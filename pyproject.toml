@@ -1,0 +1,108 @@
+[tool.poetry]
+name = "cryton"
+version = "2.0.0a0"
+description = "Advanced scenario orchestrator"
+authors = [
+    "Ivo Nutár <nutar@ics.muni.cz>",
+    "Milan Boháček <bohacek@ics.muni.cz>",
+    "Jiří Rája <raja@ics.muni.cz>",
+    "Andrej Tomči <tomci@ics.muni.cz>"
+]
+maintainers = [
+    "Jiří Rája <raja@ics.muni.cz>",
+    "Milan Boháček <bohacek@ics.muni.cz>"
+]
+license = "MIT"
+homepage = "https://gitlab.ics.muni.cz/cryton"
+repository = "https://gitlab.ics.muni.cz/cryton/cryton"
+documentation = "https://cryton.gitlab-pages.ics.muni.cz/"
+keywords = [
+    "cryton", "core", "advanced", "scheduler", "cli", "client", "orchestrator", "attacker"
+]
+readme = "README.md"
+
+packages = [
+    {include = "cryton_core", from = "src"},
+    {include = "cryton_worker", from = "src"},
+    {include = "cryton_cli", from = "src"},
+#    {include = "cryton_modules", from = "src"},
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = {version = "^1.0.0"}
+APScheduler = {version = "^3.10.4", optional = true}
+Django = {version = "^4.0.1", optional = true}
+django-cors-headers = {version = "^4.3.0", optional = true}
+djangorestframework = {version = "^3.14.0", optional = true}
+drf-spectacular = {version = "^0.26.0", optional = true}
+drf-spectacular-sidecar = {version = "^2023.3.1", optional = true}
+Jinja2 = {version = "^3.0.3", optional = true}
+psycopg2-binary = {version = "^2.9.5", optional = true}
+PyYAML = {version = "^6.0.1", optional = true}
+rpyc = {version = "^5.3.0", optional = true}
+schema = {version = "^0.7.5", optional = true}
+structlog = {version = "^23.2.0", optional = true}
+pytz = {version = "^2023.3.post1", optional = true}
+AMQPStorm = {version = "^2.10.4", optional = true}
+uuid = {version = "^1.30", optional = true}
+SQLAlchemy = {version = "^2.0.23", optional = true}
+gunicorn = {version = "^21.2.0", optional = true}
+uvicorn = {version = "^0.24.0.post1", optional = true}
+tzlocal = {version = "^5.2", optional = true}
+click = {version = "^8.1.3", optional = true}
+pymetasploit3 = {version = "^1.0.3", optional = true}
+bottle = {version = "^0.12.19", optional = true}
+pyfiglet = {version = "^1.0.2", optional = true}
+paramiko = {version = "^3.0.0", optional = true}
+requests = {version = "^2.28.2", optional = true}
+utinni-fork = {version = "^0.5.1", optional = true}
+termcolor = {version = "^2.2.0", optional = true}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+pytest-asyncio = "^0.21.1"
+pytest-django = "^4.7.0"
+pytest-mock = "^3.6.1"
+model-bakery = "^1.4.0"
+tox = "^4.4.4"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.3.1"
+mkdocs-material = "^9.0.0"
+mike = "^1.1.2"
+mkdocs-macros-plugin = "^0.7.0"
+mkdocs-include-markdown-plugin = "^6.0.3"
+
+[tool.poetry.extras]
+core = [
+    "APScheduler", "Django", "django-cors-headers", "djangorestframework",
+    "drf-spectacular", "drf-spectacular-sidecar", "Jinja2", "psycopg2-binary",
+    "PyYAML", "rpyc", "schema", "structlog", "pytz", "amqpstorm", "uuid",
+    "SQLAlchemy", "gunicorn", "uvicorn", "tzlocal", "click", "python-dotenv"
+]
+worker = [
+    "pymetasploit3", "amqpstorm", "structlog", "schema", "click", "bottle",
+    "pyfiglet", "paramiko", "requests", "utinni-fork", "python-dotenv"
+]
+cli = [
+    "PyYAML", "Jinja2", "pyfiglet", "termcolor", "requests", "click",
+    "tzlocal", "pytz", "python-dotenv"
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cryton-core = 'cryton_core.manage:main'
+cryton-worker = 'cryton_worker.lib.cli:cli'
+cryton-cli = 'cryton_cli.lib.cli:cli'
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]

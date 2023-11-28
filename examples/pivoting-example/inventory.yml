@@ -1,0 +1,23 @@
+cryton:
+  host: 192.168.0.10
+
+wordpress:
+  host: 192.168.0.20
+  subnet_ip: 192.168.1.0
+  username: wordpress
+  password: wordpress
+
+ftp:
+  host: 192.168.1.30
+  subnet_ip: 192.168.2.0
+
+exchange:
+  host: 192.168.2.40
+  subnet_ip: 192.168.3.0
+  email: Administrator@company.ex
+
+ssh:
+  host: 192.168.3.50
+  subnet_ip: 192.168.4.0
+  username: victim
+  password: victim

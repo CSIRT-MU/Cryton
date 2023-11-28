@@ -1,0 +1,49 @@
+id: 8
+plan_id: 7
+plan_name: Empire agents on Linux example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T13:13:03.714716Z'
+pause_time: null
+finish_time: '2022-07-21T13:13:32.492744Z'
+plan_executions:
+- id: 8
+  plan_name: Empire agents example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T13:13:03.736617Z'
+  finish_time: '2022-07-21T13:13:32.470158Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_8/worker_e2e-1
+  stage_executions:
+  - id: 12
+    stage_name: stage-one
+    state: FINISHED
+    start_time: '2022-07-21T13:13:03.972624Z'
+    pause_time: null
+    finish_time: '2022-07-21T13:13:32.436639Z'
+    schedule_time: '2022-07-21T13:13:03.860587Z'
+    step_executions:
+    - id: 23
+      step_name: deploy-agent
+      state: FINISHED
+      start_time: '2022-07-21T13:13:04.193967Z'
+      finish_time: '2022-07-21T13:13:09.300963Z'
+      output: Agent 'MyAgent' deployed on target 192.168.61.12.
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+    - id: 24
+      step_name: whoami-on-agent
+      state: FINISHED
+      start_time: '2022-07-21T13:13:09.438355Z'
+      finish_time: '2022-07-21T13:13:16.267801Z'
+      output: '{''agent'': ''E5XSKQ4F'', ''command'': ''whoami'', ''results'': ''victim'',
+        ''taskID'': 2, ''user_id'': 1, ''username'': ''empireadmin''}'
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false

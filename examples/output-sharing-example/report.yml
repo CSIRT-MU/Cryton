@@ -1,0 +1,54 @@
+id: 3
+plan_id: 2
+plan_name: Output sharing example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T20:23:38.302280Z'
+pause_time: null
+finish_time: '2022-07-21T20:23:39.910568Z'
+plan_executions:
+- id: 3
+  plan_name: Output sharing example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T20:23:38.314850Z'
+  finish_time: '2022-07-21T20:23:39.899478Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_3/worker_e2e-1
+  stage_executions:
+  - id: 3
+    stage_name: stage-one
+    state: FINISHED
+    start_time: '2022-07-21T20:23:38.498440Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:23:39.886100Z'
+    schedule_time: '2022-07-21T20:23:38.416535Z'
+    step_executions:
+    - id: 5
+      step_name: bruteforce
+      state: FINISHED
+      start_time: '2022-07-21T20:23:38.534406Z'
+      finish_time: '2022-07-21T20:23:38.680695Z'
+      output: ''
+      serialized_output:
+        password: victim
+        username: victim
+        all_credentials:
+          - password: victim
+            username: victim
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+    - id: 6
+      step_name: create-ssh-session
+      state: FINISHED
+      start_time: '2022-07-21T20:23:38.747992Z'
+      finish_time: '2022-07-21T20:23:39.856858Z'
+      output: ''
+      serialized_output:
+        session_id: 2
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
