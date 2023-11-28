@@ -1,0 +1,38 @@
+id: 4
+plan_id: 3
+plan_name: MSFListener trigger example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T20:25:47.772327Z'
+pause_time: null
+finish_time: '2022-07-21T20:29:35.635133Z'
+plan_executions:
+- id: 4
+  plan_name: MSFListener trigger example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T20:25:47.783201Z'
+  finish_time: '2022-07-21T20:29:35.624754Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_4/worker_e2e-1
+  stage_executions:
+  - id: 4
+    stage_name: stage-msf
+    state: FINISHED
+    start_time: '2022-07-21T20:29:34.402932Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:29:35.484183Z'
+    schedule_time: null
+    step_executions:
+    - id: 7
+      step_name: execute-in-session
+      state: FINISHED
+      start_time: '2022-07-21T20:29:34.439070Z'
+      finish_time: '2022-07-21T20:29:35.455233Z'
+      output: 'victim'
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false

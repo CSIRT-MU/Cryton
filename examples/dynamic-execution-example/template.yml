@@ -1,0 +1,7 @@
+# Contains plan only, `stages` must be at least an empty list. The `dynamic` parameter must be set to true.
+---
+plan:
+  name: example
+  owner: Cryton
+  dynamic: true
+  stages: []

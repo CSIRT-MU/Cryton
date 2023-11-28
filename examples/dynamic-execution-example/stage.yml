@@ -1,0 +1,7 @@
+# Contains Stage only, `steps` must be at least an empty list.
+---
+name: no delay stage {{ id }}
+trigger_type: delta
+trigger_args:
+  seconds: 0
+steps: []

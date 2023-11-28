@@ -1,0 +1,115 @@
+site_name: Cryton toolset
+site_url: https://cryton.gitlab-pages.ics.muni.cz/cryton-documentation/
+repo_url: https://gitlab.ics.muni.cz/cryton
+
+theme:
+  name: material
+  locale: en
+  custom_dir: docs/.overrides
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  features:
+    - content.tabs.link # Linked code tabs
+    - content.code.copy # Code copy button
+    - navigation.tracking # Anchor tracking
+    - navigation.top # Back-to-top button
+    - search.highlight # Highlight searched terms
+    - toc.follow
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.extra
+
+plugins:
+  - search:
+      lang: en
+  - macros:
+      j2_block_start_string: "{{{%"
+      j2_block_end_string: "%}}}"
+      j2_variable_start_string: "{{{"
+      j2_variable_end_string: "}}}"
+      include_yaml:
+        - docs/extra/variables.yml
+      on_error_fail: true
+  - include-markdown:
+      opening_tag: "{!"
+      closing_tag: "!}"
+
+nav:
+  - Introduction: index.md
+  - Architecture: architecture.md
+  - Getting started:
+      - Quick-start: getting-started/quick-start.md
+      - Workflow: getting-started/workflow.md
+      - Execution example: getting-started/execution-example.md
+      - Deployment with Ansible: getting-started/ansible.md
+  - Playground:
+      - Introduction: playground/introduction.md
+      - Example attack scenario: playground/example-scenario.md
+  - Components:
+      - Core: components/core.md
+      - Worker: components/worker.md
+      - Modules: components/modules.md
+      - CLI: components/cli.md
+      - Frontend: components/frontend.md
+  - Docker settings: docker-settings.md
+  - Design phase:
+      - Template (attack scenario): design-phase/template.md
+      - Plan: design-phase/plan.md
+      - Stage: design-phase/stage.md
+      - Step: design-phase/step.md
+      - Plan instance: design-phase/plan-instance.md
+  - Execution phase:
+      - What is Run: execution-phase/run.md
+      - Execution statistics: execution-phase/execution.md
+      - Reporting: execution-phase/reporting.md
+  - Interfaces:
+      - CLI: interfaces/cli.md
+      - Frontend: interfaces/frontend.md
+      - Core (REST API): interfaces/core-rest-api.md
+      - Worker (Rabbit API): interfaces/worker-rabbit-api.md
+  - Integrated tools: integrated-tools.md
+  - Modules: modules.md
+  - Production: production.md
+  - Dynamic execution: dynamic-execution.md
+  - Logging: logging.md
+  - How to contribute: contribution-guide.md
+  - Development:
+      - Core: development/core.md
+      - Worker: development/worker.md
+      - Modules: development/modules.md
+      - CLI: development/cli.md
+      - Frontend: development/frontend.md
+      - E2E testing: development/e2e-testing.md
+  - Acknowledgements: acknowledgements.md
+  - License: license.md

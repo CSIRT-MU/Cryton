@@ -1,0 +1,40 @@
+id: 5
+plan_id: 4
+plan_name: HTTPListener trigger example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T20:32:43.259332Z'
+pause_time: null
+finish_time: '2022-07-21T20:33:22.810351Z'
+plan_executions:
+- id: 5
+  plan_name: HTTPListener trigger example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T20:32:43.271366Z'
+  finish_time: '2022-07-21T20:33:22.800085Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_5/worker_e2e-1
+  stage_executions:
+  - id: 5
+    stage_name: stage-http
+    state: FINISHED
+    start_time: '2022-07-21T20:33:22.325153Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:33:22.660303Z'
+    schedule_time: null
+    step_executions:
+    - id: 8
+      step_name: execute-command
+      state: FINISHED
+      start_time: '2022-07-21T20:33:22.364998Z'
+      finish_time: '2022-07-21T20:33:22.631664Z'
+      output: ''
+      serialized_output: 'it works!
+
+        '
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false

@@ -1,0 +1,10 @@
+# Update these accordingly to your setup!
+
+attacker:
+  host: 192.168.56.1
+
+ubuntu:
+  host: 192.168.56.120
+
+windows:
+  host: 192.168.57.130

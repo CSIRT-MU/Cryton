@@ -1,0 +1,38 @@
+id: 8
+plan_id: 7
+plan_name: DateTime trigger example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T20:38:57.828807Z'
+pause_time: null
+finish_time: '2022-07-21T20:39:00.378703Z'
+plan_executions:
+- id: 8
+  plan_name: DateTime trigger example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T20:38:57.841044Z'
+  finish_time: '2022-07-21T20:39:00.368494Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_8/worker_e2e-1
+  stage_executions:
+  - id: 8
+    stage_name: stage-one
+    state: FINISHED
+    start_time: '2022-07-21T20:39:00.015179Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:39:00.354678Z'
+    schedule_time: '2022-07-21T20:39:00Z'
+    step_executions:
+    - id: 13
+      step_name: execute-command
+      state: FINISHED
+      start_time: '2022-07-21T20:39:00.052036Z'
+      finish_time: '2022-07-21T20:39:00.324061Z'
+      output: 'it works!'
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false

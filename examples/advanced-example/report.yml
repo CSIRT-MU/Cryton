@@ -1,0 +1,210 @@
+id: 10
+plan_id: 8
+plan_name: Advanced example
+state: FINISHED
+schedule_time: null
+start_time: '2022-07-21T20:43:14.072886Z'
+pause_time: null
+finish_time: '2022-07-21T20:43:29.965923Z'
+plan_executions:
+- id: 10
+  plan_name: Advanced example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-07-21T20:43:14.155837Z'
+  finish_time: '2022-07-21T20:43:29.951957Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: e2e-1
+  evidence_dir: /tmp/run_10/worker_e2e-1
+  stage_executions:
+  - id: 12
+    stage_name: stage-get-etc-passwd
+    state: FINISHED
+    start_time: '2022-07-21T20:43:14.338439Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:43:21.960649Z'
+    schedule_time: '2022-07-21T20:43:14.261627Z'
+    step_executions:
+    - id: 20
+      step_name: check-ssh
+      state: FINISHED
+      start_time: '2022-07-21T20:43:14.375385Z'
+      finish_time: '2022-07-21T20:43:14.842422Z'
+      output: ''
+      serialized_output:
+        stats:
+          args: /usr/bin/nmap -oX - -sV -p22 192.168.61.13
+          start: '1658386484'
+          scanner: nmap
+          version: '7.80'
+          startstr: Thu Jul 21 06:54:44 2022
+          xmloutputversion: '1.04'
+        runtime:
+          exit: success
+          time: '1658386484'
+          elapsed: '0.38'
+          summary: Nmap done at Thu Jul 21 06:54:44 2022; 1 IP address (1 host up)
+            scanned in 0.38 seconds
+          timestr: Thu Jul 21 06:54:44 2022
+        192.168.61.13:
+          ports:
+          - cpe:
+            - cpe: cpe:/a:openbsd:openssh:8.4p1
+            - cpe: cpe:/o:linux:linux_kernel
+            state: open
+            portid: '22'
+            reason: syn-ack
+            scripts: []
+            service:
+              conf: '10'
+              name: ssh
+              method: probed
+              ostype: Linux
+              product: OpenSSH
+              version: 8.4p1 Debian 5
+              extrainfo: protocol 2.0
+            protocol: tcp
+            reason_ttl: '64'
+          state:
+            state: up
+            reason: arp-response
+            reason_ttl: '0'
+          osmatch: {}
+          hostname:
+          - name: 192.168.61.13
+            type: PTR
+          macaddress:
+            addr: 08:00:27:D4:BF:9E
+            vendor: Oracle VirtualBox virtual NIC
+            addrtype: mac
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+    - id: 21
+      step_name: bruteforce
+      state: FINISHED
+      start_time: '2022-07-21T20:43:14.908883Z'
+      finish_time: '2022-07-21T20:43:15.065409Z'
+      output: ''
+      serialized_output:
+        password: victim
+        username: victim
+        all_credentials:
+        - password: victim
+          username: victim
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+    - id: 22
+      step_name: get-ssh-session
+      state: FINISHED
+      start_time: '2022-07-21T20:43:15.132308Z'
+      finish_time: '2022-07-21T20:43:21.498151Z'
+      output: ''
+      serialized_output: Session 1 opened
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+    - id: 23
+      step_name: session-cmd
+      state: FINISHED
+      start_time: '2022-07-21T20:43:21.561528Z'
+      finish_time: '2022-07-21T20:43:21.929145Z'
+      output: ''
+      serialized_output: 'root:x:0:0:root:/root:/bin/bash
+
+        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+        bin:x:2:2:bin:/bin:/usr/sbin/nologin
+
+        sys:x:3:3:sys:/dev:/usr/sbin/nologin
+
+        sync:x:4:65534:sync:/bin:/bin/sync
+
+        games:x:5:60:games:/usr/games:/usr/sbin/nologin
+
+        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+
+        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+
+        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+
+        news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+
+        uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+
+        proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+
+        www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+
+        backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+
+        list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+
+        irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+
+        gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+
+        nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+
+        _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+
+        systemd-network:x:101:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+
+        systemd-resolve:x:102:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+
+        messagebus:x:103:104::/nonexistent:/usr/sbin/nologin
+
+        systemd-timesync:x:104:105:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+
+        _chrony:x:105:112:Chrony daemon,,,:/var/lib/chrony:/usr/sbin/nologin
+
+        sshd:x:106:65534::/run/sshd:/usr/sbin/nologin
+
+        vagrant:x:1000:1000::/home/vagrant:/bin/bash
+
+        systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+
+        victim:x:1001:1001:,,,:/home/victim:/bin/bash
+
+        '
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+  - id: 13
+    stage_name: stage-http
+    state: FINISHED
+    start_time: '2022-07-21T20:43:21.973856Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:43:22.341192Z'
+    schedule_time: null
+    step_executions:
+    - id: 24
+      step_name: execute-command
+      state: FINISHED
+      start_time: '2022-07-21T20:43:22.010542Z'
+      finish_time: '2022-07-21T20:43:22.313299Z'
+      output: 'it works!'
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false
+  - id: 14
+    stage_name: stage-msf
+    state: FINISHED
+    start_time: '2022-07-21T20:43:28.723240Z'
+    pause_time: null
+    finish_time: '2022-07-21T20:43:29.808335Z'
+    schedule_time: null
+    step_executions:
+    - id: 25
+      step_name: execute-in-session
+      state: FINISHED
+      start_time: '2022-07-21T20:43:28.760066Z'
+      finish_time: '2022-07-21T20:43:29.779288Z'
+      output: 'victim'
+      serialized_output: {}
+      evidence_file: 'No evidence '
+      result: OK
+      valid: false

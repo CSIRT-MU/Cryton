@@ -1,0 +1,3 @@
+schema
+python3-nmap
+pytest

@@ -1,0 +1,48 @@
+id: 8
+plan_id: 6
+plan_name: example
+state: FINISHED
+schedule_time: null
+start_time: '2022-09-20T11:37:24.482512Z'
+pause_time: null
+finish_time: '2022-09-20T11:37:26.159214Z'
+plan_executions:
+- id: 8
+  plan_name: example
+  state: FINISHED
+  schedule_time: null
+  start_time: '2022-09-20T11:37:24.501936Z'
+  finish_time: '2022-09-20T11:37:26.138588Z'
+  pause_time: null
+  worker_id: 1
+  worker_name: test
+  evidence_dir: /tmp/run_8/worker_test
+  stage_executions:
+  - id: 8
+    stage_name: no delay stage
+    state: FINISHED
+    start_time: '2022-09-20T11:37:24.852610Z'
+    pause_time: null
+    finish_time: '2022-09-20T11:37:26.106874Z'
+    schedule_time: '2022-09-20T11:37:24.707770Z'
+    step_executions:
+    - id: 18
+      step_name: initial whoami
+      state: FINISHED
+      start_time: '2022-09-20T11:37:25.050036Z'
+      finish_time: '2022-09-20T11:37:25.454597Z'
+      output: "victim\n \n "
+      serialized_output: {}
+      evidence_file: ''
+      result: OK
+      valid: false
+    - id: 19
+      step_name: reusable step 1
+      state: FINISHED
+      start_time: '2022-09-20T11:37:25.612966Z'
+      finish_time: '2022-09-20T11:37:26.045550Z'
+      output: "victim\n \n "
+      serialized_output: {}
+      evidence_file: ''
+      result: OK
+      valid: false
