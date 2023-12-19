@@ -1,4 +1,4 @@
-from cryton_core.settings import *
+from cryton.core.settings import *
 
 DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',

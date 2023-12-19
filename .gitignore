@@ -12,14 +12,9 @@ coverage.readable
 .coverage*
 
 # Runtime
-cryton-core
 cryton_core/uploads
 jobs.sqlite
 uploads
-core
-
-cryton-cli
-cryton-worker
 
 site/
 
