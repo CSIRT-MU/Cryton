@@ -1,0 +1,57 @@
+---
+hive:
+  debug: false
+  message_timeout: 180
+  threads_per_process: 7
+  cpu_cores: 3
+  rabbit:
+    host: 127.0.0.1
+    port: 5672
+    username: cryton
+    password: cryton
+    queues:
+      attack_response: cryton.attack.response
+      agent_response: cryton.agent.response
+      event_response: cryton.event.response
+      control_request: cryton.control.request
+  database:
+    host: 127.0.0.1
+    port: 5432
+    name: cryton
+    username: cryton
+    password: cryton
+  api:
+    secret_key: cryton
+    allowed_hosts: *
+
+worker:
+  name: worker
+  debug: false
+  consumer_count: 7
+  max_retries: 3
+  modules:
+    install_requirements: true
+  rabbit:
+    host: 127.0.0.1
+    port: 5672
+    username: cryton
+    password: cryton
+  empire:
+    host: 127.0.0.1
+    port: 1337
+    username: cryton
+    password: cryton
+  metasploit:
+    host: 127.0.0.1
+    port: 55553
+    ssl: true
+    username: cryton
+    password: cryton
+
+cli:
+  debug: false
+  timezone: DEFAULT
+  api:
+    host: 127.0.0.1
+    port: 8000
+    ssl: false

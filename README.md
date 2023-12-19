@@ -13,13 +13,13 @@ For more information see the [documentation](https://cryton.gitlab-pages.ics.mun
 ## Quick-start
 Installation:
 ```shell
-poetry install -E core -E worker -E cli
+poetry install -E hive -E worker -E cli
 ```
 
 Run it:
 ```shell
 poetry run cryton-worker start
-poetry run cryton-core start
+poetry run cryton-hive start
 poetry run cryton-cli
 ```
 
