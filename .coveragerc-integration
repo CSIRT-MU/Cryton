@@ -1,0 +1,20 @@
+[run]
+omit =
+    */cryton_core/manage.py
+    */cryton_core/settings.py
+    */cryton_core/wsgi.py
+    */cryton_core/lib/constants.py
+    */cryton_core/lib/creator.py
+    */cryton_core/lib/event.py
+    */cryton_core/lib/exceptions.py
+    */cryton_core/lib/logger.py
+    */cryton_core/lib/plan.py
+    */cryton_core/lib/scheduler.py
+    */cryton_core/lib/scheduler_client.py
+    */cryton_core/lib/session.py
+    */cryton_core/lib/stage.py
+    */cryton_core/lib/states.py
+    */cryton_core/lib/step.py
+    */cryton_core/lib/util.py
+    */cryton_core/lib/worker.py
+    */cryton_core/etc/*

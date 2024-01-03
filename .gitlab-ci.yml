@@ -1,0 +1,358 @@
+image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest  # TODO: unnecessary?
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
+
+default:
+  interruptible: true
+  artifacts:
+    expire_in: 30 days
+
+stages:
+  - test
+  - publish
+  - build
+  - deploy
+
+.documentation:
+  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
+  rules:
+    - changes: # TODO
+        #        - cryton/**/*
+        #        - settings*
+        #        - examples/**/*
+        - mkdocs.yml
+        - docs/**/*
+        - .gitlab-ci.yml
+    - when: never
+
+# test
+.tests:
+  stage: test
+  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  rules:
+    - changes:
+        - cryton/**/*
+        - tests/**/*
+        - .coveragerc-*
+        - settings*
+        - .gitlab-ci.yml
+        - poetry.lock
+        - pyproject.toml
+        - tox.ini
+    - when: never
+
+unit_tests:
+  extends: .tests
+  script:
+    - tox run-parallel -- tests/unit_tests/ --cov=cryton --cov-config=.coveragerc-unit
+    - cat coverage.readable
+
+integration_tests:
+  extends: .tests
+  script:
+    - tox run-parallel -- tests/integration_tests/ --cov=cryton --cov-config=.coveragerc-integration
+    - cat coverage.readable
+
+build_documentation:
+  extends: .documentation
+  stage: test
+  before_script:
+    - poetry install
+  script:
+    - poetry run mkdocs build
+
+# publish
+.publish:
+  stage: publish
+  rules:
+    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
+      when: never
+    - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
+
+# TODO: here is a guide on how to build multi arch images
+#  https://github.com/GoogleContainerTools/kaniko#creating-multi-arch-container-manifests-using-kaniko-and-manifest-tool
+# TODO: set tags for the job and runner to make it use only that runner (in case we want to use docker for building)
+.build_docker_image:
+  extends: .publish
+  image:
+    name: gcr.io/kaniko-project/executor:v1.19.2-debug
+    entrypoint: [ "" ]
+  variables:  # TODO: needs testing
+    BUILD_TARGET: "production"
+    DOCKERFILE_PATH: "hive"
+    LATEST_TAG: "latest"
+  before_script:
+    # Set variables
+    - export IMAGE_VERSION=${CI_COMMIT_TAG#*/}
+    - export IMAGE_MINOR_VERSION=${IMAGE_VERSION%.*}
+    - export IMAGE_MAJOR_VERSION=${IMAGE_MINOR_VERSION%.*}
+    # Check variables
+    - echo "IMAGE_VERSION $IMAGE_VERSION"
+    - echo "IMAGE_MINOR_VERSION $IMAGE_MINOR_VERSION"
+    - echo "IMAGE_MAJOR_VERSION $IMAGE_MAJOR_VERSION"
+    - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR/docker/$DOCKERFILE_PATH
+      --target $BUILD_TARGET
+      --skip-unused-stages
+      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_VERSION
+      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_MINOR_VERSION
+      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_MAJOR_VERSION
+      --destination $CI_REGISTRY_IMAGE:$LATEST_TAG
+
+# TODO: maybe use the following example to declare variables, may be more readable
+#  variables:
+#    BUILD_TARGET: "proxy"
+#  before_script:
+#    # Set variables
+#    - export IMAGE_VERSION=${CI_COMMIT_TAG#*/}
+#    - export IMAGE_MINOR_VERSION=${IMAGE_VERSION%.*}
+#    - export IMAGE_MAJOR_VERSION=${IMAGE_MINOR_VERSION%.*}
+#    - export IMAGE_TAG_CURRENT="$BUILD_TARGET-$IMAGE_VERSION"
+#    - export IMAGE_TAG_MINOR="$BUILD_TARGET-$IMAGE_MINOR_VERSION"
+#    - export IMAGE_TAG_MAJOR="$BUILD_TARGET-$IMAGE_MAJOR_VERSION"
+#    - export IMAGE_TAG_LATEST="$BUILD_TARGET"
+#    # Check variables
+#    - echo "IMAGE_VERSION $IMAGE_VERSION"
+#    - echo "IMAGE_MINOR_VERSION $IMAGE_MINOR_VERSION"
+#    - echo "IMAGE_MAJOR_VERSION $IMAGE_MAJOR_VERSION"
+#    - echo "BUILD_TARGET $BUILD_TARGET"
+#    - echo "IMAGE_TAG_CURRENT $IMAGE_TAG_CURRENT"
+#    - echo "IMAGE_TAG_MINOR $IMAGE_TAG_MINOR"
+#    - echo "IMAGE_TAG_MAJOR $IMAGE_TAG_MAJOR"
+#    - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
+
+upload_package_to_pypi:
+  extends: .build_docker_image
+  script:
+    - poetry config pypi-token.pypi $PYPI_TOKEN
+    - poetry publish --build
+
+build_docker_image_hive:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "production"
+    DOCKERFILE_PATH: "hive"
+    LATEST_TAG: "hive"
+
+build_docker_image_api_proxy:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "production"
+    DOCKERFILE_PATH: "api-proxy"
+    LATEST_TAG: "api-proxy"
+
+build_docker_image_cli:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "production"
+    DOCKERFILE_PATH: "cli"
+    LATEST_TAG: "cli"
+
+build_docker_image_worker:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "production"
+    DOCKERFILE_PATH: "worker"
+    LATEST_TAG: "worker"
+
+build_docker_image_worker_kali:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "kali"
+    DOCKERFILE_PATH: "worker"
+    LATEST_TAG: "worker-kali"
+
+# build
+.pages:
+  extends: .documentation
+  variables:
+    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+    PAGES_BRANCH: "pages"
+  before_script:
+    - apt update && apt install -y git
+    - git config user.name $PROJECT_BOT_USER
+    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
+    - git fetch origin $PAGES_BRANCH
+  rules:
+    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
+
+build_pages:  # TODO: needs more love; merge pages_tag/master
+  extends: .pages
+  stage: build
+  script:
+    - poetry install
+    - git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
+    - git checkout $CI_COMMIT_SHA
+    - export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
+    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH $DOCUMENTATION_VERSION latest
+    - poetry run mike set-default -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH latest
+
+#pages_tag:
+#  stage: build
+#  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
+#  variables:
+#    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+#  before_script:
+#    - apt update && apt install -y git
+#    - poetry install
+#    - git config user.name $PROJECT_BOT_USER
+#    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
+#    - git fetch origin $PAGES_BRANCH && git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
+#    - git checkout $CI_COMMIT_SHA
+#    - export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
+#  script:
+#    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH $DOCUMENTATION_VERSION latest
+#    - poetry run mike set-default -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH latest
+#  rules:
+#    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
+#      when: never
+#    - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
+#
+#pages_master:
+#  stage: build
+#  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
+#  variables:
+#    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+#  before_script:
+#    - apt update && apt install -y git
+#    - poetry install
+#    - git config user.name $PROJECT_BOT_USER
+#    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
+#    - git fetch origin $PAGES_BRANCH && git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
+#    - git checkout $CI_COMMIT_SHA
+#  script:
+##    - poetry run mike delete -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH master
+#    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH master
+#  rules:
+#    - if: $CI_COMMIT_TAG
+#      when: never
+#    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
+#      when: never
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
+
+# deploy
+pages:
+  extends: .pages
+  stage: deploy
+  script:
+    - git checkout $PAGES_BRANCH
+  artifacts:
+    expire_in: 30 days
+    paths:
+      - public/
+
+
+# Modules
+
+#image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
+#
+#stages:
+#  - test
+#
+#variables:
+#  POETRY_VIRTUALENVS_IN_PROJECT: "true"
+#
+#before_script:
+#  - git clone https://gitlab.ics.muni.cz/cryton/cryton-worker.git
+#  - cd cryton-worker
+#  - poetry install
+#
+#mod_cmd:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_cmd/requirements.txt
+#    - poetry run pytest ../modules/mod_cmd/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_cmd/mod.py
+#        - modules/mod_cmd/test_mod.py
+#        - modules/mod_cmd/requirements.txt
+#    - when: never
+#
+#mod_ffuf:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_ffuf/requirements.txt
+#    - poetry run pytest ../modules/mod_ffuf/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_ffuf/mod.py
+#        - modules/mod_ffuf/test_mod.py
+#        - modules/mod_ffuf/requirements.txt
+#    - when: never
+#
+#mod_medusa:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_medusa/requirements.txt
+#    - poetry run pytest ../modules/mod_medusa/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_medusa/mod.py
+#        - modules/mod_medusa/test_mod.py
+#        - modules/mod_medusa/requirements.txt
+#    - when: never
+#
+#mod_msf:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_msf/requirements.txt
+#    - poetry run pytest ../modules/mod_msf/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_msf/mod.py
+#        - modules/mod_msf/test_mod.py
+#        - modules/mod_msf/requirements.txt
+#    - when: never
+#
+#mod_nmap:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_nmap/requirements.txt
+#    - poetry run pytest ../modules/mod_nmap/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_nmap/mod.py
+#        - modules/mod_nmap/test_mod.py
+#        - modules/mod_nmap/requirements.txt
+#    - when: never
+#
+#mod_script:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_script/requirements.txt
+#    - poetry run pytest ../modules/mod_script/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_script/mod.py
+#        - modules/mod_script/test_mod.py
+#        - modules/mod_script/requirements.txt
+#    - when: never
+#
+#mod_wpscan:
+#  stage: test
+#  script:
+#    - poetry run pip install -r ../modules/mod_wpscan/requirements.txt
+#    - poetry run pytest ../modules/mod_wpscan/
+#  coverage: '/TOTAL.*\s+(\d+%)$/'
+#  rules:
+#    - changes:
+#        - modules/mod_wpscan/mod.py
+#        - modules/mod_wpscan/test_mod.py
+#        - modules/mod_wpscan/requirements.txt
+#    - when: never

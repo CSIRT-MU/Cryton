@@ -1,0 +1,18 @@
+# Git
+.git
+.gitignore
+.gitlab-ci.yml
+
+# Tests
+tests
+.coveragerc-integration
+.coveragerc-unit
+tox.ini
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.*
+
+# Development
+.idea
