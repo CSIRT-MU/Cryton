@@ -9,7 +9,7 @@ __pycache__
 htmlcov
 .coverage
 coverage.readable
-.coverage*
+.coverage.*
 
 # Runtime
 cryton_core/uploads

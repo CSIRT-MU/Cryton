@@ -1,0 +1,8 @@
+[run]
+omit =
+    */cryton_core/manage.py
+    */cryton_core/settings.py
+    */cryton_core/wsgi.py
+    */cryton_core/asgi.py
+    */cryton_core/urls.py
+    */cryton_core/lib/listener.py

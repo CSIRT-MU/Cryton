@@ -1,17 +1,9 @@
-## new structure?
+## docker
+add all necessary files for docker deployment and update them
 
-cryton
-cryton.lib  (common stuff, that can be reused)
-cryton.lib.rabbit
-cryton.lib.metasploit
-cryton.lib.empire
-cryton.lib.utility
-cryton.lib.utility.constants
-cryton.lib.utility.schemas  (rabbit message schemas)
-cryton.lib.config
-cryton.lib.config.logger
-cryton.lib.config.settings
-cryton.core  (django)
-cryton.worker  (cli, worker, consumer)
-cryton.cli  (cli)
-cryton.modules
+
+## gitlab ci
+Update CI to work for pages (docs), tests, image build, etc.
+
+## other
+check for other files/features that were stripped during the initial merge
