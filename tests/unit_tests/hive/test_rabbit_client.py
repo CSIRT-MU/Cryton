@@ -2,12 +2,12 @@ import pytest
 from pytest_mock import MockerFixture
 from unittest.mock import patch, Mock
 
-from cryton_core.lib.util import logger, constants, rabbit_client, exceptions
+from cryton.hive.utility import logger, constants, rabbit_client, exceptions
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestRpcClient:
-    path = "cryton_core.lib.util.rabbit_client"
+    path = "cryton.hive.utility.rabbit_client"
 
     @pytest.fixture
     def f_rpc_client(self, mocker: MockerFixture):
@@ -194,9 +194,9 @@ class TestRpcClient:
         assert "Received message with an unknown correlation_id." in caplog.text
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestClient:
-    path = "cryton_core.lib.util.rabbit_client"
+    path = "cryton.hive.utility.rabbit_client"
 
     @pytest.fixture
     def f_client(self, mocker: MockerFixture):

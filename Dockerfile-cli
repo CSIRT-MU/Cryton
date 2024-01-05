@@ -1,7 +1,5 @@
 FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest as base
 
-LABEL authors="Jiri Raja <raja@ics.muni.cz>, Milan Bohacek <bohacek@ics.muni.cz>"
-
 # Set environment
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
@@ -9,20 +7,20 @@ WORKDIR /app
 
 # Install dependencies
 COPY poetry.lock pyproject.toml ./
-RUN poetry install --without dev --no-root --no-interaction --no-ansi
+RUN poetry install --without dev --no-root --no-interaction --no-ansi -E cli
 
 # Install app
-COPY . /app/
+COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E cli
 
-FROM python:3.11-alpine as production
+FROM python:3.12-alpine as cli
+
+# Set environment
+ENV CRYTON_APP_DIRECTORY=/app
 
 # Install necessary packages
 RUN apk add --no-cache \
     bash
-
-# Set environment
-ENV CRYTON_APP_DIRECTORY=/app
 
 # Copy app
 COPY --from=base /app /app
@@ -32,5 +30,6 @@ RUN ln -s /app/.venv/bin/cryton-cli /usr/local/bin/cryton-cli
 
 # Enable shell autocompletion
 RUN _CRYTON_CLI_COMPLETE=bash_source cryton-cli > /etc/profile.d/cryton-cli-complete.sh
+RUN echo ". /etc/profile.d/cryton-cli-complete.sh" >> ~/.bashrc
 
 CMD [ "bash" ]

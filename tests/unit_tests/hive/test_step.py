@@ -4,10 +4,10 @@ import pytest
 from datetime import datetime
 import pytz
 
-from cryton_core.lib.util import constants, exceptions, logger, states
-from cryton_core.lib.models import step, worker
-from cryton_core.etc import config
-from cryton_core.cryton_app.models import StageModel, StepModel, PlanExecutionModel, StageExecutionModel, \
+from cryton.hive.utility import constants, exceptions, logger, states
+from cryton.hive.models import step, worker
+from cryton.hive.config.settings import SETTINGS
+from cryton.hive.cryton_app.models import StageModel, StepModel, PlanExecutionModel, StageExecutionModel, \
     StepExecutionModel, ExecutionVariableModel, CorrelationEventModel, OutputMappingModel
 
 import yaml
@@ -115,8 +115,8 @@ class TestStepExecutionBase(TestStepBase):
     @pytest.fixture(autouse=True)
     def auto_mock(self, mocker):
         mocker.patch("time.sleep")
-        mocker.patch("cryton_core.lib.util.states.StepStateMachine.validate_transition")
-        mocker.patch("cryton_core.lib.util.states.StepStateMachine.validate_state")
+        mocker.patch("cryton.hive.utility.states.StepStateMachine.validate_transition")
+        mocker.patch("cryton.hive.utility.states.StepStateMachine.validate_state")
 
     @pytest.fixture
     def plan_execution_model(self):
@@ -178,7 +178,7 @@ class TestStepExecutionBase(TestStepBase):
         return worker_instance
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
 class TestStepBasic(TestStepBase):
     def test_step_init_delete(self, step_instance):
         step_model_id = step_instance.model.id
@@ -362,14 +362,14 @@ class TestStepSuccessors(TestStepExecutionBase):
         assert step_successor.model.id == step_execution.get_successors_to_execute().first().id
 
     def test_pause_successors(self, mocker, step_execution, step_execution_successor, step_successor_model):
-        mocker.patch("cryton_core.lib.models.step.StepExecution.get_successors_to_execute", return_value=[step_successor_model])
+        mocker.patch("cryton.hive.models.step.StepExecution.get_successors_to_execute", return_value=[step_successor_model])
 
         step_execution.pause_successors()
         assert step_execution_successor.state == states.PAUSED
 
     def test_ignore(self, step_instance, step_successor, stage_execution_model, step_execution,
                     step_execution_successor, mocker):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
 
         step_execution.ignore()
@@ -379,7 +379,7 @@ class TestStepSuccessors(TestStepExecutionBase):
 
     def test_ignore_with_multiple_parents(self, step_instance, step_instance_2, step_successor,
                                           step_execution, step_execution_2, step_execution_successor, mocker):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
         step_instance_2.add_successor(step_successor.model.id, 'output', 'test')
 
@@ -392,7 +392,7 @@ class TestStepSuccessors(TestStepExecutionBase):
 
     def test_ignore_with_multiple_parents_finished(self, step_instance, step_instance_2, step_successor,
                                                    step_execution, step_execution_2, step_execution_successor, mocker):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.get_successors_to_execute",
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.get_successors_to_execute",
                      return_value=[step_execution_successor.model.id])
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
         step_instance_2.add_successor(step_successor.model.id, 'output', 'test')
@@ -409,7 +409,7 @@ class TestStepSuccessors(TestStepExecutionBase):
     def test_ignore_adversaries(self, mocker, step_instance, step_successor, step_successor_2, step_successor_3,
                                 step_execution, step_execution_successor, step_execution_successor_2,
                                 step_execution_successor_3, stage_execution_model):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.execute")
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.execute")
 
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
         step_instance.add_successor(step_successor_2.model.id, constants.RESULT, constants.RESULT_OK)
@@ -433,8 +433,8 @@ class TestStepSuccessors(TestStepExecutionBase):
     def test_ignore_successors(self, mocker, step_instance, step_successor, step_successor_2, step_successor_3,
                                step_execution, step_execution_successor, step_execution_successor_2,
                                step_execution_successor_3, stage_execution_model):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.execute")
-        # mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.execute")
+        # mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.get_successors_to_execute")
 
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
         step_instance.add_successor(step_successor_2.model.id, constants.RESULT, constants.RESULT_OK)
@@ -454,7 +454,7 @@ class TestStepSuccessors(TestStepExecutionBase):
     def test_execute_successors(self, mocker, step_instance, step_successor, step_successor_2, step_successor_3,
                                 step_execution, step_execution_successor, step_execution_successor_2,
                                 step_execution_successor_3, stage_execution_model):
-        mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.execute")
+        mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.execute")
         step_instance.add_successor(step_successor.model.id, 'output', 'test')
         step_instance.add_successor(step_successor_2.model.id, constants.RESULT, constants.RESULT_OK)
         step_successor.add_successor(step_successor_3.model.id, constants.RESULT, constants.RESULT_OK)
@@ -532,9 +532,9 @@ class TestStepExecution(TestStepExecutionBase):
             step.StepExecution(step_execution_id=int(step_exec_model.id) + 1)
 
     def test__update_dynamic_variables(self, mocker, step_execution, step_execution_successor):
-        mocker.patch("cryton_core.lib.util.util.get_dynamic_variables", return_value=["$parent.username"])
-        get_prefixes = mocker.patch("cryton_core.lib.util.util.get_prefixes", return_value=["parent"])
-        fill_dynamic_variables = mocker.patch("cryton_core.lib.util.util.fill_dynamic_variables",
+        mocker.patch("cryton.hive.utility.util.get_dynamic_variables", return_value=["$parent.username"])
+        get_prefixes = mocker.patch("cryton.hive.utility.util.get_prefixes", return_value=["parent"])
+        fill_dynamic_variables = mocker.patch("cryton.hive.utility.util.fill_dynamic_variables",
                                               return_value={"username": "test_user"})
 
         step_execution.serialized_output = {"username": "test_user"}
@@ -565,9 +565,9 @@ class TestStepExecution(TestStepExecutionBase):
         ex_var_detail.pop('_state')
 
         update_execution_variables = mocker.patch(
-            "cryton_core.lib.models.step.StepExecution._update_arguments_with_execution_variables",
+            "cryton.hive.models.step.StepExecution._update_arguments_with_execution_variables",
             return_value={"test_variable": "test_value", "username": "$parent.username"})
-        update_dynamic_variables = mocker.patch("cryton_core.lib.models.step.StepExecution._update_dynamic_variables",
+        update_dynamic_variables = mocker.patch("cryton.hive.models.step.StepExecution._update_dynamic_variables",
                                                 return_value={"test_variable": "test_value", "username": "test_name"})
 
         arguments_to_be_updated = {"test_variable": "{{test_name}}", "username": "$parent.username"}
@@ -583,7 +583,7 @@ class TestStepExecution(TestStepExecutionBase):
 
     def test_return_msf_session_id_use_named_session(self, mocker, step_execution, step_instance, plan_execution_id):
         step_instance.arguments = {"use_named_session": "test_session"}
-        mocker.patch("cryton_core.lib.models.session.get_msf_session_id", return_value="1")
+        mocker.patch("cryton.hive.models.session.get_msf_session_id", return_value="1")
 
         return_msf_session_id = step_execution.get_msf_session_id(step_instance,
                                                                   plan_execution_id)
@@ -598,7 +598,7 @@ class TestStepExecution(TestStepExecutionBase):
                          'session_name': "test_session",
                          'plan_execution_id': plan_execution_id, 'step_id': step_instance.model.id}
 
-            mocker.patch("cryton_core.lib.models.session.get_msf_session_id",
+            mocker.patch("cryton.hive.models.session.get_msf_session_id",
                          side_effect=exceptions.SessionObjectDoesNotExist(message=""))
             step_execution.get_msf_session_id(step_instance, plan_execution_id)
 
@@ -608,7 +608,7 @@ class TestStepExecution(TestStepExecutionBase):
     def test_return_msf_session_id_use_any_session(self, mocker, step_execution, step_instance, plan_execution_id):
         step_instance.arguments = {"use_any_session_to_target": "test_session"}
 
-        mocker.patch("cryton_core.lib.models.session.get_session_ids", return_value=["1"])
+        mocker.patch("cryton.hive.models.session.get_session_ids", return_value=["1"])
         return_msf_session_id = step_execution.get_msf_session_id(step_instance,
                                                                   plan_execution_id)
 
@@ -619,7 +619,7 @@ class TestStepExecution(TestStepExecutionBase):
         step_execution.process_error_state = Mock()
 
         with pytest.raises(exceptions.SessionIsNotOpen) as exc:
-            mocker.patch("cryton_core.lib.models.session.get_session_ids", return_value=[])
+            mocker.patch("cryton.hive.models.session.get_session_ids", return_value=[])
 
             error_msg = {
                 "message": "No session to desired target open", "session_name": None, "session_id": None,
@@ -634,10 +634,10 @@ class TestStepExecution(TestStepExecutionBase):
             assert exc.value.message == error_msg
 
     def test_send_step_execution_request(self, mocker, step_execution):
-        rpc_mock = mocker.patch("cryton_core.lib.models.step.rabbit_client.RpcClient")
+        rpc_mock = mocker.patch("cryton.hive.models.step.rabbit_client.RpcClient")
         rpc_mock.return_value.__enter__.return_value.call.return_value = {'event_v': {'return_code': 0}}
         rpc_mock.return_value.__enter__.return_value.correlation_id = "1"
-        create_correlation_event = mocker.patch("cryton_core.lib.models.step.CorrelationEventModel.objects.create")
+        create_correlation_event = mocker.patch("cryton.hive.models.step.CorrelationEventModel.objects.create")
 
         message_body = {"test_body_key": "test_body_value"}
         target_queue = "test_target_queue"
@@ -650,7 +650,7 @@ class TestStepExecution(TestStepExecutionBase):
                                                                              custom_reply_queue=reply_queue)
 
     def test_send_step_execution_request_timeout(self, mocker, step_execution):
-        rpc_mock = mocker.patch("cryton_core.lib.models.step.rabbit_client.RpcClient")
+        rpc_mock = mocker.patch("cryton.hive.models.step.rabbit_client.RpcClient")
         rpc_mock.return_value.__enter__.return_value.call.side_effect = exceptions.RpcTimeoutError("")
         rpc_mock.return_value.__enter__.return_value.correlation_id = "1"
         step_execution.process_error_state = Mock()
@@ -721,9 +721,9 @@ class TestStepExecution(TestStepExecutionBase):
     #     assert updated_arguments == expected_msg_body
 
     def test_kill(self, mocker, step_execution):
-        rpc_mock = mocker.patch("cryton_core.lib.models.step.rabbit_client.RpcClient")
+        rpc_mock = mocker.patch("cryton.hive.models.step.rabbit_client.RpcClient")
         rpc_mock.return_value.__enter__.return_value.call.return_value = {'event_v': {'return_code': 0}}
-        mock_logger: Mock = mocker.patch("cryton_core.lib.util.logger.logger")
+        mock_logger: Mock = mocker.patch("cryton.hive.utility.logger.logger")
         step_execution.state = 'RUNNING'
         baker.make(CorrelationEventModel, step_execution_id=step_execution.model.id)
 
@@ -731,8 +731,8 @@ class TestStepExecution(TestStepExecutionBase):
         mock_logger.info.assert_called_once()
 
     def test_re_execute(self, mocker, step_execution):
-        mocker.patch("cryton_core.lib.models.step.StepExecution.reset_execution_data")
-        execution = mocker.patch("cryton_core.lib.models.step.StepExecutionWorkerExecute.execute")
+        mocker.patch("cryton.hive.models.step.StepExecution.reset_execution_data")
+        execution = mocker.patch("cryton.hive.models.step.StepExecutionWorkerExecute.execute")
 
         step_execution.re_execute()
         execution.assert_called()
@@ -761,7 +761,7 @@ class TestStepExecution(TestStepExecutionBase):
         assert step_execution.parent_id is None
 
     def test__prepare_execution(self, mocker, step_instance, stage_execution_model, plan_execution_id):
-        worker_instance = mocker.patch("cryton_core.lib.models.step.worker.Worker")
+        worker_instance = mocker.patch("cryton.hive.models.step.worker.Worker")
 
         # creating StepExecution because step_execution fixture is from StepExecutionWorkerExecute class and method
         # in testing is called on super()
@@ -778,9 +778,9 @@ class TestStepExecution(TestStepExecutionBase):
         plan_execution_model.evidence_directory = "test_dir"
         plan_execution_model.save()
 
-        create_session = mocker.patch("cryton_core.lib.models.step.session.create_session")
-        save_output = mocker.patch("cryton_core.lib.models.step.StepExecution.save_output")
-        mocker.patch("cryton_core.lib.models.step.timezone.now", return_value=datetime(2022, 1, 1, 12, 26, 2,
+        create_session = mocker.patch("cryton.hive.models.step.session.create_session")
+        save_output = mocker.patch("cryton.hive.models.step.StepExecution.save_output")
+        mocker.patch("cryton.hive.models.step.timezone.now", return_value=datetime(2022, 1, 1, 12, 26, 2,
                                                                                        tzinfo=pytz.utc))
 
         return_values = {constants.RETURN_CODE: constants.CODE_OK, "serialized_output": {"session_id": "1"}}
@@ -812,7 +812,7 @@ class TestStepExecutionWorkerExecute(TestStepExecutionBase):
                                                stage_execution_id=stage_execution_model.id)
 
     def test_validate(self, step_instance, mocker, step_execution, plan_execution_model, worker_instance):
-        mock_rpc_client = mocker.patch("cryton_core.lib.models.step.rabbit_client.RpcClient")
+        mock_rpc_client = mocker.patch("cryton.hive.models.step.rabbit_client.RpcClient")
         mock_rpc_client.return_value.__enter__.return_value.call \
             .return_value = {constants.EVENT_V: {constants.RETURN_CODE: 0}}
 
@@ -822,14 +822,14 @@ class TestStepExecutionWorkerExecute(TestStepExecutionBase):
 
     def test_execute(self, mocker, step_instance, step_execution, plan_execution_id, worker_instance):
         rabbit_channel = Mock()
-        _prepare_execution = mocker.patch("cryton_core.lib.models.step.StepExecution._prepare_execution",
+        _prepare_execution = mocker.patch("cryton.hive.models.step.StepExecution._prepare_execution",
                                           return_value=[plan_execution_id, worker_instance])
-        update_step_arguments = mocker.patch("cryton_core.lib.models.step.StepExecution.update_step_arguments",
+        update_step_arguments = mocker.patch("cryton.hive.models.step.StepExecution.update_step_arguments",
                                              return_value={})
-        return_msf_session_id = mocker.patch("cryton_core.lib.models.step.StepExecution.get_msf_session_id",
+        return_msf_session_id = mocker.patch("cryton.hive.models.step.StepExecution.get_msf_session_id",
                                              return_value="1")
         send_step_execution_request = mocker.patch(
-            "cryton_core.lib.models.step.StepExecution.send_step_execution_request",
+            "cryton.hive.models.step.StepExecution.send_step_execution_request",
             return_value="1")
 
         step_execution.execute(rabbit_channel)
@@ -844,7 +844,7 @@ class TestStepExecutionWorkerExecute(TestStepExecutionBase):
                                                                constants.MODULE_ARGUMENTS: {constants.SESSION_ID: "1"}
                                                            }
                                                        },
-                                                       config.Q_ATTACK_RESPONSE_NAME,
+                                                       SETTINGS.rabbit.queues.attack_response,
                                                        worker_instance.attack_q_name
                                                        )
 
@@ -875,12 +875,12 @@ class TestStepExecutionEmpireExecute(TestStepExecutionBase):
 
     def test_execute(self, mocker, step_instance, step_execution, plan_execution_id, worker_instance):
         rabbit_channel = Mock()
-        _prepare_execution = mocker.patch("cryton_core.lib.models.step.StepExecution._prepare_execution",
+        _prepare_execution = mocker.patch("cryton.hive.models.step.StepExecution._prepare_execution",
                                           return_value=[plan_execution_id, worker_instance])
-        update_step_arguments = mocker.patch("cryton_core.lib.models.step.StepExecution.update_step_arguments",
+        update_step_arguments = mocker.patch("cryton.hive.models.step.StepExecution.update_step_arguments",
                                              return_value=step_instance.arguments)
         send_step_execution_request = mocker.patch(
-            "cryton_core.lib.models.step.StepExecution.send_step_execution_request",
+            "cryton.hive.models.step.StepExecution.send_step_execution_request",
             return_value="1")
 
         step_execution.execute(rabbit_channel)
@@ -894,7 +894,7 @@ class TestStepExecutionEmpireExecute(TestStepExecutionBase):
                                                                constants.MODULE: "module_name"
                                                            }
                                                        },
-                                                       config.Q_ATTACK_RESPONSE_NAME,
+                                                       SETTINGS.rabbit.queues.attack_response,
                                                        worker_instance.attack_q_name
                                                        )
 
@@ -917,14 +917,14 @@ class TestStepExecutionEmpireAgentDeploy(TestStepExecutionBase):
 
     def test_execute(self, mocker, step_instance, step_execution, plan_execution_id, worker_instance):
         rabbit_channel = Mock()
-        _prepare_execution = mocker.patch("cryton_core.lib.models.step.StepExecution._prepare_execution",
+        _prepare_execution = mocker.patch("cryton.hive.models.step.StepExecution._prepare_execution",
                                           return_value=[plan_execution_id, worker_instance])
-        update_step_arguments = mocker.patch("cryton_core.lib.models.step.StepExecution.update_step_arguments",
+        update_step_arguments = mocker.patch("cryton.hive.models.step.StepExecution.update_step_arguments",
                                              return_value={})
-        return_msf_session_id = mocker.patch("cryton_core.lib.models.step.StepExecution.get_msf_session_id",
+        return_msf_session_id = mocker.patch("cryton.hive.models.step.StepExecution.get_msf_session_id",
                                              return_value="1")
         send_step_execution_request = mocker.patch(
-            "cryton_core.lib.models.step.StepExecution.send_step_execution_request",
+            "cryton.hive.models.step.StepExecution.send_step_execution_request",
             return_value="1")
 
         step_execution.execute(rabbit_channel)
@@ -939,6 +939,6 @@ class TestStepExecutionEmpireAgentDeploy(TestStepExecutionBase):
                                                            constants.STEP_TYPE: step_instance.step_type,
                                                            constants.ARGUMENTS: {constants.SESSION_ID: "1"}
                                                        },
-                                                       config.Q_AGENT_RESPONSE_NAME,
+                                                       SETTINGS.rabbit.queues.agent_response,
                                                        worker_instance.agent_q_name
                                                        )

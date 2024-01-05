@@ -1,11 +1,71 @@
+x-settings: &settings
+  # HIVE
+  CRYTON_HIVE_RABBIT_HOST: cryton-rabbit
+  CRYTON_HIVE_RABBIT_USERNAME: cryton
+  CRYTON_HIVE_RABBIT_PASSWORD: cryton
+  CRYTON_HIVE_DATABASE_HOST: cryton-pgbouncer
+  CRYTON_HIVE_DATABASE_NAME: cryton
+  CRYTON_HIVE_DATABASE_USERNAME: cryton
+  CRYTON_HIVE_DATABASE_PASSWORD: cryton
+  # WORKER
+  CRYTON_WORKER_NAME: local_worker
+  CRYTON_WORKER_EMPIRE_USERNAME: cryton
+  CRYTON_WORKER_EMPIRE_PASSWORD: cryton
+  # DATABASE
+  POSTGRES_PASSWORD: cryton
+  POSTGRES_USER: cryton
+  POSTGRES_DB: cryton
+  POSTGRES_HOST_AUTH_METHOD: md5
+  # PGBOUNCER
+  POSTGRESQL_HOST: cryton-db
+  POSTGRESQL_USERNAME: cryton
+  POSTGRESQL_DATABASE: cryton
+  POSTGRESQL_PASSWORD: cryton
+  PGBOUNCER_DATABASE: cryton
+  PGBOUNCER_PORT: 5432
+  PGBOUNCER_MAX_CLIENT_CONN: 1000
+  PGBOUNCER_MIN_POOL_SIZE: 8
+  PGBOUNCER_POOL_MODE: transaction
+  # RABBIT
+  RABBITMQ_DEFAULT_USER: cryton
+  RABBITMQ_DEFAULT_PASS: cryton
+  # MSF
+  MSF_DB_HOST: cryton-pgbouncer
+  MSF_DB_PORT: 5432
+  MSF_DB_NAME: cryton
+  MSF_DB_USERNAME: cryton
+  MSF_DB_PASSWORD: cryton
+
 version: '3.9'
 services:
-  cryton_core:
+  cryton_cli:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-core
-    container_name: cryton-core
-    env_file:
-      - .env
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/cli
+    container_name: cryton-cli
+    environment:
+      <<: *settings
+    network_mode: host
+    tty: true
+
+  cryton_worker:
+    restart: always
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:kali
+    container_name: cryton-worker
+    environment:
+      <<: *settings
+    network_mode: host
+    depends_on:
+      cryton_empire:
+        condition: service_started
+      cryton_msf:
+        condition: service_started
+
+  cryton_hive:
+    restart: always
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/hive
+    container_name: cryton-hive
+    environment:
+      <<: *settings
     ports:
       - "8000:80"
     depends_on:
@@ -14,26 +74,30 @@ services:
       cryton_rabbit:
         condition: service_healthy
 
-  cryton_proxy:
+  cryton_frontend:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-core:proxy
-    container_name: cryton-proxy
-    network_mode: service:cryton_core
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend
+    container_name: cryton-frontend
+    ports:
+      - "127.0.0.1:8080:80"
+
+  cryton_api_proxy:
+    restart: always
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/api-proxy
+    container_name: cryton-api-proxy
+    environment:
+      <<: *settings
+    network_mode: service:cryton_hive
     depends_on:
-      cryton_core:
+      cryton_hive:
         condition: service_started
 
   cryton_db:
     restart: always
-    image: postgres:15
+    image: postgres:16
     container_name: cryton-db
-    env_file:
-      - .env
     environment:
-      POSTGRES_PASSWORD: $CRYTON_CORE_DB_PASSWORD
-      POSTGRES_USER: $CRYTON_CORE_DB_USERNAME
-      POSTGRES_DB: $CRYTON_CORE_DB_NAME
-      POSTGRES_HOST_AUTH_METHOD: md5
+      <<: *settings
     volumes:
       - cryton_db_data:/var/lib/postgresql/data
     healthcheck:
@@ -44,33 +108,20 @@ services:
 
   cryton_pgbouncer:
     restart: always
-    image: bitnami/pgbouncer:1.18.0
+    image: bitnami/pgbouncer:1.21.0
     container_name: cryton-pgbouncer
     depends_on:
       cryton_db:
         condition: service_healthy
-    env_file:
-      - .env
     environment:
-      POSTGRESQL_HOST: cryton_db
-      POSTGRESQL_USERNAME: $CRYTON_CORE_DB_USERNAME
-      POSTGRESQL_DATABASE: $CRYTON_CORE_DB_NAME
-      POSTGRESQL_PASSWORD: $CRYTON_CORE_DB_PASSWORD
-      PGBOUNCER_DATABASE: $CRYTON_CORE_DB_NAME
-      PGBOUNCER_PORT: 5432
-      PGBOUNCER_MAX_CLIENT_CONN: 1000
-      PGBOUNCER_MIN_POOL_SIZE: 8
-      PGBOUNCER_POOL_MODE: transaction
+      <<: *settings
 
   cryton_rabbit:
     restart: always
-    image: rabbitmq:3.11-management
+    image: rabbitmq:3.12-management
     container_name: cryton-rabbit
-    env_file:
-      - .env
     environment:
-      RABBITMQ_DEFAULT_USER: $CRYTON_CORE_RABBIT_USERNAME
-      RABBITMQ_DEFAULT_PASS: $CRYTON_CORE_RABBIT_PASSWORD
+      <<: *settings
     ports:
       - "5672:5672"
       - "127.0.0.1:15672:15672"
@@ -85,58 +136,28 @@ services:
       timeout: 10s
       retries: 5
 
-  cryton_worker:
-    restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-worker:kali
-    container_name: cryton-worker
-    network_mode: host
-    env_file:
-      - .env
-    depends_on:
-      cryton_empire:
-        condition: service_started
-      cryton_msf:
-        condition: service_started
-
   cryton_empire:
     restart: always
     image: bcsecurity/empire:v4.10.0
     container_name: cryton-empire
+    environment:
+      <<: *settings
     network_mode: host
-    env_file:
-      - .env
     stdin_open: true
-    command: [ "server", "--username", "$CRYTON_WORKER_EMPIRE_USERNAME", "--password", "$CRYTON_WORKER_EMPIRE_PASSWORD" ]
+    # TODO: the command has to be tested since it is possible that it wont take the env vars
+    command: [ "server", "--username", "$$CRYTON_WORKER_EMPIRE_USERNAME", "--password", "$$CRYTON_WORKER_EMPIRE_PASSWORD" ]
 
   cryton_msf:
     restart: always
     image: registry.gitlab.ics.muni.cz:443/cryton/configurations/metasploit-framework:0
     container_name: cryton-msf
-    network_mode: host
-    env_file:
-      - .env
     environment:
-      MSF_RPC_HOST: $CRYTON_WORKER_MSF_RPC_HOST
-      MSF_RPC_PORT: $CRYTON_WORKER_MSF_RPC_PORT
-      MSF_RPC_SSL: $CRYTON_WORKER_MSF_RPC_SSL
-      MSF_RPC_USERNAME: $CRYTON_WORKER_MSF_RPC_USERNAME
-      MSF_RPC_PASSWORD: $CRYTON_WORKER_MSF_RPC_PASSWORD
-      MSF_DB_HOST: $CRYTON_WORKER_MSF_DB_HOST
-      MSF_DB_PORT: $CRYTON_WORKER_MSF_DB_PORT
-      MSF_DB_NAME: $CRYTON_WORKER_MSF_DB_NAME
-      MSF_DB_USERNAME: $CRYTON_WORKER_MSF_DB_USERNAME
-      MSF_DB_PASSWORD: $CRYTON_WORKER_MSF_DB_PASSWORD
+      <<: *settings
+    network_mode: host
     tty: true
     depends_on:
-      cryton_msf_db:
-        condition: service_healthy
-
-  cryton_cli:
-    restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-cli
-    container_name: cryton-cli
-    network_mode: host
-    tty: true
+      cryton_pgbouncer:
+        condition: service_started
 
 volumes:
   cryton_db_data:

@@ -9,7 +9,7 @@ import string
 import os
 import yaml
 
-from cryton_cli.lib.cli import cli
+from cryton.cli.cli import cli
 
 
 def get_random_name():
@@ -18,16 +18,16 @@ def get_random_name():
 
 
 class TestCli:
-    path_cli = 'cryton_cli.lib.cli'
-    path_cmd_execution_variable = 'cryton_cli.lib.commands.execution_variable'
-    path_cmd_log = 'cryton_cli.lib.commands.log'
-    path_cmd_plan = 'cryton_cli.lib.commands.plan'
-    path_cmd_plan_template = 'cryton_cli.lib.commands.plan_template'
-    path_cmd_run = 'cryton_cli.lib.commands.run'
-    path_cmd_stage = 'cryton_cli.lib.commands.stage'
-    path_cmd_step = 'cryton_cli.lib.commands.step'
-    path_cmd_worker = 'cryton_cli.lib.commands.worker'
-    path_util = 'cryton_cli.lib.util'
+    path_cli = 'cryton.cli.cli'
+    path_cmd_execution_variable = 'cryton.cli.commands.execution_variable'
+    path_cmd_log = 'cryton.cli.commands.log'
+    path_cmd_plan = 'cryton.cli.commands.plan'
+    path_cmd_plan_template = 'cryton.cli.commands.plan_template'
+    path_cmd_run = 'cryton.cli.commands.run'
+    path_cmd_stage = 'cryton.cli.commands.stage'
+    path_cmd_step = 'cryton.cli.commands.step'
+    path_cmd_worker = 'cryton.cli.commands.worker'
+    path_util = 'cryton.cli.util'
     runner = CliRunner()
     response = requests.Response()
     response.status_code = 200
@@ -96,7 +96,7 @@ class TestCli:
         assert 0 == result.exit_code
 
     def test_runs_execute_error(self, mocker: MockerFixture):
-        mock_health_check_workers = mocker.patch("cryton_cli.lib.commands.run.run_health_check_workers")
+        mock_health_check_workers = mocker.patch("cryton.cli.commands.run.run_health_check_workers")
         mock_health_check_workers.return_value = False
 
         result = self.runner.invoke(cli, ['runs', 'execute', '1'])

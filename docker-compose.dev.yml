@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  cryton_cli:
+    image: cryton-cli
+    build:
+      dockerfile: Dockerfile-cli
+
+  cryton_worker:
+    image: cryton-worker-kali
+    build:
+      dockerfile: Dockerfile-worker
+      target: worker-kali
+
+  cryton_hive:
+    image: cryton-hive
+    build:
+      dockerfile: Dockerfile-hive
+
+  cryton_api_proxy:
+    image: cryton-api-proxy
+    build:
+      dockerfile: Dockerfile-api-proxy

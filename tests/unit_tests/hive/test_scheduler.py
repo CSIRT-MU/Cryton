@@ -1,6 +1,6 @@
 from django.test import TestCase
-from cryton_core.lib.services import scheduler
-from cryton_core.lib.util import logger
+from cryton.hive.services import scheduler
+from cryton.hive.utility import logger
 from unittest.mock import patch, Mock
 import os
 import datetime
@@ -17,13 +17,13 @@ mock_exc.start.side_effect = run_null
 devnull = open(os.devnull, 'w')
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
 @patch("sys.stdout", devnull)
-@patch('cryton_core.lib.services.scheduler.config.SCHEDULER_MISFIRE_GRACE_TIME', 42)
+@patch('cryton.hive.services.scheduler.config.SCHEDULER_MISFIRE_GRACE_TIME', 42)
 class SchedulerTest(TestCase):
 
     def setUp(self) -> None:
-        mock_db = patch('cryton_core.lib.services.scheduler.SQLAlchemyJobStore',
+        mock_db = patch('cryton.hive.services.scheduler.SQLAlchemyJobStore',
                         return_value=SQLAlchemyJobStore('sqlite:///jobs.sqlite'))
         mock_db.start()
         self.scheduler_obj = scheduler.SchedulerService(Mock())

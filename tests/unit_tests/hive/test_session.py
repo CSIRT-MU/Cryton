@@ -1,17 +1,17 @@
 import pytest
 from unittest.mock import Mock
 from pytest_mock import MockFixture
-from cryton_core.lib.util import exceptions, logger, constants
-from cryton_core.lib.models import session
+from cryton.hive.utility import exceptions, logger, constants
+from cryton.hive.models import session
 
 
 @pytest.fixture(autouse=True)
 def f_logger(mocker: MockFixture):
-    mocker.patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+    mocker.patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 
 
 class TestSession:
-    session_path = "cryton_core.lib.models.session"
+    session_path = "cryton.hive.models.session"
     plan_id = 1
     session_id = "test_id"
     session_name = "test_name"

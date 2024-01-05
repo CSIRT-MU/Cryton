@@ -1,13 +1,13 @@
 import pytest
 from unittest.mock import Mock, patch
 
-from cryton_core.lib.util import logger
-from cryton_core.cryton_app.management.commands import startgunicorn
+from cryton.hive.utility import logger
+from cryton.hive.cryton_app.management.commands import startgunicorn
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestGunicornApplication:
-    path = "cryton_core.lib.services.gunicorn"
+    path = "cryton.hive.services.gunicorn"
 
     @pytest.fixture
     def f_altered_gunicorn_application(self):

@@ -4,11 +4,11 @@ import requests
 import click
 from datetime import datetime
 
-from cryton_cli.lib.util import util
+from cryton.cli.utility import helpers
 
 
 class TestUtil:
-    path = "cryton_cli.lib.util.util"
+    path = "cryton.cli.utility.helpers"
     plan_dict = {"plan": "plan"}
 
     def test_save_yaml_to_file(self, mocker):
@@ -18,7 +18,7 @@ class TestUtil:
         mock_random_choices = mocker.patch(self.path + '.random.choices')
         mock_random_choices.return_value = "tail"
 
-        result = util.save_yaml_to_file(self.plan_dict, '/tmp', 'test')
+        result = helpers.save_yaml_to_file(self.plan_dict, '/tmp', 'test')
 
         assert "/tmp/test_timestamp_tail" == result
 
@@ -30,7 +30,7 @@ class TestUtil:
         mock_random_choices.return_value = "tail"
 
         with pytest.raises(IOError):
-            util.save_yaml_to_file(self.plan_dict, '/tmp', 'test')
+            helpers.save_yaml_to_file(self.plan_dict, '/tmp', 'test')
 
     def test_convert_from_utc(self, mocker):
         test_datetime = datetime.utcnow()
@@ -38,7 +38,7 @@ class TestUtil:
 
         mocker.patch(self.path + '.config.TIME_ZONE', 'utc')
 
-        ret = util.convert_from_utc(str_test_datetime)
+        ret = helpers.convert_from_utc(str_test_datetime)
 
         assert test_datetime == ret
 
@@ -55,23 +55,23 @@ class TestUtil:
                     {'param_type_name': 'option', 'name': 'opt', 'opts': ['-l'], 'help': 'test'},
                 ]}}
         }
-        result = util.render_documentation(raw_docs, 2)
+        result = helpers.render_documentation(raw_docs, 2)
         assert len(result) == 186
 
     def test_clean_up_documentation(self):
-        result = util.clean_up_documentation('_')
+        result = helpers.clean_up_documentation('_')
         assert result == r'\_'
 
     def test_load_files(self, mocker):
         mocker.patch('builtins.open', mock_open(read_data=b'test'))
 
-        result = util.load_files([""])
+        result = helpers.load_files([""])
 
         assert result == {"0": b'test'}
 
 
 class TestCliUtil:
-    path = "cryton_cli.lib.util.util"
+    path = "cryton.cli.utility.helpers"
     request_url = 'http://test.test/test/'
     response_text = '{"detail": "response"}'
     response_json = {'detail': 'response'}
@@ -92,7 +92,7 @@ class TestCliUtil:
         mocker.patch(self.path + '.config.API_SSL', True)
         mock_url = mocker.patch(self.path + '.api.create_rest_api_url')
         mock_url.return_value = 'test'
-        ret = util.CliContext(None, None, False, False)
+        ret = helpers.CliContext(None, None, False, False)
 
         assert mock_url.return_value == ret.api_url
 
@@ -112,7 +112,7 @@ class TestCliUtil:
     def test_parse_response(self, p_data, p_parsed_data, requests_mock):
         requests_mock.get(self.request_url, text=p_data)
         response = requests.get(self.request_url)
-        result = util.parse_response(response)
+        result = helpers.parse_response(response)
         assert result == p_parsed_data
 
     def test_echo_msg(self, requests_mock):
@@ -122,7 +122,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        assert util.echo_msg(response) is True
+        assert helpers.echo_msg(response) is True
         click_echo.echo.assert_called_with('\x1b[32mSuccess!\x1b[0m (response)')
 
     def test_echo_msg_debug(self, requests_mock, f_parse_response):
@@ -133,7 +133,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        assert util.echo_msg(response, debug=True) is True
+        assert helpers.echo_msg(response, debug=True) is True
         click_echo.echo.assert_called_with(self.response_text)
 
     def test_echo_msg_fail(self, requests_mock):
@@ -143,7 +143,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        assert util.echo_msg(response) is False
+        assert helpers.echo_msg(response) is False
         click_echo.echo.assert_called_with('\x1b[31mresponse\x1b[0m (None)')
 
     @staticmethod
@@ -152,7 +152,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        assert util.echo_msg(response) is False
+        assert helpers.echo_msg(response) is False
         click_echo.secho.assert_called_with('err', fg='red')
 
     def test_echo_list(self, requests_mock, f_parse_response):
@@ -163,7 +163,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name'])
+        helpers.echo_list(response, ['id', 'name'])
         click_echo.echo.assert_called_with('id: 10, name: name')
 
     def test_echo_list_empty(self, requests_mock, f_parse_response):
@@ -174,7 +174,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        util.echo_list(response, ['ignore'])
+        helpers.echo_list(response, ['ignore'])
         click_echo.secho.assert_called_with('No matching objects...', fg='green')
 
     def test_echo_list_debug(self, requests_mock):
@@ -184,7 +184,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name'], debug=True)
+        helpers.echo_list(response, ['id', 'name'], debug=True)
         click_echo.echo.assert_called_with(self.response_text)
 
     def test_echo_list_localize(self, requests_mock, f_parse_response, mocker):
@@ -197,7 +197,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name', 'pause_time'], localize=True)
+        helpers.echo_list(response, ['id', 'name', 'pause_time'], localize=True)
         click_echo.echo.assert_called_with('id: 10, name: name, pause_time: 2020-01-01 01:01:01.100000')
 
     def test_echo_list_more(self, requests_mock, f_parse_response):
@@ -209,7 +209,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name'])
+        helpers.echo_list(response, ['id', 'name'])
         click_echo.echo.assert_called_with('id: 11, name: name')
 
     def test_echo_list_one(self, requests_mock, f_parse_response):
@@ -220,7 +220,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name'])
+        helpers.echo_list(response, ['id', 'name'])
         click_echo.echo.assert_called_with('id: 10, name: name')
 
     def test_echo_list_pager(self, requests_mock, f_parse_response):
@@ -230,7 +230,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo_via_pager = Mock(return_value=1)
 
-        util.echo_list(response, ['id', 'name'], True)
+        helpers.echo_list(response, ['id', 'name'], True)
         click_echo.echo_via_pager.assert_called_with(['id: 10, name: None'])
 
     @staticmethod
@@ -239,7 +239,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        util.echo_list(response, ['ignore'])
+        helpers.echo_list(response, ['ignore'])
         click_echo.secho.assert_called_with('err', fg='red')
 
     def test_echo_list_one_error(self, requests_mock, f_parse_response):
@@ -250,7 +250,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.echo_list(response, ['ignore'])
+        helpers.echo_list(response, ['ignore'])
         click_echo.echo.assert_called_with('\x1b[31merr\x1b[0m (test)')
 
     def test_get_yaml(self, requests_mock, f_parse_response, f_save_yaml_to_file):
@@ -262,7 +262,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        util.get_yaml(response, '/tmp', 'test')
+        helpers.get_yaml(response, '/tmp', 'test')
         click_echo.secho.assert_called_with('Successfully saved file to file-location', fg='green')
 
     def test_get_yaml_echo_only(self, requests_mock, f_parse_response, f_save_yaml_to_file):
@@ -274,7 +274,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.get_yaml(response, '', '', True)
+        helpers.get_yaml(response, '', '', True)
         click_echo.echo.assert_called_once()
 
     def test_get_yaml_echo_only_less(self, requests_mock, f_parse_response, f_save_yaml_to_file,
@@ -288,7 +288,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo_via_pager = Mock(return_value=1)
 
-        util.get_yaml(response, '', '', True, True, True)
+        helpers.get_yaml(response, '', '', True, True, True)
         click_echo.echo_via_pager.assert_called_once()
 
     def test_get_yaml_debug(self, requests_mock):
@@ -298,7 +298,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.get_yaml(response, '', '', True, debug=True)
+        helpers.get_yaml(response, '', '', True, debug=True)
         click_echo.echo.assert_called_once_with(self.response_text)
 
     def test_get_yaml_save_error(self, requests_mock, f_parse_response, f_save_yaml_to_file):
@@ -310,7 +310,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        util.get_yaml(response, '/tmp', 'test')
+        helpers.get_yaml(response, '/tmp', 'test')
         click_echo.secho.assert_called_with('save error', fg='red')
 
     def test_get_yaml_request_error(self, requests_mock, f_parse_response):
@@ -321,7 +321,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.echo = Mock(return_value=1)
 
-        util.get_yaml(response, '/tmp', 'test')
+        helpers.get_yaml(response, '/tmp', 'test')
         click_echo.echo.assert_called_with('\x1b[31merr\x1b[0m (test)')
 
     @staticmethod
@@ -330,7 +330,7 @@ class TestCliUtil:
         click_echo = click
         click_echo.secho = Mock(return_value=1)
 
-        util.get_yaml(response, '/tmp', 'test')
+        helpers.get_yaml(response, '/tmp', 'test')
         click_echo.secho.assert_called_with('err', fg='red')
 
     def test_format_report(self, mocker):
@@ -362,10 +362,10 @@ class TestCliUtil:
             ]
         }
 
-        util.format_report(report, True)
+        helpers.format_report(report, True)
         assert report == localized_report
 
     def test_format_result_line(self):
-        result = util.format_result_line({"a": "one", "b": "two"}, [], False)
+        result = helpers.format_result_line({"a": "one", "b": "two"}, [], False)
 
         assert result == "a: one, b: two"

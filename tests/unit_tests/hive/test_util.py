@@ -6,14 +6,14 @@ import pytz
 from model_bakery import baker
 
 
-from cryton_core.lib.util import util
+from cryton.hive.utility import util
 
-from cryton_core.cryton_app.models import WorkerModel
+from cryton.hive.cryton_app.models import WorkerModel
 
 TESTS_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
-@patch('cryton_core.lib.util.util.logger.logger', util.logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.util.logger.logger', util.logger.structlog.getLogger('cryton-core-debug'))
 @patch('amqpstorm.Connection', Mock())
 class TestUtil(TestCase):
 
@@ -53,15 +53,15 @@ class TestUtil(TestCase):
         ret = util.split_into_lists(input_list, 3)
         self.assertEqual(ret, [[1], [2], []])
 
-    # @patch("cryton_core.lib.util.util.amqpstorm.Connection")
-    @patch("cryton_core.lib.util.util.run_step_executions")
-    @patch("cryton_core.lib.util.util.split_into_lists", Mock(return_value=["exec1", "exec2", "exec3"]))
-    @patch("cryton_core.lib.util.util.Thread")
+    # @patch("cryton.hive.utility.util.amqpstorm.Connection")
+    @patch("cryton.hive.utility.util.run_step_executions")
+    @patch("cryton.hive.utility.util.split_into_lists", Mock(return_value=["exec1", "exec2", "exec3"]))
+    @patch("cryton.hive.utility.util.Thread")
     def test_run_executions_in_threads(self, mock_thread, mock_run_step_executions):
         mock_conn = MagicMock()
         mock_connection = MagicMock()
         mock_connection.return_value.__enter__.return_value = mock_conn
-        patch_connection = patch("cryton_core.lib.util.util.amqpstorm.Connection", mock_connection)
+        patch_connection = patch("cryton.hive.utility.util.amqpstorm.Connection", mock_connection)
         patch_connection.start()
 
         util.run_executions_in_threads(["exec1", "exec2", "exec3"])
@@ -95,7 +95,7 @@ class TestUtil(TestCase):
         result = util.parse_dot_argument(test_arg)
         self.assertEqual([test_arg], result)
 
-    @patch("cryton_core.lib.util.util.parse_dot_argument")
+    @patch("cryton.hive.utility.util.parse_dot_argument")
     def test_get_from_mod_in(self, mock_parse_dot_arg):
         mock_parse_dot_arg.side_effect = [["parent"], ["output"], ["username"]]
         resp = util.get_from_dict({'parent': {'output': {'username': 'admin'}}}, '$parent.output.username', ".")
@@ -159,19 +159,19 @@ class TestUtil(TestCase):
         with self.assertRaises(KeyError):
             util.rename_key(dict_in, rename_from, rename_to)
 
-    @patch("cryton_core.lib.util.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {"a": 3} \n'))
+    @patch("cryton.hive.utility.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {"a": 3} \n'))
     def test_get_logs(self):
         result = util.get_logs(0, 0, [""])
 
         self.assertEqual([{'a': 1}, {'a': 2}, {'a': 3}], result)
 
-    @patch("cryton_core.lib.util.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {"a": 3} \n'))
+    @patch("cryton.hive.utility.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {"a": 3} \n'))
     def test_get_logs_filter(self):
         result = util.get_logs(0, 0, ["2"])
 
         self.assertEqual([{'a': 2}], result)
 
-    @patch("cryton_core.lib.util.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {\'a\': 3} \n'))
+    @patch("cryton.hive.utility.util.open", mock_open(read_data='{"a": 1} \n{"a": 2} \n {\'a\': 3} \n'))
     def test_get_logs_json_error(self):
         result = util.get_logs(0, 0, [""])
 
