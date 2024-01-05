@@ -1,5 +1,6 @@
 # Git
 .git
+.gitlab
 .gitignore
 .gitlab-ci.yml
 
@@ -11,8 +12,9 @@ tox.ini
 
 # Docker
 .dockerignore
-Dockerfile
+Dockerfile-*
 docker-compose.*
 
 # Development
 .idea
+dist

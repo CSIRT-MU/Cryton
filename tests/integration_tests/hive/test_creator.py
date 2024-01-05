@@ -2,8 +2,8 @@ import os
 import pytest
 import yaml
 
-from cryton_core.lib.util import creator
-from cryton_core.cryton_app.models import StepModel, StageModel, DependencyModel, SuccessorModel
+from cryton.hive.utility import creator
+from cryton.hive.cryton_app.models import StepModel, StageModel, DependencyModel, SuccessorModel
 
 
 TESTS_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

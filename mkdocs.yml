@@ -64,6 +64,9 @@ plugins:
   - include-markdown:
       opening_tag: "{!"
       closing_tag: "!}"
+  - mike:
+      alias_type: redirect
+      canonical_version: latest
 
 nav:
   - Introduction: index.md

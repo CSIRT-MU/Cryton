@@ -22,7 +22,7 @@ hive:
     password: cryton
   api:
     secret_key: cryton
-    allowed_hosts: *
+    allowed_hosts: "*"
 
 worker:
   name: worker

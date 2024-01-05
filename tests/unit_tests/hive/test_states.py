@@ -1,23 +1,23 @@
 import pytest
 from pytest_mock import MockFixture
 
-from cryton_core.lib.util import exceptions, states, constants
-from cryton_core.lib.util.logger import structlog
+from cryton.hive.utility import exceptions, states, constants
+from cryton.hive.utility.logger import structlog
 
 
 @pytest.fixture
 def f_check_transition_validity(mocker: MockFixture):
-    return mocker.patch('cryton_core.lib.util.states.StateMachine._check_transition_validity')
+    return mocker.patch('cryton.hive.utility.states.StateMachine._check_transition_validity')
 
 
 @pytest.fixture
 def f_check_valid_state(mocker: MockFixture):
-    return mocker.patch('cryton_core.lib.util.states.StateMachine._check_valid_state')
+    return mocker.patch('cryton.hive.utility.states.StateMachine._check_valid_state')
 
 
 @pytest.fixture(autouse=True)
 def f_logger(mocker: MockFixture):
-    mocker.patch('cryton_core.lib.util.logger.logger', structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+    mocker.patch('cryton.hive.utility.logger.logger', structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 
 
 class TestStateMachine:

@@ -72,101 +72,98 @@ build_documentation:
       when: never
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
 
-# TODO: here is a guide on how to build multi arch images
-#  https://github.com/GoogleContainerTools/kaniko#creating-multi-arch-container-manifests-using-kaniko-and-manifest-tool
-# TODO: set tags for the job and runner to make it use only that runner (in case we want to use docker for building)
+# TODO: multi arch Docker images (use tags to define the runner)
+# https://github.com/GoogleContainerTools/kaniko#creating-multi-arch-container-manifests-using-kaniko-and-manifest-tool
 .build_docker_image:
   extends: .publish
   image:
     name: gcr.io/kaniko-project/executor:v1.19.2-debug
     entrypoint: [ "" ]
-  variables:  # TODO: needs testing
-    BUILD_TARGET: "production"
-    DOCKERFILE_PATH: "hive"
+  variables:
+    BUILD_TARGET: "target"
     LATEST_TAG: "latest"
+    TAG_PREFIX: ""
+    IMAGE_NAME_POSTFIX: ""
+    DOCKERFILE: "Dockerfile"
   before_script:
     # Set variables
-    - export IMAGE_VERSION=${CI_COMMIT_TAG#*/}
-    - export IMAGE_MINOR_VERSION=${IMAGE_VERSION%.*}
-    - export IMAGE_MAJOR_VERSION=${IMAGE_MINOR_VERSION%.*}
+    - export IMAGE_VERSION_CURRENT=$CI_COMMIT_TAG
+    - export IMAGE_VERSION_MINOR=${IMAGE_VERSION%.*}
+    - export IMAGE_VERSION_MAJOR=${IMAGE_MINOR_VERSION%.*}
+    - export IMAGE_TAG_CURRENT=$TAG_PREFIX$IMAGE_VERSION_CURRENT
+    - export IMAGE_TAG_MINOR=$TAG_PREFIX$IMAGE_VERSION_MINOR
+    - export IMAGE_TAG_MAJOR=$TAG_PREFIX$IMAGE_VERSION_MAJOR
+    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE$IMAGE_NAME_POSTFIX
     # Check variables
-    - echo "IMAGE_VERSION $IMAGE_VERSION"
-    - echo "IMAGE_MINOR_VERSION $IMAGE_MINOR_VERSION"
-    - echo "IMAGE_MAJOR_VERSION $IMAGE_MAJOR_VERSION"
     - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
+    - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
+    - echo "BUILD_TARGET $BUILD_TARGET"
+    - echo "IMAGE_TAG_CURRENT $IMAGE_TAG_CURRENT"
+    - echo "IMAGE_TAG_MINOR $IMAGE_TAG_MINOR"
+    - echo "IMAGE_TAG_MAJOR $IMAGE_TAG_MAJOR"
+    - echo "LATEST_TAG $LATEST_TAG"
   script:
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
-      --context $CI_PROJECT_DIR/docker/$DOCKERFILE_PATH
+      --context $CI_PROJECT_DIR
+      --dockerfile $DOCKERFILE
       --target $BUILD_TARGET
       --skip-unused-stages
-      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_VERSION
-      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_MINOR_VERSION
-      --destination $CI_REGISTRY_IMAGE:$DOCKERFILE_PATH$IMAGE_MAJOR_VERSION
-      --destination $CI_REGISTRY_IMAGE:$LATEST_TAG
-
-# TODO: maybe use the following example to declare variables, may be more readable
-#  variables:
-#    BUILD_TARGET: "proxy"
-#  before_script:
-#    # Set variables
-#    - export IMAGE_VERSION=${CI_COMMIT_TAG#*/}
-#    - export IMAGE_MINOR_VERSION=${IMAGE_VERSION%.*}
-#    - export IMAGE_MAJOR_VERSION=${IMAGE_MINOR_VERSION%.*}
-#    - export IMAGE_TAG_CURRENT="$BUILD_TARGET-$IMAGE_VERSION"
-#    - export IMAGE_TAG_MINOR="$BUILD_TARGET-$IMAGE_MINOR_VERSION"
-#    - export IMAGE_TAG_MAJOR="$BUILD_TARGET-$IMAGE_MAJOR_VERSION"
-#    - export IMAGE_TAG_LATEST="$BUILD_TARGET"
-#    # Check variables
-#    - echo "IMAGE_VERSION $IMAGE_VERSION"
-#    - echo "IMAGE_MINOR_VERSION $IMAGE_MINOR_VERSION"
-#    - echo "IMAGE_MAJOR_VERSION $IMAGE_MAJOR_VERSION"
-#    - echo "BUILD_TARGET $BUILD_TARGET"
-#    - echo "IMAGE_TAG_CURRENT $IMAGE_TAG_CURRENT"
-#    - echo "IMAGE_TAG_MINOR $IMAGE_TAG_MINOR"
-#    - echo "IMAGE_TAG_MAJOR $IMAGE_TAG_MAJOR"
-#    - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
+      --destination $IMAGE_DESTINATION:$IMAGE_TAG_CURRENT
+      --destination $IMAGE_DESTINATION:$IMAGE_TAG_MINOR
+      --destination $IMAGE_DESTINATION:$IMAGE_TAG_MAJOR
+      --destination $IMAGE_DESTINATION:$LATEST_TAG
+      --label version="$IMAGE_VERSION_CURRENT"
+      --label commit="$CI_COMMIT_SHA"
 
 upload_package_to_pypi:
-  extends: .build_docker_image
+  extends: .publish
   script:
     - poetry config pypi-token.pypi $PYPI_TOKEN
     - poetry publish --build
 
+build_docker_image_cryton:
+  extends: .build_docker_image
+  variables:
+    BUILD_TARGET: "cryton"
+    DOCKERFILE: "Dockerfile"
+
 build_docker_image_hive:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "production"
-    DOCKERFILE_PATH: "hive"
-    LATEST_TAG: "hive"
+    BUILD_TARGET: "hive"
+    IMAGE_NAME_POSTFIX: "/hive"
+    DOCKERFILE: "Dockerfile-hive"
 
 build_docker_image_api_proxy:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "production"
-    DOCKERFILE_PATH: "api-proxy"
-    LATEST_TAG: "api-proxy"
+    BUILD_TARGET: "api-proxy"
+    IMAGE_NAME_POSTFIX: "/api-proxy"
+    DOCKERFILE: "Dockerfile-api-proxy"
 
 build_docker_image_cli:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "production"
-    DOCKERFILE_PATH: "cli"
-    LATEST_TAG: "cli"
+    BUILD_TARGET: "cli"
+    IMAGE_NAME_POSTFIX: "/cli"
+    DOCKERFILE: "Dockerfile-cli"
 
 build_docker_image_worker:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "production"
-    DOCKERFILE_PATH: "worker"
-    LATEST_TAG: "worker"
+    BUILD_TARGET: "worker"
+    IMAGE_NAME_POSTFIX: "/worker"
+    DOCKERFILE: "Dockerfile-worker"
 
 build_docker_image_worker_kali:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "kali"
-    DOCKERFILE_PATH: "worker"
-    LATEST_TAG: "worker-kali"
+    BUILD_TARGET: "worker-kali"
+    LATEST_TAG: "kali"
+    TAG_PREFIX: "kali-"
+    IMAGE_NAME_POSTFIX: "/worker"
+    DOCKERFILE: "Dockerfile-worker"
 
 # build
 .pages:
@@ -177,7 +174,7 @@ build_docker_image_worker_kali:
   before_script:
     - apt update && apt install -y git
     - git config user.name $PROJECT_BOT_USER
-    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
+    - git config user.email $PROJECT_BOT_USER@example.com
     - git fetch origin $PAGES_BRANCH
   rules:
     - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
@@ -185,59 +182,36 @@ build_docker_image_worker_kali:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
 
-build_pages:  # TODO: needs more love; merge pages_tag/master
+build_pages:
   extends: .pages
   stage: build
   script:
     - poetry install
     - git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
     - git checkout $CI_COMMIT_SHA
-    - export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
-    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH $DOCUMENTATION_VERSION latest
-    - poetry run mike set-default -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH latest
-
-#pages_tag:
-#  stage: build
-#  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
-#  variables:
-#    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
-#  before_script:
-#    - apt update && apt install -y git
-#    - poetry install
-#    - git config user.name $PROJECT_BOT_USER
-#    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
-#    - git fetch origin $PAGES_BRANCH && git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
-#    - git checkout $CI_COMMIT_SHA
-#    - export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
-#  script:
-#    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH $DOCUMENTATION_VERSION latest
-#    - poetry run mike set-default -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH latest
-#  rules:
-#    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
-#      when: never
-#    - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
-#
-#pages_master:
-#  stage: build
-#  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
-#  variables:
-#    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
-#  before_script:
-#    - apt update && apt install -y git
-#    - poetry install
-#    - git config user.name $PROJECT_BOT_USER
-#    - git config user.email $PROJECT_BOT_USER@gitlab.example.com
-#    - git fetch origin $PAGES_BRANCH && git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
-#    - git checkout $CI_COMMIT_SHA
-#  script:
-##    - poetry run mike delete -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH master
-#    - poetry run mike deploy -u -p --prefix public -r $HTTPS_REMOTE -b $PAGES_BRANCH master
-#  rules:
-#    - if: $CI_COMMIT_TAG
-#      when: never
-#    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
-#      when: never
-#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
+    - |
+      if [ -n $CI_COMMIT_TAG ]; then
+        export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
+        export ALIAS=latest
+      else
+        export DOCUMENTATION_VERSION=master
+        export ALIAS=""
+      fi
+    - poetry run mike deploy
+      --update-aliases
+      --push
+      --remote $HTTPS_REMOTE
+      --branch $PAGES_BRANCH
+      --alias-type=redirect
+      --deploy-prefix public
+      $DOCUMENTATION_VERSION $ALIAS
+# TODO: maybe unnecessary
+#    - poetry run mike set-default
+#      --push
+#      --remote $HTTPS_REMOTE
+#      --branch $PAGES_BRANCH
+#      --deploy-prefix public
+#      latest
 
 # deploy
 pages:
@@ -250,22 +224,13 @@ pages:
     paths:
       - public/
 
+# TODO
+# modules will be reworked to serve the purpose as the default/fallback modules
+# tests will be in tests, modules in modules, readme in the documentation, example.py wont exist
+# structure will remain the same for external modules
 
 # Modules
 
-#image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
-#
-#stages:
-#  - test
-#
-#variables:
-#  POETRY_VIRTUALENVS_IN_PROJECT: "true"
-#
-#before_script:
-#  - git clone https://gitlab.ics.muni.cz/cryton/cryton-worker.git
-#  - cd cryton-worker
-#  - poetry install
-#
 #mod_cmd:
 #  stage: test
 #  script:

@@ -5,10 +5,10 @@ import os
 import yaml
 from unittest.mock import patch, Mock, MagicMock
 
-from cryton_core.lib.util import creator, exceptions, logger, states
-from cryton_core.lib.models import step, run, plan, worker
+from cryton.hive.utility import creator, exceptions, logger, states
+from cryton.hive.models import step, run, plan, worker
 
-from cryton_core.cryton_app.models import PlanModel, WorkerModel, StepExecutionModel
+from cryton.hive.cryton_app.models import PlanModel, WorkerModel, StepExecutionModel
 from django.utils import timezone
 
 

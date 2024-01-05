@@ -1,0 +1,32 @@
+FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest as base
+
+# Set environment
+ENV POETRY_VIRTUALENVS_IN_PROJECT=true
+
+WORKDIR /app
+
+# Install dependencies
+COPY poetry.lock pyproject.toml ./
+RUN poetry install --without dev --no-root --no-interaction --no-ansi -E hive
+
+# Install app
+COPY . .
+RUN poetry install --only-root --no-interaction --no-ansi -E hive
+
+FROM python:3.12-slim-bullseye as hive
+
+# Set environment
+ENV CRYTON_APP_DIRECTORY=/app
+
+# Copy app
+COPY --from=base /app /app
+
+# Make the executable accessible
+RUN ln -s /app/.venv/bin/cryton-hive /usr/local/bin/cryton-hive
+
+RUN _CRYTON_HIVE_COMPLETE=bash_source cryton-hive > /etc/profile.d/cryton-hive-complete.sh
+RUN echo ". /etc/profile.d/cryton-hive-complete.sh" >> ~/.bashrc
+
+ENTRYPOINT [ "/app/docker/hive/entrypoint.sh" ]
+
+CMD [ "cryton-hive", "start" ]

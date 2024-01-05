@@ -12,19 +12,19 @@ from pytest_mock import MockerFixture
 from django.test.client import Client
 from django.utils.datastructures import MultiValueDict
 
-from cryton_core.cryton_app.models import PlanExecutionModel, ExecutionVariableModel, PlanTemplateModel, PlanModel, \
+from cryton.hive.cryton_app.models import PlanExecutionModel, ExecutionVariableModel, PlanTemplateModel, PlanModel, \
     RunModel, StageExecutionModel, StageModel, StepExecutionModel, StepModel, WorkerModel
-from cryton_core.cryton_app import util, exceptions
-from cryton_core.lib.util import logger, exceptions as core_exceptions, states
+from cryton.hive.cryton_app import util, exceptions
+from cryton.hive.utility import logger, exceptions as core_exceptions, states
 
 
 TESTS_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestExecutionVariableViews:
-    path = "cryton_core.cryton_app.views.execution_variable_views"
+    path = "cryton.hive.cryton_app.views.execution_variable_views"
     client = Client()
 
     @pytest.fixture
@@ -105,9 +105,9 @@ class TestExecutionVariableViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestLogViews:
-    path = "cryton_core.cryton_app.views.log_views"
+    path = "cryton.hive.cryton_app.views.log_views"
     client = Client()
 
     @pytest.fixture
@@ -149,9 +149,9 @@ class TestLogViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestPlanExecutionViews:
-    path = "cryton_core.cryton_app.views.plan_execution_views"
+    path = "cryton.hive.cryton_app.views.plan_execution_views"
     client = Client()
 
     @pytest.fixture
@@ -285,9 +285,9 @@ class TestPlanExecutionViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestPlanTemplateViews:
-    path = "cryton_core.cryton_app.views.plan_template_views"
+    path = "cryton.hive.cryton_app.views.plan_template_views"
     client = Client()
 
     @pytest.fixture
@@ -359,9 +359,9 @@ class TestPlanTemplateViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestPlanViews:
-    path = "cryton_core.cryton_app.views.plan_views"
+    path = "cryton.hive.cryton_app.views.plan_views"
     client = Client()
 
     @pytest.fixture
@@ -546,9 +546,9 @@ class TestPlanViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestRunViews:
-    path = "cryton_core.cryton_app.views.run_views"
+    path = "cryton.hive.cryton_app.views.run_views"
     client = Client()
 
     @pytest.fixture
@@ -868,9 +868,9 @@ class TestRunViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStageExecutionViews:
-    path = "cryton_core.cryton_app.views.stage_execution_views"
+    path = "cryton.hive.cryton_app.views.stage_execution_views"
     client = Client()
 
     @pytest.fixture
@@ -971,9 +971,9 @@ class TestStageExecutionViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStageViews:
-    path = "cryton_core.cryton_app.views.stage_views"
+    path = "cryton.hive.cryton_app.views.stage_views"
     client = Client()
 
     @pytest.fixture
@@ -1171,9 +1171,9 @@ class TestStageViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStepExecutionViews:
-    path = "cryton_core.cryton_app.views.step_execution_views"
+    path = "cryton.hive.cryton_app.views.step_execution_views"
     client = Client()
 
     @pytest.fixture
@@ -1267,9 +1267,9 @@ class TestStepExecutionViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStepViews:
-    path = "cryton_core.cryton_app.views.step_views"
+    path = "cryton.hive.cryton_app.views.step_views"
     client = Client()
 
     @pytest.fixture
@@ -1468,9 +1468,9 @@ class TestStepViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestWorkerViews:
-    path = "cryton_core.cryton_app.views.worker_views"
+    path = "cryton.hive.cryton_app.views.worker_views"
     client = Client()
 
     @pytest.fixture
@@ -1543,9 +1543,9 @@ class TestWorkerViews:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestQuerysetFilter:
-    path = "cryton_core.cryton_app.util"
+    path = "cryton.hive.cryton_app.util"
     client = Client()
 
     @pytest.fixture
@@ -1602,9 +1602,9 @@ class TestQuerysetFilter:
 
 
 @pytest.mark.django_db
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestUtil:
-    path = "cryton_core.cryton_app.util"
+    path = "cryton.hive.cryton_app.util"
 
     @pytest.fixture
     def f_fill_template(self, mocker) -> Mock:

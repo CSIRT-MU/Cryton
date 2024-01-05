@@ -2,10 +2,10 @@ from django.test import TestCase
 from unittest.mock import patch, Mock, MagicMock
 import os
 import datetime
-from cryton_core.lib.util import exceptions, logger, states
-from cryton_core.lib.models import plan, run
+from cryton.hive.utility import exceptions, logger, states
+from cryton.hive.models import plan, run
 
-from cryton_core.cryton_app.models import PlanModel, StageModel, StepModel, WorkerModel, PlanExecutionModel, \
+from cryton.hive.cryton_app.models import PlanModel, StageModel, StepModel, WorkerModel, PlanExecutionModel, \
     StageExecutionModel
 
 from model_bakery import baker
@@ -14,7 +14,7 @@ from django.utils import timezone
 TESTS_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
 class RunTest(TestCase):
 
     def setUp(self) -> None:
@@ -52,8 +52,8 @@ class RunTest(TestCase):
             self.assertEqual(len(run.Run.filter(non_existent=False)), 1)
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
-@patch('cryton_core.lib.util.states.RunStateMachine.validate_transition', MagicMock())
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.states.RunStateMachine.validate_transition', MagicMock())
 class RunTestAdvanced(TestCase):
 
     def setUp(self) -> None:
@@ -86,7 +86,7 @@ class RunTestAdvanced(TestCase):
                          PlanExecutionModel.objects.filter(worker=self.worker1,
                                                            run=run_obj.model).latest('id'))
 
-    @patch('cryton_core.lib.util.scheduler_client.schedule_function')
+    @patch('cryton.hive.utility.scheduler_client.schedule_function')
     def test_schedule(self, mock_sched):
         mock_sched.return_value = 0
         schedule_time = timezone.now()
@@ -97,8 +97,8 @@ class RunTestAdvanced(TestCase):
         self.assertIn("Run scheduled", cm.output[-1])
         self.assertEqual(run_obj.schedule_time, schedule_time)
 
-    @patch('cryton_core.lib.util.scheduler_client.schedule_function', Mock(return_value=1))
-    @patch('cryton_core.lib.util.scheduler_client.remove_job', Mock(return_value=1))
+    @patch('cryton.hive.utility.scheduler_client.schedule_function', Mock(return_value=1))
+    @patch('cryton.hive.utility.scheduler_client.remove_job', Mock(return_value=1))
     def test_reschedule(self):
         schedule_time = timezone.now()
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
@@ -119,14 +119,14 @@ class RunTestAdvanced(TestCase):
         self.assertIn("Run rescheduled", cm.output[2])
         self.assertEqual(run_obj.schedule_time, schedule_time + datetime.timedelta(minutes=10))
 
-    @patch('cryton_core.lib.models.plan.PlanExecution.pause', Mock())
+    @patch('cryton.hive.models.plan.PlanExecution.pause', Mock())
     def test_pause(self):
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
         # Correct state
         run_obj.state = states.RUNNING
         run_obj.pause()
 
-    @patch('cryton_core.lib.models.plan.PlanExecution.unpause', Mock())
+    @patch('cryton.hive.models.plan.PlanExecution.unpause', Mock())
     def test_unpause(self):
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
 
@@ -137,8 +137,8 @@ class RunTestAdvanced(TestCase):
             run_obj.unpause()
         self.assertEqual(run_obj.state, states.RUNNING)
 
-    @patch('cryton_core.lib.util.scheduler_client.schedule_function', Mock(return_value=1))
-    @patch('cryton_core.lib.util.scheduler_client.remove_job', Mock(return_value=1))
+    @patch('cryton.hive.utility.scheduler_client.schedule_function', Mock(return_value=1))
+    @patch('cryton.hive.utility.scheduler_client.remove_job', Mock(return_value=1))
     def test_postpone(self):
 
         dt = datetime.timedelta(hours=1)
@@ -167,7 +167,7 @@ class RunTestAdvanced(TestCase):
         self.assertIn("Run postponed", cm.output[2])
         self.assertEqual(run_obj.schedule_time, schedule_time_dt + dt)
 
-    @patch('cryton_core.lib.models.plan.PlanExecution.kill', Mock())
+    @patch('cryton.hive.models.plan.PlanExecution.kill', Mock())
     def test_kill(self):
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
         for plan_ex_model in run_obj.model.plan_executions.all():
@@ -177,7 +177,7 @@ class RunTestAdvanced(TestCase):
             run_obj.kill()
         self.assertEqual(run_obj.state, states.TERMINATED)
 
-    @patch('cryton_core.lib.models.run.Worker.healthcheck')
+    @patch('cryton.hive.models.run.Worker.healthcheck')
     def test_healthcheck_workers(self, mock_worker_healthcheck: Mock):
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
 
@@ -185,7 +185,7 @@ class RunTestAdvanced(TestCase):
 
         assert run_obj.healthcheck_workers() is None
 
-    @patch('cryton_core.lib.models.run.Worker.healthcheck')
+    @patch('cryton.hive.models.run.Worker.healthcheck')
     def test_healthcheck_workers_error(self, mock_worker_healthcheck: Mock):
         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
 

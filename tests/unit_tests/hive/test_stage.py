@@ -1,17 +1,15 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock, Mock
-from cryton_core.lib.util import creator, exceptions, logger
-from cryton_core.lib.models import stage
+from cryton.hive.utility import creator, exceptions, logger
+from cryton.hive.models import stage
 
-from cryton_core.lib.triggers import (
-    trigger_delta
-)
+from cryton.hive.triggers import trigger_delta
 
 import yaml
 import os
 from model_bakery import baker
 
-from cryton_core.cryton_app.models import PlanModel, StageModel, StepModel, StepExecutionModel, StageExecutionModel, \
+from cryton.hive.cryton_app.models import PlanModel, StageModel, StepModel, StepExecutionModel, StageExecutionModel, \
     PlanExecutionModel, DependencyModel
 
 from django.utils import timezone
@@ -19,7 +17,7 @@ from django.utils import timezone
 TESTS_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
 class TestStage(TestCase):
 
     def setUp(self) -> None:
@@ -111,7 +109,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.WrongParameterError):
             stage.Stage.filter(incorrect='test1')
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_incorrect_stage_dict(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -119,7 +117,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             stage.Stage.validate(stage_dict)
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_delta_correct_dict(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -127,7 +125,7 @@ class TestStage(TestCase):
 
         self.assertTrue(stage.Stage.validate(stage_dict))
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_delta_no_dict(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -135,7 +133,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             (stage.Stage.validate(stage_dict))
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_unknown_trigger(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'unknown'})
@@ -143,7 +141,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             (stage.Stage.validate(stage_dict))
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_no_steps(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -153,7 +151,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             stage.Stage.validate(stage_dict)
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_HTTPListener_correct_dict(self):
         stage_dict = self.stage_validation_args
         arg_dict = {'host': '127.0.0.1',
@@ -175,7 +173,7 @@ class TestStage(TestCase):
 
         self.assertTrue(stage.Stage.validate(stage_dict))
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_HTTPListener_incorrect_dict(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'HTTPListener'})
@@ -183,7 +181,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             stage.Stage.validate(stage_dict)
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_successor_as_init_invalid(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -194,7 +192,7 @@ class TestStage(TestCase):
         with self.assertRaises(exceptions.StageValidationError):
             stage.Stage.validate(stage_dict)
 
-    @patch('cryton_core.lib.models.step.Step.validate', MagicMock)
+    @patch('cryton.hive.models.step.Step.validate', MagicMock)
     def test_validate_successor_as_init_valid(self):
         stage_dict = self.stage_validation_args
         stage_dict.update({'trigger_type': 'delta'})
@@ -225,9 +223,9 @@ class TestStage(TestCase):
         self.assertEqual(dependency.id, dependency_instance.dependency_id)
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
-@patch('cryton_core.lib.util.states.StageStateMachine.validate_transition', MagicMock())
-@patch('cryton_core.lib.util.states.StageStateMachine.validate_state', MagicMock())
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.states.StageStateMachine.validate_transition', MagicMock())
+@patch('cryton.hive.utility.states.StageStateMachine.validate_state', MagicMock())
 class TestStageExecute(TestCase):
 
     def setUp(self) -> None:
@@ -346,9 +344,9 @@ class TestStageExecute(TestCase):
 
     @patch('multiprocessing.Process', MagicMock)
     @patch('threading.Thread', MagicMock)
-    @patch('cryton_core.lib.util.util.split_into_lists', MagicMock(items=[]))
-    @patch('cryton_core.etc.config.CPU_CORES', 0)
-    @patch('cryton_core.lib.util.util.run_executions_in_threads', MagicMock)
+    @patch('cryton.hive.utility.util.split_into_lists', MagicMock(items=[]))
+    @patch('cryton.hive.etc.config.CPU_CORES', 0)
+    @patch('cryton.hive.utility.util.run_executions_in_threads', MagicMock)
     @patch('django.db.connections.close_all', MagicMock)
     def test_execute(self):
         with patch.object(stage.StageExecution, 'state') as mock_state:
@@ -360,9 +358,9 @@ class TestStageExecute(TestCase):
 
     @patch('multiprocessing.Process', MagicMock)
     @patch('threading.Thread', MagicMock)
-    @patch('cryton_core.lib.util.util.split_into_lists', MagicMock(items=[]))
-    @patch('cryton_core.etc.config.CPU_CORES', 0)
-    @patch('cryton_core.lib.util.util.run_executions_in_threads', MagicMock)
+    @patch('cryton.hive.utility.util.split_into_lists', MagicMock(items=[]))
+    @patch('cryton.hive.etc.config.CPU_CORES', 0)
+    @patch('cryton.hive.utility.util.run_executions_in_threads', MagicMock)
     @patch('django.db.connections.close_all', MagicMock)
     def test_execute_with_unfinished_dependency(self):
 
@@ -375,9 +373,9 @@ class TestStageExecute(TestCase):
 
     @patch('multiprocessing.Process', MagicMock)
     @patch('threading.Thread', MagicMock)
-    # @patch('cryton_core.lib.util.split_into_lists', MagicMock(items=[]))
-    # @patch('cryton_core.etc.config.CRYTON_CPU_CORES', 2)
-    @patch('cryton_core.lib.util.util.run_executions_in_threads', MagicMock)
+    # @patch('cryton.hive.utility.split_into_lists', MagicMock(items=[]))
+    # @patch('cryton.hive.etc.config.CRYTON_CPU_CORES', 2)
+    @patch('cryton.hive.utility.util.run_executions_in_threads', MagicMock)
     @patch('django.db.connections.close_all', MagicMock)
     def test_execute_with_steps(self):
         with open('{}/stage.yaml'.format(TESTS_DIR)) as fp:
@@ -391,9 +389,9 @@ class TestStageExecute(TestCase):
 
     @patch('multiprocessing.Process', MagicMock)
     @patch('threading.Thread', MagicMock)
-    @patch('cryton_core.lib.util.util.split_into_lists', MagicMock(items=[]))
-    @patch('cryton_core.etc.config.CPU_CORES', 0)
-    @patch('cryton_core.lib.util.util.run_executions_in_threads', MagicMock)
+    @patch('cryton.hive.utility.util.split_into_lists', MagicMock(items=[]))
+    @patch('cryton.hive.etc.config.CPU_CORES', 0)
+    @patch('cryton.hive.utility.util.run_executions_in_threads', MagicMock)
     @patch('django.db.connections.close_all', MagicMock)
     def test_execute_pause(self):
         PlanExecutionModel.objects.filter(id=self.stage_ex_obj.model.plan_execution_id).select_for_update() \
@@ -408,8 +406,8 @@ class TestStageExecute(TestCase):
         else:
             raise AssertionError("'Stage execution executed' not found in log messages")
 
-    @patch('cryton_core.lib.triggers.trigger_delta.TriggerDelta._create_schedule_time')
-    @patch('cryton_core.lib.triggers.trigger_base.scheduler_client.schedule_function')
+    @patch('cryton.hive.triggers.trigger_delta.TriggerDelta._create_schedule_time')
+    @patch('cryton.hive.triggers.trigger_base.scheduler_client.schedule_function')
     def test_schedule(self, schedule_function, schedule_time):
         schedule_time.return_value = timezone.now()
         schedule_function.return_value = '1'
@@ -426,7 +424,7 @@ class TestStageExecute(TestCase):
         with self.assertRaises(exceptions.UnexpectedValue):
             trigger_delta.TriggerDelta(stage_ex).schedule()
 
-    @patch('cryton_core.lib.triggers.trigger_base.scheduler_client.remove_job', MagicMock)
+    @patch('cryton.hive.triggers.trigger_base.scheduler_client.remove_job', MagicMock)
     def test_unschedule(self):
         self.stage_ex_obj.aps_job_id = '1'
         with self.assertLogs('cryton-core-debug', level='INFO') as cm:
@@ -435,8 +433,8 @@ class TestStageExecute(TestCase):
         self.assertIn("Stage execution unscheduled", cm.output[0])
         self.assertEqual(self.stage_ex_obj.aps_job_id, "")
 
-    @patch('cryton_core.lib.models.step.StepExecution.kill', Mock())
-    @patch('cryton_core.lib.models.stage.StageExecution.trigger', Mock())
+    @patch('cryton.hive.models.step.StepExecution.kill', Mock())
+    @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
     def test_kill(self):
         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'RUNNING'})
         baker.make(StepExecutionModel, **{'state': 'RUNNING', 'stage_execution': stage_ex_model})
@@ -446,8 +444,8 @@ class TestStageExecute(TestCase):
             stage_ex.kill()
         self.assertEqual(stage_ex.state, 'TERMINATED')
 
-    @patch('cryton_core.lib.triggers.trigger_delta.TriggerDelta.unschedule', Mock())
-    @patch('cryton_core.lib.models.stage.StageExecution.trigger', Mock())
+    @patch('cryton.hive.triggers.trigger_delta.TriggerDelta.unschedule', Mock())
+    @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
     def test_kill_scheduled(self):
         stage_ex_model = baker.make(
             StageExecutionModel, **{'state': 'PENDING', 'schedule_time': timezone.now(), 'stage_model':
@@ -458,7 +456,7 @@ class TestStageExecute(TestCase):
             stage_ex.kill()
         self.assertEqual(stage_ex.state, 'TERMINATED')
 
-    @patch('cryton_core.lib.models.stage.StageExecution.trigger', Mock())
+    @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
     def test_kill_waiting(self):
         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'WAITING'})
         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)
@@ -467,7 +465,7 @@ class TestStageExecute(TestCase):
             stage_ex.kill()
         self.assertEqual(stage_ex.state, 'TERMINATED')
 
-    # @patch('cryton_core.lib.models.step.StepExecution.validate_attack_module_args')
+    # @patch('cryton.hive.models.step.StepExecution.validate_attack_module_args')
     # def test_validate_modules(self, validate_args):
     #     step_execution_model = baker.make(StepExecutionModel)
     #     stage_execution = stage.StageExecution(stage_execution_id=step_execution_model.stage_execution.id)
@@ -489,29 +487,29 @@ class TestStageExecute(TestCase):
         self.assertIsNotNone(report_dict.get('step_executions'))
         self.assertEqual(report_dict.get('step_executions')[0].get('state'), 'FINISHED')
 
-    @patch('cryton_core.lib.models.stage.StageExecution', MagicMock())
+    @patch('cryton.hive.models.stage.StageExecution', MagicMock())
     def test_execution(self):
         self.assertIsNone(stage.execution(1))
 
-    @patch("cryton_core.lib.models.stage.StepExecutionWorkerExecute.validate", MagicMock())
+    @patch("cryton.hive.models.stage.StepExecutionWorkerExecute.validate", MagicMock())
     def test_validate_modules(self):
         stage_execution_model = baker.make(StageExecutionModel, **{'state': 'RUNNING'})
         stage_execution = stage.StageExecution(stage_execution_id=stage_execution_model.id)
         stage_execution.validate_modules()
 
-    @patch("cryton_core.lib.models.stage.StageExecution.reset_execution_data", Mock())
-    @patch("cryton_core.lib.models.stage.StageExecution.execute")
+    @patch("cryton.hive.models.stage.StageExecution.reset_execution_data", Mock())
+    @patch("cryton.hive.models.stage.StageExecution.execute")
     def test_re_execute_immediately(self, mock_execute):
         self.stage_ex_obj.re_execute(True)
         mock_execute.assert_called()
 
-    @patch("cryton_core.lib.models.stage.StageExecution.reset_execution_data", Mock())
+    @patch("cryton.hive.models.stage.StageExecution.reset_execution_data", Mock())
     def test_re_execute(self):
-        with patch("cryton_core.lib.models.stage.StageExecution.trigger") as mock_trigger:
+        with patch("cryton.hive.models.stage.StageExecution.trigger") as mock_trigger:
             self.stage_ex_obj.re_execute()
             mock_trigger.start.assert_called()
 
-    @patch("cryton_core.lib.models.stage.StepExecution.reset_execution_data", Mock())
+    @patch("cryton.hive.models.stage.StepExecution.reset_execution_data", Mock())
     def test_reset_execution_data(self):
         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'TERMINATED'})
         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)

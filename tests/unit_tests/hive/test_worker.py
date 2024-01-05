@@ -2,14 +2,14 @@ import pytest
 from pytest_mock import MockerFixture
 from unittest.mock import patch, Mock, call
 
-from cryton_core.lib.util import exceptions, logger, constants, states
-from cryton_core.lib.models import worker
-from cryton_core.cryton_app.models import WorkerModel
+from cryton.hive.utility import exceptions, logger, constants, states
+from cryton.hive.models import worker
+from cryton.hive.cryton_app.models import WorkerModel
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestWorker:
-    path = "cryton_core.lib.models.worker"
+    path = "cryton.hive.models.worker"
 
     @pytest.fixture
     def f_worker_model(self, mocker: MockerFixture):

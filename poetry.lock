@@ -2468,6 +2468,7 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy (>=0.9.1)", "pytest-ruff"]
 
 [extras]
+all = ["AMQPStorm", "APScheduler", "Django", "Jinja2", "SQLAlchemy", "bottle", "click", "django-cors-headers", "djangorestframework", "drf-spectacular", "gunicorn", "paramiko", "psycopg2-binary", "pyfiglet", "pymetasploit3", "python-dotenv", "pytz", "requests", "schema", "structlog", "tzlocal", "utinni-fork", "uuid", "uvicorn"]
 cli = ["click", "python-dotenv", "pytz", "requests", "tzlocal"]
 hive = ["AMQPStorm", "APScheduler", "Django", "Jinja2", "SQLAlchemy", "click", "django-cors-headers", "djangorestframework", "drf-spectacular", "gunicorn", "psycopg2-binary", "python-dotenv", "pytz", "schema", "structlog", "uuid", "uvicorn"]
 worker = ["AMQPStorm", "bottle", "click", "paramiko", "pyfiglet", "pymetasploit3", "python-dotenv", "requests", "schema", "structlog", "utinni-fork"]
@@ -2475,4 +2476,4 @@ worker = ["AMQPStorm", "bottle", "click", "paramiko", "pyfiglet", "pymetasploit3
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "6e4a6c9aa5862d4120630ec9689303c0b87253bbf9690a6ad82a1ac970786eb2"
+content-hash = "f4315c42886522827d65597c50dbc0ae4e9cf00b50c9fd59f4dddeb513554605"

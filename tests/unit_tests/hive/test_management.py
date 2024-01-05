@@ -2,13 +2,13 @@ import pytest
 from unittest.mock import Mock, patch
 from pytest_mock import MockerFixture
 
-from cryton_core.lib.util import logger
-from cryton_core.cryton_app.management.commands import runserver, startlistener, startgunicorn, start  # startmonitoring
+from cryton.hive.utility import logger
+from cryton.hive.cryton_app.management.commands import runserver, startlistener, startgunicorn, start  # startmonitoring
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestCommandRunServer:
-    path = "cryton_core.cryton_app.management.commands.runserver"
+    path = "cryton.hive.cryton_app.management.commands.runserver"
 
     @pytest.fixture
     def f_logger_object(self, mocker: MockerFixture):
@@ -40,9 +40,9 @@ class TestCommandRunServer:
         f_logger_object.log_queue.put.assert_called_once_with(None)
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestCommandStartListener:
-    path = "cryton_core.cryton_app.management.commands.startlistener"
+    path = "cryton.hive.cryton_app.management.commands.startlistener"
 
     def test_handle(self, mocker):
         mock_listener: Mock = mocker.patch(self.path + ".Listener")
@@ -51,18 +51,18 @@ class TestCommandStartListener:
         mock_listener.return_value.start.assert_called()
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestCommandStartMonitoring:
-    path = "cryton_core.cryton_app.management.commands.startmonitoring"
+    path = "cryton.hive.cryton_app.management.commands.startmonitoring"
 
     @pytest.mark.skip(reason="this feature is not available at the moment")
     def test_handle(self, mocker):
         pass
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStartGunicorn:
-    path = "cryton_core.cryton_app.management.commands.startgunicorn"
+    path = "cryton.hive.cryton_app.management.commands.startgunicorn"
 
     @pytest.fixture
     def f_logger_object(self, mocker: MockerFixture):
@@ -101,9 +101,9 @@ class TestStartGunicorn:
         f_logger_object.log_queue.put.assert_called_once_with(None)
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-test'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-test'))
 class TestStart:
-    path = "cryton_core.cryton_app.management.commands.start"
+    path = "cryton.hive.cryton_app.management.commands.start"
 
     @pytest.fixture
     def f_logger_object(self, mocker: MockerFixture):

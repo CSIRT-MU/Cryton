@@ -5,14 +5,14 @@ from unittest.mock import patch, Mock, call
 import amqpstorm
 from queue import Empty
 
-from cryton_core.lib.services import listener
-from cryton_core.lib.util import logger, states, constants
-from cryton_core.cryton_app.models import CorrelationEventModel
+from cryton.hive.services import listener
+from cryton.hive.utility import logger, states, constants
+from cryton.hive.cryton_app.models import CorrelationEventModel
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestChannelConsumer:
-    path = "cryton_core.lib.services.listener"
+    path = "cryton.hive.services.listener"
 
     @pytest.fixture
     def f_channel_consumer(self):
@@ -64,9 +64,9 @@ class TestChannelConsumer:
         assert len(caplog.records) == 3
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestConsumer:
-    path = "cryton_core.lib.services.listener"
+    path = "cryton.hive.services.listener"
 
     @pytest.fixture
     def f_amqpstorm_connection(self, mocker: MockerFixture):
@@ -247,9 +247,9 @@ class TestConsumer:
         mock_thread.assert_called_once()
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestListener:
-    path = "cryton_core.lib.services.listener"
+    path = "cryton.hive.services.listener"
 
     @pytest.fixture(autouse=True)
     def f_scheduler_service(self, mocker: MockerFixture):

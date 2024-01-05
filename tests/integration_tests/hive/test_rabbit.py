@@ -4,8 +4,8 @@ import os
 
 from unittest.mock import patch, Mock, MagicMock
 
-from cryton_core.lib.util import creator, logger, states
-from cryton_core.lib.models import stage, plan, run, worker
+from cryton.hive.utility import creator, logger, states
+from cryton.hive.models import stage, plan, run, worker
 
 import threading
 

@@ -4,16 +4,16 @@ from django.test import TestCase
 from unittest.mock import patch, Mock, MagicMock, call
 from model_bakery import baker
 
-from cryton_core.lib.util import exceptions, logger
-from cryton_core.lib.models import plan
+from cryton.hive.utility import exceptions, logger
+from cryton.hive.models import plan
 
-from cryton_core.cryton_app.models import PlanModel, StageModel, StepExecutionModel, StageExecutionModel, \
+from cryton.hive.cryton_app.models import PlanModel, StageModel, StepExecutionModel, StageExecutionModel, \
     PlanExecutionModel, WorkerModel, RunModel
 
-from cryton_core.lib.triggers import trigger_http
+from cryton.hive.triggers import trigger_http
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
 class PlanTest(TestCase):
     def setUp(self):
         self.plan_obj = plan.Plan(plan_model_id=baker.make(PlanModel).id)
@@ -83,8 +83,8 @@ class PlanTest(TestCase):
         with self.assertRaises(exceptions.PlanObjectDoesNotExist):
             plan.Plan(plan_model_id=plan_model_id)
 
-    @patch("cryton_core.lib.models.plan.Plan.validate_unique_values", Mock)
-    @patch("cryton_core.lib.models.stage.Stage.validate")
+    @patch("cryton.hive.models.plan.Plan.validate_unique_values", Mock)
+    @patch("cryton.hive.models.stage.Stage.validate")
     def test_validate_all_valid(self, mock_stage_validate):
         stage1 = {
             "name": "stage1", "steps": [
@@ -107,7 +107,7 @@ class PlanTest(TestCase):
 
         mock_stage_validate.assert_has_calls([call(stage1, False), call(stage2, False)])
 
-    @patch("cryton_core.lib.models.stage.Stage.validate", Mock)
+    @patch("cryton.hive.models.stage.Stage.validate", Mock)
     def test_validate_stage_dependency(self):
         test_plan_dict = {
             "name": "Test plan",
@@ -297,8 +297,8 @@ class PlanTest(TestCase):
             plan.Plan.validate(args)
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
-@patch('cryton_core.lib.util.states.PlanStateMachine.validate_transition', MagicMock())
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger('cryton-core-debug'))
+@patch('cryton.hive.utility.states.PlanStateMachine.validate_transition', MagicMock())
 class PlanExecutionTest(TestCase):
     def setUp(self):
         self.pex_obj = plan.PlanExecution(plan_execution_id=baker.make(PlanExecutionModel).id)
@@ -314,7 +314,7 @@ class PlanExecutionTest(TestCase):
         with self.assertRaises(exceptions.PlanExecutionDoesNotExist):
             plan.PlanExecution(plan_execution_id=42)
 
-    @patch("cryton_core.lib.models.plan.PlanExecution._create_evidence_directory")
+    @patch("cryton.hive.models.plan.PlanExecution._create_evidence_directory")
     def test_constructor_create(self, mock_evidence_directory):
         run_model = baker.make(RunModel)
         worker_model = baker.make(WorkerModel)
@@ -366,7 +366,7 @@ class PlanExecutionTest(TestCase):
         with self.assertRaises(exceptions.PlanExecutionDoesNotExist):
             plan.PlanExecution(plan_execution_id=pex_model_id)
 
-    @patch("cryton_core.lib.util.scheduler_client.schedule_function", Mock(return_value=1))
+    @patch("cryton.hive.utility.scheduler_client.schedule_function", Mock(return_value=1))
     def test_schedule(self):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="delta"),
@@ -380,8 +380,8 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.schedule_time, datetime(3000, 12, 12, 10, 0, 0, tzinfo=timezone.utc))
         self.assertIn("Plan execution scheduled", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.start_triggers")
-    @patch('cryton_core.lib.models.plan.worker.Worker', Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.start_triggers")
+    @patch('cryton.hive.models.plan.worker.Worker', Mock())
     def test_execute_delta_stage_pending(self, mock_start_triggers):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="delta"),
@@ -394,8 +394,8 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "RUNNING")
         self.assertIn("Plan execution executed", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.start_triggers")
-    @patch('cryton_core.lib.models.plan.worker.Worker', Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.start_triggers")
+    @patch('cryton.hive.models.plan.worker.Worker', Mock())
     def test_execute_delta_stage_suspended(self, mock_start_triggers):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="delta"),
@@ -409,8 +409,8 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "RUNNING")
         self.assertIn("Plan execution executed", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.start_triggers")
-    @patch('cryton_core.lib.models.plan.worker.Worker', Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.start_triggers")
+    @patch('cryton.hive.models.plan.worker.Worker', Mock())
     def test_execute_delta_stage_running(self, mock_start_triggers):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="delta"),
@@ -424,9 +424,9 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "RUNNING")
         self.assertIn("Plan execution executed", cm.output[0])
 
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.schedule")
-    @patch("cryton_core.lib.models.plan.PlanExecution.start_triggers")
-    @patch('cryton_core.lib.models.plan.worker.Worker', Mock())
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.schedule")
+    @patch("cryton.hive.models.plan.PlanExecution.start_triggers")
+    @patch('cryton.hive.models.plan.worker.Worker', Mock())
     def test_execute_trigger_stage(self, mock_start_triggers, mock_schedule_stage):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="HTTPListener"))
@@ -440,7 +440,7 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "RUNNING")
         self.assertIn("Plan execution executed", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.start_triggers", Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.start_triggers", Mock())
     def test_execute_not_pending(self):
         stage_execution_model = baker.make(StageExecutionModel,
                                            stage_model=baker.make(StageModel, trigger_type="HTTPListener"))
@@ -452,7 +452,7 @@ class PlanExecutionTest(TestCase):
             plan_execution.execute()
             self.assertIn("invalid state detected", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.scheduler_client.remove_job")
+    @patch("cryton.hive.models.plan.scheduler_client.remove_job")
     def test_unschedule(self, mock_schedule):
         plan_execution_model = baker.make(PlanExecutionModel, state="SCHEDULED",
                                           stage_executions=[baker.make(StageExecutionModel,
@@ -476,8 +476,8 @@ class PlanExecutionTest(TestCase):
             plan_execution.unschedule()
             self.assertIn("invalid state detected", cm.output[0])
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.schedule")
-    @patch("cryton_core.lib.models.plan.PlanExecution.unschedule")
+    @patch("cryton.hive.models.plan.PlanExecution.schedule")
+    @patch("cryton.hive.models.plan.PlanExecution.unschedule")
     def test_reschedule_valid(self, mock_unschedule_plan, mock_schedule_plan):
         plan_execution_model = baker.make(PlanExecutionModel, start_time="3000-12-12 10:00:00Z", state="SCHEDULED")
         plan_execution = plan.PlanExecution(plan_execution_id=plan_execution_model.id)
@@ -496,8 +496,8 @@ class PlanExecutionTest(TestCase):
         with self.assertRaises(exceptions.UserInputError), self.assertLogs('cryton-core-debug', level='ERROR'):
             plan_execution.reschedule(datetime(1990, 12, 12, 11, 1, 1, tzinfo=timezone.utc))
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.schedule", Mock())
-    @patch("cryton_core.lib.models.plan.PlanExecution.unschedule", Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.schedule", Mock())
+    @patch("cryton.hive.models.plan.PlanExecution.unschedule", Mock())
     def test_reschedule_notscheduled(self):
         plan_execution_model = baker.make(PlanExecutionModel, start_time="3000-12-12 10:00:00Z", state="PENDING")
         plan_execution = plan.PlanExecution(plan_execution_id=plan_execution_model.id)
@@ -505,7 +505,7 @@ class PlanExecutionTest(TestCase):
         with self.assertRaises(exceptions.PlanInvalidStateError), self.assertLogs('cryton-core-debug', level='ERROR'):
             plan_execution.reschedule(datetime(3000, 12, 12, 11, 1, 1))
 
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.pause")
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.pause")
     def test_pause_pending_stage(self, mock_stage_pause):
         stage_execution_model = baker.make(StageExecutionModel, state="PENDING",
                                            stage_model=baker.make(StageModel, trigger_type="delta",
@@ -520,7 +520,7 @@ class PlanExecutionTest(TestCase):
         mock_stage_pause.assert_called_once()
         self.assertIn("Plan execution pausing", cm.output[0])
 
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.pause")
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.pause")
     def test_pause_suspended_stage(self, mock_stage_pause):
         stage_execution_model = baker.make(StageExecutionModel, state="PAUSED",
                                            stage_model=baker.make(StageModel, trigger_type="delta",
@@ -536,7 +536,7 @@ class PlanExecutionTest(TestCase):
         mock_stage_pause.assert_called_once()
         self.assertIn("Plan execution pausing", cm.output[0])
 
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.unschedule")
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.unschedule")
     def test_pause_running_stage(self, mock_stage_pause):
         stage_execution_model = baker.make(StageExecutionModel, state="RUNNING",
                                            stage_model=baker.make(StageModel, trigger_type="delta",
@@ -551,8 +551,8 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "PAUSING")
         mock_stage_pause.assert_not_called()
 
-    @patch('cryton_core.lib.models.plan.datetime')
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.unpause")
+    @patch('cryton.hive.models.plan.datetime')
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.unpause")
     def test_unpause_stage(self, mock_stage_unpause, mock_utcnow):
         mock_utcnow.now.return_value = datetime(3000, 12, 12, 10, 0, 0, tzinfo=timezone.utc)
         stage_execution_model = baker.make(StageExecutionModel, state="PAUSED",
@@ -567,7 +567,7 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "RUNNING")
         mock_stage_unpause.assert_called()
 
-    @patch("cryton_core.lib.triggers.trigger_delta.TriggerDelta.unschedule")
+    @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.unschedule")
     def test_pause_suspending_stage(self, mock_stage_unschedule):
         stage_execution_model = baker.make(StageExecutionModel, state="PAUSING",
                                            stage_model=baker.make(StageModel, trigger_type="delta",
@@ -582,7 +582,7 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(plan_execution.state, "PAUSING")
         mock_stage_unschedule.assert_not_called()
 
-    # @patch("cryton_core.lib.stage.StageExecution.validate_modules")
+    # @patch("cryton.hive.stage.StageExecution.validate_modules")
     # def test_validate_modules(self, mock_stage_validate_modules):
     #     mock_stage_validate_modules.return_value = [(True, None), (False, "error 1")]
     #     stage_execution_model = baker.make(StageExecutionModel)
@@ -592,7 +592,7 @@ class PlanExecutionTest(TestCase):
     #
     #     self.assertEqual(ret, [(True, None), (False, "error 1")])
     #
-    # @patch("cryton_core.lib.stage.StageExecution.validate_modules")
+    # @patch("cryton.hive.stage.StageExecution.validate_modules")
     # def test_validate_modules_more_stages(self, mock_stage_validate_modules):
     #     mock_stage_validate_modules.side_effect = [[(True, None), (False, "error 1")],
     #                                                [(True, None), (False, "error 2")]]
@@ -606,8 +606,8 @@ class PlanExecutionTest(TestCase):
     #
     #     self.assertEqual(ret, [(True, None), (False, "error 1"), (True, None), (False, "error 2")])
 
-    @patch("cryton_core.lib.models.plan.os.makedirs")
-    @patch("cryton_core.lib.models.plan.config.EVIDENCE_DIRECTORY", "/path")
+    @patch("cryton.hive.models.plan.os.makedirs")
+    @patch("cryton.hive.models.plan.config.EVIDENCE_DIRECTORY", "/path")
     def test_create_evidence_directory(self, mock_makedirs):
         plan_execution_model = baker.make(PlanExecutionModel,
                                           run=baker.make(RunModel,
@@ -674,19 +674,19 @@ class PlanExecutionTest(TestCase):
         self.assertEqual(report_dict.get('stage_executions')[0].get('step_executions')[0]
                          .get('state'), 'FINISHED')
 
-    @patch("cryton_core.lib.models.plan.PlanExecution.execute", MagicMock())
+    @patch("cryton.hive.models.plan.PlanExecution.execute", MagicMock())
     def test_execution(self):
         plan.execution(self.pex_obj.model.id)
         self.pex_obj.execute.assert_called()
 
-    @patch("cryton_core.lib.models.stage.StageExecution.validate_modules", MagicMock())
+    @patch("cryton.hive.models.stage.StageExecution.validate_modules", MagicMock())
     def test_validate_modules(self):
         plan_execution_model = baker.make(PlanExecutionModel, **{'state': 'RUNNING'})
         plan_execution = plan.PlanExecution(plan_execution_id=plan_execution_model.id)
         plan_execution.validate_modules()
 
-    @patch('cryton_core.lib.models.plan.connections.close_all', Mock())
-    @patch('cryton_core.lib.models.stage.StageExecution.kill', Mock())
+    @patch('cryton.hive.models.plan.connections.close_all', Mock())
+    @patch('cryton.hive.models.stage.StageExecution.kill', Mock())
     def test_kill(self):
         plan_execution_model = baker.make(PlanExecutionModel, **{'state': 'RUNNING'})
         baker.make(StageExecutionModel, **{'state': 'RUNNING', 'plan_execution': plan_execution_model})

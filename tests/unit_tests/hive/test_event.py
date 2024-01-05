@@ -2,12 +2,12 @@ import pytest
 from pytest_mock import MockerFixture
 from unittest.mock import patch, Mock
 
-from cryton_core.lib.util import logger, states, constants, event, exceptions
+from cryton.hive.utility import logger, states, constants, event, exceptions
 
 
-@patch('cryton_core.lib.util.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
+@patch('cryton.hive.utility.logger.logger', logger.structlog.getLogger(constants.LOGGER_CRYTON_TESTING))
 class TestEvent:
-    path = "cryton_core.lib.util.event"
+    path = "cryton.hive.utility.event"
 
     @pytest.fixture
     def f_step_execution(self, mocker: MockerFixture):
