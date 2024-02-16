@@ -1,15 +1,7 @@
-## Description
-Cryton (attack) modules are a collection of Python scripts with the goal of orchestrating known offensive security tools 
-(Nmap, Metasploit, medusa, etc.). Although this is their intended purpose, they are still Python scripts, and therefore 
-any custom-made script can be used similarly.
-
-!!! note ""
-
-    Do not forget that the modules can be used for other purposes other than attacking.
-
-[Link to the repository](https://gitlab.ics.muni.cz/cryton/cryton-modules){target="_blank"}.
-
 ## Installation
+
+[//]: # (TODO: this will be renamed as `Using unofficial modules` and it will be a section in the new modules page; also probably much simpler)
+
 Modules are automatically installed on [Worker](worker.md)'s start-up, you just need to download and **move them to the [Worker's app directory](worker.md#cryton_worker_app_directory)**.
 
 !!! warning ""

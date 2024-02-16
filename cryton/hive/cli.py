@@ -13,13 +13,14 @@ from cryton.hive.utility.logger import logger_object
 @click.version_option()
 def cli() -> None:
     """
-    Cryton Hive CLI.
+    Cryton Hive.
 
     \f
     :return: None
     """
     pass
 
+    # TODO: create migrate command and add --migrate-database to the start command to invoke the migration command
 
 @cli.command("start")
 def start() -> None:

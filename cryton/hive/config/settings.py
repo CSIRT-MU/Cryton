@@ -101,7 +101,7 @@ class Settings:
             "CRYTON_HIVE_THREADS_PER_PROCESS", raw_settings.get("threads_per_process", 7)
         )
         self.cpu_cores = getenv_int(
-            "CRYTON_HIVE_CPU_CORES", raw_settings.get("cpu_cores", 3), len(sched_getaffinity(0))
+            "CRYTON_HIVE_CPU_CORES", raw_settings.get("cpu_cores", 3), fallback=len(sched_getaffinity(0))
         )
         self.rabbit = SettingsRabbit(raw_settings.get("rabbit", {}))
         self.database = SettingsDatabase(raw_settings.get("database", {}))
