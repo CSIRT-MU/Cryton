@@ -1,0 +1,20 @@
+release_version: 2
+git_release: stable/2
+
+python:
+  min: 3.9
+  max: 3.13
+
+ansible:
+  deploy_cli: 2.0.0
+  deploy_core: 2.0.0
+  deploy_worker: 2.0.0
+  deploy_frontend: 2.0.0
+  register_worker: 2.0.0
+
+releases:
+  cryton: https://gitlab.ics.muni.cz/cryton/cryton/-/releases/
+  frontend: https://gitlab.ics.muni.cz/cryton/cryton-frontend/-/releases/
+
+empire_version: 4.10.0
+metasploit_version: 6.3.33

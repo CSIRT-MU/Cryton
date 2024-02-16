@@ -25,8 +25,10 @@ theme:
     - content.code.copy # Code copy button
     - navigation.tracking # Anchor tracking
     - navigation.top # Back-to-top button
+    - navigation.instant  # Instant loading
+    - navigation.instant.progress  # Show progress when loading a new page
     - search.highlight # Highlight searched terms
-    - toc.follow
+    - toc.follow  # Anchor following (the right navigation)
 
 extra:
   version:
@@ -46,8 +48,8 @@ markdown_extensions:
   - pymdownx.details
   - attr_list
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.extra
 
 plugins:
@@ -59,7 +61,7 @@ plugins:
       j2_variable_start_string: "{{{"
       j2_variable_end_string: "}}}"
       include_yaml:
-        - docs/extra/variables.yml
+        - docs/.variables.yml
       on_error_fail: true
   - include-markdown:
       opening_tag: "{!"
@@ -75,44 +77,32 @@ nav:
       - Quick-start: getting-started/quick-start.md
       - Workflow: getting-started/workflow.md
       - Execution example: getting-started/execution-example.md
-      - Deployment with Ansible: getting-started/ansible.md
-  - Playground:
-      - Introduction: playground/introduction.md
-      - Example attack scenario: playground/example-scenario.md
-  - Components:
-      - Core: components/core.md
-      - Worker: components/worker.md
-      - Modules: components/modules.md
-      - CLI: components/cli.md
-      - Frontend: components/frontend.md
-  - Docker settings: docker-settings.md
-  - Design phase:
-      - Template (attack scenario): design-phase/template.md
-      - Plan: design-phase/plan.md
-      - Stage: design-phase/stage.md
-      - Step: design-phase/step.md
-      - Plan instance: design-phase/plan-instance.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Settings: settings.md
+  - Design phase:  # TODO: re-think
+      - Template (attack scenario): design-phase/template.md  # update
+      - Plan: design-phase/plan.md  # update
+      - Stage: design-phase/stage.md  # update
+      - Step: design-phase/step.md  # update
+      - Plan instance: design-phase/plan-instance.md  # update
   - Execution phase:
-      - What is Run: execution-phase/run.md
-      - Execution statistics: execution-phase/execution.md
-      - Reporting: execution-phase/reporting.md
+      - What is Run: execution-phase/run.md  # update
+      - Execution statistics: execution-phase/execution.md  # update
+      - Reporting: execution-phase/reporting.md  # update
+      - Dynamic execution: execution-phase/dynamic-execution.md  # update  # TODO: re-think
   - Interfaces:
-      - CLI: interfaces/cli.md
-      - Frontend: interfaces/frontend.md
-      - Core (REST API): interfaces/core-rest-api.md
-      - Worker (Rabbit API): interfaces/worker-rabbit-api.md
-  - Integrated tools: integrated-tools.md
-  - Modules: modules.md
-  - Production: production.md
-  - Dynamic execution: dynamic-execution.md
-  - Logging: logging.md
-  - How to contribute: contribution-guide.md
-  - Development:
-      - Core: development/core.md
-      - Worker: development/worker.md
-      - Modules: development/modules.md
-      - CLI: development/cli.md
-      - Frontend: development/frontend.md
-      - E2E testing: development/e2e-testing.md
+      - CLI: interfaces/cli.md  # update
+      - Frontend: interfaces/frontend.md  # update
+      - REST API: interfaces/rest-api.md  # update
+#  - Modules:  # TODO: will be done in a different ticket
+  - Playground: playground.md  # TODO: update once the playground is moved
+  - Integrated tools: integrated-tools.md  # update  # TODO: re-think
+  - How to contribute: contribution-guide.md  # update
+  - Development: development.md  # update
+  - Production: production.md  # update  # TODO: re-think
+  - Logging: logging.md  # update
+  - Docker images: docker-images.md  # update  # TODO: re-think
+  - Ansible: ansible/ansible.md  # update
   - Acknowledgements: acknowledgements.md
   - License: license.md

@@ -17,9 +17,11 @@ Putting this all together you get the whole attack scenario (called **[Plan](pla
 (called **[Stage](stage.md)**). Every stage is set to run at a specific time, as this is often required by the exercise. And finally, each 
 stage consists of attack steps (called **[Step](step.md)**), which are organized in a non-binary tree described above.
 
-## What is the plan template
-The first step in designing a Plan (attack scenario) is creating a plan template. A template is basically a Plan object written in YAML.
+The lifecycle of the attack scenario in the Cryton context can be seen in the following picture:
+![](../images/lifecycle.png)
 
+## What is the plan template
+The first step in designing a Plan (attack scenario) is creating a plan template. A template is basically a Plan object written in YAML - a description of the actions required to run during attack execution.
 ![](../images/design-template.png)
 
 The template itself is not a fully described attack scenario. The structure of the Attack (execution tree) is correct, 

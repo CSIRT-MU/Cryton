@@ -4,42 +4,41 @@ The logs adhere to the following format:
 {"plan_name": "Example scenario", "plan_id": 129, "status": "success", "event": "plan created", "logger": "cryton", "level": "info", "timestamp": "2021-05-18T06:17:39.753017Z"}
 ```
 
-Logs are stored in the app directory, which can be found at `~/.local/cryton_<app>`. 
-In case you're running the app in a Docker container the logs will be saved inside the container.
+Logs are stored in the *application directory*, which can be found at `~/.local/cryton/` by default (`/app/` inside Docker).
 
 ## Core
 Every change of state is logged for later analysis. Every Step the result is also logged, although 
 the output is not. It can be found in the database.
 
-You can switch between the debug and the production loggers using the environment variable *CRYTON_CORE_DEBUG*. 
+You can switch between the debug and the production loggers by changing the [settings](settings.md#debug). 
 To run tests, we use a testing logger to avoid saving unwanted logs.
 
-**Production** (`cryton-core`)
+**Production** (`cryton-hive`)
 
-- RotatingFileHandler (*CRYTON_CORE_APP_DIRECTORY*/log/cryton-core.log)
+- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-hive.log)
 
-**Debug** (`cryton-core-debug`)
+**Debug** (`cryton-hive-debug`)
 
-- RotatingFileHandler (*CRYTON_CORE_APP_DIRECTORY*/log/cryton-core-debug.log)
+- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-hive.log)
 - Console (std_out)
 
-**Testing** (`cryton-core-test`)
+**Testing** (`cryton-hive-test`)
 
 - Console (std_out)
 
 ## Worker
 Each request and its processing are logged for later analysis.
 
-You can switch between the debug and the production loggers using the environment variable *CRYTON_WORKER_DEBUG*. 
+You can switch between the debug and the production loggers by changing the [settings](settings.md#debug-1). 
 To run tests, we use a testing logger to avoid saving unwanted logs.
 
 **Production** (`cryton-worker`)
 
-- RotatingFileHandler (*CRYTON_WORKER_APP_DIRECTORY*/log/cryton-worker.log)
+- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-worker.log)
 
 **Debug** (`cryton-worker-debug`)
 
-- RotatingFileHandler (*CRYTON_WORKER_APP_DIRECTORY*/log/cryton-worker-debug.log)
+- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-worker.log)
 - Console (std_out)
 
 **Testing** (`cryton-worker-test`)

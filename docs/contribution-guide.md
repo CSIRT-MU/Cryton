@@ -82,6 +82,12 @@ class TestUnitName:
 ### CLI documentation generation
 Install Cryton CLI and run `cryton-cli generate-docs doc.md`
 
+### Marking changes/new features
+Use the following to mark a new feature:
+```markdown
+[:octicons-tag-24: 2.1.0]({{{ releases.cryton }}}2.1.0){target="_blank"}
+```
+
 ### Core REST API documentation generation
 
 - Install the [swagger-markdown tool](https://www.npmjs.com/package/swagger-markdown){target="_blank"}

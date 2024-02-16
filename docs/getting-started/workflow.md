@@ -1,27 +1,19 @@
-The following is the ideal sequence of steps to use when you are planning an attack and using Cryton to automate it.
+The current page tries to describe the ideal sequence of steps to use when you are planning a cyber defense exercise and want to use Cryton to automate the attacks.
 
 ## Deployment
-First, you need to prepare an infrastructure for your cyber defense exercise. Deploying the Cryton toolset should be part of it:
+First, you need to prepare an infrastructure for your cyber defense exercise. Deploying Cryton should be part of it:
 
-1. Install and set up [Core](../components/core.md)
-2. Install [CLI](../components/cli.md) and [Frontend](../components/frontend.md)
-3. Install and set up your [Worker(s)](../components/worker.md)
+1. Deploy and start [Hive](../installation.md)
+2. Deploy [CLI](../installation.md) or [Frontend](../installation.md)
+3. Deploy and start [Worker(s)](../installation.md)
 4. Make sure it works:
-    - Core is up and running
-    - CLI/Frontend can access Core's REST API
-    - Worker(s) are up and running
-    - Worker(s) are connected to the RabbitMQ server
-
-Once the Cryton tools are deployed, you can start planning your attack.
+    - To ensure your deployment works, try to perform a successful healthcheck on your Worker(s) using CLI, frontend, or possibly REST API
+    - Additionally, check the Hive and Worker(s) output if there are any errors
 
 !!! tip "Tips"
 
-    - CLI and Frontend can be deployed outside the infrastructure since other components don't need access to them
-    - Use one worker per team infrastructure
-
-!!! note ""
-
-    This section can be represented by the [quick-start](quick-start.md) guide.
+    - **CLI** and **Frontend** can be deployed outside the infrastructure and installed on demand
+    - Use **one Worker per team** infrastructure
 
 ## Attack planning
 Every Run can be described by a simple formula:
@@ -33,13 +25,9 @@ Plan instance + Workers = Run
 
 Which results in the following steps:
 
-1. Choose or design a plan template
+1. Design a plan template (scenario)
 2. Create a Plan instance
 3. Register the Worker(s)
 4. Create a Run
 5. Schedule or execute the Run
-6. Get the Run Report
-
-!!! note ""
-
-    More information about this section can be found in the [execution example](execution-example.md).
+6. Get the Run report

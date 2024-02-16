@@ -10,7 +10,7 @@ from cryton.worker.utility import util
 @click.version_option()
 def cli() -> None:
     """
-    Cryton Worker CLI.
+    Cryton Worker.
 
     \f
     :return: None

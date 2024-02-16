@@ -15,7 +15,7 @@ from cryton.cli.commands import plan_template, run, plan, step, worker, executio
 @click.option('--debug', is_flag=True, help='Do not format output.')
 def cli(ctx: click.Context, host: Optional[str], port: Optional[int], secure: bool, debug: bool) -> None:
     """
-    A CLI wrapper for Cryton API.
+    Wrapper for Hive's REST API.
 
     \f
     :param ctx: Click context

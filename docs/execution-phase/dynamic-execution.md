@@ -39,13 +39,13 @@ Download the example script:
 === "curl"
 
     ```shell
-    curl -O {{{ config.site_url }}}/dynamic_example.py
+    curl -O {{{ config.site_url }}}/execution-phase/dynamic_example.py
     ```
 
 === "wget"
 
     ```shell
-    wget {{{ config.site_url }}}/dynamic_example.py
+    wget {{{ config.site_url }}}/execution-phase/dynamic_example.py
     ```
 
 Update the `WORKER_ID` variable, and run the script:
@@ -56,7 +56,7 @@ python3 dynamic_example.py
 ??? abstract "Show the example"
 
     ```python
-    {! include "dynamic_example.py" !}
+    {! include "./dynamic_example.py" !}
     ```
 
 ## Example using CLI
