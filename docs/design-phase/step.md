@@ -103,6 +103,13 @@ This functionality uses `step_type: empire/agent-deploy` and enables to deploy E
     agent_name: MyAgent # only lower/upper characters and numbers allowed in name
 ```
 
+#### Troubleshooting
+
+- Some Metasploit sessions may be unsuitable for deploying Empire agents
+- Make sure the Empire host is set correctly in the scenario and is reachable from the target
+- Currently, the `multi/launcher` option is the recommended `stager_type` for use with Windows machines
+- For Empire stagers to work on newer versions of Windows OS, you need to disable all **firewall** and **antivirus** protection on the target
+
 ### Execute shell script or Empire module on agent
 This functionality uses `step_type: empire/execute` and allows the execution of shell commands or Empire modules on active Empire agents.
 
@@ -411,3 +418,14 @@ For `empire/agent-deploy` or `empire/execute` you can use these variables for th
     ```yaml
     foo: {% raw %} '{{ variable + 14 }}' {% endraw %}
     ```
+
+## Output serialization
+
+[//]: # (TODO: move this to the design-phase/step.md?)
+[//]: # (TODO: needs a bit more information, what is this for, how and where to use it, probably will be solved in the previously created ticket)
+
+Automatic output serialization is an experimental feature.  
+It allows you to take the output and use it in other modules in the form of a `serialized_output`. For this to work, the **command output must be a valid JSON** (`"some text"`, `{"a": "b"}`, `["a", "b"]`).
+
+It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.
+

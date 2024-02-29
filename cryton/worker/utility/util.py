@@ -1,98 +1,78 @@
-import importlib.util
-# TODO: https://stackoverflow.com/questions/6028000/how-to-read-a-static-file-from-inside-a-python-package
-import glob
-import os
 from types import ModuleType
 from multiprocessing import connection
+from importlib import import_module
+from pkgutil import iter_modules
+import paramiko
 
 from pymetasploit3.msfrpc import MsfRpcClient, ExploitModule, PayloadModule, AuxiliaryModule, MsfConsole
 import traceback
-import subprocess
-import sys
 import time
 from dataclasses import dataclass, field
 
 from cryton.worker.config.settings import SETTINGS
 from cryton.worker.utility import logger, constants as co, exceptions
-import paramiko
+from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
-def run_attack_module(module_path: str, arguments: dict, request_pipe: connection.Connection):
+def run_module(name: str, arguments: dict, validate_only: bool = False) -> ModuleOutput:
     """
-    Execute module defined by path and arguments.
-    :param module_path: Path to the module directory relative to config.MODULES_DIR
-    :param arguments: Arguments passed to execute function
-    :param request_pipe: Pipe for results
-    :return: Execution result
+    Validate arguments and requirements, and execute module with supplied arguments.
+    :param name: Module name
+    :param arguments: Arguments passed to the module
+    :param validate_only: Do not execute the module
+    :return: Standardized module output
     """
-    logger.logger.debug("Executing module.", module_name=module_path, arguments=arguments)
-    try:  # Try to import the module.
-        module_obj = import_module(module_path)
+    # TODO: if the module ends successfully and there is a serialized output, add drop_output flag to drop output
+    try:
+        module_type = get_module(name)
+    except KeyError:
+        return ModuleOutput(Result.ERROR, output=f"Module {name} doesn't exist.")
+
+    try:
+        module_type.validate_arguments(arguments)
     except Exception as ex:
-        request_pipe.send({co.RETURN_CODE: -2,
-                           co.OUTPUT: f"Couldn't import module {module_path}. Original error: {ex}."})
-        return
+        return ModuleOutput(Result.FAIL, output=str(ex))
 
-    try:  # Check if it has the execute function.
-        executable = module_obj.execute
-    except AttributeError:
-        result = {co.RETURN_CODE: -2, co.OUTPUT: f"Module {module_path} does not have execute function"}
-    else:
-        try:  # Run the execute function.
-            result = executable(arguments)
-        except Exception as ex:
-            result = {co.RETURN_CODE: -2, co.OUTPUT: str({"module": module_path, "ex_type": str(ex.__class__),
-                                                          "error": ex.__str__(), "traceback": traceback.format_exc()})}
-
-    logger.logger.debug("Module execution finished.", module_name=module_path, arguments=arguments, ret=result)
-    request_pipe.send(result)
-
-
-def validate_module(module_path: str, arguments: dict) -> dict:
-    """
-    Validate module defined by path and arguments.
-    :param module_path: Path to the module directory relative to config.MODULES_DIR
-    :param arguments: Arguments passed to validate function
-    :return: Validation result
-    """
-    logger.logger.debug("Validating module.", module_name=module_path, arguments=arguments)
-
-    try:  # Try to import the module.
-        module_obj = import_module(module_path)
+    try:
+        module = module_type(arguments)
     except Exception as ex:
-        return {co.RETURN_CODE: -2, co.OUTPUT: f"Couldn't import module {module_path}. Original error: {ex}."}
+        return ModuleOutput(Result.ERROR, str(ex), {"ex_type": str(ex.__class__), "traceback": traceback.format_exc()})
 
-    try:  # Check if it has the validate function.
-        executable = module_obj.validate
-    except AttributeError:
-        result = {co.RETURN_CODE: -2, co.OUTPUT: f"Module {module_path} does not have validate function."}
-    else:
-        try:  # Run the validate function.
-            return_code = executable(arguments)
-            result = {co.RETURN_CODE: return_code, co.OUTPUT: f"Module {module_path} is valid."}
-        except Exception as ex:
-            result = {co.RETURN_CODE: -2, co.OUTPUT: str({"module": module_path, "ex_type": str(ex.__class__),
-                                                          "error": ex.__str__(), "traceback": traceback.format_exc()})}
+    try:
+        module.check_requirements()
+    except Exception as ex:
+        return ModuleOutput(Result.FAIL, output=str(ex))
 
-    logger.logger.debug("Module validation finished.", module_name=module_path, arguments=arguments, result=result)
-    return result
+    if validate_only:
+        return ModuleOutput(Result.OK)
+
+    try:
+        return module.execute()
+    except Exception as ex:
+        return ModuleOutput(Result.ERROR, str(ex), {"ex_type": str(ex.__class__), "traceback": traceback.format_exc()})
 
 
-def import_module(module_path: str) -> ModuleType:
+def get_module(name: str) -> type[ModuleBase]:
     """
-    Import module defined by path. The module does not have to be installed,
-    as the path is being added to the system PATH.
-    :param module_path: Path to the module directory relative to config.MODULES_DIR
-    :return: Imported module object
+    Filter available modules and get matching module.
+    :param name: Module name
+    :return: Module class implementation
     """
-    logger.logger.debug("Importing module.", module_name=module_path)
-    module_name = "mod"
-    module_path = os.path.join(SETTINGS.modules.directory, module_path, module_name + ".py")
+    available_modules = get_available_modules()
+    return available_modules[f"cryton.modules.{name}"].Module
 
-    module_spec = importlib.util.spec_from_file_location(module_name, module_path)
-    module_obj = importlib.util.module_from_spec(module_spec)
-    module_spec.loader.exec_module(module_obj)
-    return module_obj
+
+def get_available_modules() -> dict[str, ModuleType]:
+    """
+    Get list of available modules.
+    :return: Available modules
+    """
+    modules_namespace = import_module("cryton.modules")
+    return {
+        name: import_module(f"{name}.module")
+        for finder, name, ispkg
+        in iter_modules(modules_namespace.__path__, f"{modules_namespace.__name__}.")
+    }
 
 
 def ssh_to_target(ssh_arguments: dict):
@@ -347,39 +327,6 @@ class Metasploit:
                                                           run_as_job=run_as_job)
 
         pipe_connection.send(response)
-
-
-def list_modules() -> list:
-    """
-    Get a list of available modules.
-    :return: Available modules
-    """
-    logger.logger.debug("Listing modules.")
-    default_modules_dir = SETTINGS.modules.directory
-    # List all python files, exclude init files
-    files = [f.replace(default_modules_dir, "") for f in glob.glob(default_modules_dir + "**/*.py", recursive=True)]
-    files = list(filter(lambda a: a.find("__init__.py") == -1, files))
-
-    logger.logger.debug("Finished listing modules.", modules_list=files)
-    return files
-
-
-def install_modules_requirements(verbose: bool = False) -> None:
-    """
-    Go through module directories and install all requirement files.
-    :param verbose: Display output from installation
-    :return: None
-    """
-    additional_args = {}
-    if not verbose:
-        additional_args.update({"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL})
-
-    logger.logger.debug("Installing module requirements.")
-    for root, dirs, files in os.walk(SETTINGS.modules.directory):
-        for filename in files:
-            if filename == "requirements.txt":
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", os.path.join(root, filename)],
-                                      **additional_args)
 
 
 @dataclass(order=True)

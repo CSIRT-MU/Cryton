@@ -4,9 +4,13 @@ By default, the Frontend is served at [http://localhost:8080/](http://localhost:
 
 Use the in-app help pages to learn about usage.
 
+!!! tip "Update settings at runtime"
+
+    It is possible to update the REST API host and port at runtime at [http://localhost:8080/app/user/settings](http://localhost:8080/app/user/settings){target="_blank"}.
+
 ## Features
 
-[//]: # (TODO: make a video, maybe for each feature? or just use timestamps in the video)
+[//]: # (TODO: make a video, maybe for each feature - use timestamps in the video)
 
 ### Listing data
 You can list all Cryton data by using list pages in the navigation bar. Most important data can be found directly in 

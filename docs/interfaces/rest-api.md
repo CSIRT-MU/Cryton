@@ -1,7 +1,6 @@
-This page provides information about the (self-hosted) interactive documentation of the Cryton REST API endpoints. 
-It also provides a list of changes and some important notes.
+This page provides information about the (self-hosted) interactive documentation of the Cryton REST API endpoints. It also provides a list of changes and some important notes.
 
-To access the Swagger or Redoc pages, install and start the Cryton Core application as described [here](../getting-started/quick-start.md) or [here](../components/core.md).
+To access the Swagger or Redoc pages, install and start the Cryton Hive application as described [here](../quick-start.md) or [here](../installation.md).
 
 !!! danger "Uploading files"
 
@@ -21,8 +20,4 @@ For example: [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/){target
 
 ## API changes
 
-!!! info "/api/logs/"
-
-    [:octicons-tag-24: Core 1.1.0]({{{ releases.core }}}1.1.0){target="_blank"}
-    
-    Added ability to filter the logs using multiple substrings in the following format: `substring1|substring2`.
+There are no changes.

@@ -4,10 +4,6 @@
 
     - [npm](https://nodejs.org/en/){target="_blank"}
 
-!!! tip "Recommendations"
-
-    - Override the [settings](../components/frontend.md#settings)
-
 Clone the repository:
 ```shell
 git clone https://gitlab.ics.muni.cz/cryton/cryton-frontend.git
@@ -34,8 +30,7 @@ Serve the app:
 
 !!! warning ""
 
-    Use `ng serve` only for development/testing. In a real production environment use either Docker (compose) installation or a
-    production build deployed on a production-ready web server (for example Nginx).
+    Use `ng serve` only for development/testing. In a real production environment use either Docker installation or a production build deployed on a production-ready web server (for example Nginx).
 
 ??? info "Build the app"
 
@@ -68,18 +63,17 @@ The app will refresh itself when the project changes.
     - Running unit tests with Karma.
 
 ## Build a Docker image
-If you want to build a custom Docker image, clone the repository, and switch to the correct directory:
+If you want to build a Docker image, switch to the correct directory:
 ```shell
-git clone https://gitlab.ics.muni.cz/cryton/cryton-frontend.git
 cd cryton-frontend
 ```
 
 Build the image:
 ```shell
-docker build -t custom-frontend-image .
+docker build -t <image-name> .
 ```
 
-Test your docker image:
+Test it:
 ```shell
-docker run -p 127.0.0.1:8080:80 --rm custom-frontend-image
+docker run -p 127.0.0.1:8080:80 --rm <image-name>
 ```

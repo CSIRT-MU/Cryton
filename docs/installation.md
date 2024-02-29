@@ -1,11 +1,13 @@
-In this section we will go through our installation options. In case you just want to test Cryton, check the [quick-start](getting-started/quick-start.md) or [playground](playground.md) pages.
+In this section we will go through our installation options. In case you just want to test Cryton, check the [quick-start](quick-start.md) or [playground](playground.md) pages.
 
 !!! question "Do I need to install all components?"
 
     Since the version *2.0.0*, Cryton is shipped as a single application with the option to select [extras](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-extras). Cryton's front-end is treated as a different application.
 
-    - Installing the front-end is unnecessary if you wish to control Cryton using only the CLI
+    
     - Hive and Worker are usually installed on different hosts
+    - Installing the front-end is unnecessary if you wish to control Cryton using only the CLI
+    - CLI and front-end can be deployed on a different host and installed on demand
 
 ## Prerequisites
 The following is a list of applications used and required by Cryton (its components).
@@ -172,7 +174,7 @@ It is **highly recommended** to use *pipx*, since it creates and manages an isol
     pip install --user cryton[all]=={{{ release_version }}}.*
     ```
 
-Once you finish the installation, check out the [usage](usage.md) page.
+Once you finish the installation, check out the [usage](usage/index.md) page.
 
 ## With Docker
 Cryton is also shipped in the form of Docker images.
@@ -304,3 +306,6 @@ Generate, save, and load the completion script:
         ```
 
 You may need to restart your shell for the changes to take effect.
+
+## Installing additional modules
+To install an unofficial module, please check [here](modules/index.md#installing-unofficial-modules).

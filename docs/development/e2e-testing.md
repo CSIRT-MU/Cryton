@@ -1,5 +1,7 @@
 # Cryton E2E
 
+[//]: # (TODO: update once merged with cryton)
+
 ## Description
 Cryton E2E is a project used for End-To-End testing of the Cryton toolset.
 

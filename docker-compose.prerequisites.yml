@@ -1,0 +1,100 @@
+x-settings: &settings
+  # EMPIRE
+  CRYTON_WORKER_EMPIRE_USERNAME: cryton
+  CRYTON_WORKER_EMPIRE_PASSWORD: cryton
+  # DATABASE
+  POSTGRES_PASSWORD: cryton
+  POSTGRES_USER: cryton
+  POSTGRES_DB: cryton
+  POSTGRES_HOST_AUTH_METHOD: md5
+  # PGBOUNCER
+  POSTGRESQL_HOST: cryton-db
+  POSTGRESQL_USERNAME: cryton
+  POSTGRESQL_DATABASE: cryton
+  POSTGRESQL_PASSWORD: cryton
+  PGBOUNCER_DATABASE: cryton
+  PGBOUNCER_PORT: 5432
+  PGBOUNCER_MAX_CLIENT_CONN: 1000
+  PGBOUNCER_MIN_POOL_SIZE: 8
+  PGBOUNCER_POOL_MODE: transaction
+  # RABBIT
+  RABBITMQ_DEFAULT_USER: cryton
+  RABBITMQ_DEFAULT_PASS: cryton
+  # MSF
+  MSF_DB_HOST: cryton-pgbouncer
+  MSF_DB_PORT: 5432
+  MSF_DB_NAME: cryton
+  MSF_DB_USERNAME: cryton
+  MSF_DB_PASSWORD: cryton
+
+version: '3.9'
+services:
+  cryton_db:
+    restart: always
+    image: postgres:16
+    container_name: cryton-db
+    environment:
+      <<: *settings
+    volumes:
+      - cryton_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: /usr/bin/pg_isready -U $$POSTGRES_USER
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  cryton_pgbouncer:
+    restart: always
+    image: bitnami/pgbouncer:1.21.0
+    container_name: cryton-pgbouncer
+    depends_on:
+      cryton_db:
+        condition: service_healthy
+    environment:
+      <<: *settings
+
+  cryton_rabbit:
+    restart: always
+    image: rabbitmq:3.12-management
+    container_name: cryton-rabbit
+    environment:
+      <<: *settings
+    ports:
+      - "5672:5672"
+      - "127.0.0.1:15672:15672"
+    healthcheck:
+      test: rabbitmqctl eval '
+        { true, rabbit_app_booted_and_running } = { rabbit:is_booted(node()), rabbit_app_booted_and_running },
+        { [], no_alarms } = { rabbit:alarms(), no_alarms },
+        [] /= rabbit_networking:active_listeners(),
+        rabbitmq_node_is_healthy.
+        ' || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  cryton_empire:
+    restart: always
+    image: bcsecurity/empire:v4.10.0
+    container_name: cryton-empire
+    environment:
+      <<: *settings
+    network_mode: host
+    stdin_open: true
+    # TODO: the command has to be tested since it is possible that it wont take the env vars
+    command: [ "server", "--username", "$$CRYTON_WORKER_EMPIRE_USERNAME", "--password", "$$CRYTON_WORKER_EMPIRE_PASSWORD" ]
+
+  cryton_msf:
+    restart: always
+    image: registry.gitlab.ics.muni.cz:443/cryton/configurations/metasploit-framework:0
+    container_name: cryton-msf
+    environment:
+      <<: *settings
+    network_mode: host
+    tty: true
+    depends_on:
+      cryton_pgbouncer:
+        condition: service_started
+
+volumes:
+  cryton_db_data:

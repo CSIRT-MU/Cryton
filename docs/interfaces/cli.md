@@ -1,5 +1,7 @@
 CLI implements capabilities of the Cryton's REST API and can be automated by using custom scripts.
 
+[//]: # (TODO: update the following, once the app is updated)
+
 ```
 Usage: cryton-cli [OPTIONS] COMMAND [ARGS]...
 

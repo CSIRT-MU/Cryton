@@ -51,8 +51,12 @@ class SettingsEmpire:
 
 @dataclass
 class SettingsModules:
+    # TODO: can be removed, currently unused
+    # TODO: would be cool if the user specified the modules he wanted and cryton installed them for the user on startup
+    # TODO: use install_requirements for the installation of system requirements?
+    #  each module could implement install_requirements method which would do that
     directory: str
-    install_requirements: bool  # TODO: allow installation of system requirements?
+    install_requirements: bool
 
     def __init__(self, raw_settings: dict):
         self.directory = MODULES_DIRECTORY
