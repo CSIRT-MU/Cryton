@@ -1,285 +1,116 @@
-Modules are hot-swappable, which means the modules don't have to be present at startup. 
-This is especially useful for development but **not recommended for production**.
+On this page, we will discuss primarily modules creation. If you want to contribute to the official project repository, make sure you follow the instructions in the [development section](index.md) first.
 
-## Development environment
-Since the modules will be used and installed in the Worker environment, it is best to develop inside it.
+Modules are [namespace packages](https://packaging.python.org/en/latest/guides/packaging-namespace-packages/) in the `cryton.modules` namespace.
 
-1. [Install Worker using Poetry](worker.md#installation)
-2. Enter the Worker's environment (make sure you are in the correct directory)
+Once Worker receives an execution request, it:
+
+- imports the specified module (in case it exists)
+- validates the input using [JSON Schema](https://json-schema.org/) *2020-12* (specified in the `Module.SCHEMA` parameter)
+- checks requirements (using the `Module.check_requirements` method)
+- runs the module with the supplied arguments (using the `Module.execute` method)
+- saves the module output
+
+In order to achieve this, there are some rules:
+
+- module is a namespace package
+- the namespace package contains `module.py` file
+- the `module.py` file contains class called `Module`
+- the `Module` class inherits from `cryton.lib.utility.module.ModuleBase`
+- the `Module` class implements all abstract methods from the `ModuleBase`
+- the `Module` class overrides the `SCHEMA` class variable (see [JSON Schema](https://json-schema.org/))
+- the `Module` class overrides the `ModuleBase.execute` method - it is the entry point for running the module
+
+## Creating a new module
+
+[//]: # (![]&#40;../images/oh-youre-approaching-me.jpg&#41;)
+
+Let's say we want to create a module that just prints and returns `Hello World!`. In case the user specifies a `name` parameter, it will use it instead.
+
+??? question "Want to create your own project with modules?"
+
+    In case you want to keep your modules private, or version the modules yourself, you can create your own repository and install them later as mentioned [here](../modules/index.md#installing-unofficial-modules).
+    
+    Projects and Python packages should follow the convention of having the `cryton-modules-` prefix.
+    
+    We will be using [Poetry](https://python-poetry.org/docs/#installation){target="_blank"} for this example.
+    
+    Create new poetry project for a module called `hello_world` for the `cryton.modules` namespace:
     ```shell
-    poetry shell
+    poetry new --name cryton.modules.hello_world cryton-modules-my-collection
     ```
-3. Switch to the directory containing your module
+    
+    Go into the project directory:
     ```shell
-    cd /path/to/cryton-modules/modules/my_module
+    cd cryton-modules-my-collection
     ```
-4. Install the module requirements
+    
+    Add Cryton (with *worker* extras) as a dependency.
     ```shell
-    pip install -r requirements.txt
+    poetry add "cryton[worker]>=2"
     ```
+    
+    You're all set. Follow the rest of the guide, but don't forget you already have the module directory (Python package).
 
-## How to create attack modules
-In this section, we will discuss best practices and some rules that each module must follow.
-
-To be able to execute a module using the Worker, it must have the following structure and IO arguments.
-
-- Each module must have its directory with its name.
-- The main module script must be called `mod.py`.
-- Module must contain an `execute` function that takes a dictionary and returns a dictionary. It's an entry point for executing it.
-- Module should contain a `validate` function that takes a dictionary, validates it, and returns 0 if it's okay, else raises an exception.
-
-Path example:  
-`/CRYTON_WORKER_MODULES_DIRECTORY/my-module-name/mod.py`
-
-Where:
-
-- **CRYTON_WORKER_MODULES_DIRECTORY** has to be the same path as is defined in the *CRYTON_WORKER_MODULES_DIRECTORY* variable.
-- **my-module-name** is the directory containing your module.
-- **mod.py** is the module file.
-
-Here's an example of a typical module directory:
+In the directory `cryton/modules/` create a new Python package (directory with `__init__.py` file) and give it appropriate name (`hello_world` in our case).
+```shell
+mkdir cryton/modules/hello_world
+touch cryton/modules/hello_world/__init__.py
 ```
-my_module_name/
-├── mod.py
-├── test_mod.py
-├── README.md
-├── requirements.txt
-└── example.py
+
+Now create `module.py` file in the new directory.
+```shell
+touch cryton/modules/hello_world/module.py
 ```
 
-### mod.py
-The most important file is the module itself (**must be called `mod.py`**). It consists of two main methods:
-- `execute` (is used as an entry point for module execution; takes and returns **dictionary**)
-- `validate` (is used to validate input parameters for the `execute` method; takes **dictionary** and returns 0 if it's okay, else raises an exception)
+We should have the following structure:
+```
+├── cryton
+│   ├── modules
+│   │   ├── hello_world
+│   │   │   ├── __init__.py
+│   │   │   ├── module.py
+```
 
-You can also use [prebuilt functionality](#prebuilt-functionality) from Worker.
-
-#### I/O parameters
-Every module has its unique input parameters. These are given by the Worker as a dictionary to the 
-module `execute` (when executing the module) or `validate` (when validating the module parameters) function. 
-
-Once the *execute* method has finished it must return a dictionary to the Worker with the following keys:
-
-| Parameter name      | Parameter meaning                                                                                                                                                                                                              |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `return_code`       | Numeric representation of result (0, -1, -2). <br />0 (OK) means the module finished successfully.<br />-1 (FAIL) means the module finished unsuccessfully.<br />-2 (ERROR) means the module finished with an unhandled error. |
-| `serialized_output` | Parsed output of the module. Eg. for a brute force module, this might be a list of found usernames and passwords.                                                                                                              |                                                                                                                                                                           |
-| `output`            | Raw output of the module                                                                                                                                                                                                       |
-
-#### Examples
-Here's a minimal example:
+Copy the following code into the `cryton/modules/hello_world/module.py` file:
 ```python
-def validate(arguments: dict) -> int:
-    if arguments != {}:
-        return 0  # If arguments are valid.
-    raise Exception("No arguments")  # If arguments aren't valid.
-
-def execute(arguments: dict) -> dict:
-    # Do stuff.
-    return {"return_code": 0, "serialized_output": ["x", "y"]}
-
-```
-
-And also a bit more complex example:
-```python
-from schema import Schema
-from cryton_worker.lib.util.module_util import File
+from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
-def validate(arguments: dict) -> int:
-    """
-    Validate input arguments for the execute function.
-    :param arguments: Arguments for module execution
-    :raises: schema.SchemaError
-    :return: 0 If arguments are valid
-    """
-    conf_schema = Schema({
-        'path': File(str),
-    })
-
-    conf_schema.validate(arguments)
-    return 0
-
-
-def execute(arguments: dict) -> dict:
-    """
-    This attack module can read a local file.
-    Detailed information should be in README.md.
-    :param arguments: Arguments for module execution
-    :return: Generally supported output parameters (for more information check Cryton Worker README.md)
-    """
-    # Set default return values
-    ret_vals = {
-        "return_code": -1,
-        "serialized_output": {},
-        "output": ""
+# Module implementation
+class Module(ModuleBase):
+    # The SCHEMA variable is used for input arguments validation (it uses JSON Schema)
+    SCHEMA = {
+        "type": "object",
+        "description": "Arguments for the `hello_world` module.",
+        "properties": {
+            "name": {"type": "string", "minLength": 1, "description": "Name used in the greeting."}
+        },
+        "additionalProperties": False
     }
 
-    # Parse arguments
-    path_to_file = arguments.get("path")
+    # In case our module has any system requirements, we can check for them here
+    def check_requirements(self) -> None:
+        pass
 
-    try:  # Try to get the file's content
-        with open(path_to_file) as f:
-            my_file = f.read()
-    except IOError as ex:  # In case of fatal error (expected) update output
-        ret_vals.update({'output': str(ex)})
-        return ret_vals
+    # This is the entrypoint to the module execution. 
+    # Write the code you want to run here. Also add parsing and evaluation of results
+    def execute(self) -> ModuleOutput:
+        # Arguments can be accessed using the `self._arguments` parameter
+        name = self._arguments.get("name", "World")
 
-    # In case of success update return_code to 0 (OK) and send the file content to the worker
-    ret_vals.update({"return_code": 0})
-    ret_vals.update({'output': my_file})
+        to_print = f"Hello {name}!"
 
-    return ret_vals
-
-```
-
-### test_mod.py
-Contains a set of tests to check if the code is correct.
-
-Here's a simple example:
-```python
-from mod import execute
-
-
-class TestMyModuleName:
-    def test_mod_execute(self):
-        arguments = {'cmd': "test"}
-
-        result = execute(arguments)
-
-        assert result == {"return_code": 0}
+        self._data.result = Result.OK  # The module finished successfully
+        self._data.output = to_print  # Output we want to send
+        return self._data
 
 ```
 
-Run the tests ([set up the environment first](#development-environment)):
+You just created a module that checks if the input parameter `name` is a string and has at least one character, in case it is defined. Once the module is executed it returns the greeting.
 
-```shell
-pytest test_mod.py --cov=. --cov-report html
-```
+!!! tip
 
-### README.md
-README file should describe what the module is for, its IO parameters, and give the user some examples.
-
-It should also say what system requirements are necessary (with version).
-
-### requirements.txt
-Here are the specified Python packages that are required to run the module. These requirements must be compliant with the
-Python requirements in Cryton Worker.
-
-For example, if the module wants to use the `schema` package with version *2.0.0*, but the Worker requires version *2.1.1*, it won't work.
-
-### example.py
-Is a set of predefined parameters that should allow the user to test if the module works as intended.
-
-Example:
-
-```python
-from mod import execute, validate
-
-args = {
-    "argument1": "value1",
-    "argument2": "value2"
-}
-
-validate_output = validate(args)
-print(f"validate output: {validate_output}")
-
-execute_output = execute(args)
-print(f"execute output: {execute_output}")
-
-
-```
-
-Run the example ([set up the environment first](#development-environment)):
-
-```shell
-python example.py
-```
-
-## Prebuilt functionality
-The worker provides prebuilt functionality to make building modules easier. Import it using:
-```python
-from cryton_worker.lib.util import module_util
-```
-
-It gives you access to:
-### Metasploit
-Wrapper for *MsfRpcClient* from *[pymetasploit3](https://github.com/DanMcInerney/pymetasploit3)*.
-Examples:
-```python
-# Check if the connection to the MSF RPC server is OK before doing anything.
-from cryton_worker.lib.util.module_util import Metasploit
-msf = Metasploit()
-if msf.is_connected():
-    msf.do_stuff()
-```
-
----
-
-```python
-from cryton_worker.lib.util.module_util import Metasploit
-search_criteria = {"via_exploit": "my/exploit"}
-found_sessions = Metasploit().get_sessions(**search_criteria)
-```
-
----
-
-```python
-from cryton_worker.lib.util.module_util import Metasploit
-output = Metasploit().execute_in_session("my_command", "session_id")
-```
-
-??? note "Changes"
-
-    [:octicons-tag-24: Worker 1.1.0]({{{ releases.worker }}}1.1.0){target="_blank"} Added `minimal_execution_time` parameter
-
----
-
-```python
-from cryton_worker.lib.util.module_util import Metasploit
-
-options = {"exploit_arguments": {}, "payload_arguments": {}}
-Metasploit().execute_exploit("my_exploit", "my_payload", **options)
-```
-
----
-
-```python
-from cryton_worker.lib.util.module_util import Metasploit
-token = Metasploit().client.add_perm_token()
-```
-
----
-
-```python
-from cryton_worker.lib.util.module_util import Metasploit
-output = Metasploit().get_parameter_from_session("session_id", "my_param")
-```
-
-### get_file_binary
-Function to get a file as binary.  
-Example:
-```python
-from cryton_worker.lib.util.module_util import get_file_binary
-my_file_content = get_file_binary("/path/to/my/file")
-```
-
-### File
-Class used with *[schema](https://pypi.org/project/schema/)* for validation if the file exists.  
-Example:
-```python
-from schema import Schema
-from cryton_worker.lib.util.module_util import File
-schema = Schema(File(str))
-schema.validate("/path/to/file")
-```
-
-### Dir
-Class used with *[schema](https://pypi.org/project/schema/)* for validation if the directory exists.  
-Example:
-```python
-from schema import Schema
-from cryton_worker.lib.util.module_util import Dir
-schema = Schema(Dir(str))
-schema.validate("/path/to/directory")
-```
+    - For more information, see the implementation of the `cryton.lib.utility.module.ModuleBase` class
+    - Since the modules are installed alongside Cryton, they have access to its features/code (*Metasploit*, *Empire*, ...)
+    - Do not forget to add tests
+    - Feel free to check other modules for inspiration

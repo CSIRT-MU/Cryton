@@ -17,7 +17,8 @@ All of its open-source components can be found [here](https://gitlab.ics.muni.cz
 
 !!! tip "No time to read?"
 
-    Check out the [quick-start](getting-started/quick-start.md) guide.
+    - Check out the [quick-start](quick-start.md) guide
+    - If you can't find something, try using the search on the top of the page
 
 ## Purpose
 The main purpose of Cryton is **to execute complex attack scenarios, in which the system under test is known in advance**. It was designed as such to assist red teams in cybersecurity exercises in means of repeatability of attack scenarios. These scenarios are often prepared in advance and reflect vulnerabilities hidden in the blue team's infrastructure.

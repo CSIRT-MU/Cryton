@@ -1,0 +1,1 @@
+# TODO: OOP json schema?

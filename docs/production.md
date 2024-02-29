@@ -24,3 +24,6 @@ Update these settings to not use the default values
 - CRYTON_WORKER_MSF_RPC_PASSWORD
 - CRYTON_WORKER_RABBIT_PASSWORD
 - CRYTON_WORKER_EMPIRE_PASSWORD
+
+
+https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html

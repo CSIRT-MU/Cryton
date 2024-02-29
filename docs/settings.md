@@ -242,12 +242,17 @@ The number of retries before shuttling down, when the connection to RabbitMQ is 
 |------|---------|---------|--------------------|---------------------------|
 | int  | 3       | 5       | worker.max_retries | CRYTON_WORKER_MAX_RETRIES |
 
-#### Modules - install requirements
-Install `requirements.txt` for each module on startup.
+[//]: # (TODO: deprecated for now, see settings.py)
+[//]: # (#### Modules - install requirements)
 
-| type    | default | example | YAML variable path                  | Environment variable                       |
-|---------|---------|---------|-------------------------------------|--------------------------------------------|
-| boolean | true    | false   | worker.modules.install_requirements | CRYTON_WORKER_MODULES_INSTALL_REQUIREMENTS |
+[//]: # (Install `requirements.txt` for each module on startup.)
+
+[//]: # ()
+[//]: # (| type    | default | example | YAML variable path                  | Environment variable                       |)
+
+[//]: # (|---------|---------|---------|-------------------------------------|--------------------------------------------|)
+
+[//]: # (| boolean | true    | false   | worker.modules.install_requirements | CRYTON_WORKER_MODULES_INSTALL_REQUIREMENTS |)
 
 #### Rabbit host
 RabbitMQ server host.

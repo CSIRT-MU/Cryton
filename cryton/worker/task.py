@@ -1,5 +1,5 @@
 from click import echo
-from multiprocessing import Process, get_context
+from multiprocessing import Process, get_context, connection
 from queue import PriorityQueue
 from threading import Thread
 import amqpstorm
@@ -95,7 +95,8 @@ class Task:
         """
         ctx = get_context('spawn')
         response_pipe, request_pipe = ctx.Pipe()
-        self._process = ctx.Process(target=to_run, args=(*args, request_pipe))  # TODO: run in a logged process?
+        # TODO: run in a logged process?
+        self._process = ctx.Process(target=self._pipe_results, args=(to_run, request_pipe, *args))
         self._process.start()
         self._process.join()
 
@@ -107,6 +108,16 @@ class Task:
             result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: "An unknown error occurred."}
 
         return result
+
+    @staticmethod
+    def _pipe_results(request_pipe: connection.Connection, to_run: Callable, *args) -> None:
+        """
+        Run a function and send its results into pipe.
+        :param request_pipe: Pipe for results
+        :param to_run: Callable to run
+        :return: None
+        """
+        request_pipe.send(to_run(*args))
 
     def kill(self) -> bool:
         """
@@ -227,7 +238,7 @@ class AttackTask(Task):
         else:
             module_path = arguments.pop(co.MODULE)
             module_arguments = arguments.pop(co.MODULE_ARGUMENTS)
-            result = self._run_in_process(util.run_attack_module, *(module_path, module_arguments))
+            result = self._run_in_process(util.run_module, *(module_path, module_arguments))
 
         logger.logger.info("Finished AttackTask._execute().", correlation_id=self.correlation_id, step_type=step_type)
         return result

@@ -19,4 +19,4 @@ uploads
 site/
 
 # Other
-examples/metasploitable3-example/.vagrant
+examples/scenarios/metasploitable3-example/.vagrant

@@ -27,6 +27,8 @@ theme:
     - navigation.top # Back-to-top button
     - navigation.instant  # Instant loading
     - navigation.instant.progress  # Show progress when loading a new page
+    - navigation.indexes  # Index pages for sections
+    - navigation.footer  # Next/Previous page shortcut in the footer
     - search.highlight # Highlight searched terms
     - toc.follow  # Anchor following (the right navigation)
 
@@ -73,33 +75,46 @@ plugins:
 nav:
   - Introduction: index.md
   - Architecture: architecture.md
-  - Getting started:
-      - Quick-start: getting-started/quick-start.md
-      - Workflow: getting-started/workflow.md
-      - Execution example: getting-started/execution-example.md
+  - Quick-start: quick-start.md
+  - Execution example: execution-example.md
   - Installation: installation.md
-  - Usage: usage.md
+  - Usage:
+      - usage/index.md
+      - Workflows: usage/workflows.md
   - Settings: settings.md
-  - Design phase:  # TODO: re-think
+  - Creating a scenario:  # TODO: re-think
+      - design-phase/index.md
       - Template (attack scenario): design-phase/template.md  # update
       - Plan: design-phase/plan.md  # update
       - Stage: design-phase/stage.md  # update
       - Step: design-phase/step.md  # update
       - Plan instance: design-phase/plan-instance.md  # update
-  - Execution phase:
+  - Running a scenario:
+      - execution-phase/index.md
       - What is Run: execution-phase/run.md  # update
       - Execution statistics: execution-phase/execution.md  # update
       - Reporting: execution-phase/reporting.md  # update
       - Dynamic execution: execution-phase/dynamic-execution.md  # update  # TODO: re-think
   - Interfaces:
-      - CLI: interfaces/cli.md  # update
+      - interfaces/index.md
+      - CLI: interfaces/cli.md
       - Frontend: interfaces/frontend.md  # update
       - REST API: interfaces/rest-api.md  # update
-#  - Modules:  # TODO: will be done in a different ticket
+  - Modules:
+      - modules/index.md
+      - Command: modules/list/command.md
+      - FFUF: modules/list/ffuf.md
+      - Medusa: modules/list/medusa.md
+      - Metasploit: modules/list/metasploit.md
+      - Nmap: modules/list/nmap.md
+      - Script: modules/list/script.md
+      - WPScan: modules/list/wpscan.md
   - Playground: playground.md  # TODO: update once the playground is moved
-  - Integrated tools: integrated-tools.md  # update  # TODO: re-think
-  - How to contribute: contribution-guide.md  # update
-  - Development: development.md  # update
+  - How to contribute: contribution-guide.md
+  - Development:
+      - development/index.md
+      - Modules: development/modules.md
+      - Front-end: development/frontend.md
   - Production: production.md  # update  # TODO: re-think
   - Logging: logging.md  # update
   - Docker images: docker-images.md  # update  # TODO: re-think
