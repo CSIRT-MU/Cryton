@@ -62,14 +62,14 @@ def generate_docs(ctx: helpers.Context, file: str, layer: int):
     :param layer: Highest header level
     :return: None
     """
-    docs = ''
-    for cmd_detail in ctx.parent.to_info_dict().get('commands').values():
+    docs = ""
+    for cmd_detail in ctx.parent.to_info_dict().get("command").get("commands").values():
         docs += helpers.render_documentation(cmd_detail, layer)
     docs = helpers.clean_up_documentation(docs)
 
     if file is not None:
         try:
-            with open(file, 'w+') as f:
+            with open(file, "w+") as f:
                 f.write(docs)
         except IOError:
             click.echo(f"Cannot access {file}.")

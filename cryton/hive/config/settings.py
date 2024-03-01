@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from os import getenv, sched_getaffinity, path
 
 from cryton.lib.config.settings import (
-    SETTINGS_HIVE, getenv_bool, getenv_int, getenv_list, LOG_DIRECTORY
+    SETTINGS_HIVE, getenv_bool, getenv_int, getenv_list, LOG_DIRECTORY, EVIDENCE_DIRECTORY
 )
 
 
@@ -108,6 +108,7 @@ class Settings:
         self.api = SettingsAPI(raw_settings.get("api", {}))
         self.scheduler = SettingsScheduler(self.message_timeout)
         self.log_file = path.join(LOG_DIRECTORY, "hive.log")
+        self.evidence_directory = EVIDENCE_DIRECTORY
 
 
 SETTINGS = Settings(SETTINGS_HIVE)

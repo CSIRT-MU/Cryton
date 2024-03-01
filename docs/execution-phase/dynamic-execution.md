@@ -32,7 +32,7 @@ You will probably want to automate these actions rather than using CLI to do the
 
     - Cryton Core is running (REST API is accessible at *localhost:8000*)
     - Worker is registered in Core and running
-    - mod_cmd is accessible from the Worker
+    - module command is accessible from the Worker
 
 Download the example script:
 
@@ -66,7 +66,7 @@ For this example we will assume that:
 
     - Cryton Core is running (REST API is accessible at *localhost:8000*)
     - Worker is registered in Core and running
-    - mod_cmd is accessible from the Worker
+    - module command is accessible from the Worker
 
 Files used in this guide can be found in the [Cryton Core repository](https://gitlab.ics.muni.cz/cryton/cryton-core/-/tree/{{{ git_release }}}/examples/dynamic-execution-example){target="_blank"}.
 

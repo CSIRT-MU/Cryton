@@ -11,7 +11,7 @@ step_type: worker/execute
 is_init: true
 output_prefix: credentials_from_localhost
 arguments:
-  module: mod_medusa
+  module: medusa
   module_arguments:
     target: localhost
     credentials:
@@ -270,21 +270,21 @@ For example:
   is_init: true
   output_prefix: custom_prefix
   arguments:
-    module: mod_medusa
+    module: medusa
     # Should return username and password in a dictionary
     module_arguments:
       target: localhost
-      # Default password list in mod_medusa folder will be used for bruteforce
+      # Default password list in medusa folder will be used for bruteforce
       credentials:
         username: admin
   next:
   - type: result
     value: OK
-    step: mod_ssh
-- name: mod_ssh
+    step: ssh
+- name: ssh
   step_type: worker/execute
   arguments:
-    module: mod_ssh
+    module: ssh
     module_arguments:
       username: $custom_prefix.username
       password: $custom_prefix.password
@@ -302,7 +302,7 @@ Also, there is a special prefix named **parent**, which simply takes the output 
 - name: stepB
   ...
   arguments:
-    module_name: mod_a
+    module_name: module_a
     module_arguments:
       username: $parent.var
 ```
@@ -332,7 +332,7 @@ plan:
       - name: stepB
         ...
         arguments:
-          module: mod_a
+          module: module_a
           module_arguments:
             username: $parent|arg
 ```
@@ -352,7 +352,7 @@ For this reason, there is a ```output_mapping``` mechanism.
       name_to: stolen_token
   step_type: worker/execute
   arguments:
-    module: mod_a
+    module: module_a
     module_arguments:
       ...
 - name: step_b
@@ -363,13 +363,13 @@ For this reason, there is a ```output_mapping``` mechanism.
       name_to: stolen_token
   step_type: worker/execute
   arguments:
-    module: mod_b
+    module: module_b
     module_arguments:
       ...
 - name: step_c
   step_type: worker/execute
   arguments:
-    module: mod_c
+    module: module_c
     module_arguments:
       token: $steal.stolen_token
 ```

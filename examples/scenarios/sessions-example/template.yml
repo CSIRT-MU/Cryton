@@ -1,6 +1,6 @@
 ---
 # This example shows how to create and use named sessions.
-# It is required to have the `mod_cmd` and `mod_msf` modules installed.
+# It is required to have the `command` and `metasploit` modules installed.
 
 plan:
   name: Sessions example
@@ -16,7 +16,7 @@ plan:
           step_type: worker/execute
           arguments:
             create_named_session: session_to_target_1
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: auxiliary
               module: scanner/ssh/ssh_login
@@ -32,6 +32,6 @@ plan:
           step_type: worker/execute
           arguments:
             use_named_session: session_to_target_1
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: whoami

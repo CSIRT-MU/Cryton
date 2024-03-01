@@ -27,6 +27,4 @@ RUN ln -s /app/.venv/bin/cryton-hive /usr/local/bin/cryton-hive
 RUN _CRYTON_HIVE_COMPLETE=bash_source cryton-hive > /etc/profile.d/cryton-hive-complete.sh
 RUN echo ". /etc/profile.d/cryton-hive-complete.sh" >> ~/.bashrc
 
-ENTRYPOINT [ "/app/docker/hive/entrypoint.sh" ]
-
-CMD [ "cryton-hive", "start" ]
+CMD [ "cryton-hive", "start", "--migrate-database" ]

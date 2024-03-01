@@ -4,6 +4,6 @@ name: initial whoami
 step_type: worker/execute
 is_init: true
 arguments:
-  module: mod_cmd
+  module: command
   module_arguments:
     cmd: whoami

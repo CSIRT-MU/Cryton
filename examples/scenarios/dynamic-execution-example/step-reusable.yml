@@ -3,6 +3,6 @@
 name: reusable step {{ id }}
 step_type: worker/execute
 arguments:
-  module: mod_cmd
+  module: command
   module_arguments:
     cmd: {{ command }}

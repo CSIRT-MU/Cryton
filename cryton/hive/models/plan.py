@@ -13,6 +13,7 @@ from multiprocessing import Process
 from cryton.hive.cryton_app.models import PlanModel, PlanExecutionModel, StageExecutionModel
 
 from cryton.hive.utility import constants, exceptions, logger, scheduler_client, states as st
+from cryton.hive.config.settings import SETTINGS
 from cryton.hive.models import worker
 from cryton.hive.models.stage import StageExecution, Stage
 from django.utils import timezone
@@ -342,7 +343,7 @@ class PlanExecution:
         Generate directory for storing execution evidence.
         :return: None
         """
-        worker_evidence_directory = os.path.join(config.EVIDENCE_DIRECTORY, f"run_{self.model.run_id}",
+        worker_evidence_directory = os.path.join(SETTINGS.evidence_directory, f"run_{self.model.run_id}",
                                                  f"worker_{self.model.worker.name}")
 
         os.makedirs(worker_evidence_directory, exist_ok=True)

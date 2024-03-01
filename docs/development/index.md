@@ -66,11 +66,11 @@ poetry run cryton-cli
 
 ### Pytest
 ```shell
-pytest --cov=cryton tests/unit_tests --cov-config=.coveragerc-unit --cov-report html
+pytest --cov=cryton tests/unit/ --cov-config=.coveragerc-unit --cov-report html
 ```
 
 ```shell
-pytest --cov=cryton tests/integration_tests --cov-config=.coveragerc-integration --cov-report html
+pytest --cov=cryton tests/integration/ --cov-config=.coveragerc-integration --cov-report html
 ```
 
 ???+ "Run specific test" 
@@ -83,11 +83,11 @@ pytest --cov=cryton tests/integration_tests --cov-config=.coveragerc-integration
 Use in combination with [pyenv](https://github.com/pyenv/pyenv){target="_blank"}.
 
 ```shell
-tox -- tests/unit_tests/ --cov=cryton --cov-config=.coveragerc-unit
+tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
 ```
 
 ```shell
-tox -- tests/integration_tests/ --cov=cryton --cov-config=.coveragerc-integration
+tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
 ```
 
 ### E2E
