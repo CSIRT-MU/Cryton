@@ -175,7 +175,7 @@ build_docker_image_worker_kali:
     - apt update && apt install -y git
     - git config user.name $PROJECT_BOT_USER
     - git config user.email $PROJECT_BOT_USER@example.com
-    - git fetch origin $PAGES_BRANCH
+    - git fetch origin $PAGES_BRANCH || echo "Pages branch not deployed yet."
   rules:
     - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
       when: never
