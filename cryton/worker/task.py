@@ -9,6 +9,7 @@ from schema import Schema, Or, SchemaError, Optional as SchemaOptional
 from utinni import EmpireLoginError
 import asyncio
 from typing import Optional, Callable, List
+from dataclasses import asdict
 
 from cryton.worker import event, empire
 from cryton.worker.utility import util, constants as co, logger
@@ -96,7 +97,7 @@ class Task:
         ctx = get_context('spawn')
         response_pipe, request_pipe = ctx.Pipe()
         # TODO: run in a logged process?
-        self._process = ctx.Process(target=self._pipe_results, args=(to_run, request_pipe, *args))
+        self._process = ctx.Process(target=self._pipe_results, args=(request_pipe, to_run, *args))
         self._process.start()
         self._process.join()
 
@@ -238,7 +239,7 @@ class AttackTask(Task):
         else:
             module_path = arguments.pop(co.MODULE)
             module_arguments = arguments.pop(co.MODULE_ARGUMENTS)
-            result = self._run_in_process(util.run_module, *(module_path, module_arguments))
+            result = asdict(self._run_in_process(util.run_module, *(module_path, module_arguments)))
 
         logger.logger.info("Finished AttackTask._execute().", correlation_id=self.correlation_id, step_type=step_type)
         return result

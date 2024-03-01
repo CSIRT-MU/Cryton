@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from enum import StrEnum, auto
+from enum import Enum, auto
 from copy import deepcopy
 from jsonschema import validate
 
 
-class Result(StrEnum):
+class Result(str, Enum):  # StrEnum introduced in 3.11
     """
     Module result options.
     """

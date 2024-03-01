@@ -47,20 +47,20 @@ stages:
 unit_tests:
   extends: .tests
   script:
-    - tox run-parallel -- tests/unit_tests/ --cov=cryton --cov-config=.coveragerc-unit
+    - tox run-parallel -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
     - cat coverage.readable
 
 integration_tests:
   extends: .tests
   script:
-    - tox run-parallel -- tests/integration_tests/ --cov=cryton --cov-config=.coveragerc-integration
+    - tox run-parallel -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
     - cat coverage.readable
 
 build_documentation:
   extends: .documentation
   stage: test
   before_script:
-    - poetry install
+    - poetry install --with docs
   script:
     - poetry run mkdocs build
 
@@ -186,7 +186,7 @@ build_pages:
   extends: .pages
   stage: build
   script:
-    - poetry install
+    - poetry install --with docs
     - git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
     - git checkout $CI_COMMIT_SHA
     - |

@@ -17,7 +17,7 @@ class SchedulerService:
         self._job_queue = job_queue
         db_url = (
             f"postgresql://{SETTINGS.database.username}:{SETTINGS.database.password}@{SETTINGS.database.host}:"
-            f"{SETTINGS.database.port}{SETTINGS.database.name}"
+            f"{SETTINGS.database.port}/{SETTINGS.database.name}"
         )
 
         jobstores = {

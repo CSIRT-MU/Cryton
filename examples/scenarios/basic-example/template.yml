@@ -1,6 +1,6 @@
 ---
 # This is a simple example of Step chaining.
-# Required modules: mod_cmd, mod_medusa.
+# Required modules: command, medusa.
 
 plan:
   name: Basic example
@@ -15,7 +15,7 @@ plan:
           is_init: true
           step_type: worker/execute
           arguments:
-            module: mod_nmap
+            module: nmap
             module_arguments:
               target: {{ target }}
               ports:
@@ -27,7 +27,7 @@ plan:
         - name: bruteforce
           step_type: worker/execute
           arguments:
-            module: mod_medusa
+            module: medusa
             module_arguments:
               target: {{ target }}
               credentials:

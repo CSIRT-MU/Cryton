@@ -67,7 +67,7 @@ services:
     environment:
       <<: *settings
     ports:
-      - "8000:80"
+      - "127.0.0.1:8000:80"
     depends_on:
       cryton_pgbouncer:
         condition: service_started

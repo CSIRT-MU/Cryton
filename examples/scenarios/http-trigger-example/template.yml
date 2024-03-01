@@ -1,6 +1,6 @@
 ---
 # This example shows the usage of the HTTPListener trigger type.
-# Required modules: mod_cmd.
+# Required modules: command.
 # To trigger the HTTPListener, use command "curl http://<worker_ip>:8082/index?test=test".
 
 plan:
@@ -23,6 +23,6 @@ plan:
           is_init: true
           step_type: worker/execute
           arguments:
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: echo "it works!"

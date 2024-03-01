@@ -47,7 +47,6 @@ class Module(ModuleBase):
                 "description": ""
             }
         },
-        "additionalProperties": False,
         "oneOf": [
             {
                 "properties": {

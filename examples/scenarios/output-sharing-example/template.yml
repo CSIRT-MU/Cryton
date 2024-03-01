@@ -1,6 +1,6 @@
 ---
 # This example shows how to share output between the Steps.
-# Required modules: mod_medusa, mod_msf.
+# Required modules: medusa, metasploit.
 
 plan:
   name: Output sharing example
@@ -15,7 +15,7 @@ plan:
           is_init: true
           step_type: worker/execute
           arguments:
-            module: mod_medusa
+            module: medusa
             module_arguments:
               target: {{ target }}
               credentials:
@@ -28,7 +28,7 @@ plan:
         - name: create-ssh-session
           step_type: worker/execute
           arguments:
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: auxiliary
               module: scanner/ssh/ssh_login

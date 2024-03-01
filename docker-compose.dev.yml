@@ -4,17 +4,23 @@ services:
     image: cryton-cli
     build:
       dockerfile: Dockerfile-cli
+    environment:
+      CRYTON_CLI_DEBUG: true
 
   cryton_worker:
     image: cryton-worker-kali
     build:
       dockerfile: Dockerfile-worker
       target: worker-kali
+    environment:
+      CRYTON_WORKER_DEBUG: true
 
   cryton_hive:
     image: cryton-hive
     build:
       dockerfile: Dockerfile-hive
+    environment:
+      CRYTON_HIVE_DEBUG: true
 
   cryton_api_proxy:
     image: cryton-api-proxy

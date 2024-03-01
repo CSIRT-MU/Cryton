@@ -27,7 +27,7 @@ STEP = {
     "step_type": "worker/execute",
     "is_init": True,
     "arguments": {
-        "module": "mod_cmd",
+        "module": "command",
         "module_arguments": {
             "cmd": "whoami"
         }
@@ -38,7 +38,7 @@ STEP_REUSABLE = {
     "name": "reusable step {{ id }}",
     "step_type": "worker/execute",
     "arguments": {
-        "module": "mod_cmd",
+        "module": "command",
         "module_arguments": {
             "cmd": "{{ command }}"
         }
