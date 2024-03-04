@@ -13,24 +13,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E worker
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E worker
 
-FROM python:3.12-slim-bullseye as worker
-
-# Set environment
-ENV CRYTON_APP_DIRECTORY=/app
-
-# Copy app
-COPY --from=base /app /app
-
-# Make the executable accessible
-RUN ln -s /app/.venv/bin/cryton-worker /usr/local/bin/cryton-worker
-
-# Enable shell autocompletion
-RUN _CRYTON_WORKER_COMPLETE=bash_source cryton-worker > /etc/profile.d/cryton-worker-complete.sh
-RUN echo ". /etc/profile.d/cryton-worker-complete.sh" >> ~/.bashrc
-
-CMD [ "cryton-worker", "start" ]
-
-FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/kali-prebuilt:latest as worker-kali
+FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/kali-prebuilt:latest as production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

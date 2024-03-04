@@ -203,17 +203,12 @@ In case of a misconfiguration the containers can keep restarting (become unhealt
 
 === "Worker"
 
-    Two versions of Worker are shipped. Both of them contain the modules and their prerequisites. One is based on the Alpine linux and the other on Kali.
-    
-    Run the *Alpine* linux version container in the background:
+    Run the container in the background:
     ```shell
     docker run --network host -d registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:{{{ release_version }}}
     ```
-    
-    Run the *Kali* linux version container in the background:
-    ```shell
-    docker run --network host -d registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:kali-{{{ release_version }}}
-    ```
+
+    It contains the official modules and their prerequisites.
 
 === "CLI"
 

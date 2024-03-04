@@ -1,4 +1,4 @@
-FROM httpd:2-alpine as api-proxy
+FROM httpd:2-alpine as production
 
 COPY docker/api-proxy/httpd.conf /usr/local/apache2/conf/httpd.conf
 COPY docker/api-proxy/hp-vhosts.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf

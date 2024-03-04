@@ -1,4 +1,4 @@
-image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest  # TODO: unnecessary?
+image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
@@ -18,10 +18,7 @@ stages:
 .documentation:
   image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
   rules:
-    - changes: # TODO
-        #        - cryton/**/*
-        #        - settings*
-        #        - examples/**/*
+    - changes:
         - mkdocs.yml
         - docs/**/*
         - .gitlab-ci.yml
@@ -72,36 +69,27 @@ build_documentation:
       when: never
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
 
-# TODO: multi arch Docker images (use tags to define the runner)
-# https://github.com/GoogleContainerTools/kaniko#creating-multi-arch-container-manifests-using-kaniko-and-manifest-tool
 .build_docker_image:
   extends: .publish
   image:
     name: gcr.io/kaniko-project/executor:v1.19.2-debug
     entrypoint: [ "" ]
   variables:
-    BUILD_TARGET: "target"
-    LATEST_TAG: "latest"
-    TAG_PREFIX: ""
+    BUILD_TARGET: "production"
     IMAGE_NAME_POSTFIX: ""
     DOCKERFILE: "Dockerfile"
   before_script:
     # Set variables
-    - export IMAGE_VERSION_CURRENT=$CI_COMMIT_TAG
-    - export IMAGE_VERSION_MINOR=${IMAGE_VERSION%.*}
-    - export IMAGE_VERSION_MAJOR=${IMAGE_MINOR_VERSION%.*}
-    - export IMAGE_TAG_CURRENT=$TAG_PREFIX$IMAGE_VERSION_CURRENT
-    - export IMAGE_TAG_MINOR=$TAG_PREFIX$IMAGE_VERSION_MINOR
-    - export IMAGE_TAG_MAJOR=$TAG_PREFIX$IMAGE_VERSION_MAJOR
-    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE$IMAGE_NAME_POSTFIX
+    - export IMAGE_TAG_CURRENT=$CI_COMMIT_TAG
+    - export IMAGE_TAG_MINOR=${IMAGE_TAG_CURRENT%.*}
+    - export IMAGE_TAG_MAJOR=${IMAGE_TAG_MINOR%.*}
+    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE/$IMAGE_NAME_POSTFIX
     # Check variables
-    - echo "CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE"
     - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
     - echo "BUILD_TARGET $BUILD_TARGET"
     - echo "IMAGE_TAG_CURRENT $IMAGE_TAG_CURRENT"
     - echo "IMAGE_TAG_MINOR $IMAGE_TAG_MINOR"
     - echo "IMAGE_TAG_MAJOR $IMAGE_TAG_MAJOR"
-    - echo "LATEST_TAG $LATEST_TAG"
   script:
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
@@ -112,62 +100,45 @@ build_documentation:
       --destination $IMAGE_DESTINATION:$IMAGE_TAG_CURRENT
       --destination $IMAGE_DESTINATION:$IMAGE_TAG_MINOR
       --destination $IMAGE_DESTINATION:$IMAGE_TAG_MAJOR
-      --destination $IMAGE_DESTINATION:$LATEST_TAG
-      --label version="$IMAGE_VERSION_CURRENT"
+      --destination $IMAGE_DESTINATION:latest
+      --label version="$IMAGE_TAG_CURRENT"
       --label commit="$CI_COMMIT_SHA"
 
 upload_package_to_pypi:
   extends: .publish
+  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
   script:
     - poetry config pypi-token.pypi $PYPI_TOKEN
     - poetry publish --build
 
-build_docker_image_cryton:
-  extends: .build_docker_image
-  variables:
-    BUILD_TARGET: "cryton"
-    DOCKERFILE: "Dockerfile"
-
 build_docker_image_hive:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "hive"
-    IMAGE_NAME_POSTFIX: "/hive"
+    IMAGE_NAME_POSTFIX: "hive"
     DOCKERFILE: "Dockerfile-hive"
 
 build_docker_image_api_proxy:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "api-proxy"
-    IMAGE_NAME_POSTFIX: "/api-proxy"
+    IMAGE_NAME_POSTFIX: "api-proxy"
     DOCKERFILE: "Dockerfile-api-proxy"
 
 build_docker_image_cli:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "cli"
-    IMAGE_NAME_POSTFIX: "/cli"
+    IMAGE_NAME_POSTFIX: "cli"
     DOCKERFILE: "Dockerfile-cli"
 
 build_docker_image_worker:
   extends: .build_docker_image
   variables:
-    BUILD_TARGET: "worker"
-    IMAGE_NAME_POSTFIX: "/worker"
+    IMAGE_NAME_POSTFIX: "worker"
     DOCKERFILE: "Dockerfile-worker"
 
-build_docker_image_worker_kali:
-  extends: .build_docker_image
-  variables:
-    BUILD_TARGET: "worker-kali"
-    LATEST_TAG: "kali"
-    TAG_PREFIX: "kali-"
-    IMAGE_NAME_POSTFIX: "/worker"
-    DOCKERFILE: "Dockerfile-worker"
-
-# build
-.pages:
+# Build and deploy pages
+pages:
   extends: .documentation
+  stage: build
   variables:
     HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
     PAGES_BRANCH: "pages"
@@ -181,22 +152,26 @@ build_docker_image_worker_kali:
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
-
-build_pages:
-  extends: .pages
-  stage: build
   script:
     - poetry install --with docs
     - git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
     - git checkout $CI_COMMIT_SHA
     - |
-      if [ -n $CI_COMMIT_TAG ]; then
-        export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%.*}
+      if [[ "$CI_COMMIT_TAG" != "" ]]; then
+        export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%%.*}.x
         export ALIAS=latest
       else
         export DOCUMENTATION_VERSION=master
         export ALIAS=""
       fi
+    - echo "DOCUMENTATION_VERSION $DOCUMENTATION_VERSION"
+    - echo "ALIAS $ALIAS"
+    - poetry run mike delete
+      --push
+      --remote $HTTPS_REMOTE
+      --branch $PAGES_BRANCH
+      --deploy-prefix public
+      $DOCUMENTATION_VERSION || echo "Version not deployed yet."
     - poetry run mike deploy
       --update-aliases
       --push
@@ -205,20 +180,9 @@ build_pages:
       --alias-type=redirect
       --deploy-prefix public
       $DOCUMENTATION_VERSION $ALIAS
-# TODO: maybe unnecessary
-#    - poetry run mike set-default
-#      --push
-#      --remote $HTTPS_REMOTE
-#      --branch $PAGES_BRANCH
-#      --deploy-prefix public
-#      latest
-
-# deploy
-pages:
-  extends: .pages
-  stage: deploy
-  script:
     - git checkout $PAGES_BRANCH
+    - git pull
+    - git log -1
   artifacts:
     expire_in: 30 days
     paths:

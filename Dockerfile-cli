@@ -13,7 +13,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E cli
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E cli
 
-FROM python:3.12-alpine as cli
+FROM python:3.12-alpine as production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app
