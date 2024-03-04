@@ -13,7 +13,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E hive
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E hive
 
-FROM python:3.12-slim-bullseye as hive
+FROM python:3.12-slim-bullseye as production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

@@ -49,7 +49,7 @@ services:
 
   cryton_worker:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:kali
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/worker
     container_name: cryton-worker
     environment:
       <<: *settings
