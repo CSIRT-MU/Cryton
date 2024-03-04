@@ -1,0 +1,2112 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/nmap/">
+      
+      
+        <link rel="prev" href="../metasploit/">
+      
+      
+        <link rel="next" href="../script/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+    
+    
+      
+        <title>Nmap - Cryton toolset</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#description" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Cryton toolset" class="md-header__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cryton toolset
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Nmap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Cryton toolset" class="md-nav__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Cryton toolset
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick-start
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../execution-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../usage/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../design-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Creating a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Creating a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-phase/template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Template (attack scenario)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-phase/plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-phase/stage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-phase/step/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-phase/plan-instance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan instance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../execution-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Running a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Running a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../execution-phase/run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What is Run
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../execution-phase/execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../execution-phase/reporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../execution-phase/dynamic-execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic execution
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../interfaces/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Interfaces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Interfaces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../interfaces/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../interfaces/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../interfaces/rest-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    REST API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../command/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ffuf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FFUF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../medusa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Medusa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metasploit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metasploit
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Nmap
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Nmap
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input parameters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target" class="md-nav__link">
+    <span class="md-ellipsis">
+      target
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      ports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      command
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialize_output" class="md-nav__link">
+    <span class="md-ellipsis">
+      serialize_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      port_parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-predefined-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with predefined inputs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-custom-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with custom command
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output serialization
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../script/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wpscan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WPScan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playground/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playground
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribution-guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to contribute
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../development/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Front-end
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../production/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../docker-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ansible/ansible/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ansible
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Acknowledgements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input parameters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target" class="md-nav__link">
+    <span class="md-ellipsis">
+      target
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      ports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      command
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serialize_output" class="md-nav__link">
+    <span class="md-ellipsis">
+      serialize_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      port_parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-predefined-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with predefined inputs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-with-custom-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with custom command
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output serialization
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Nmap</h1>
+
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>A module for scanning using the <a href="https://nmap.org/">nmap</a> tool.</p>
+<p>By default, it scans the most common ports and returns a list with all ports and their parameters.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.kali.org/tools/nmap/">Nmap</a> must be installed.</p>
+<h2 id="input-parameters">Input parameters<a class="headerlink" href="#input-parameters" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Simple</label><label for="__tabbed_1_2">Custom</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<h3 id="target"><code>target</code><a class="headerlink" href="#target" title="Permanent link">&para;</a></h3>
+<p>Scan target.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>127.0.0.1:8000</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ports"><code>ports</code><a class="headerlink" href="#ports" title="Permanent link">&para;</a></h3>
+<p>List of individual ports or ranges to scan.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ports</code></td>
+<td>array[integer]</td>
+<td>&cross;</td>
+<td>Top 100 common ports.</td>
+<td><code>[1-300, 443]</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="options"><code>options</code><a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
+<p>Additional Nmap parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>options</code></td>
+<td>string</td>
+<td>&cross;</td>
+<td></td>
+<td><code>-T4 -sV</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<h3 id="command"><code>command</code><a class="headerlink" href="#command" title="Permanent link">&para;</a></h3>
+<p>Nmap command to run with syntax as in command line (with executable).</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>nmap localhost</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="serialize_output"><code>serialize_output</code><a class="headerlink" href="#serialize_output" title="Permanent link">&para;</a></h3>
+<p>Option to serialize output to JSON. This option will add <code>-oX -</code> parameter to the command (if not already there).</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serialize_output</code></td>
+<td>boolean</td>
+<td>&cross;</td>
+<td><code>true</code></td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h3 id="timeout"><code>timeout</code><a class="headerlink" href="#timeout" title="Permanent link">&para;</a></h3>
+<p>Timeout for the command (<strong>in seconds</strong>).</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timeout</code></td>
+<td>integer</td>
+<td>&cross;</td>
+<td><code>60</code></td>
+<td><code>200</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="port_parameters"><code>port_parameters</code><a class="headerlink" href="#port_parameters" title="Permanent link">&para;</a></h3>
+<p>Check if found ports match your desired parameters. If the port with desired parameters is not found, the module will result in failure.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>port_parameters</code></td>
+<td>object</td>
+<td>&cross;</td>
+<td></td>
+<td><code>{"portid": "22"}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Possible options:</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp</span>
+<span class="nt">portid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;22&#39;</span>
+<span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">open</span>
+<span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">syn-ack</span>
+<span class="nt">reason_ttl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0&#39;</span>
+<span class="nt">service</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenSSH</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6.6.1p1 Ubuntu 2ubuntu2.13</span>
+<span class="w">  </span><span class="nt">extrainfo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ubuntu Linux; protocol 2.0</span>
+<span class="w">  </span><span class="nt">ostype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Linux</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">probed</span>
+<span class="w">  </span><span class="nt">conf</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;10&#39;</span>
+<span class="nt">cpe</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpe:/a:openbsd:openssh:6.6.1p1</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpe:/o:linux:linux_kernel</span>
+<span class="nt">scripts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
+<p>All options try to find string in the nmap serialized output, and they are non-case sensitive. For example if the <code>cpe</code> in the nmap output would be cpe:/o:linux:linux_kernel, <code>cpe: -linux</code> in <code>port_parameters</code> would match it successfully.</p>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h3 id="example-with-predefined-inputs">Example with predefined inputs<a class="headerlink" href="#example-with-predefined-inputs" title="Permanent link">&para;</a></h3>
+<p>Input:
+<div class="highlight"><pre><span></span><code><span class="nt">module_arguments</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE ME</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-30</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">  </span><span class="nt">port_parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp</span>
+<span class="w">      </span><span class="nt">portid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;80&#39;</span>
+<span class="w">      </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">open</span>
+<span class="w">      </span><span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">syn-ack</span>
+<span class="w">      </span><span class="nt">reason_ttl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0&#39;</span>
+<span class="w">      </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">        </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apache httpd</span>
+<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.4.7</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">probed</span>
+<span class="w">        </span><span class="nt">conf</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;10&#39;</span>
+<span class="w">      </span><span class="nt">cpe</span><span class="p">:</span><span class="w"> </span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache</span>
+<span class="w">  </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-T4 -sV</span>
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;192.168.56.3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;osmatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="nt">&quot;ports&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;portid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;21&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ftp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;product&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ProFTPD&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3.5&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ostype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unix&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;probed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/a:proftpd:proftpd:1.3.5&quot;</span><span class="p">}],</span><span class="w"> </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;portid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;22&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;product&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OpenSSH&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6.6.1p1 Ubuntu 2ubuntu2.13&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;extrainfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ubuntu Linux; protocol 2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ostype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Linux&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;probed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/a:openbsd:openssh:6.6.1p1&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/o:linux:linux_kernel&quot;</span><span class="p">}],</span><span class="w"> </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;portid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;80&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;product&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Apache httpd&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.4.7&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;127.0.2.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;probed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/a:apache:http_server:2.4.7&quot;</span><span class="p">}],</span><span class="w"> </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]}],</span><span class="w"> </span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;macaddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="w"> </span><span class="nt">&quot;stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;scanner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nmap&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/usr/bin/nmap -oX - -T4 -sV -p-29,80 192.168.56.3&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1660830754&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;startstr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thu Aug 18 15:52:34 2022&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7.92&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;xmloutputversion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.05&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;runtime&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1660830775&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timestr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thu Aug 18 15:52:55 2022&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nmap done at Thu Aug 18 15:52:55 2022; 1 IP address (1 host up) scanned in 21.05 seconds&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;elapsed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;21.05&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;exit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">}},</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;nmaprun scanner=\&quot;nmap\&quot; args=\&quot;/usr/bin/nmap -oX - -T4 -sV -p-29,80 192.168.56.3\&quot; start=\&quot;1660830754\&quot; startstr=\&quot;Thu Aug 18 15:52:34 2022\&quot; version=\&quot;7.92\&quot; xmloutputversion=\&quot;1.05\&quot;&gt;\n&lt;scaninfo type=\&quot;connect\&quot; protocol=\&quot;tcp\&quot; numservices=\&quot;30\&quot; services=\&quot;1-29,80\&quot; /&gt;\n&lt;verbose level=\&quot;0\&quot; /&gt;\n&lt;debugging level=\&quot;0\&quot; /&gt;\n&lt;hosthint&gt;&lt;status state=\&quot;up\&quot; reason=\&quot;unknown-response\&quot; reason_ttl=\&quot;0\&quot; /&gt;\n&lt;address addr=\&quot;192.168.56.3\&quot; addrtype=\&quot;ipv4\&quot; /&gt;\n&lt;hostnames&gt;\n&lt;/hostnames&gt;\n&lt;/hosthint&gt;\n&lt;host starttime=\&quot;1660830767\&quot; endtime=\&quot;1660830775\&quot;&gt;&lt;status state=\&quot;up\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot; /&gt;\n&lt;address addr=\&quot;192.168.56.3\&quot; addrtype=\&quot;ipv4\&quot; /&gt;\n&lt;hostnames&gt;\n&lt;/hostnames&gt;\n&lt;ports&gt;&lt;extraports state=\&quot;filtered\&quot; count=\&quot;27\&quot;&gt;\n&lt;extrareasons reason=\&quot;no-response\&quot; count=\&quot;27\&quot; proto=\&quot;tcp\&quot; ports=\&quot;1-20,23-29\&quot; /&gt;\n&lt;/extraports&gt;\n&lt;port protocol=\&quot;tcp\&quot; portid=\&quot;21\&quot;&gt;&lt;state state=\&quot;open\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot; /&gt;&lt;service name=\&quot;ftp\&quot; product=\&quot;ProFTPD\&quot; version=\&quot;1.3.5\&quot; ostype=\&quot;Unix\&quot; method=\&quot;probed\&quot; conf=\&quot;10\&quot;&gt;&lt;cpe&gt;cpe:/a:proftpd:proftpd:1.3.5&lt;/cpe&gt;&lt;/service&gt;&lt;/port&gt;\n&lt;port protocol=\&quot;tcp\&quot; portid=\&quot;22\&quot;&gt;&lt;state state=\&quot;open\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot; /&gt;&lt;service name=\&quot;ssh\&quot; product=\&quot;OpenSSH\&quot; version=\&quot;6.6.1p1 Ubuntu 2ubuntu2.13\&quot; extrainfo=\&quot;Ubuntu Linux; protocol 2.0\&quot; ostype=\&quot;Linux\&quot; method=\&quot;probed\&quot; conf=\&quot;10\&quot;&gt;&lt;cpe&gt;cpe:/a:openbsd:openssh:6.6.1p1&lt;/cpe&gt;&lt;cpe&gt;cpe:/o:linux:linux_kernel&lt;/cpe&gt;&lt;/service&gt;&lt;/port&gt;\n&lt;port protocol=\&quot;tcp\&quot; portid=\&quot;80\&quot;&gt;&lt;state state=\&quot;open\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot; /&gt;&lt;service name=\&quot;http\&quot; product=\&quot;Apache httpd\&quot; version=\&quot;2.4.7\&quot; hostname=\&quot;127.0.2.1\&quot; method=\&quot;probed\&quot; conf=\&quot;10\&quot;&gt;&lt;cpe&gt;cpe:/a:apache:http_server:2.4.7&lt;/cpe&gt;&lt;/service&gt;&lt;/port&gt;\n&lt;/ports&gt;\n&lt;times srtt=\&quot;464\&quot; rttvar=\&quot;1667\&quot; to=\&quot;100000\&quot; /&gt;\n&lt;/host&gt;\n&lt;runstats&gt;&lt;finished time=\&quot;1660830775\&quot; timestr=\&quot;Thu Aug 18 15:52:55 2022\&quot; summary=\&quot;Nmap done at Thu Aug 18 15:52:55 2022; 1 IP address (1 host up) scanned in 21.05 seconds\&quot; elapsed=\&quot;21.05\&quot; exit=\&quot;success\&quot; /&gt;&lt;hosts up=\&quot;1\&quot; down=\&quot;0\&quot; total=\&quot;1\&quot; /&gt;\n&lt;/runstats&gt;\n&lt;/nmaprun&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="example-with-custom-command">Example with custom command<a class="headerlink" href="#example-with-custom-command" title="Permanent link">&para;</a></h3>
+<p>Input:
+<div class="highlight"><pre><span></span><code><span class="nt">module_arguments</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nmap -A -T4 --top-ports 100 &lt;target&gt;</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;192.168.56.51&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;osmatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="nt">&quot;ports&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;portid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;22&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;product&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OpenSSH&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6.6.1p1 Ubuntu 2ubuntu2.13&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;extrainfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ubuntu Linux; protocol 2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ostype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Linux&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;probed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/a:openbsd:openssh:6.6.1p1&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cpe:/o:linux:linux_kernel&quot;</span><span class="p">}],</span><span class="w"> </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh-hostkey&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;raw&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\n  1024 c7:23:04:56:47:12:29:44:cd:b5:47:f7:5a:cb:ad:6b (DSA)\n  2048 ab:d9:26:30:04:cd:99:ee:2c:f2:33:82:cd:2d:28:67 (RSA)\n  256 80:e7:ff:d4:4d:83:fb:e8:9f:69:27:68:bd:05:d4:2b (ECDSA)\n  256 61:36:ed:35:89:45:08:e0:85:da:45:05:9f:70:ed:15 (ED25519)&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;fingerprint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;c723045647122944cdb547f75acbad6b&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh-dss&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AAAAB3NzaC1kc3MAAACBAO9HtEJnY/fqKHmaAw+ycL4gHrICR7T/1JL5lpm0drDcrZtWI/mDhDiICba8yZlQrELAhnsP9yQf0AtRDiAA8zOqFw/55RdejvvUzWWUTI+5shisefPHbSRzHrJsO9khVR9gbDkirdGnOvjzi4qIHsqOPW6ji6/WhBWmjAKOWjr1AAAAFQDeFPBoAJqvJf+dPA1d3v+pH/VVpQAAAIEA3XepPB0Uo4M6J4UYCsX+Lu8SWujQ0AOSm9jQqmVQpD9sjnBWnAUP7ScUoSX1om7GadlZLMWT4GM3ljq3fQ+tNh/hejenJioTfnYY1BLlwpiqpNq9kU4JyF5vq1ZXdOPPKwJar52IDQf+p6M9fMtHrRgLVqXt5eHUWFDCiyxRi6kAAACBAL8lNl2BPKTyk66pGaKyUOBKw030K+2KPCdsupfzKS6oa5ZUWLSv2xToq0mKCLa+AcIr3yCS+q/v0oS85GawG56s5aQ9qNAlQbqDXqM/5TJx7xv57uDsZH5dNzyAEIM/+FjoiT6acQHFQ+DHRMrWwTuU3nHi5BF5k31/DflS8h+J&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;bits&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1024&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;fingerprint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abd9263004cd99ee2cf23382cd2d2867&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh-rsa&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AAAAB3NzaC1yc2EAAAADAQABAAABAQDjroBPHxLTl8UXL2r6HHW9Hcj+p2J4uUJh3k7ULVR8/aTRnJxyUfCPDway/lyoa2tY5qtiAF8k4tI53o7cCNnzL/aRW+w3PHIWGaYyI8VmNQxKKvQqcorML5UUaif9H3nTIN6+MIK+bxWMOnjq9vMnz4lzDYp6JX5Ra1LzflhmYHhnVVHA1JUuERp2MzN5OC3QJ+YaOCYYkbuY+GIn/SV+tcTbVXvpj6Dk3IQAQx1plQLbjcLda3wJjB+Umb+Xr/YkrKGvlWJTjc75I1+qIT4IJ1bKeecERHnT/IPpg8w7CDv3mHTlhW3fA9I3D3YElh21C/RFzwaGbOFP5q5pdunP&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;bits&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2048&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;fingerprint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;80e7ffd44d83fbe89f692768bd05d42b&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPkR0kyR7nNOBkue6qsy995GPdpnlnrsbDMkm/8lrx8dTkg+xg5exjZcQeATsNgMbzvwAcm4NXEMg3RNiLAJ4Zo=&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;bits&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;256&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;fingerprint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6136ed35894508e085da45059f70ed15&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AAAAC3NzaC1lZDI1NTE5AAAAIJIkt1AlQN1PvvvgH6AgQjroOF2iIYTC0QFqP0Kfx9bC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;bits&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;256&quot;</span><span class="p">}]}}]},</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;portid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;syn-ack&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rpcbind&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2-4&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;extrainfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RPC #100000&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;probed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;conf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;cpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rpcinfo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;raw&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\n  program version    port/proto  service\n  100000  2,3,4        111/tcp   rpcbind\n  100000  2,3,4        111/udp   rpcbind\n  100000  3,4          111/tcp6  rpcbind\n  100000  3,4          111/udp6  rpcbind\n  100024  1          34829/tcp   status\n  100024  1          35465/udp   status\n  100024  1          38358/udp6  status\n  100024  1          41647/tcp6  status\n&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;100024&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;tcp6&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;41647&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;::&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;udp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;35465&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;udp6&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;38358&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;::&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;tcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;34829&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">}]}},</span><span class="w"> </span><span class="nt">&quot;100000&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;udp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;local&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/run/rpcbind.sock&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;superuser&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;tcp6&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;::&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;udp6&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;::&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;tcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">}]},</span><span class="w"> </span><span class="nt">&quot;children&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;addr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">}]}}}}]}],</span><span class="w"> </span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;macaddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;up&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;conn-refused&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason_ttl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="w"> </span><span class="nt">&quot;stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;scanner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nmap&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nmap -oX - -A -T4 --top-ports 100 192.168.56.51&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1660741353&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;startstr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wed Aug 17 15:02:33 2022&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7.92&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;xmloutputversion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.05&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;runtime&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1660741360&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timestr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Wed Aug 17 15:02:40 2022&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nmap done at Wed Aug 17 15:02:40 2022; 1 IP address (1 host up) scanned in 7.65 seconds&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;elapsed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7.65&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;exit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">}},</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;!DOCTYPE nmaprun&gt;\n&lt;?xml-stylesheet href=\&quot;file:///usr/bin/../share/nmap/nmap.xsl\&quot; type=\&quot;text/xsl\&quot;?&gt;\n&lt;!-- Nmap 7.92 scan initiated Wed Aug 17 15:02:33 2022 as: nmap -oX - -A -T4 -&amp;#45;top-ports 100 192.168.56.51 --&gt;\n&lt;nmaprun scanner=\&quot;nmap\&quot; args=\&quot;nmap -oX - -A -T4 -&amp;#45;top-ports 100 192.168.56.51\&quot; start=\&quot;1660741353\&quot; startstr=\&quot;Wed Aug 17 15:02:33 2022\&quot; version=\&quot;7.92\&quot; xmloutputversion=\&quot;1.05\&quot;&gt;\n&lt;scaninfo type=\&quot;connect\&quot; protocol=\&quot;tcp\&quot; numservices=\&quot;100\&quot; services=\&quot;7,9,13,21-23,25-26,37,53,79-81,88,106,110-111,113,119,135,139,143-144,179,199,389,427,443-445,465,513-515,543-544,548,554,587,631,646,873,990,993,995,1025-1029,1110,1433,1720,1723,1755,1900,2000-2001,2049,2121,2717,3000,3128,3306,3389,3986,4899,5000,5009,5051,5060,5101,5190,5357,5432,5631,5666,5800,5900,6000-6001,6646,7070,8000,8008-8009,8080-8081,8443,8888,9100,9999-10000,32768,49152-49157\&quot;/&gt;\n&lt;verbose level=\&quot;0\&quot;/&gt;\n&lt;debugging level=\&quot;0\&quot;/&gt;\n&lt;hosthint&gt;&lt;status state=\&quot;up\&quot; reason=\&quot;unknown-response\&quot; reason_ttl=\&quot;0\&quot;/&gt;\n&lt;address addr=\&quot;192.168.56.51\&quot; addrtype=\&quot;ipv4\&quot;/&gt;\n&lt;hostnames&gt;\n&lt;/hostnames&gt;\n&lt;/hosthint&gt;\n&lt;host starttime=\&quot;1660741353\&quot; endtime=\&quot;1660741360\&quot;&gt;&lt;status state=\&quot;up\&quot; reason=\&quot;conn-refused\&quot; reason_ttl=\&quot;0\&quot;/&gt;\n&lt;address addr=\&quot;192.168.56.51\&quot; addrtype=\&quot;ipv4\&quot;/&gt;\n&lt;hostnames&gt;\n&lt;/hostnames&gt;\n&lt;ports&gt;&lt;extraports state=\&quot;closed\&quot; count=\&quot;98\&quot;&gt;\n&lt;extrareasons reason=\&quot;conn-refused\&quot; count=\&quot;98\&quot; proto=\&quot;tcp\&quot; ports=\&quot;7,9,13,21,23,25-26,37,53,79-81,88,106,110,113,119,135,139,143-144,179,199,389,427,443-445,465,513-515,543-544,548,554,587,631,646,873,990,993,995,1025-1029,1110,1433,1720,1723,1755,1900,2000-2001,2049,2121,2717,3000,3128,3306,3389,3986,4899,5000,5009,5051,5060,5101,5190,5357,5432,5631,5666,5800,5900,6000-6001,6646,7070,8000,8008-8009,8080-8081,8443,8888,9100,9999-10000,32768,49152-49157\&quot;/&gt;\n&lt;/extraports&gt;\n&lt;port protocol=\&quot;tcp\&quot; portid=\&quot;22\&quot;&gt;&lt;state state=\&quot;open\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot;/&gt;&lt;service name=\&quot;ssh\&quot; product=\&quot;OpenSSH\&quot; version=\&quot;6.6.1p1 Ubuntu 2ubuntu2.13\&quot; extrainfo=\&quot;Ubuntu Linux; protocol 2.0\&quot; ostype=\&quot;Linux\&quot; method=\&quot;probed\&quot; conf=\&quot;10\&quot;&gt;&lt;cpe&gt;cpe:/a:openbsd:openssh:6.6.1p1&lt;/cpe&gt;&lt;cpe&gt;cpe:/o:linux:linux_kernel&lt;/cpe&gt;&lt;/service&gt;&lt;script id=\&quot;ssh-hostkey\&quot; output=\&quot;&amp;#xa;  1024 c7:23:04:56:47:12:29:44:cd:b5:47:f7:5a:cb:ad:6b (DSA)&amp;#xa;  2048 ab:d9:26:30:04:cd:99:ee:2c:f2:33:82:cd:2d:28:67 (RSA)&amp;#xa;  256 80:e7:ff:d4:4d:83:fb:e8:9f:69:27:68:bd:05:d4:2b (ECDSA)&amp;#xa;  256 61:36:ed:35:89:45:08:e0:85:da:45:05:9f:70:ed:15 (ED25519)\&quot;&gt;&lt;table&gt;\n&lt;elem key=\&quot;fingerprint\&quot;&gt;c723045647122944cdb547f75acbad6b&lt;/elem&gt;\n&lt;elem key=\&quot;type\&quot;&gt;ssh-dss&lt;/elem&gt;\n&lt;elem key=\&quot;key\&quot;&gt;AAAAB3NzaC1kc3MAAACBAO9HtEJnY/fqKHmaAw+ycL4gHrICR7T/1JL5lpm0drDcrZtWI/mDhDiICba8yZlQrELAhnsP9yQf0AtRDiAA8zOqFw/55RdejvvUzWWUTI+5shisefPHbSRzHrJsO9khVR9gbDkirdGnOvjzi4qIHsqOPW6ji6/WhBWmjAKOWjr1AAAAFQDeFPBoAJqvJf+dPA1d3v+pH/VVpQAAAIEA3XepPB0Uo4M6J4UYCsX+Lu8SWujQ0AOSm9jQqmVQpD9sjnBWnAUP7ScUoSX1om7GadlZLMWT4GM3ljq3fQ+tNh/hejenJioTfnYY1BLlwpiqpNq9kU4JyF5vq1ZXdOPPKwJar52IDQf+p6M9fMtHrRgLVqXt5eHUWFDCiyxRi6kAAACBAL8lNl2BPKTyk66pGaKyUOBKw030K+2KPCdsupfzKS6oa5ZUWLSv2xToq0mKCLa+AcIr3yCS+q/v0oS85GawG56s5aQ9qNAlQbqDXqM/5TJx7xv57uDsZH5dNzyAEIM/+FjoiT6acQHFQ+DHRMrWwTuU3nHi5BF5k31/DflS8h+J&lt;/elem&gt;\n&lt;elem key=\&quot;bits\&quot;&gt;1024&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table&gt;\n&lt;elem key=\&quot;fingerprint\&quot;&gt;abd9263004cd99ee2cf23382cd2d2867&lt;/elem&gt;\n&lt;elem key=\&quot;type\&quot;&gt;ssh-rsa&lt;/elem&gt;\n&lt;elem key=\&quot;key\&quot;&gt;AAAAB3NzaC1yc2EAAAADAQABAAABAQDjroBPHxLTl8UXL2r6HHW9Hcj+p2J4uUJh3k7ULVR8/aTRnJxyUfCPDway/lyoa2tY5qtiAF8k4tI53o7cCNnzL/aRW+w3PHIWGaYyI8VmNQxKKvQqcorML5UUaif9H3nTIN6+MIK+bxWMOnjq9vMnz4lzDYp6JX5Ra1LzflhmYHhnVVHA1JUuERp2MzN5OC3QJ+YaOCYYkbuY+GIn/SV+tcTbVXvpj6Dk3IQAQx1plQLbjcLda3wJjB+Umb+Xr/YkrKGvlWJTjc75I1+qIT4IJ1bKeecERHnT/IPpg8w7CDv3mHTlhW3fA9I3D3YElh21C/RFzwaGbOFP5q5pdunP&lt;/elem&gt;\n&lt;elem key=\&quot;bits\&quot;&gt;2048&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table&gt;\n&lt;elem key=\&quot;fingerprint\&quot;&gt;80e7ffd44d83fbe89f692768bd05d42b&lt;/elem&gt;\n&lt;elem key=\&quot;type\&quot;&gt;ecdsa-sha2-nistp256&lt;/elem&gt;\n&lt;elem key=\&quot;key\&quot;&gt;AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPkR0kyR7nNOBkue6qsy995GPdpnlnrsbDMkm/8lrx8dTkg+xg5exjZcQeATsNgMbzvwAcm4NXEMg3RNiLAJ4Zo=&lt;/elem&gt;\n&lt;elem key=\&quot;bits\&quot;&gt;256&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table&gt;\n&lt;elem key=\&quot;fingerprint\&quot;&gt;6136ed35894508e085da45059f70ed15&lt;/elem&gt;\n&lt;elem key=\&quot;type\&quot;&gt;ssh-ed25519&lt;/elem&gt;\n&lt;elem key=\&quot;key\&quot;&gt;AAAAC3NzaC1lZDI1NTE5AAAAIJIkt1AlQN1PvvvgH6AgQjroOF2iIYTC0QFqP0Kfx9bC&lt;/elem&gt;\n&lt;elem key=\&quot;bits\&quot;&gt;256&lt;/elem&gt;\n&lt;/table&gt;\n&lt;/script&gt;&lt;/port&gt;\n&lt;port protocol=\&quot;tcp\&quot; portid=\&quot;111\&quot;&gt;&lt;state state=\&quot;open\&quot; reason=\&quot;syn-ack\&quot; reason_ttl=\&quot;0\&quot;/&gt;&lt;service name=\&quot;rpcbind\&quot; version=\&quot;2-4\&quot; extrainfo=\&quot;RPC #100000\&quot; method=\&quot;probed\&quot; conf=\&quot;10\&quot;/&gt;&lt;script id=\&quot;rpcinfo\&quot; output=\&quot;&amp;#xa;  program version    port/proto  service&amp;#xa;  100000  2,3,4        111/tcp   rpcbind&amp;#xa;  100000  2,3,4        111/udp   rpcbind&amp;#xa;  100000  3,4          111/tcp6  rpcbind&amp;#xa;  100000  3,4          111/udp6  rpcbind&amp;#xa;  100024  1          34829/tcp   status&amp;#xa;  100024  1          35465/udp   status&amp;#xa;  100024  1          38358/udp6  status&amp;#xa;  100024  1          41647/tcp6  status&amp;#xa;\&quot;&gt;&lt;table key=\&quot;100024\&quot;&gt;\n&lt;table key=\&quot;tcp6\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;1&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;41647&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;107&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;::&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;udp\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;1&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;35465&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;107&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;0.0.0.0&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;udp6\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;1&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;38358&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;107&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;::&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;tcp\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;1&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;34829&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;107&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;0.0.0.0&lt;/elem&gt;\n&lt;/table&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;100000\&quot;&gt;\n&lt;table key=\&quot;udp\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;2&lt;/elem&gt;\n&lt;elem&gt;3&lt;/elem&gt;\n&lt;elem&gt;4&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;111&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;superuser&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;0.0.0.0&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;local\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;3&lt;/elem&gt;\n&lt;elem&gt;4&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;/run/rpcbind.sock&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;superuser&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;tcp6\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;3&lt;/elem&gt;\n&lt;elem&gt;4&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;111&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;superuser&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;::&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;udp6\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;3&lt;/elem&gt;\n&lt;elem&gt;4&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;111&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;superuser&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;::&lt;/elem&gt;\n&lt;/table&gt;\n&lt;table key=\&quot;tcp\&quot;&gt;\n&lt;table key=\&quot;version\&quot;&gt;\n&lt;elem&gt;2&lt;/elem&gt;\n&lt;elem&gt;3&lt;/elem&gt;\n&lt;elem&gt;4&lt;/elem&gt;\n&lt;/table&gt;\n&lt;elem key=\&quot;port\&quot;&gt;111&lt;/elem&gt;\n&lt;elem key=\&quot;owner\&quot;&gt;superuser&lt;/elem&gt;\n&lt;elem key=\&quot;addr\&quot;&gt;0.0.0.0&lt;/elem&gt;\n&lt;/table&gt;\n&lt;/table&gt;\n&lt;/script&gt;&lt;/port&gt;\n&lt;/ports&gt;\n&lt;times srtt=\&quot;484\&quot; rttvar=\&quot;383\&quot; to=\&quot;100000\&quot;/&gt;\n&lt;/host&gt;\n&lt;runstats&gt;&lt;finished time=\&quot;1660741360\&quot; timestr=\&quot;Wed Aug 17 15:02:40 2022\&quot; summary=\&quot;Nmap done at Wed Aug 17 15:02:40 2022; 1 IP address (1 host up) scanned in 7.65 seconds\&quot; elapsed=\&quot;7.65\&quot; exit=\&quot;success\&quot;/&gt;&lt;hosts up=\&quot;1\&quot; down=\&quot;0\&quot; total=\&quot;1\&quot;/&gt;\n&lt;/runstats&gt;\n&lt;/nmaprun&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p>So far so good.</p>
+<h2 id="output-serialization">Output serialization<a class="headerlink" href="#output-serialization" title="Permanent link">&para;</a></h2>
+<p>Output is serialized by Nmap itself.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../metasploit/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metasploit">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Metasploit
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../script/" class="md-footer__link md-footer__link--next" aria-label="Next: Script">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Script
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      
+    
+  </body>
+</html>
