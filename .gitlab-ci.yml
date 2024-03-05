@@ -140,22 +140,23 @@ pages:
   extends: .documentation
   stage: build
   variables:
-    HTTPS_REMOTE: https://${PROJECT_BOT_USER}:${PROJECT_BOT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+    HTTPS_REMOTE: https://${BOT_SHAKESPEARE_NAME}:${BOT_SHAKESPEARE_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
     PAGES_BRANCH: "pages"
   before_script:
     - apt update && apt install -y git
-    - git config user.name $PROJECT_BOT_USER
-    - git config user.email $PROJECT_BOT_USER@example.com
-    - git fetch origin $PAGES_BRANCH || echo "Pages branch not deployed yet."
+    - git config user.name $BOT_SHAKESPEARE_NAME
+    - git config user.email $BOT_SHAKESPEARE_NAME@asd.asd
+    - git remote remove origin
+    - git remote add origin $HTTPS_REMOTE
+    - git branch -D $PAGES_BRANCH || echo "Branch not present."
+    - git fetch --depth=1 origin $PAGES_BRANCH || echo "Branch doesn't exist yet."
+    - poetry install --with docs
   rules:
     - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
   script:
-    - poetry install --with docs
-    - git checkout -b $PAGES_BRANCH origin/$PAGES_BRANCH || echo "Pages branch not deployed yet."
-    - git checkout $CI_COMMIT_SHA
     - |
       if [[ "$CI_COMMIT_TAG" != "" ]]; then
         export DOCUMENTATION_VERSION=${CI_COMMIT_TAG%%.*}.x
@@ -166,22 +167,15 @@ pages:
       fi
     - echo "DOCUMENTATION_VERSION $DOCUMENTATION_VERSION"
     - echo "ALIAS $ALIAS"
-    - poetry run mike delete
-      --push
-      --remote $HTTPS_REMOTE
-      --branch $PAGES_BRANCH
-      --deploy-prefix public
-      $DOCUMENTATION_VERSION || echo "Version not deployed yet."
     - poetry run mike deploy
       --update-aliases
-      --push
-      --remote $HTTPS_REMOTE
-      --branch $PAGES_BRANCH
       --alias-type=redirect
+      --push
+      --branch $PAGES_BRANCH
       --deploy-prefix public
       $DOCUMENTATION_VERSION $ALIAS
+    - poetry run mike set-default --push --branch $PAGES_BRANCH --deploy-prefix public latest || echo "The tag latest doesn't exist."
     - git checkout $PAGES_BRANCH
-    - git pull
     - git log -1
   artifacts:
     expire_in: 30 days
