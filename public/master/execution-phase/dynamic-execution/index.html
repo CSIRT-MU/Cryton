@@ -1,0 +1,1972 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/dynamic-execution/">
+      
+      
+        <link rel="prev" href="../reporting/">
+      
+      
+        <link rel="next" href="../../interfaces/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+    
+    
+      
+        <title>Dynamic execution - Cryton toolset</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#features" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cryton toolset" class="md-header__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cryton toolset
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dynamic execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cryton toolset" class="md-nav__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Cryton toolset
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick-start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick-start
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../usage/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../design-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Creating a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Creating a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Template (attack scenario)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/stage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/step/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/plan-instance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan instance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Running a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Running a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What is Run
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dynamic execution
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic execution
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-using-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example using Python
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-using-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example using CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example using CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-base-plan-and-executing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building a base Plan and executing it
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-a-standalone-stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start a standalone Stage:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-a-standalone-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute a standalone Step:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-results-works-only-once-the-run-is-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check the results - works only once the Run is created:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../interfaces/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Interfaces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Interfaces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/rest-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    REST API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../modules/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/command/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/ffuf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FFUF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/medusa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Medusa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/metasploit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metasploit
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/nmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/script/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/wpscan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WPScan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playground
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribution-guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to contribute
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../development/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Front-end
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../production/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ansible/ansible/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ansible
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../acknowledgements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Acknowledgements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-using-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example using Python
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-using-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example using CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example using CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-base-plan-and-executing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building a base Plan and executing it
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-a-standalone-stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start a standalone Stage:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-a-standalone-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute a standalone Step:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-results-works-only-once-the-run-is-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check the results - works only once the Run is created:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Dynamic execution</h1>
+
+<p>To support dynamic security testing. We've added support for creating dynamic plans. They allow the user to 
+create an empty Plan/Stage and create their agent to control the execution instead of Cryton's advanced scheduler.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Create a Plan/Step/Stage for dynamic execution (an empty list of Stages/Steps can be provided)</li>
+<li>Add Step to Stage execution and execute it</li>
+<li>Add Stage to Plan execution and start it</li>
+<li>Added Steps are automatically set as a successor of the last Step (only if the <code>is_init</code> variable is <strong>not</strong> set to <em>True</em> and a possible parent Step exists)</li>
+</ul>
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dynamic plan must have the <code>dynamic</code> variable set to <em>True</em></li>
+<li>If you don't want to pass any Stages/Steps you must provide an empty list</li>
+<li>Each Stage and Step must have a unique name in the same Plan (utilize <a href="design-phase/plan-instance.md#inventory-files">inventory variables</a> to overcome this limitation)</li>
+<li>The Stage/Step you're trying to add must be valid</li>
+<li>Run's Plan must contain the instance (Stage/Step) you are trying to execute</li>
+<li>You cannot create multiple executions for an instance (you can execute an instance only once) under the same Plan execution</li>
+</ul>
+<h2 id="example-using-python">Example using Python<a class="headerlink" href="#example-using-python" title="Permanent link">&para;</a></h2>
+<p>You will probably want to automate these actions rather than using CLI to do them. For this purpose, we will create a simple Python script that will:</p>
+<ol>
+<li>Create a template</li>
+<li>Create a Plan</li>
+<li>Add a Stage</li>
+<li>Add a Step</li>
+<li>Create a Run</li>
+<li>Execute the Run</li>
+<li>Create a new Step</li>
+<li>Execute the new Step</li>
+<li>Get the Run report</li>
+</ol>
+<div class="admonition danger">
+<p class="admonition-title">Requirements</p>
+<ul>
+<li>Cryton Core is running (REST API is accessible at <em>localhost:8000</em>)</li>
+<li>Worker is registered in Core and running</li>
+<li>module command is accessible from the Worker</li>
+</ul>
+</div>
+<p>Download the example script:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">curl</label><label for="__tabbed_1_2">wget</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-O<span class="w"> </span>https://cryton.gitlab-pages.ics.muni.cz/cryton//execution-phase/dynamic_example.py
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://cryton.gitlab-pages.ics.muni.cz/cryton//execution-phase/dynamic_example.py
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Update the <code>WORKER_ID</code> variable, and run the script:
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>dynamic_example.py
+</code></pre></div></p>
+<details class="abstract">
+<summary>Show the example</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">WORKER_ID</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;plan&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="s2">&quot;Cryton&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dynamic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;stages&quot;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">STAGE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;no delay stage {{ id }}&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trigger_type&quot;</span><span class="p">:</span> <span class="s2">&quot;delta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trigger_args&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;seconds&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+
+<span class="n">STEP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;initial step&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;step_type&quot;</span><span class="p">:</span> <span class="s2">&quot;worker/execute&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_init&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;module_arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;whoami&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">STEP_REUSABLE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;reusable step {{ id }}&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;step_type&quot;</span><span class="p">:</span> <span class="s2">&quot;worker/execute&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;module_arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ command }}&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">get_api_root</span><span class="p">():</span>
+    <span class="n">api_address</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+    <span class="n">api_port</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;http://</span><span class="si">{</span><span class="n">api_address</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">api_port</span><span class="si">}</span><span class="s2">/api/&quot;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Check if the Worker is specified</span>
+    <span class="k">if</span> <span class="n">WORKER_ID</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Please specify a correct Worker ID at the top of the file.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Worker id: </span><span class="si">{</span><span class="n">WORKER_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get api root</span>
+    <span class="n">api_root</span> <span class="o">=</span> <span class="n">get_api_root</span><span class="p">()</span>
+
+    <span class="c1"># 1. Create a template</span>
+    <span class="n">r_create_template</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">templates/&quot;</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">TEMPLATE</span><span class="p">)})</span>
+    <span class="n">template_id</span> <span class="o">=</span> <span class="n">r_create_template</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Template id: </span><span class="si">{</span><span class="n">template_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 2. Create a Plan</span>
+    <span class="n">r_create_plan</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">plans/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;template_id&#39;</span><span class="p">:</span> <span class="n">template_id</span><span class="p">})</span>
+    <span class="n">plan_id</span> <span class="o">=</span> <span class="n">r_create_plan</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plan id: </span><span class="si">{</span><span class="n">plan_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 3. Add a Stage</span>
+    <span class="n">stage_inventory</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="n">r_create_stage</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">stages/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;plan_id&#39;</span><span class="p">:</span> <span class="n">plan_id</span><span class="p">},</span>
+                                   <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">STAGE</span><span class="p">),</span> <span class="s2">&quot;inventory_file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">stage_inventory</span><span class="p">)})</span>
+    <span class="n">stage_id</span> <span class="o">=</span> <span class="n">r_create_stage</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stage id: </span><span class="si">{</span><span class="n">stage_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 4. Add a Step</span>
+    <span class="n">r_create_step</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">steps/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;stage_id&#39;</span><span class="p">:</span> <span class="n">stage_id</span><span class="p">},</span> <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">STEP</span><span class="p">)})</span>
+    <span class="n">step_id</span> <span class="o">=</span> <span class="n">r_create_step</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step id: </span><span class="si">{</span><span class="n">step_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 5. Create a new Run</span>
+    <span class="n">r_create_run</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">runs/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;plan_id&#39;</span><span class="p">:</span> <span class="n">plan_id</span><span class="p">,</span> <span class="s2">&quot;worker_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">WORKER_ID</span><span class="p">]})</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">r_create_run</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run id: </span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 6. Execute the Run</span>
+    <span class="n">r_execute_run</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/execute/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;run_id&#39;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run response: </span><span class="si">{</span><span class="n">r_execute_run</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 7. Create a new Step</span>
+    <span class="n">step_inventory</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;echo test&quot;</span><span class="p">}</span>
+    <span class="n">r_create_step2</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">steps/&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;stage_id&#39;</span><span class="p">:</span> <span class="n">stage_id</span><span class="p">},</span>
+                                   <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">STEP_REUSABLE</span><span class="p">),</span>
+                                          <span class="s2">&quot;inventory_file&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">step_inventory</span><span class="p">)})</span>
+    <span class="n">step_id2</span> <span class="o">=</span> <span class="n">r_create_step2</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Second step id: </span><span class="si">{</span><span class="n">step_id2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 8. Execute the new Step (First, get Stage execution&#39;s id)</span>
+    <span class="n">stage_execution_id</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/report/&quot;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;detail&quot;</span><span class="p">][</span><span class="s2">&quot;plan_executions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;stage_executions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+    <span class="n">r_execute_step</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">steps/</span><span class="si">{</span><span class="n">step_id2</span><span class="si">}</span><span class="s2">/execute/&quot;</span><span class="p">,</span>
+                                   <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;stage_execution_id&#39;</span><span class="p">:</span> <span class="n">stage_execution_id</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Second Step response: </span><span class="si">{</span><span class="n">r_execute_step</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 9. Get Run report</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current_state</span> <span class="o">==</span> <span class="s2">&quot;FINISHED&quot;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Waiting for a final state. Current state: </span><span class="si">{</span><span class="n">current_state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Report: &quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_root</span><span class="si">}</span><span class="s2">runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/report/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;detail&quot;</span><span class="p">]))</span>
+</code></pre></div>
+</details>
+<h2 id="example-using-cli">Example using CLI<a class="headerlink" href="#example-using-cli" title="Permanent link">&para;</a></h2>
+<p>For this example we will assume that:</p>
+<div class="admonition danger">
+<p class="admonition-title">Requirements</p>
+<ul>
+<li>Cryton Core is running (REST API is accessible at <em>localhost:8000</em>)</li>
+<li>Worker is registered in Core and running</li>
+<li>module command is accessible from the Worker</li>
+</ul>
+</div>
+<p>Files used in this guide can be found in the <a href="https://gitlab.ics.muni.cz/cryton/cryton-core/-/tree/stable/2/examples/dynamic-execution-example" target="_blank">Cryton Core repository</a>.</p>
+<p>It's best to switch to the example directory, so we will assume that's true.
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/cryton-core/examples/dynamic-execution-example/
+</code></pre></div></p>
+<h3 id="building-a-base-plan-and-executing-it">Building a base Plan and executing it<a class="headerlink" href="#building-a-base-plan-and-executing-it" title="Permanent link">&para;</a></h3>
+<p>First, we create a template
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>plan-templates<span class="w"> </span>create<span class="w"> </span>template.yml
+</code></pre></div></p>
+<p>Create a Plan (instance)
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>plans<span class="w"> </span>create<span class="w"> </span>&lt;template_id&gt;
+</code></pre></div></p>
+<p>Add a Stage to the Plan (update the inventory file to your needs)
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>stages<span class="w"> </span>create<span class="w"> </span>&lt;plan_id&gt;<span class="w"> </span>stage.yml<span class="w"> </span>-i<span class="w"> </span>stage-inventory.yml
+</code></pre></div></p>
+<p>Add an initial Step to the Stage
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>steps<span class="w"> </span>create<span class="w"> </span>&lt;stage_id&gt;<span class="w"> </span>step-init.yml
+</code></pre></div></p>
+<p>Add a reusable Step to the Stage (update the inventory file to your needs)
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>steps<span class="w"> </span>create<span class="w"> </span>&lt;stage_id&gt;<span class="w"> </span>step-reusable.yml<span class="w"> </span>-i<span class="w"> </span>step-reusable-inventory.yml
+</code></pre></div></p>
+<p>Create a Worker you want to test on
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>create<span class="w"> </span><span class="nb">local</span>
+</code></pre></div></p>
+<p>Create a Run
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>runs<span class="w"> </span>create<span class="w"> </span>&lt;plan_id&gt;<span class="w"> </span>&lt;worker_id&gt;
+</code></pre></div></p>
+<p>Execute the Run
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>runs<span class="w"> </span>execute<span class="w"> </span>&lt;run_id&gt;
+</code></pre></div></p>
+<h3 id="start-a-standalone-stage">Start a standalone Stage:<a class="headerlink" href="#start-a-standalone-stage" title="Permanent link">&para;</a></h3>
+<p>Add your Stage to the desired Plan (<strong>Update the inventory file! Stage names must be unique.</strong>)
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>stages<span class="w"> </span>create<span class="w"> </span>&lt;plan_id&gt;<span class="w"> </span>stage.yml<span class="w"> </span>-i<span class="w"> </span>stage-inventory.yml
+</code></pre></div></p>
+<p>Start your Stage (its trigger) under the desired Plan execution 
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>stages<span class="w"> </span>start-trigger<span class="w"> </span>&lt;stage_id&gt;<span class="w"> </span>&lt;plan_execution_id&gt;
+</code></pre></div></p>
+<h3 id="execute-a-standalone-step">Execute a standalone Step:<a class="headerlink" href="#execute-a-standalone-step" title="Permanent link">&para;</a></h3>
+<p>Add your Step to the desired Stage (<strong>Update the inventory file! Step names must be unique.</strong>)
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>steps<span class="w"> </span>create<span class="w"> </span>&lt;stage_id&gt;<span class="w"> </span>step-reusable.yml<span class="w"> </span>-i<span class="w"> </span>step-reusable-inventory.yml
+</code></pre></div></p>
+<p>Execute your Step under the desired Stage execution
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>steps<span class="w"> </span>execute<span class="w"> </span>&lt;step_id&gt;<span class="w"> </span>&lt;stage_execution_id&gt;
+</code></pre></div></p>
+<h3 id="check-the-results-works-only-once-the-run-is-created">Check the results - works only once the Run is created:<a class="headerlink" href="#check-the-results-works-only-once-the-run-is-created" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>runs<span class="w"> </span>report<span class="w"> </span><span class="m">1</span><span class="w"> </span>--less
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../reporting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reporting">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Reporting
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../interfaces/" class="md-footer__link md-footer__link--next" aria-label="Next: Index">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Index
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      
+    
+  </body>
+</html>

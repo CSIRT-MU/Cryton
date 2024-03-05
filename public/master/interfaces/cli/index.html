@@ -1,0 +1,3872 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/interfaces/cli/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../frontend/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+    
+    
+      
+        <title>CLI - Cryton toolset</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#execution-variables" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cryton toolset" class="md-header__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cryton toolset
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CLI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cryton toolset" class="md-nav__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Cryton toolset
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick-start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick-start
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../usage/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../design-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Creating a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Creating a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Template (attack scenario)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/stage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/step/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design-phase/plan-instance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan instance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../execution-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Running a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Running a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-phase/run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What is Run
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-phase/execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-phase/reporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execution-phase/dynamic-execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic execution
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Interfaces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Interfaces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#execution-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      execution-variables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="execution-variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate-docs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      plan-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plan-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate-modules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      plan-templates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plan-templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-template
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      plans
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      runs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="runs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-plan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      health-check-workers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postpone" class="md-nav__link">
+    <span class="md-ellipsis">
+      postpone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reschedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      reschedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      schedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unschedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      unschedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-modules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate-modules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      stage-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stage-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      re-execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      stages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      start-trigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      step-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="step-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-execute_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      re-execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      workers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="workers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      health-check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rest-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    REST API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../modules/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/command/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/ffuf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FFUF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/medusa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Medusa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/metasploit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metasploit
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/nmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/script/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/wpscan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WPScan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playground
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribution-guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to contribute
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../development/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Front-end
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../production/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ansible/ansible/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ansible
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../acknowledgements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Acknowledgements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#execution-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      execution-variables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="execution-variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate-docs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      plan-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plan-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate-modules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      plan-templates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plan-templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-template
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      plans
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="plans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      runs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="runs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-plan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      get-plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      health-check-workers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postpone" class="md-nav__link">
+    <span class="md-ellipsis">
+      postpone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reschedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      reschedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      schedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unschedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      unschedule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-modules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate-modules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      stage-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stage-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      re-execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      stages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#start-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      start-trigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-executions" class="md-nav__link">
+    <span class="md-ellipsis">
+      step-executions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="step-executions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kill_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      kill
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-execute_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      re-execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      execute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      workers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="workers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      health-check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      show
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>CLI</h1>
+
+<p>CLI implements capabilities of the Cryton's REST API and can be automated by using custom scripts.</p>
+<div class="highlight"><pre><span></span><code>Usage: cryton-cli [OPTIONS] COMMAND [ARGS]...
+
+  A CLI wrapper for Cryton API.
+
+Options:
+  -H, --host TEXT     Set Cryton&#39;s address (default is localhost).
+  -p, --port INTEGER  Set Cryton&#39;s address (default is 8000).
+  --secure            Set if HTTPS will be used.
+  --debug             Show non formatted output.
+  --version           Show the version and exit.
+  --help              Show this message and exit.
+
+Commands:
+  execution-variables  Manage Execution variables from here.
+  logs                 Manage Workers from here.
+  plan-executions      Manage Plan&#39;s executions from here.
+  plan-templates       Manage Plan templates from here.
+  plans                Manage Plans from here.
+  runs                 Manage Runs from here.
+  stage-executions     Manage Stage&#39;s executions from here.
+  stages               Manage Stages from here.
+  step-executions      Manage Step&#39;s executions from here.
+  steps                Manage Steps from here.
+  workers              Manage Workers from here.
+</code></pre></div>
+<h2 id="execution-variables">execution-variables<a class="headerlink" href="#execution-variables" title="Permanent link">&para;</a></h2>
+<p>Manage Execution variables from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
+<p>Create new execution variable(s) for PLAN_EXECUTION_ID from FILE.</p>
+<p>PLAN_EXECUTION_ID IS ID of the desired PlanExecution.</p>
+<p>FILE is path (can be multiple) to file(s) containing execution variables.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_EXECUTION_ID<br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<p>Delete Execution variable with EXECUTION_VARIABLE_ID saved in Cryton.</p>
+<p>EXECUTION_VARIABLE_ID is ID of the Execution_variable you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_VARIABLE_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list">list<a class="headerlink" href="#list" title="Permanent link">&para;</a></h3>
+<p>List existing Execution variables in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Execution variables using Plan execution ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show">show<a class="headerlink" href="#show" title="Permanent link">&para;</a></h3>
+<p>Show Execution variable with EXECUTION_VARIABLE_ID saved in Cryton.</p>
+<p>EXECUTION_VARIABLE_ID is ID of the Execution variable you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_VARIABLE_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="generate-docs">generate-docs<a class="headerlink" href="#generate-docs" title="Permanent link">&para;</a></h2>
+<p>Generate Markdown documentation for CLI.</p>
+<p>FILE is path/to/your/file where you want to save the generated documentation.</p>
+<p><strong>Arguments:</strong><br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- layer (<code>-l</code>, <code>--layer</code>) - Highest header level.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="logs">logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<p>Manage logs from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_1">list<a class="headerlink" href="#list_1" title="Permanent link">&para;</a></h3>
+<p>List existing Logs in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using substrings (for example <code>warning</code>, <code>2023-08-11T13:26</code>, etc.).<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="plan-executions">plan-executions<a class="headerlink" href="#plan-executions" title="Permanent link">&para;</a></h2>
+<p>Manage Plan's executions from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_1">delete<a class="headerlink" href="#delete_1" title="Permanent link">&para;</a></h3>
+<p>Delete Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="kill">kill<a class="headerlink" href="#kill" title="Permanent link">&para;</a></h3>
+<p>Kill Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_2">list<a class="headerlink" href="#list_2" title="Permanent link">&para;</a></h3>
+<p>List existing Plan's executions in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Plan executions using Run ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="pause">pause<a class="headerlink" href="#pause" title="Permanent link">&para;</a></h3>
+<p>Pause Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to pause.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="report">report<a class="headerlink" href="#report" title="Permanent link">&para;</a></h3>
+<p>Create report for Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to create report for.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the report to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="resume">resume<a class="headerlink" href="#resume" title="Permanent link">&para;</a></h3>
+<p>Resume Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to resume.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_1">show<a class="headerlink" href="#show_1" title="Permanent link">&para;</a></h3>
+<p>Show Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="validate-modules">validate-modules<a class="headerlink" href="#validate-modules" title="Permanent link">&para;</a></h3>
+<p>Validate modules for Plan's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Plan's execution you want to validate modules for.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="plan-templates">plan-templates<a class="headerlink" href="#plan-templates" title="Permanent link">&para;</a></h2>
+<p>Manage Plan templates from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_1">create<a class="headerlink" href="#create_1" title="Permanent link">&para;</a></h3>
+<p>Store Plan Template into Cryton.</p>
+<p>FILE is path/to/your/file that you want to upload to Cryton.</p>
+<p><strong>Arguments:</strong><br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_2">delete<a class="headerlink" href="#delete_2" title="Permanent link">&para;</a></h3>
+<p>Delete Template with TEMPLATE_ID saved in Cryton.</p>
+<p>TEMPLATE_ID is ID of the Template you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- TEMPLATE_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="get-template">get-template<a class="headerlink" href="#get-template" title="Permanent link">&para;</a></h3>
+<p>Get Template with TEMPLATE_ID saved in Cryton.</p>
+<p>TEMPLATE_ID is ID of the Template you want to get.</p>
+<p><strong>Arguments:</strong><br />
+- TEMPLATE_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the template to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_3">list<a class="headerlink" href="#list_3" title="Permanent link">&para;</a></h3>
+<p>List existing Plan templates in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_2">show<a class="headerlink" href="#show_2" title="Permanent link">&para;</a></h3>
+<p>Show Template with TEMPLATE_ID saved in Cryton.</p>
+<p>TEMPLATE_ID is ID of the Template you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- TEMPLATE_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="plans">plans<a class="headerlink" href="#plans" title="Permanent link">&para;</a></h2>
+<p>Manage Plans from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_2">create<a class="headerlink" href="#create_2" title="Permanent link">&para;</a></h3>
+<p>Fill template PLAN_TEMPLATE_ID with inventory file(s) and save it to Cryton.</p>
+<p>PLAN_TEMPLATE_ID is ID of the template you want to fill.</p>
+<p><strong>Arguments:</strong><br />
+- TEMPLATE_ID  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_3">delete<a class="headerlink" href="#delete_3" title="Permanent link">&para;</a></h3>
+<p>Delete Plan with PLAN_ID saved in Cryton.</p>
+<p>PLAN_ID is ID of the Plan you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="execute">execute<a class="headerlink" href="#execute" title="Permanent link">&para;</a></h3>
+<p>Execute Plan saved in Cryton with PLAN_ID on Worker with WORKER_ID and attach it to Run with RUN_ID.</p>
+<p>PLAN_ID is ID of the Plan you want to execute.</p>
+<p>WORKER_ID is ID of the Plan you want to execute.</p>
+<p>RUN_ID is ID of the Run you want to attach this execution to.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID<br />
+- WORKER_ID<br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="get-plan">get-plan<a class="headerlink" href="#get-plan" title="Permanent link">&para;</a></h3>
+<p>Get Plan with PLAN_ID saved in Cryton.</p>
+<p>PLAN_ID is ID of the Plan you want to get.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the plan to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_4">list<a class="headerlink" href="#list_4" title="Permanent link">&para;</a></h3>
+<p>List existing Plans in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_3">show<a class="headerlink" href="#show_3" title="Permanent link">&para;</a></h3>
+<p>Show Plan with PLAN_ID saved in Cryton.</p>
+<p>PLAN_ID is ID of the Plan you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
+<p>Validate (syntax check) your FILE with Plan.</p>
+<p>FILE is path/to/your/file that you want to validate.</p>
+<p><strong>Arguments:</strong><br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="runs">runs<a class="headerlink" href="#runs" title="Permanent link">&para;</a></h2>
+<p>Manage Runs from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_3">create<a class="headerlink" href="#create_3" title="Permanent link">&para;</a></h3>
+<p>Create new Run with PLAN_ID and WORKER_IDS.</p>
+<p>PLAN_ID is ID of the Plan you want to create Run for. (for example 1)</p>
+<p>WORKER_IDS is list of IDs you want to use for Run. (1 2 3)</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID<br />
+- WORKER_IDS  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_4">delete<a class="headerlink" href="#delete_4" title="Permanent link">&para;</a></h3>
+<p>Delete Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="execute_1">execute<a class="headerlink" href="#execute_1" title="Permanent link">&para;</a></h3>
+<p>Execute Run saved in Cryton with RUN_ID.</p>
+<p>RUN_ID is ID of the Run you want to execute.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- skip_checks (<code>-S</code>, <code>--skip-checks</code>) - Skip health-checks and modules validation. <a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<div class="admonition info">
+<p class="admonition-title">Changes</p>
+<p><a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a> <a href="{{ no such element: dict object['core'] }}1.2.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> Core 1.2.0</a></p>
+<p>Since the CLI release 1.1.0 the command checks if the selected Workers are available and modules are valid. If everything is OK, it executes the Run.</p>
+<p>If you're running Core with a lower version than 1.2.0, use the <code>-S</code> option.</p>
+</div>
+<h3 id="get-plan_1">get-plan<a class="headerlink" href="#get-plan_1" title="Permanent link">&para;</a></h3>
+<p>Get plan from Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to get plan from.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the plan to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="health-check-workers">health-check-workers<a class="headerlink" href="#health-check-workers" title="Permanent link">&para;</a></h3>
+<p><a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a></p>
+<p>Check Workers for Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to check Workers for.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="kill_1">kill<a class="headerlink" href="#kill_1" title="Permanent link">&para;</a></h3>
+<p>Kill Run saved in Cryton with RUN_ID.</p>
+<p>RUN_ID is ID of the Run you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_5">list<a class="headerlink" href="#list_5" title="Permanent link">&para;</a></h3>
+<p>List existing Runs in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show 'less' like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="pause_1">pause<a class="headerlink" href="#pause_1" title="Permanent link">&para;</a></h3>
+<p>Pause Run saved in Cryton with RUN_ID.</p>
+<p>RUN_ID is ID of the Run you want to pause.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="postpone">postpone<a class="headerlink" href="#postpone" title="Permanent link">&para;</a></h3>
+<p>Postpone Run saved in Cryton with RUN_ID by TIME (hh<img alt="🇲🇲" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/svg/1f1f2-1f1f2.svg" title=":mm:" />ss).</p>
+<p>RUN_ID is ID of the Run you want to postpone.</p>
+<p>TIME is time that will be added to the Run's start time (hh<img alt="🇲🇲" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/svg/1f1f2-1f1f2.svg" title=":mm:" />ss).</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID<br />
+- TO_POSTPONE  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="report_1">report<a class="headerlink" href="#report_1" title="Permanent link">&para;</a></h3>
+<p>Create report for Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to create report for.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the report to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="reschedule">reschedule<a class="headerlink" href="#reschedule" title="Permanent link">&para;</a></h3>
+<p>Reschedule Run saved in Cryton with RUN_ID to specified DATE and TIME.</p>
+<p>RUN_ID is ID of the Run you want to reschedule.</p>
+<p>DATE in format year-month-day (Y-m-d).</p>
+<p>TIME in format hours:minutes:seconds (H:M:S).</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID<br />
+- TO_DATE<br />
+- TO_TIME  </p>
+<p><strong>Options:</strong><br />
+- utc_timezone (<code>--utc-timezone</code>) - Input time in UTC timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="resume_1">resume<a class="headerlink" href="#resume_1" title="Permanent link">&para;</a></h3>
+<p>Resume Run saved in Cryton with RUN_ID.</p>
+<p>RUN_ID is ID of the Run you want to resume.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="schedule">schedule<a class="headerlink" href="#schedule" title="Permanent link">&para;</a></h3>
+<p>Schedule Run saved in Cryton with RUN_ID to specified DATE and TIME.</p>
+<p>RUN_ID is ID of the Run you want to schedule.</p>
+<p>DATE in format year-month-day (Y-m-d).</p>
+<p>TIME in format hours:minutes:seconds (H:M:S).</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID<br />
+- TO_DATE<br />
+- TO_TIME  </p>
+<p><strong>Options:</strong><br />
+- utc_timezone (<code>--utc-timezone</code>) - Input time in UTC timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_4">show<a class="headerlink" href="#show_4" title="Permanent link">&para;</a></h3>
+<p>Show Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="unschedule">unschedule<a class="headerlink" href="#unschedule" title="Permanent link">&para;</a></h3>
+<p>Unschedule Run saved in Cryton with RUN_ID.</p>
+<p>RUN_ID is ID of the Run you want to unschedule.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="validate-modules_1">validate-modules<a class="headerlink" href="#validate-modules_1" title="Permanent link">&para;</a></h3>
+<p>Validate modules for Run with RUN_ID saved in Cryton.</p>
+<p>RUN_ID is ID of the Run you want to validate modules for.</p>
+<p><strong>Arguments:</strong><br />
+- RUN_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="stage-executions">stage-executions<a class="headerlink" href="#stage-executions" title="Permanent link">&para;</a></h2>
+<p>Manage Stage's executions from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_5">delete<a class="headerlink" href="#delete_5" title="Permanent link">&para;</a></h3>
+<p>Delete Stage's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Stage's execution you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="kill_2">kill<a class="headerlink" href="#kill_2" title="Permanent link">&para;</a></h3>
+<p>Kill Stage's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Stage's execution you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_6">list<a class="headerlink" href="#list_6" title="Permanent link">&para;</a></h3>
+<p>List existing Stage's executions in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Stage executions using Plan execution ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="re-execute">re-execute<a class="headerlink" href="#re-execute" title="Permanent link">&para;</a></h3>
+<p>Re-execute Stage's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Stage's execution you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- immediately (<code>--immediately</code>) - Re-execute StageExecution immediately without starting its Trigger.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="report_2">report<a class="headerlink" href="#report_2" title="Permanent link">&para;</a></h3>
+<p>Create report for Stage's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Stage's execution you want to create report for.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the report to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_5">show<a class="headerlink" href="#show_5" title="Permanent link">&para;</a></h3>
+<p>Show Stage's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Stage's execution you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="stages">stages<a class="headerlink" href="#stages" title="Permanent link">&para;</a></h2>
+<p>Manage Stages from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_4">create<a class="headerlink" href="#create_4" title="Permanent link">&para;</a></h3>
+<p>Create Stage from FILE and add it to Plan with PLAN_ID.</p>
+<p>PLAN_ID is an ID of the Plan you want to add the Stage to.</p>
+<p>FILE is a path to the file containing the Stage template.</p>
+<p><strong>Arguments:</strong><br />
+- PLAN_ID<br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_6">delete<a class="headerlink" href="#delete_6" title="Permanent link">&para;</a></h3>
+<p>Delete Stage with STAGE_ID saved in Cryton.</p>
+<p>STAGE_ID is ID of the Stage you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- STAGE_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_7">list<a class="headerlink" href="#list_7" title="Permanent link">&para;</a></h3>
+<p>List existing Stages in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Stages using Plan ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_6">show<a class="headerlink" href="#show_6" title="Permanent link">&para;</a></h3>
+<p>Show Stage with STAGE_ID saved in Cryton.</p>
+<p>STAGE_ID is ID of the Stage you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- STAGE_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="start-trigger">start-trigger<a class="headerlink" href="#start-trigger" title="Permanent link">&para;</a></h3>
+<p>Start Stage's trigger with STAGE_ID under Plan execution with PLAN_EXECUTION_ID.</p>
+<p>STAGE_ID is an ID of the Stage you want to start.</p>
+<p>PLAN_EXECUTION_ID is an ID of the Plan execution you want to set as a parent of the Stage execution.</p>
+<p><strong>Arguments:</strong><br />
+- STAGE_ID<br />
+- PLAN_EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="validate_1">validate<a class="headerlink" href="#validate_1" title="Permanent link">&para;</a></h3>
+<p>Validate (syntax check) your FILE with Stage.</p>
+<p>FILE is path/to/your/file that you want to validate.</p>
+<p><strong>Arguments:</strong><br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- dynamic (<code>-D</code>, <code>--dynamic</code>) - If Stage will be used with a dynamic Plan.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="step-executions">step-executions<a class="headerlink" href="#step-executions" title="Permanent link">&para;</a></h2>
+<p>Manage Step's executions from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_7">delete<a class="headerlink" href="#delete_7" title="Permanent link">&para;</a></h3>
+<p>Delete Step's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Step's execution you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="kill_3">kill<a class="headerlink" href="#kill_3" title="Permanent link">&para;</a></h3>
+<p>Kill Step's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Step's execution you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_8">list<a class="headerlink" href="#list_8" title="Permanent link">&para;</a></h3>
+<p>List existing Step's executions in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Step executions using Stage execution ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="re-execute_1">re-execute<a class="headerlink" href="#re-execute_1" title="Permanent link">&para;</a></h3>
+<p>Re-execute Step's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Step's execution you want to kill.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="report_3">report<a class="headerlink" href="#report_3" title="Permanent link">&para;</a></h3>
+<p>Create report for Step's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Step's execution you want to create report for.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- file (<code>-f</code>, <code>--file</code>) - File to save the report to (default is /tmp).<br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_7">show<a class="headerlink" href="#show_7" title="Permanent link">&para;</a></h3>
+<p>Show Step's execution with EXECUTION_ID saved in Cryton.</p>
+<p>EXECUTION_ID is ID of the Step's execution you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="steps">steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<p>Manage Steps from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_5">create<a class="headerlink" href="#create_5" title="Permanent link">&para;</a></h3>
+<p>Create Step from FILE and add it to Stage with STAGE_ID.</p>
+<p>STAGE_ID is an ID of the Stage you want to add the Stage to.</p>
+<p>FILE is a path to the file containing the Step template.</p>
+<p><strong>Arguments:</strong><br />
+- STAGE_ID<br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_8">delete<a class="headerlink" href="#delete_8" title="Permanent link">&para;</a></h3>
+<p>Delete Step with STEP_ID saved in Cryton.</p>
+<p>STEP_ID is ID of the Step you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- STEP_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="execute_2">execute<a class="headerlink" href="#execute_2" title="Permanent link">&para;</a></h3>
+<p>Execute Step with STEP_ID under Stage execution with STAGE_EXECUTION_ID.</p>
+<p>STEP_ID is ID of the Step you want to execute.</p>
+<p>STAGE_EXECUTION_ID is an ID of the Stage execution you want to set as a parent of the Step execution.</p>
+<p><strong>Arguments:</strong><br />
+- STEP_ID<br />
+- STAGE_EXECUTION_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_9">list<a class="headerlink" href="#list_9" title="Permanent link">&para;</a></h3>
+<p>List existing Steps in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parent (<code>-p</code>, <code>--parent</code>) - Filter Steps using Stage ID.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_8">show<a class="headerlink" href="#show_8" title="Permanent link">&para;</a></h3>
+<p>Show Step with STEP_ID saved in Cryton.</p>
+<p>STEP_ID is ID of the Step you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- STEP_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="validate_2">validate<a class="headerlink" href="#validate_2" title="Permanent link">&para;</a></h3>
+<p>Validate (syntax check) your FILE with Step.</p>
+<p>FILE is path/to/your/file that you want to validate.</p>
+<p><strong>Arguments:</strong><br />
+- FILE  </p>
+<p><strong>Options:</strong><br />
+- inventory_files (<code>-i</code>, <code>--inventory-file</code>) - Inventory file used to fill the template. Can be used multiple times.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h2 id="workers">workers<a class="headerlink" href="#workers" title="Permanent link">&para;</a></h2>
+<p>Manage Workers from here.</p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="create_6">create<a class="headerlink" href="#create_6" title="Permanent link">&para;</a></h3>
+<p>Create new Worker with NAME and save it into Cryton.</p>
+<p>NAME of your Worker (will be used to match your Worker). For example: "MyCustomName".</p>
+<p><strong>Arguments:</strong><br />
+- NAME  </p>
+<p><strong>Options:</strong><br />
+- description (<code>-d</code>, <code>--description</code>) - Description of your Worker (wrap in "").<br />
+- force (<code>-f</code>, <code>--force</code>) - Ignore, if Worker with the same parameter 'name' exists.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="delete_9">delete<a class="headerlink" href="#delete_9" title="Permanent link">&para;</a></h3>
+<p>Delete Worker with WORKER_ID saved in Cryton.</p>
+<p>WORKER_ID is ID of the Worker you want to delete.</p>
+<p><strong>Arguments:</strong><br />
+- WORKER_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="health-check">health-check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h3>
+<p>Check if Worker with WORKER_ID saved in Cryton is online.</p>
+<p>WORKER_ID is ID of the Worker you want to check.</p>
+<p><strong>Arguments:</strong><br />
+- WORKER_ID  </p>
+<p><strong>Options:</strong><br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="list_10">list<a class="headerlink" href="#list_10" title="Permanent link">&para;</a></h3>
+<p>List existing Workers in Cryton.</p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- offset (<code>-o</code>, <code>--offset</code>) - The initial index from which to return the results.<br />
+- limit (<code>-l</code>, <code>--limit</code>) - Number of results to return per page.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- parameter_filters (<code>-f</code>, <code>--filter</code>) - Filter results using returned parameters (for example <code>id=1</code>, <code>name=test</code>, etc.).<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+<h3 id="show_9">show<a class="headerlink" href="#show_9" title="Permanent link">&para;</a></h3>
+<p>Show Worker with WORKER_ID saved in Cryton.</p>
+<p>WORKER_ID is ID of the Worker you want to see.</p>
+<p><strong>Arguments:</strong><br />
+- WORKER_ID  </p>
+<p><strong>Options:</strong><br />
+- less (<code>--less</code>) - Show less like output.<br />
+- localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
+- help (<code>--help</code>) - Show this message and exit.  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Index">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Index
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../frontend/" class="md-footer__link md-footer__link--next" aria-label="Next: Frontend">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Frontend
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      
+    
+  </body>
+</html>

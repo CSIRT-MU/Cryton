@@ -1,0 +1,3417 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/settings/">
+      
+      
+        <link rel="prev" href="../usage/workflows/">
+      
+      
+        <link rel="next" href="../design-phase/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+    
+    
+      
+        <title>Settings - Cryton toolset</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overriding-settings" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Cryton toolset" class="md-header__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cryton toolset
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Settings
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Cryton toolset" class="md-nav__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Cryton toolset
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Gitlab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-start/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quick-start
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution-example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../usage/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Settings
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Settings
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threads-per-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Threads per process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpu-cores" class="md-nav__link">
+    <span class="md-ellipsis">
+      CPU cores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-attack_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - attack_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-agent_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - agent_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-event_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - event_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-control_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - control_request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-secret-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      API secret key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-allowed-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      API allowed hosts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consumer-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consumer count
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Max retries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-host_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-port_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-username_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-password_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit SSL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit password
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      API host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      API port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      API SSL
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../design-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Creating a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Creating a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-phase/template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Template (attack scenario)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-phase/plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-phase/stage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-phase/step/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Step
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-phase/plan-instance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plan instance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../execution-phase/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Running a scenario
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Running a scenario
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution-phase/run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What is Run
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution-phase/execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution statistics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution-phase/reporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution-phase/dynamic-execution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic execution
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../interfaces/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Interfaces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Interfaces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces/cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces/rest-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    REST API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../modules/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/command/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/ffuf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FFUF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/medusa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Medusa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/metasploit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metasploit
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/nmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/script/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/wpscan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WPScan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playground/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Playground
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contribution-guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to contribute
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../development/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Front-end
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../production/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible/ansible/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ansible
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acknowledgements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Acknowledgements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threads-per-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Threads per process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpu-cores" class="md-nav__link">
+    <span class="md-ellipsis">
+      CPU cores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-attack_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - attack_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-agent_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - agent_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-event_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - event_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-queue-control_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit queue - control_request
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-secret-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      API secret key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-allowed-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      API allowed hosts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consumer-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consumer count
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Max retries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-host_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-port_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-username_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rabbit-password_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rabbit password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empire-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empire password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit SSL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-username" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit username
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit password
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      API host
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      API port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      API SSL
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Settings</h1>
+
+<p>By default, settings, logs, and other important files are stored in the application directory (<code>APP_DIRECTORY</code>) located at <code>~/.local/cryton/</code> (<code>/app/</code> in case you are in a Docker image).</p>
+<p>There are multiple ways to update the settings (the higher the number the higher the priority):</p>
+<ol>
+<li><a href="https://gitlab.ics.muni.cz/cryton/cryton/-/raw/stable/2/settings.yml" target="_blank">YAML configuration</a> in the application directory (<code>APP_DIRECTORY/settings.yml</code>)</li>
+<li><a href="https://gitlab.ics.muni.cz/cryton/cryton/-/raw/stable/2/settings" target="_blank">File with environment variables</a> in the application directory (<code>APP_DIRECTORY/settings</code>)</li>
+<li>Temporary override using environment variables</li>
+<li>Temporary override using options in each CLI application</li>
+</ol>
+<h2 id="overriding-settings">Overriding settings<a class="headerlink" href="#overriding-settings" title="Permanent link">&para;</a></h2>
+<p>To override the settings (using environment variables), use the <code>export</code> command:
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">CRYTON_CLI_API_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1
+</code></pre></div></p>
+<p>The environment variables must be prefixed by <code>CRYTON_</code> and are comprised of the uppercase path of the setting and with dots replaced by underscores, as in the example above for setting <code>cli.api.host</code>.</p>
+<div class="admonition note">
+<p>Use <code>unset</code> to remove a variable.</p>
+</div>
+<div class="admonition tip">
+<p>Some settings can be overridden using the CLI. Try using:
+<div class="highlight"><pre><span></span><code>cryton-cli --help
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>cryton-hive --help
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>cryton-worker --help
+</code></pre></div></p>
+</div>
+<details class="tip">
+<summary>Overriding settings with Docker</summary>
+<p><div id="settings-docker"></div></p>
+<p>To override a variable use the <code>-e</code> or the <code>--env-file</code> option:
+<div class="highlight"><pre><span></span><code>docker run -e CRYTON_CLI_API_HOST=127.0.0.1 --env-file relative/path/to/settings ...
+</code></pre></div></p>
+<p>More information can be found <a href="https://docs.docker.com/engine/reference/commandline/run/#env" target="_blank">here</a>.</p>
+</details>
+<details class="tip">
+<summary>Overriding settings with Docker compose</summary>
+<p><div id="settings-compose"></div></p>
+<p>Override variables in the <code>environment</code> or the <code>env_file</code> attribute:
+<div class="highlight"><pre><span></span><code>services
+  service:
+    environment:
+      - CRYTON_CLI_API_HOST=127.0.0.1
+    env_file:
+      - relative/path/to/settings
+</code></pre></div></p>
+<p>More information can be found <a href="https://docs.docker.com/compose/environment-variables/set-environment-variables/#use-the-environment-attribute" target="_blank">here</a>.</p>
+</details>
+<details class="question">
+<summary>How do I change the location of the application directory</summary>
+<p><div id="settings-application-directory"></div></p>
+<p>Simply update the value of the <code>CRYTON_APP_DIRECTORY</code> environment variable to the path you desire. Don't forget that environment variables are not permanent.</p>
+</details>
+<h2 id="available-settings">Available settings<a class="headerlink" href="#available-settings" title="Permanent link">&para;</a></h2>
+<h3 id="hive">Hive<a class="headerlink" href="#hive" title="Permanent link">&para;</a></h3>
+<h4 id="debug">Debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h4>
+<p>Allow debug logs to be saved/displayed.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>true</td>
+<td>hive.debug</td>
+<td>CRYTON_HIVE_DEBUG</td>
+</tr>
+</tbody>
+</table>
+<h4 id="message-timeout">Message timeout<a class="headerlink" href="#message-timeout" title="Permanent link">&para;</a></h4>
+<p>Timeout (in seconds) for RabbitMQ requests and messages.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>180</td>
+<td>300</td>
+<td>hive.message_timeout</td>
+<td>CRYTON_HIVE_MESSAGE_TIMEOUT</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p>If you choose a lower timeout value and the Worker's IP changes during runtime, the messages may timeout. This is because the Worker tries to reconnect to RabbitMQ server after two minutes of silence.</p>
+</div>
+<h4 id="threads-per-process">Threads per process<a class="headerlink" href="#threads-per-process" title="Permanent link">&para;</a></h4>
+<p>Affects the number of message consumers and speed of starting and consuming Rabbit messages.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>7</td>
+<td>5</td>
+<td>hive.threads_per_process</td>
+<td>CRYTON_HIVE_THREADS_PER_PROCESS</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cpu-cores">CPU cores<a class="headerlink" href="#cpu-cores" title="Permanent link">&para;</a></h4>
+<p>The number of CPU cores that can be utilized at the same time. This affects the speed of sending and consuming Rabbit messages.</p>
+<p>Set the value to <code>0</code> to use all cores.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>3</td>
+<td>4</td>
+<td>hive.cpu_cores</td>
+<td>CRYTON_HIVE_CPU_CORES</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-host">Rabbit host<a class="headerlink" href="#rabbit-host" title="Permanent link">&para;</a></h4>
+<p>RabbitMQ server host.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>rabbit-host</td>
+<td>hive.rabbit.host</td>
+<td>CRYTON_HIVE_RABBIT_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-port">Rabbit port<a class="headerlink" href="#rabbit-port" title="Permanent link">&para;</a></h4>
+<p>RabbitMQ server port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>5672</td>
+<td>15672</td>
+<td>hive.rabbit.port</td>
+<td>CRYTON_HIVE_RABBIT_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-username">Rabbit username<a class="headerlink" href="#rabbit-username" title="Permanent link">&para;</a></h4>
+<p>Username for RabbitMQ server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>hive.rabbit.username</td>
+<td>CRYTON_HIVE_RABBIT_USERNAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-password">Rabbit password<a class="headerlink" href="#rabbit-password" title="Permanent link">&para;</a></h4>
+<p>Password for RabbitMQ server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>hive.rabbit.password</td>
+<td>CRYTON_HIVE_RABBIT_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-queue-attack_response">Rabbit queue - attack_response<a class="headerlink" href="#rabbit-queue-attack_response" title="Permanent link">&para;</a></h4>
+<p>Queue name for processing attack responses.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton.attack.response</td>
+<td>cryton.attack.response.id</td>
+<td>hive.rabbit.queues.attack_response</td>
+<td>CRYTON_HIVE_RABBIT_QUEUES_ATTACK_RESPONSE</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-queue-agent_response">Rabbit queue - agent_response<a class="headerlink" href="#rabbit-queue-agent_response" title="Permanent link">&para;</a></h4>
+<p>Queue name for processing agent responses.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton.agent.response</td>
+<td>cryton.agent.response.id</td>
+<td>hive.rabbit.queues.agent_response</td>
+<td>CRYTON_HIVE_RABBIT_QUEUES_AGENT_RESPONSE</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-queue-event_response">Rabbit queue - event_response<a class="headerlink" href="#rabbit-queue-event_response" title="Permanent link">&para;</a></h4>
+<p>Queue name for processing event responses.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton.event.response</td>
+<td>cryton.event.response.id</td>
+<td>hive.rabbit.queues.event_response</td>
+<td>CRYTON_HIVE_RABBIT_QUEUES_EVENT_RESPONSE</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-queue-control_request">Rabbit queue - control_request<a class="headerlink" href="#rabbit-queue-control_request" title="Permanent link">&para;</a></h4>
+<p>Queue name for processing control requests.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton.control.request</td>
+<td>cryton.control.request.id</td>
+<td>hive.rabbit.queues.control_request</td>
+<td>CRYTON_HIVE_RABBIT_QUEUES_CONTROL_REQUEST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="database-host">Database host<a class="headerlink" href="#database-host" title="Permanent link">&para;</a></h4>
+<p>Postgres server host.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>database-host</td>
+<td>hive.database.host</td>
+<td>CRYTON_HIVE_DATABASE_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="database-port">Database port<a class="headerlink" href="#database-port" title="Permanent link">&para;</a></h4>
+<p>Postgres server port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>5432</td>
+<td>15432</td>
+<td>hive.database.port</td>
+<td>CRYTON_HIVE_DATABASE_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="database-name">Database name<a class="headerlink" href="#database-name" title="Permanent link">&para;</a></h4>
+<p>Postgres database name to connect to.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>custom</td>
+<td>hive.database.name</td>
+<td>CRYTON_HIVE_DATABASE_NAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="database-username">Database username<a class="headerlink" href="#database-username" title="Permanent link">&para;</a></h4>
+<p>Username for Postgres server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>hive.database.username</td>
+<td>CRYTON_HIVE_DATABASE_USERNAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="database-password">Database password<a class="headerlink" href="#database-password" title="Permanent link">&para;</a></h4>
+<p>Password for Postgres server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>hive.database.password</td>
+<td>CRYTON_HIVE_DATABASE_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-secret-key">API secret key<a class="headerlink" href="#api-secret-key" title="Permanent link">&para;</a></h4>
+<p>Key (64 chars) used by the REST API for cryptographic signing. More information can be found <a href="https://docs.djangoproject.com/en/4.2/ref/settings/#std-setting-SECRET_KEY" target="_blank">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>XF37...6HB3</td>
+<td>hive.api.secret_key</td>
+<td>CRYTON_HIVE_API_SECRET_KEY</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-allowed-hosts">API allowed hosts<a class="headerlink" href="#api-allowed-hosts" title="Permanent link">&para;</a></h4>
+<p>Domain names that the site can serve. More information can be found <a href="https://docs.djangoproject.com/en/4.2/ref/settings/#allowed-hosts" target="_blank">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list of strings separated by space</td>
+<td>"*"</td>
+<td>host1 host2</td>
+<td>hive.api.allowed_hosts</td>
+<td>CRYTON_HIVE_API_ALLOWED_HOSTS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="worker">Worker<a class="headerlink" href="#worker" title="Permanent link">&para;</a></h3>
+<h4 id="name">Name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h4>
+<p><strong>Unique</strong> name used for Worker identification and communication.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>worker</td>
+<td>attacker</td>
+<td>worker.name</td>
+<td>CRYTON_WORKER_NAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="debug_1">Debug<a class="headerlink" href="#debug_1" title="Permanent link">&para;</a></h4>
+<p>Allow debug logs to be saved/displayed.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>true</td>
+<td>worker.debug</td>
+<td>CRYTON_WORKER_DEBUG</td>
+</tr>
+</tbody>
+</table>
+<h4 id="consumer-count">Consumer count<a class="headerlink" href="#consumer-count" title="Permanent link">&para;</a></h4>
+<p>The number of consumers used for Rabbit and internal message processing.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>7</td>
+<td>3</td>
+<td>worker.consumer_count</td>
+<td>CRYTON_WORKER_CONSUMER_COUNT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="max-retries">Max retries<a class="headerlink" href="#max-retries" title="Permanent link">&para;</a></h4>
+<p>The number of retries before shuttling down, when the connection to RabbitMQ is lost.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>3</td>
+<td>5</td>
+<td>worker.max_retries</td>
+<td>CRYTON_WORKER_MAX_RETRIES</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-host_1">Rabbit host<a class="headerlink" href="#rabbit-host_1" title="Permanent link">&para;</a></h4>
+<p>RabbitMQ server host.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>rabbit-host</td>
+<td>worker.rabbit.host</td>
+<td>CRYTON_WORKER_RABBIT_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-port_1">Rabbit port<a class="headerlink" href="#rabbit-port_1" title="Permanent link">&para;</a></h4>
+<p>RabbitMQ server port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>5672</td>
+<td>15672</td>
+<td>worker.rabbit.port</td>
+<td>CRYTON_WORKER_RABBIT_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-username_1">Rabbit username<a class="headerlink" href="#rabbit-username_1" title="Permanent link">&para;</a></h4>
+<p>Username for RabbitMQ server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.rabbit.username</td>
+<td>CRYTON_WORKER_RABBIT_USERNAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rabbit-password_1">Rabbit password<a class="headerlink" href="#rabbit-password_1" title="Permanent link">&para;</a></h4>
+<p>Password for RabbitMQ server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.rabbit.password</td>
+<td>CRYTON_WORKER_RABBIT_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h4 id="empire-host">Empire host<a class="headerlink" href="#empire-host" title="Permanent link">&para;</a></h4>
+<p>Empire server host.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>empire-host</td>
+<td>worker.empire.host</td>
+<td>CRYTON_WORKER_EMPIRE_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="empire-port">Empire port<a class="headerlink" href="#empire-port" title="Permanent link">&para;</a></h4>
+<p>Empire server port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>1337</td>
+<td>11337</td>
+<td>worker.empire.port</td>
+<td>CRYTON_WORKER_EMPIRE_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="empire-username">Empire username<a class="headerlink" href="#empire-username" title="Permanent link">&para;</a></h4>
+<p>Username for Empire server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.empire.username</td>
+<td>CRYTON_WORKER_EMPIRE_USERNAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="empire-password">Empire password<a class="headerlink" href="#empire-password" title="Permanent link">&para;</a></h4>
+<p>Password for Empire server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.empire.password</td>
+<td>CRYTON_WORKER_EMPIRE_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-host">Metasploit host<a class="headerlink" href="#metasploit-host" title="Permanent link">&para;</a></h4>
+<p>Metasploit RPC server host.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>metasploit-host</td>
+<td>worker.metasploit.host</td>
+<td>CRYTON_WORKER_METASPLOIT_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-port">Metasploit port<a class="headerlink" href="#metasploit-port" title="Permanent link">&para;</a></h4>
+<p>Metasploit RPC server port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>55553</td>
+<td>55554</td>
+<td>worker.metasploit.port</td>
+<td>CRYTON_WORKER_METASPLOIT_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-ssl">Metasploit SSL<a class="headerlink" href="#metasploit-ssl" title="Permanent link">&para;</a></h4>
+<p>Use SSL to connect to Metasploit RPC server.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>true</td>
+<td>false</td>
+<td>worker.metasploit.ssl</td>
+<td>CRYTON_WORKER_METASPLOIT_SSL</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-username">Metasploit username<a class="headerlink" href="#metasploit-username" title="Permanent link">&para;</a></h4>
+<p>Username for Metasploit RPC server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.metasploit.username</td>
+<td>CRYTON_WORKER_METASPLOIT_USERNAME</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-password">Metasploit password<a class="headerlink" href="#metasploit-password" title="Permanent link">&para;</a></h4>
+<p>Password for Metasploit RPC server login.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>cryton</td>
+<td>admin</td>
+<td>worker.metasploit.password</td>
+<td>CRYTON_WORKER_METASPLOIT_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h3>
+<h4 id="debug_2">Debug<a class="headerlink" href="#debug_2" title="Permanent link">&para;</a></h4>
+<p>Return raw responses from the REST API.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>true</td>
+<td>cli.debug</td>
+<td>CRYTON_CLI_DEBUG</td>
+</tr>
+</tbody>
+</table>
+<h4 id="timezone">Timezone<a class="headerlink" href="#timezone" title="Permanent link">&para;</a></h4>
+<p><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank">Timezone</a> used for scheduling (for example when scheduling a Run). </p>
+<p>Set the value to <code>DEFAULT</code> to use your system timezone.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>DEFAULT</td>
+<td>Europe/Prague</td>
+<td>cli.timezone</td>
+<td>CRYTON_CLI_TIMEZONE</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-host">API host<a class="headerlink" href="#api-host" title="Permanent link">&para;</a></h4>
+<p>Cryton Hive's REST API address.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>127.0.0.1</td>
+<td>cryton-hive</td>
+<td>cli.api.host</td>
+<td>CRYTON_CLI_API_HOST</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-port">API port<a class="headerlink" href="#api-port" title="Permanent link">&para;</a></h4>
+<p>Cryton Hive's REST API port.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>8000</td>
+<td>8008</td>
+<td>cli.api.port</td>
+<td>CRYTON_CLI_API_PORT</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-ssl">API SSL<a class="headerlink" href="#api-ssl" title="Permanent link">&para;</a></h4>
+<p>Use SSL to connect to Cryton Hive's REST API.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>true</td>
+<td>cli.api.ssl</td>
+<td>CRYTON_CLI_API_SSL</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../usage/workflows/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Workflows">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Workflows
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../design-phase/" class="md-footer__link md-footer__link--next" aria-label="Next: Index">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Index
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      
+    
+  </body>
+</html>

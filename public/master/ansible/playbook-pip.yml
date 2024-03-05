@@ -1,0 +1,11 @@
+- name: Deploy all components using pip
+  hosts: default
+  become: yes
+  roles:
+    - role: deploy-cli
+    - role: deploy-core
+    - role: deploy-frontend
+    - role: deploy-worker
+    - role: register-worker
+      cryton_worker_name: Worker
+      cryton_worker_description: base description

@@ -1,0 +1,20 @@
+- name: Deploy all components using Docker (Compose)
+  hosts: default
+  become: yes
+  run_as_user: root
+  roles:
+    - role: deploy-cli
+      cryton_cli_installation: docker
+    - role: deploy-core
+      cryton_core_installation: docker
+      cryton_core_environment:
+        CRYTON_CORE_RABBIT_HOST: cryton-rabbit
+        CRYTON_CORE_DB_HOST: cryton-pgbouncer
+        CRYTON_CORE_API_USE_STATIC_FILES: true
+    - role: deploy-frontend
+    - role: deploy-worker
+      cryton_worker_installation: docker
+    - role: register-worker
+      cryton_cli_executable: docker exec cryton-cli cryton-cli
+      cryton_worker_name: Worker
+      cryton_worker_description: base description
