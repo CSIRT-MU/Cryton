@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from enum import Enum, auto
+from enum import Enum
 from copy import deepcopy
 from jsonschema import validate
 
 
-class Result(str, Enum):  # StrEnum introduced in 3.11
+class Result(str, Enum):  # StrEnum + auto() introduced in 3.11
     """
     Module result options.
     """
-    OK = auto()
-    FAIL = auto()
-    ERROR = auto()
+    OK = "ok"
+    FAIL = "fail"
+    ERROR = "error"
 
 
 @dataclass

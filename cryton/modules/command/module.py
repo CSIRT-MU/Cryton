@@ -6,7 +6,6 @@ from cryton.worker.utility.util import Metasploit
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
-# TODO: add tests
 class Module(ModuleBase):
     SCHEMA = {
         "type": "object",
@@ -94,7 +93,7 @@ class Module(ModuleBase):
                     check=True
                 )
             except subprocess.TimeoutExpired:
-                self._data.output += "Command execution timed out"
+                self._data.output += "Command execution timed out."
                 return self._data
             except subprocess.CalledProcessError as ex:
                 self._data.output += ex.stderr.decode("utf-8")
@@ -106,7 +105,7 @@ class Module(ModuleBase):
             process_output = process.stdout.decode("utf-8")
             process_error = process.stderr.decode("utf-8")
 
-            self._data.output += f"{process_output}{chr(10)}{process_error}"
+            self._data.output += f"{process_output}\n{process_error}"
             if not process_error:
                 self._data.result = Result.OK
 
@@ -114,7 +113,7 @@ class Module(ModuleBase):
             try:
                 self._data.serialized_output = self.serialize_output(process_output)
             except TypeError as ex:
-                self._data.output += f"{chr(10)}{ex}"
+                self._data.output += f"\n{ex}"
                 self._data.result = Result.FAIL
 
         return self._data

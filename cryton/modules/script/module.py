@@ -67,21 +67,18 @@ class Module(ModuleBase):
             return self._data
 
         process_stdout = process.stdout.decode("utf-8")
+        print(process_stdout)
         if not (process_error := process.stderr.decode("utf-8")):
             self._data.result = Result.OK
 
-        module_output = f"STDOUT: {process_stdout} {chr(10)} STDERR: {process_error}"
-
-        self._data.output = module_output
+        self._data.output = f"{process_stdout}\n{process_error}"
 
         if serialize_output:
             try:
                 script_serialized_output = json.loads(process_stdout)
                 self._data.serialized_output = script_serialized_output
             except (json.JSONDecodeError, TypeError):
-                module_output += "serialized_output_error: Output of the script is not valid JSON."
+                self._data.output += "serialized_output_error: Output of the script is not valid JSON."
                 self._data.result = Result.FAIL
-
-        self._data.output = module_output
 
         return self._data

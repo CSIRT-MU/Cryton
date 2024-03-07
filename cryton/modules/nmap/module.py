@@ -40,9 +40,11 @@ class Module(ModuleBase):
                                 "ostype": {"type": "string"},
                                 "method": {"type": "string"},
                                 "conf": {"type": "string"}
-                            }
+                            },
+                            "additionalProperties": False
                         }
-                    }
+                    },
+                    "additionalProperties": False
                 },
                 "description": ""
             }
@@ -65,7 +67,7 @@ class Module(ModuleBase):
                     }
                 },
                 "required": ["target"],
-                "additionalProperties": False
+                # "additionalProperties": False  # TODO: solve
             },
             {
                 "properties": {
@@ -76,7 +78,7 @@ class Module(ModuleBase):
                     "serialize_output": {"type": "boolean"}
                 },
                 "required": ["command"],
-                "additionalProperties": False
+                # "additionalProperties": False  # TODO: solve
             }
         ]
     }
