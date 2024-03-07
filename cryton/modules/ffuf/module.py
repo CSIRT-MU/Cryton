@@ -6,7 +6,6 @@ from uuid import uuid1
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
-# TODO: add tests
 class Module(ModuleBase):
     SCHEMA = {
         "type": "object",
@@ -55,13 +54,13 @@ class Module(ModuleBase):
         self._wordlist = self._arguments.get("wordlist")
         self._options = self._arguments.get("options", "")
         self._serialize_output = self._arguments.get("serialize_output", True)
-        self._tmp_file = f"/tmp/cryton-report-ffuf-{uuid1}"
+        self._tmp_file = f"/tmp/cryton-report-ffuf-{uuid1()}"
 
     def check_requirements(self) -> None:
         if self._command is not None:
             return
 
-        if os.path.isfile(self._wordlist):
+        if not os.path.isfile(self._wordlist):
             raise OSError("Unable to access the defined wordlist.")
 
         try:
@@ -75,7 +74,7 @@ class Module(ModuleBase):
         try:
             process = subprocess.run(command, capture_output=True, check=True)
         except subprocess.CalledProcessError as ex:
-            self._data.output += f"{ex.stdout}{chr(10)}{ex.stderr}"
+            self._data.output += f"{ex.stdout.decode('utf-8')}\n{ex.stderr.decode('utf-8')}"
             return self._data
         except Exception as ex:
             self._data.output += str(ex)
@@ -83,6 +82,8 @@ class Module(ModuleBase):
 
         process_output = process.stdout.decode("utf-8")
         process_error = process.stderr.decode("utf-8")
+
+        self._data.output += f"{process_output}\n{process_error}"
 
         if self._serialize_output and os.path.isfile(self._tmp_file):
             try:
@@ -97,7 +98,6 @@ class Module(ModuleBase):
             except OSError:
                 pass
 
-        self._data.output += f"{process_output}{chr(10)}{process_error}"
         if "Encountered error" not in self._data.output:
             self._data.result = Result.OK
 
@@ -107,6 +107,7 @@ class Module(ModuleBase):
         command = ["ffuf", "-w", self._wordlist, "-u", self._target]
         if self._serialize_output:
             command += ["-of", "json", "-o", self._tmp_file]
-        command += self._options.split(" ")
+        if self._options:
+            command += self._options.split(" ")
 
         return command

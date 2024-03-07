@@ -63,11 +63,12 @@ class Module(ModuleBase):
                 "properties": {
                     "payload": {"type": "string", "description": ""},
                     "payload_options": {"type": "object", "description": ""}
-                }
-            }
+                },
+                "additionalProperties": False
+            },
+            # "additionalProperties": False  # TODO: solve
         },
-        "required": ["module_type", "module"],
-        "additionalProperties": False
+        "required": ["module_type", "module"]
     }
 
     def __init__(self, arguments: dict):

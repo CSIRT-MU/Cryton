@@ -1,13 +1,33 @@
 import os
 import subprocess
-from uuid import uuid1
 
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
-# TODO: add tests
 class Module(ModuleBase):
     SCHEMA = {
+        "definitions": {
+            "username": {
+                "type": "string",
+                "description": "Username."
+            },
+            "username_file": {
+                "type": "string",
+                "description": "Absolute path to file with usernames."
+            },
+            "password": {
+                "type": "string",
+                "description": "Password."
+            },
+            "password_file": {
+                "type": "string",
+                "description": "Absolute path to file with passwords."
+            },
+            "combo_file": {
+                "type": "string",
+                "description": "Absolute path to file with username and password pairs."
+            }
+        },
         "type": "object",
         "description": "Arguments for the `medusa` module.",
         "oneOf": [
@@ -32,36 +52,47 @@ class Module(ModuleBase):
                     "credentials": {
                         "type": "object",
                         "description": "",
-                        "properties": {
-                            "username": {
-                                "type": "string",
-                                "description": "Username."
-                            },
-                            "username_file": {
-                                "type": "string",
-                                "description": "Absolute path to file with usernames."
-                            },
-                            "password": {
-                                "type": "string",
-                                "description": "Password."
-                            },
-                            "password_file": {
-                                "type": "string",
-                                "description": "Absolute path to file with passwords."
-                            },
-                            "combo_file": {
-                                "type": "string",
-                                "description": "Absolute path to file with username and password pairs."
-                            }
-                        },
                         "oneOf": [
-                            {"required": ["combo_file"]},
-                            {"required": ["username", "password"]},
-                            {"required": ["username", "password_file"]},
-                            {"required": ["username_file", "password"]},
-                            {"required": ["username_file", "password_file"]},
-                        ],
-                        "additionalProperties": False
+                            {
+                                "properties": {
+                                    "combo_file": {"$ref": "#/definitions/combo_file"}
+                                },
+                                "minProperties": 1,
+                                "additionalProperties": False
+                            },
+                            {
+                                "properties": {
+                                    "username": {"$ref": "#/definitions/username"},
+                                    "password": {"$ref": "#/definitions/password"},
+                                },
+                                "minProperties": 2,
+                                "additionalProperties": False
+                            },
+                            {
+                                "properties": {
+                                    "username": {"$ref": "#/definitions/username"},
+                                    "password_file": {"$ref": "#/definitions/password_file"},
+                                },
+                                "minProperties": 2,
+                                "additionalProperties": False
+                            },
+                            {
+                                "properties": {
+                                    "username_file": {"$ref": "#/definitions/username_file"},
+                                    "password": {"$ref": "#/definitions/password"},
+                                },
+                                "minProperties": 2,
+                                "additionalProperties": False
+                            },
+                            {
+                                "properties": {
+                                    "username_file": {"$ref": "#/definitions/username_file"},
+                                    "password_file": {"$ref": "#/definitions/password_file"},
+                                },
+                                "minProperties": 2,
+                                "additionalProperties": False
+                            },
+                        ]
                     }
                 },
                 "required": ["target", "credentials"],
@@ -89,7 +120,6 @@ class Module(ModuleBase):
         self._options = self._arguments.get("options", "")
         self._credentials: dict = self._arguments.get("credentials")
         self._command = self._arguments.get("command")
-        self._tmp_file = f"/tmp/cryton-report-ffuf-{uuid1}"
 
     def check_requirements(self) -> None:
         if self._command is not None:
@@ -115,7 +145,7 @@ class Module(ModuleBase):
         try:
             process = subprocess.run(command, capture_output=True, check=True)
         except subprocess.CalledProcessError as ex:
-            self._data.output += f"{ex.stdout}{chr(10)}{ex.stderr}"
+            self._data.output += f"{ex.stdout.decode('utf-8')}\n{ex.stderr.decode('utf-8')}"
             return self._data
         except Exception as ex:
             self._data.output += str(ex)
@@ -124,11 +154,11 @@ class Module(ModuleBase):
         process_output = process.stdout.decode("utf-8")
         process_error = process.stderr.decode("utf-8")
 
+        self._data.output += f"{process_output}\n{process_error}"
+
         if "ACCOUNT FOUND:" in process_output and "[SUCCESS]" in process_output:
             self._data.result = Result.OK
             self._data.serialized_output = self._parse_credentials(process_output)
-
-        self._data.output += f"{process_output}{chr(10)}{process_error}"
 
         return self._data
 
@@ -148,6 +178,9 @@ class Module(ModuleBase):
             elif password_file := self._credentials.get("password_file"):
                 command += ["-P", password_file]
 
+        if self._options:
+            command += self._options.split(" ")
+
         return command
 
     @staticmethod
@@ -158,6 +191,7 @@ class Module(ModuleBase):
         :param medusa_output: Stdout of medusa bruteforce
         :return: Found username and password credentials
         """
+        # TODO: replace with regex
         json_credentials = []
         medusa_output_lines = medusa_output.split("\n")
         for row in medusa_output_lines:
