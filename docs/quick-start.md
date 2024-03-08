@@ -48,7 +48,7 @@ docker compose exec cryton_cli bash
 
 Register the Worker:
 ```shell
-cryton-cli workers create local_worker -d "my local worker for testing"
+cryton-cli workers create worker -d "my local worker for testing"
 ```
 
 Check if the Worker is reachable (use the **id** from the previous command):

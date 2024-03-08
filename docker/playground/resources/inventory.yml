@@ -1,0 +1,49 @@
+networks:
+  cryton:
+    subnet: 192.168.90.0/24
+    hosts:
+      cryton_core: 192.168.90.10
+      cryton_worker: 192.168.90.11
+      cryton_frontend: 192.168.90.12
+      cryton_db: 192.168.90.13
+      cryton_pgbouncer: 192.168.90.14
+      cryton_rabbit: 192.168.90.15
+
+  public:
+    subnet: 192.168.91.0/24
+    hosts:
+      cryton_worker: 192.168.91.11
+      wordpress: 192.168.91.10
+
+  server_net:
+    subnet: 192.168.92.0/24
+    subnet_ip: 192.168.92.0
+    hosts:
+      vulnerable_ftp: 192.168.92.20
+      vulnerable_db: 192.168.92.21
+      wordpress: 192.168.92.10
+
+  dmz:
+    subnet: 192.168.93.0/24
+    hosts:
+      wordpress_db: 192.168.93.11
+      wordpress: 192.168.93.10
+
+  user_net:
+    subnet: 192.168.94.0/24
+    subnet_ip: 192.168.94.0
+    hosts:
+      vulnerable_user_machine: 192.168.94.20
+      wordpress: 192.168.94.10
+      vulnerable_db: 192.168.94.21
+
+
+machines:
+  wordpress:
+    wp_admin:
+      username: wordpress
+      password: wordpress
+
+  vulnerable_user:
+    username: victim
+    password: password

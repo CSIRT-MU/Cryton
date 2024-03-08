@@ -87,7 +87,7 @@ class TriggerTime(TriggerBase):
         self.stage_execution.pause_time = None
         self.stage_execution.state = states.SCHEDULED
         self.stage_execution.aps_job_id = scheduler_client.schedule_function(
-            "cryton.hive.lib.models.stage:execution", [self.stage_execution_id], schedule_time)
+            "cryton.hive.models.stage:execution", [self.stage_execution_id], schedule_time)
 
         logger.logger.info("Stage execution scheduled", stage_execution_id=self.stage_execution_id,
                            stage_name=self.stage_execution.model.stage_model.name, status='success')

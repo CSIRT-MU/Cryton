@@ -213,7 +213,7 @@ class Run:
         st.RunStateMachine(self.model.id).validate_state(self.state, st.RUN_SCHEDULE_STATES)
 
         # Schedule execution
-        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.lib.models.run:execution",
+        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.models.run:execution",
                                                              [self.model.id], schedule_time)
         if isinstance(self.aps_job_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)

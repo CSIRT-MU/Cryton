@@ -371,7 +371,7 @@ class PlanExecution:
         logger.logger.debug("Scheduling Plan execution", plan_execution_id=self.model.id)
         st.PlanStateMachine(self.model.id).validate_state(self.state, st.PLAN_SCHEDULE_STATES)
 
-        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.lib.models.plan:execution", [self.model.id],
+        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.models.plan:execution", [self.model.id],
                                                              schedule_time)
 
         if isinstance(self.aps_job_id, str):
