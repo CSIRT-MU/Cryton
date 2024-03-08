@@ -53,7 +53,7 @@ services:
     environment:
       <<: *settings
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5432:5432"  # This is open in case the user hosts Hive using pipx
 
   cryton_rabbit:
     restart: always
@@ -63,7 +63,6 @@ services:
       <<: *settings
     ports:
       - "5672:5672"
-      - "127.0.0.1:15672:15672"
     healthcheck:
       test: rabbitmqctl eval '
         { true, rabbit_app_booted_and_running } = { rabbit:is_booted(node()), rabbit_app_booted_and_running },

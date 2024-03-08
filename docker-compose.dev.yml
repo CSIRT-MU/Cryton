@@ -25,3 +25,11 @@ services:
     image: cryton-api-proxy
     build:
       dockerfile: Dockerfile-api-proxy
+
+  cryton_db:
+    ports:
+      - "127.0.0.1:15432:5432"
+
+  cryton_rabbit:
+    ports:
+      - "127.0.0.1:15672:15672"

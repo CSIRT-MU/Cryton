@@ -1,0 +1,179 @@
+version: '3.9'
+services:
+  cryton_cli:
+    network_mode: service:cryton_hive
+    volumes:
+      - ./docker/playground/resources:/opt/resources
+
+  cryton_worker:
+    environment:
+      CRYTON_WORKER_RABBIT_HOST: cryton-rabbit
+    volumes:
+      - ./docker/playground/resources:/opt/resources
+    network_mode: ""
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.11
+      public:
+        ipv4_address: 192.168.91.11
+
+  cryton_hive:
+    network_mode: ""
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.10
+
+  cryton_frontend:
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.12
+
+  cryton_db:
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.13
+
+  cryton_pgbouncer:
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.14
+
+  cryton_rabbit:
+    networks:
+      cryton:
+        ipv4_address: 192.168.90.15
+
+  cryton_empire:
+    network_mode: service:cryton_worker
+
+  cryton_msf:
+    network_mode: service:cryton_worker
+    volumes:
+      - ./docker/playground/resources:/opt/resources
+
+  wordpress_db:
+    image: mysql:8.0.31 # 5.7 <- alternative version
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - wordpress_db_data:/var/lib/mysql
+    networks:
+      dmz:
+        ipv4_address: 192.168.93.11
+    healthcheck:
+      test: mysql $$MYSQL_DATABASE --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --silent --execute "SELECT 1;"
+      interval: 10s
+      timeout: 10s
+      retries: 7
+
+  wordpress_app:
+    image: wordpress:6.1.1-apache  # 4.8.3-php7.1-apache <- alternative version
+    restart: always
+    expose:
+      - 80
+    environment: &wordpress_app_env
+      WORDPRESS_DB_HOST: wordpress_db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+    volumes:
+      - wordpress_app_html:/var/www/html
+    networks:
+      public:
+        ipv4_address: 192.168.91.10
+      server_net:
+        ipv4_address: 192.168.92.10
+      dmz:
+        ipv4_address: 192.168.93.10
+      user_net:
+        ipv4_address: 192.168.94.10
+    healthcheck:
+      test: curl localhost/wp-admin/install.php | grep WordPress
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  wordpress_cli:
+    image: wordpress:cli-2.7.1-php8.0 # cli-php7.1 <- alternative version
+    depends_on:
+      wordpress_db:
+        condition: service_healthy
+      wordpress_app:
+        condition: service_healthy
+    network_mode: service:wordpress_app
+    environment:
+      <<: *wordpress_app_env
+    volumes:
+      - wordpress_app_html:/var/www/html
+    entrypoint: sh
+    command: -c 'wp core install --url="http://192.168.91.10" --title="wordpress" --admin_name=wordpress --admin_password="wordpress" --admin_email=wordpress@wordpress.wordpress'
+
+  vulnerable_ftp:
+    restart: always
+    image: uexpl0it/vulnerable-packages:backdoored-vsftpd-2.3.4
+    volumes:
+      - ./docker/playground/resources/vsftpd.log:/var/log/vsftpd.log
+    networks:
+      server_net:
+        ipv4_address: 192.168.92.20
+
+  vulnerable_db:
+    restart: always
+    image: postgres:10.5
+    environment:
+      - POSTGRES_DB=beastdb
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+    volumes:
+      - vulnerable_db_data:/var/lib/postgresql/data
+      - ./docker/playground/resources/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./docker/playground/resources/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+    networks:
+      server_net:
+        ipv4_address: 192.168.92.21
+      user_net:
+        ipv4_address: 192.168.94.21
+
+  vulnerable_user_machine:
+    restart: always
+    image: vulnerable_user_machine
+    build:
+      target: vulnerable-user
+      context: docker/playground
+    networks:
+      user_net:
+        ipv4_address: 192.168.94.20
+
+volumes:
+  wordpress_app_html:
+  wordpress_db_data:
+  vulnerable_db_data:
+
+networks:
+  cryton:
+    ipam:
+      config:
+        - subnet: 192.168.90.0/24
+  public:
+    ipam:
+      config:
+        - subnet: 192.168.91.0/24
+  server_net:
+    ipam:
+      config:
+        - subnet: 192.168.92.0/24
+  dmz:
+    ipam:
+      config:
+        - subnet: 192.168.93.0/24
+  user_net:
+    ipam:
+      config:
+        - subnet: 192.168.94.0/24

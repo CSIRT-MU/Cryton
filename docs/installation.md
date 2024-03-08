@@ -219,7 +219,7 @@ In case of a misconfiguration the containers can keep restarting (become unhealt
 
 === "Frontend"
 
-    Run the container and enter an interactive shell:
+    Run the container in the background:
     ```shell
     docker run -d -p 127.0.0.1:8080:80 registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend:{{{ release_version }}}
     ```

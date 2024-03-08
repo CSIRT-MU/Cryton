@@ -1,3 +1,5 @@
+# TODO: use merge, include, and override options https://docs.docker.com/compose/compose-file/13-merge/?
+
 x-settings: &settings
   # HIVE
   CRYTON_HIVE_RABBIT_HOST: cryton-rabbit
@@ -8,7 +10,7 @@ x-settings: &settings
   CRYTON_HIVE_DATABASE_USERNAME: cryton
   CRYTON_HIVE_DATABASE_PASSWORD: cryton
   # WORKER / EMPIRE
-  CRYTON_WORKER_NAME: local_worker
+  CRYTON_WORKER_NAME: worker
   CRYTON_WORKER_EMPIRE_USERNAME: cryton
   CRYTON_WORKER_EMPIRE_PASSWORD: cryton
   # DATABASE
@@ -54,11 +56,6 @@ services:
     environment:
       <<: *settings
     network_mode: host
-    depends_on:
-      cryton_empire:
-        condition: service_started
-      cryton_msf:
-        condition: service_started
 
   cryton_hive:
     restart: always
@@ -124,7 +121,6 @@ services:
       <<: *settings
     ports:
       - "5672:5672"
-      - "127.0.0.1:15672:15672"
     healthcheck:
       test: rabbitmqctl eval '
         { true, rabbit_app_booted_and_running } = { rabbit:is_booted(node()), rabbit_app_booted_and_running },
