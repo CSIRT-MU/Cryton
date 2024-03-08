@@ -1533,7 +1533,7 @@
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cryton_cli<span class="w"> </span>bash
 </code></pre></div></p>
 <p>Register the Worker:
-<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>create<span class="w"> </span>local_worker<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;my local worker for testing&quot;</span>
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>create<span class="w"> </span>worker<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;my local worker for testing&quot;</span>
 </code></pre></div></p>
 <p>Check if the Worker is reachable (use the <strong>id</strong> from the previous command):
 <div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>health-check<span class="w"> </span>&lt;id&gt;
