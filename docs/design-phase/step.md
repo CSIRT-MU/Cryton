@@ -19,7 +19,7 @@ arguments:
       password: admin
 next:
   - type: result
-    value: OK
+    value: ok
     step: create-sesion
 ```
 
@@ -164,7 +164,7 @@ The following are types of conditions together with descriptions of possible val
 
 | Type                | Value                                          | Description                                                                                                                             |
 |---------------------|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `result`            | OK, FAIL, EXCEPTION                            | Match final `result` of the Step.                                                                                                       |
+| `result`            | ok, fail, error                                | Match final `result` of the Step.                                                                                                       |
 | `serialized_output` | Regular expression, for example: `^my_regex.*` | Match [regex](https://docs.python.org/3/library/re.html#regular-expression-syntax){target="_blank"} in `serialized_output` of the Step. |
 | `output`            | Regular expression, for example: `^my_regex.*` | Match [regex](https://docs.python.org/3/library/re.html#regular-expression-syntax){target="_blank"} in `output` of the Step.            |
 | `any`               | Value must be omitted                          | Run successor(s) in any case.                                                                                                           |
@@ -173,7 +173,7 @@ The following are types of conditions together with descriptions of possible val
 ```yaml
 next:
 - type: result
-  value: OK
+  value: ok
   step: step-to-execute
 ```
 
@@ -279,7 +279,7 @@ For example:
         username: admin
   next:
   - type: result
-    value: OK
+    value: ok
     step: ssh
 - name: ssh
   step_type: worker/execute

@@ -1,16 +1,4 @@
-# results
-RESULT_OK = 'OK'
-RESULT_FAIL = 'FAIL'
-RESULT_UNKNOWN = 'UNKNOWN'
-
-# return codes
-CODE_OK = 0
-CODE_FAIL = -1
-CODE_ERROR = -2
-CODE_TERMINATED = -3
-
 # types
-RETURN_CODE = 'return_code'
 RETURN_VALUE = 'return_value'
 RESULT = 'result'
 OUTPUT = 'output'
@@ -61,15 +49,8 @@ DATETIME = 'datetime'
 HTTP_LISTENER = 'HTTPListener'
 MSF_LISTENER = 'MSFListener'
 
-# Step related
-RETURN_CODE_ENUM = {
-    CODE_OK: RESULT_OK,
-    CODE_FAIL: RESULT_FAIL,
-}
-
 # Successor related
 VALID_SUCCESSOR_TYPES = [RESULT, ANY, SERIALIZED_OUTPUT, OUTPUT]
-VALID_SUCCESSOR_RESULTS = [RESULT_OK, RESULT_FAIL]
 SUCCESSOR_TYPES_WITHOUT_ANY = [RESULT, SERIALIZED_OUTPUT, OUTPUT]
 
 # RabbitMQ message keywords

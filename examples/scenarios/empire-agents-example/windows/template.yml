@@ -28,7 +28,7 @@ plan:
                 PASSWORD: {{ target.password }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: deploy-agent
         - name: deploy-agent
           step_type: empire/agent-deploy
@@ -42,7 +42,7 @@ plan:
             agent_name: MyAgent # only lower/upper characters and numbers are allowed in name
           next:
             - type: result
-              value: OK
+              value: ok
               step: whoami-on-agent
         - name: whoami-on-agent
           step_type: empire/execute

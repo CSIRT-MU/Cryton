@@ -110,7 +110,7 @@ The following table contains a list of output parameters.
 | start_time        | When the execution started.                                   | datetime   | 2022-07-21T20:37:28.343619Z |
 | pause_time        | Time of the last pause.                                       | datetime   | 2022-07-21T20:37:28.343619Z |
 | finish_time       | When the execution finished.                                  | datetime   | 2022-07-21T20:37:28.343619Z |
-| result            | Result of the module execution.                               | string     | OK                          |
+| result            | Result of the module execution.                               | string     | ok                          |
 | output            | Received output from the module execution.                    | string     | created session with id 1.  |
 | serialized_output | Serializable output from the module execution.                | dictionary | {"session_id": 1}           |
 | valid             | Whether the parameters passed to the module are valid or not. | boolean    | true                        |

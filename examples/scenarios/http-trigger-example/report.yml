@@ -36,5 +36,5 @@ plan_executions:
 
         '
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false

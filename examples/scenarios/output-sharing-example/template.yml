@@ -23,7 +23,7 @@ plan:
                 password: {{ bruteforce.password }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: create-ssh-session
         - name: create-ssh-session
           step_type: worker/execute

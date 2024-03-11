@@ -27,7 +27,7 @@ plan:
               password: {{ target.password }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: whoami-on-agent
         - name: whoami-on-agent
           step_type: empire/execute

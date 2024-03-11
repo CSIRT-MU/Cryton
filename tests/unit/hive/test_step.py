@@ -275,7 +275,7 @@
 #     def test_validate_next_parameter(self, step_instance):
 #         next_dict = {
 #             "type": "result",
-#             "value": "OK",
+#             "value": "ok",
 #             "step": "test_step"
 #         }
 #
@@ -348,7 +348,7 @@
 #
 #     @pytest.mark.parametrize("p_successor_type, p_successor_value, p_step_execution_result",
 #                              [(constants.RESULT, constants.RESULT_OK, constants.RESULT_OK),
-#                               (constants.ANY, None, 'FAIL'),
+#                               (constants.ANY, None, 'fail'),
 #                               (constants.OUTPUT, "test", "testresult"),
 #                               (constants.SERIALIZED_OUTPUT, "test", {"test": "result"})])
 #     def test_get_successors(self, step_instance, step_successor, step_execution, p_successor_type, p_successor_value,

@@ -1,17 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from enum import Enum
 from copy import deepcopy
 from jsonschema import validate
 
-
-class Result(str, Enum):  # StrEnum + auto() introduced in 3.11
-    """
-    Module result options.
-    """
-    OK = "ok"
-    FAIL = "fail"
-    ERROR = "error"
+from cryton.lib.utility.enums import Result
 
 
 @dataclass

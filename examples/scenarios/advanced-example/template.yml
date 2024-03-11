@@ -26,7 +26,7 @@ plan:
                 - 22
           next:
             - type: result
-              value: OK
+              value: ok
               step: bruteforce
         - name: bruteforce
           step_type: worker/execute
@@ -39,7 +39,7 @@ plan:
                 password: "{{ bruteforce.password }}"
           next:
             - type: result
-              value: OK
+              value: ok
               step: get-ssh-session
         - name: get-ssh-session
           step_type: worker/execute
@@ -55,7 +55,7 @@ plan:
                 PASSWORD: $parent.password
           next:
             - type: result
-              value: OK
+              value: ok
               step: session-cmd
         - name: session-cmd
           step_type: worker/execute

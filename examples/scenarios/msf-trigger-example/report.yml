@@ -34,5 +34,5 @@ plan_executions:
       output: 'victim'
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false

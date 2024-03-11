@@ -34,7 +34,7 @@ plan:
                 LHOST: {{ cryton.host }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: create-route-to-network-1
 
         - name: create-route-to-network-1
@@ -74,7 +74,7 @@ plan:
               module_retries: 3
           next:
             - type: result
-              value: OK
+              value: ok
               step: create-route-to-network-2
 
         - name: create-route-to-network-2
@@ -116,7 +116,7 @@ plan:
                 LHOST: {{ cryton.host }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: create-route-to-network-3
 
         - name: create-route-to-network-3
@@ -157,7 +157,7 @@ plan:
                 STOP_ON_SUCCESS: true
           next:
             - type: result
-              value: OK
+              value: ok
               step: get-passwd-file
 
         - name: get-passwd-file

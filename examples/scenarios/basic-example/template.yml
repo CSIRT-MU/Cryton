@@ -22,7 +22,7 @@ plan:
                 - 22
           next:
             - type: result
-              value: OK
+              value: ok
               step: bruteforce
         - name: bruteforce
           step_type: worker/execute
