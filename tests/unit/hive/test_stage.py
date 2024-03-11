@@ -469,10 +469,10 @@
 #     # def test_validate_modules(self, validate_args):
 #     #     step_execution_model = baker.make(StepExecutionModel)
 #     #     stage_execution = stage.StageExecution(stage_execution_id=step_execution_model.stage_execution.id)
-#     #     validate_args.return_value = (True, 'OK')
+#     #     validate_args.return_value = (True, 'ok')
 #     #     ret = stage_execution.validate_modules()
 #     #
-#     #     self.assertEqual(ret, [(True, 'OK')])
+#     #     self.assertEqual(ret, [(True, 'ok')])
 #
 #     def test_report(self):
 #         plan_ex = baker.make(PlanExecutionModel, **{'state': 'RUNNING'})

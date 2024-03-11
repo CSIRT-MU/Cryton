@@ -5,7 +5,7 @@ from django.core import exceptions as django_exc
 from cryton.hive.config.settings import SETTINGS
 from cryton.hive.utility import exceptions, states, constants, rabbit_client
 from cryton.hive.cryton_app.models import WorkerModel
-
+from cryton.lib.utility.module import Result
 
 class Worker:
     def __init__(self, **kwargs):
@@ -89,7 +89,7 @@ class Worker:
         with rabbit_client.RpcClient() as rpc_client:
             try:
                 response = rpc_client.call(self.control_q_name, message)
-                if response.get(constants.EVENT_V).get(constants.RETURN_CODE) == 0:
+                if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
                     self.state = states.UP
                     return True
             except exceptions.RpcTimeoutError:

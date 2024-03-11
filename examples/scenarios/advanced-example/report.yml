@@ -79,7 +79,7 @@ plan_executions:
             vendor: Oracle VirtualBox virtual NIC
             addrtype: mac
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 21
       step_name: bruteforce
@@ -94,7 +94,7 @@ plan_executions:
         - password: victim
           username: victim
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 22
       step_name: get-ssh-session
@@ -104,7 +104,7 @@ plan_executions:
       output: ''
       serialized_output: Session 1 opened
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 23
       step_name: session-cmd
@@ -170,7 +170,7 @@ plan_executions:
 
         '
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
   - id: 13
     stage_name: stage-http
@@ -188,7 +188,7 @@ plan_executions:
       output: 'it works!'
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
   - id: 14
     stage_name: stage-msf
@@ -206,5 +206,5 @@ plan_executions:
       output: 'victim'
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false

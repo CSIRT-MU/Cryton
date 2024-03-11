@@ -49,7 +49,7 @@
 #         plan_execution_obj = plan.PlanExecution(plan_model=plan_obj, worker=worker_obj, run=run_obj,
 #                                                 state=states.PAUSING)
 #
-#         body = dict(event_t='PAUSE', event_v=dict(result='OK', plan_execution_id=plan_execution_obj.model.id))
+#         body = dict(event_t='PAUSE', event_v=dict(result='ok', plan_execution_id=plan_execution_obj.model.id))
 #         message = Mock()
 #         message.body = json.dumps(body)
 #         self.listener_obj.event_callback(message)
@@ -68,7 +68,7 @@
 #             raise AssertionError("String not found in any log message")
 #
 #     # def test_control_callback(self):
-#     #     body = dict(control_t='VALIDATE_MODULES', control_v=dict(result='OK'))
+#     #     body = dict(control_t='VALIDATE_MODULES', control_v=dict(result='ok'))
 #     #     message = Mock()
 #     #     message.body = json.dumps(body)
 #     #     message.properties = self.properties

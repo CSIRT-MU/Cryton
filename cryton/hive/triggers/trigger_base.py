@@ -5,6 +5,7 @@ import schema
 from cryton.hive.models import stage, worker, step
 from cryton.hive.utility.rabbit_client import RpcClient
 from cryton.hive.utility import constants, exceptions, logger, scheduler_client, states
+from cryton.lib.utility.module import Result
 
 
 class TriggerBase:
@@ -159,7 +160,7 @@ class TriggerWorker(TriggerBase):
 
         # TODO: When changing the Stage's state to final state, it must propagate to PlanEx
         #  Each execution component should have its `process_finished` method, maybe create event `process_finished`
-        if response.get(constants.EVENT_V).get(constants.RETURN_CODE) == 0:
+        if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
             self.stage_execution.trigger_id = response.get(constants.EVENT_V).get(constants.TRIGGER_ID)
             self.stage_execution.state = states.AWAITING
             logger.logger.info("Stage Execution trigger started.", stage_execution_id=self.stage_execution_id)
@@ -186,7 +187,7 @@ class TriggerWorker(TriggerBase):
                                     stage_execution_id=self.stage_execution_id)
                 return
 
-        if response.get(constants.EVENT_V).get(constants.RETURN_CODE) == 0:
+        if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
             logger.logger.info("Stage Execution trigger stopped.", stage_execution_id=self.stage_execution_id,
                                trigger_id=self.stage_execution.trigger_id)
             self.stage_execution.trigger_id = ""

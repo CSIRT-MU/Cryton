@@ -60,7 +60,7 @@ plan:
               LPORT: 4445
         next:
           - type: result
-            value: OK
+            value: ok
             step: exploit-dockerd-privesc
 
       - name: exploit-dockerd-privesc
@@ -103,7 +103,7 @@ plan:
               cmd: sysinfo
           next:
             - type: result
-              value: OK
+              value: ok
               step: ubuntu-get-etc-shadow
 
         - name: ubuntu-get-etc-shadow
@@ -118,7 +118,7 @@ plan:
               cmd: cat /etc/shadow
           next:
             - type: result
-              value: OK
+              value: ok
               step: ubuntu-get-process-list
 
         - name: ubuntu-get-process-list
@@ -153,7 +153,7 @@ plan:
               cmd: ifconfig
           next:
             - type: result
-              value: OK
+              value: ok
               step: update-msf-routing-table
 
         - name: update-msf-routing-table
@@ -225,7 +225,7 @@ plan:
                 LPORT: 4447
           next:
             - type: result
-              value: OK
+              value: ok
               step: exploit-ms16-reflection-juicy
 
         - name: exploit-ms16-reflection-juicy
@@ -268,7 +268,7 @@ plan:
               cmd: execute -f whoami -i -a /all
           next:
             - type: result
-              value: OK
+              value: ok
               step: get-tasklist
 
         - name: get-tasklist

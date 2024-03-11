@@ -39,7 +39,7 @@ plan_executions:
           - password: victim
             username: victim
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 6
       step_name: create-ssh-session
@@ -50,5 +50,5 @@ plan_executions:
       serialized_output:
         session_id: 2
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false

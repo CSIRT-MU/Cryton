@@ -70,8 +70,11 @@ class PlanViewSet(util.InstanceFullViewSet):
         except PlanTemplateModel.DoesNotExist:
             raise exceptions.NotFound(f"Nonexistent template_id: {template_id}.")
 
-        with open(str(plan_template_obj.file.path)) as temp:
-            plan_template = temp.read()
+        try:
+            with open(str(plan_template_obj.file.path)) as temp:
+                plan_template = temp.read()
+        except FileNotFoundError:
+            raise exceptions.NotFound("The template was removed. Please upload a new one.")
 
         inventory_variables = util.get_inventory_variables_from_files(request.FILES)
         filled_plan_template = util.fill_template(inventory_variables, plan_template)

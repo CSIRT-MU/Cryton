@@ -92,7 +92,7 @@ plan_executions:
             vendor: Oracle VirtualBox virtual NIC
             addrtype: mac
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 12
       step_name: bruteforce
@@ -107,7 +107,7 @@ plan_executions:
         - password: victim
           username: victim
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
 
 ```

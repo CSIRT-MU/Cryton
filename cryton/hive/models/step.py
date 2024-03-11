@@ -21,6 +21,7 @@ from cryton.hive.utility import constants, exceptions, logger, states, util, rab
 from cryton.hive.models import worker, session
 from cryton.hive.utility.exceptions import StepTypeDoesNotExist
 from enum import EnumMeta, Enum
+from cryton.lib.utility.enums import Result
 
 from dataclasses import dataclass, asdict
 
@@ -278,7 +279,7 @@ class Step:
 
         conf_schema.validate(next_dict)
 
-        if next_dict["type"] == constants.RESULT and next_dict["value"] not in constants.VALID_SUCCESSOR_RESULTS:
+        if next_dict["type"] == constants.RESULT and next_dict["value"] not in Result:
             raise SchemaError("Invalid value for type 'result' in the parameter 'next'")
 
     def add_successor(self, successor_id: int, successor_type: str, successor_value: Optional[str]) -> int:
@@ -299,9 +300,9 @@ class Step:
                 successor_type
             )
 
-        if successor_type == constants.RESULT and successor_value not in constants.VALID_SUCCESSOR_RESULTS:
+        if successor_type == constants.RESULT and successor_value not in Result:
             raise exceptions.InvalidSuccessorValue(
-                "Unknown successor value. Choose one of valid types: {}".format(constants.VALID_SUCCESSOR_RESULTS),
+                "Unknown successor value. Choose one of valid types: {}".format(Result.values()),
                 successor_value
             )
 
@@ -864,23 +865,26 @@ class StepExecution:
             try:
                 msf_session_id = ret_vals[constants.SERIALIZED_OUTPUT][constants.SESSION_ID]
             except (KeyError, TypeError):
-                ret_vals[constants.RETURN_CODE] = constants.CODE_FAIL
+                ret_vals[constants.RESULT] = Result.FAIL
                 logger.logger.warning("Module didn't return a session id", step_execution_id=self.model.id)
             else:
                 session.create_session(self.model.stage_execution.plan_execution_id, msf_session_id,
                                        create_named_session)
 
         # Set final state, optionally save result
-        return_code = ret_vals.get(constants.RETURN_CODE)
+        result = ret_vals.get(constants.RESULT)
         self.finish_time = timezone.now()
 
-        if return_code == constants.CODE_TERMINATED:
+        if result == Result.TERMINATED:
             self.state = states.TERMINATED
-        elif return_code == constants.CODE_ERROR:
+        elif result == Result.ERROR:
             self.state = states.ERROR
         else:
             self.state = states.FINISHED
-            self.result = constants.RETURN_CODE_ENUM.get(return_code, constants.RESULT_UNKNOWN)
+            try:
+                self.result = Result(result)
+            except ValueError:
+                self.result = Result.UNKNOWN
 
         # Store job output and error message
         self.save_output(ret_vals)
@@ -995,7 +999,7 @@ class StepExecution:
                     return
                 else:  # The state is set in the `post_process` method
                     response_value = response.get(constants.EVENT_V)
-                    if response_value.get(constants.RETURN_CODE) != 0:
+                    if response_value.get(constants.RESULT) != Result.OK:
                         logger.logger.warning("Step execution not terminated", step_execution_id=self.model.id,
                                               error=response_value.get('output'))
                         return
@@ -1070,7 +1074,7 @@ class StepExecutionWorkerExecute(StepExecution):
         with rabbit_client.RpcClient() as rpc_client:
             response = rpc_client.call(target_queue, message)
 
-        if response.get(constants.EVENT_V).get(constants.RETURN_CODE) == 0:
+        if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
             self.valid = True
 
         return self.valid
@@ -1096,6 +1100,9 @@ class StepExecutionWorkerExecute(StepExecution):
 
         if session_id:
             module_arguments[constants.SESSION_ID] = session_id
+
+        if (session_id := module_arguments.get(constants.SESSION_ID)) is not None:
+            module_arguments[constants.SESSION_ID] = int(session_id)
 
         message_body = {
             constants.STEP_TYPE: self.step_instance.step_type,
@@ -1179,6 +1186,9 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
 
         if session_id:
             step_arguments[constants.SESSION_ID] = session_id
+
+        if (session_id := step_arguments.get(constants.SESSION_ID)) is not None:
+            step_arguments[constants.SESSION_ID] = int(session_id)
 
         message_body = {
             constants.STEP_TYPE: self.step_instance.step_type,

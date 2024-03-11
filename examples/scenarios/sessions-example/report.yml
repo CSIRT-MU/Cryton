@@ -35,7 +35,7 @@ plan_executions:
       serialized_output:
         session_id: 1
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
     - id: 4
       step_name: execute-in-session
@@ -45,5 +45,5 @@ plan_executions:
       output: 'victim'
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: OK
+      result: ok
       valid: false
