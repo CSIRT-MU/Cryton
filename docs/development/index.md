@@ -28,11 +28,17 @@ docker compose -f docker-compose.prerequisites.yml up -d
 
     !!! warning
 
-        The following script removes unused images and volumes. Make sure you know what you're doing!
+        The following commands removes all images and volumes. Make sure you know what you're doing!
 
     ```
-    docker compose -f docker-compose.prerequisites.yml down -t 0 && docker system prune --volumes -f && docker compose -f docker-compose.prerequisites.yml up -d 
+    docker compose -f docker-compose.prerequisites.yml down -t 0 && docker system prune --all --force && docker volume prune --all --force && docker compose -f docker-compose.prerequisites.yml up -d 
     ```
+
+??? tip "Unable to access the database with Pycharm"
+
+    To be able to access the DB through the PgBouncer, add the following variable to the service definition in the Compose configuration: 
+    
+    `PGBOUNCER_IGNORE_STARTUP_PARAMETERS: extra_float_digits`.
 
 Install Cryton:
 ```shell
@@ -88,6 +94,19 @@ tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
 
 ```shell
 tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
+```
+
+#### Isolated testing environment
+To get the same environment as in the CI/CD pipeline, use the provided `ci-python` image.
+
+Build it:
+```shell
+docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest docker/ci-python/
+```
+
+Push it:
+```shell
+docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
 ```
 
 ### E2E
