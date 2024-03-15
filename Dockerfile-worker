@@ -1,3 +1,14 @@
+FROM kalilinux/kali-last-release:latest as kali
+
+# Install packages
+RUN apt update && apt install -y \
+    python3.12 \
+    medusa \
+    nmap \
+    wpscan \
+    ffuf \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest as base
 
 # Set environment
@@ -13,7 +24,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E worker
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E worker
 
-FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/kali-prebuilt:latest as production
+FROM kali as production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

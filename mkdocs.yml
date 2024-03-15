@@ -117,7 +117,6 @@ nav:
       - Front-end: development/frontend.md
   - Production: production.md  # update  # TODO: re-think
   - Logging: logging.md  # update
-  - Docker images: docker-images.md  # update  # TODO: re-think
   - Ansible: ansible/ansible.md  # update
   - Acknowledgements: acknowledgements.md
   - License: license.md

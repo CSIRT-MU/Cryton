@@ -69,6 +69,8 @@ The following is a list of applications used and required by Cryton (its compone
 
 === "Worker"
 
+[//]: # (TODO: update the metasploit framework image)
+
     - [Metasploit Framework](https://docs.metasploit.com/docs/using-metasploit/getting-started/nightly-installers.html){target="_blank"}
     - [PostgreSQL database](https://www.postgresql.org/download/){target="_blank"} (for Metasploit Framework)
     - [Empire C2](https://bc-security.gitbook.io/empire-wiki/quickstart/installation){target="_blank"}
@@ -189,10 +191,9 @@ Cryton is also shipped in the form of Docker images.
 
     This doesn't apply to the front-end. We will expose only the necessary port.
 
-Once you start the container, and it's healthy, you are all set.
+Once you start the container, and it's healthy, you are all set. Otherwise, check the logs from the unhealthy container (`docker logs <container-name>`).
 
-Before starting the containers, make sure to check out the [settings](settings.md) page.  
-In case of a misconfiguration the containers can keep restarting (become unhealthy) or Worker and Hive may not communicate. If that happens check the logs from the unhealthy container (`docker logs <container-name>`).
+Before starting the containers, make sure to check out the [settings](settings.md) page. Use environment variables to override Container settings.
 
 === "Hive"
 

@@ -1,10 +1,10 @@
-image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
-
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
 
+# TODO: build ci-python in a manual job
 default:
+  image: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
   interruptible: true
   artifacts:
     expire_in: 30 days
@@ -16,7 +16,6 @@ stages:
   - deploy
 
 .documentation:
-  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
   rules:
     - changes:
         - mkdocs.yml
@@ -27,7 +26,6 @@ stages:
 # test
 .tests:
   stage: test
-  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/ci-base:latest
   coverage: '/TOTAL.*\s+(\d+%)$/'
   rules:
     - changes:
@@ -106,7 +104,6 @@ build_documentation:
 
 upload_package_to_pypi:
   extends: .publish
-  image: registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest
   script:
     - poetry config pypi-token.pypi $PYPI_TOKEN
     - poetry publish --build
