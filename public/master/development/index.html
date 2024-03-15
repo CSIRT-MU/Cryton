@@ -1325,26 +1325,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-images/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Docker images
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../ansible/ansible/" class="md-nav__link">
         
   
@@ -1467,6 +1447,21 @@
       tox
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="tox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isolated-testing-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolated testing environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1667,10 +1662,15 @@
 <summary>Clean up and rebuild the prerequisites</summary>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The following script removes unused images and volumes. Make sure you know what you're doing!</p>
+<p>The following commands removes all images and volumes. Make sure you know what you're doing!</p>
 </div>
-<div class="highlight"><pre><span></span><code>docker compose -f docker-compose.prerequisites.yml down -t 0 &amp;&amp; docker system prune --volumes -f &amp;&amp; docker compose -f docker-compose.prerequisites.yml up -d 
+<div class="highlight"><pre><span></span><code>docker compose -f docker-compose.prerequisites.yml down -t 0 &amp;&amp; docker system prune --all --force &amp;&amp; docker volume prune --all --force &amp;&amp; docker compose -f docker-compose.prerequisites.yml up -d 
 </code></pre></div>
+</details>
+<details class="tip">
+<summary>Unable to access the database with Pycharm</summary>
+<p>To be able to access the DB through the PgBouncer, add the following variable to the service definition in the Compose configuration: </p>
+<p><code>PGBOUNCER_IGNORE_STARTUP_PARAMETERS: extra_float_digits</code>.</p>
 </details>
 <p>Install Cryton:
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>install<span class="w"> </span>--all-extras<span class="w"> </span>--with<span class="w"> </span>docs
@@ -1706,6 +1706,14 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>tox<span class="w"> </span>--<span class="w"> </span>tests/integration/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration
 </code></pre></div>
+<h4 id="isolated-testing-environment">Isolated testing environment<a class="headerlink" href="#isolated-testing-environment" title="Permanent link">&para;</a></h4>
+<p>To get the same environment as in the CI/CD pipeline, use the provided <code>ci-python</code> image.</p>
+<p>Build it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:<span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="k">)</span><span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest<span class="w"> </span>docker/ci-python/
+</code></pre></div></p>
+<p>Push it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
+</code></pre></div></p>
 <h3 id="e2e">E2E<a class="headerlink" href="#e2e" title="Permanent link">&para;</a></h3>
 <h2 id="django-related">Django related<a class="headerlink" href="#django-related" title="Permanent link">&para;</a></h2>
 <h2 id="custom-script-setup-with-django">Custom script setup with Django<a class="headerlink" href="#custom-script-setup-with-django" title="Permanent link">&para;</a></h2>
