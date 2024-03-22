@@ -67,8 +67,8 @@ class Event:
         :return: Details about the event result
         """
         logger.logger.debug("Running event: health_check", event_details=self._event_details)
-        result = 0
-        return {co.RETURN_CODE: result}
+        result = co.CODE_OK
+        return {co.RESULT: result}
 
     def add_trigger(self) -> dict:
         """

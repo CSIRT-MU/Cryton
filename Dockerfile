@@ -1,4 +1,4 @@
-FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest as base
+FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest as base
 
 # Set environment
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true

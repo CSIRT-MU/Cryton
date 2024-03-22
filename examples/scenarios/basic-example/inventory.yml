@@ -1,5 +1,0 @@
----
-target: 127.0.0.1
-bruteforce:
-  username: my_user
-  password: my_pass

@@ -1,0 +1,38 @@
+---
+# This example shows how to share output between the Steps.
+# Required modules: medusa, metasploit.
+
+plan:
+  name: Output sharing example
+  owner: Cryton
+  stages:
+    - name: stage-one
+      trigger_type: delta
+      trigger_args:
+        seconds: 0
+      steps:
+        - name: bruteforce
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: medusa
+            module_arguments:
+              target: {{ target.address }}
+              credentials:
+                username: {{ target.username }}
+                password: {{ target.password }}
+          next:
+            - type: result
+              value: ok
+              step: create-ssh-session
+        - name: create-ssh-session
+          step_type: worker/execute
+          arguments:
+            module: metasploit
+            module_arguments:
+              module_type: auxiliary
+              module: scanner/ssh/ssh_login
+              module_options:
+                RHOSTS: {{ target.address }}
+                USERNAME: $parent.username
+                PASSWORD: $parent.password

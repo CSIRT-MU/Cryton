@@ -2,7 +2,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
 
-# TODO: build ci-python in a manual job
+# TODO: build ci-python and production-base in a manual job
 default:
   image: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
   interruptible: true

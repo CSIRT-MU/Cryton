@@ -349,7 +349,7 @@ class Listener:
             step_ex_obj.pause_successors()  # Pause all successors so they can be executed after UNPAUSE
 
             # If any Steps are still running/starting, no execution can be paused
-            if stage_ex_obj.model.step_executions.all().exclude(state__in=[states.STARTING, states.RUNNING]).exists():
+            if stage_ex_obj.model.step_executions.filter(state__in=[states.STARTING, states.RUNNING]).exists():
                 return
 
             stage_ex_obj.state = states.PAUSED

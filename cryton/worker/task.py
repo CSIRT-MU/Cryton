@@ -53,7 +53,7 @@ class Task:
         try:
             self._validate(message_body)
         except SchemaError as ex:
-            result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: str(ex)}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
         else:
             result = self._execute(message_body)
 
@@ -104,9 +104,9 @@ class Task:
         if self._process.exitcode == 0:
             result = response_pipe.recv()
         elif self._process.exitcode < 0:
-            result = {co.RETURN_CODE: co.CODE_KILL}
+            result = {co.RESULT: co.CODE_KILL}
         else:
-            result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: "An unknown error occurred."}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: "An unknown error occurred."}
 
         return result
 
@@ -137,7 +137,7 @@ class Task:
         :param ack_queue: On what queue to send the acknowledgment
         :return: None
         """
-        msg_body = json.dumps({co.RETURN_CODE: co.CODE_OK})
+        msg_body = json.dumps({co.RESULT: co.CODE_OK})
         self.reply(msg_body, ack_queue)
 
     def reply(self, message_body: str, recipient: str = None) -> bool:
@@ -234,7 +234,7 @@ class AttackTask(Task):
             try:
                 result = asyncio.run(empire_client.execute_on_agent(arguments))
             except ConnectionError as err:
-                result = {co.RETURN_CODE: -2, co.OUTPUT: str(err)}
+                result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
 
         else:
             module_path = arguments.pop(co.MODULE)
@@ -294,7 +294,7 @@ class AgentTask(Task):
         try:
             result = asyncio.run(empire.deploy_agent(arguments))
         except (ConnectionError, EmpireLoginError) as err:
-            result = {co.RETURN_CODE: -2, co.OUTPUT: str(err)}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
 
         logger.logger.info("Finished AgentTask._execute().", correlation_id=self.correlation_id)
         return result
@@ -342,7 +342,7 @@ class ControlTask(Task):
             event_obj_method = getattr(event_obj, event_t_lower)
         except AttributeError:
             ex = f"Unknown event type: {event_t}."
-            event_v = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: ex}
+            event_v = {co.RESULT: co.CODE_ERROR, co.OUTPUT: ex}
             logger.logger.debug(ex, correlation_id=self.correlation_id)
         else:
             try:

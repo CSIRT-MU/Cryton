@@ -118,7 +118,7 @@ class EmpireClient(utinni.EmpireApiClient):
         try:
             empire_agent = await try_empire_request(self.agents.get, agent_name)
         except KeyError:
-            return {co.RETURN_CODE: -2, co.OUTPUT: f"Agent '{agent_name}' not found in Empire."}
+            return {co.RESULT: co.CODE_ERROR, co.OUTPUT: f"Agent '{agent_name}' not found in Empire."}
         else:
             logger.logger.debug(f"Agent '{agent_name}' successfully pulled from Empire.")
 
@@ -127,17 +127,17 @@ class EmpireClient(utinni.EmpireApiClient):
             try:
                 await try_empire_request(self.modules.get, module_name)
             except KeyError:
-                return {co.RETURN_CODE: -2, co.OUTPUT: f"Module '{module_name}' not found in Empire."}
+                return {co.RESULT: co.CODE_ERROR, co.OUTPUT: f"Module '{module_name}' not found in Empire."}
 
             try:
                 execution_result = await asyncio.wait_for(try_empire_request(empire_agent.execute, module_name,
                                                                              module_args), 15)
             except (utinni.EmpireModuleExecutionError, utinni.EmpireModuleExecutionTimeout) as ex:
                 logger.logger.error("Error while executing empire module", err=str(ex))
-                return {co.RETURN_CODE: -2, co.OUTPUT: str(ex)}
+                return {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
             except asyncio.exceptions.TimeoutError:
                 logger.logger.error(f"Module execution timed out, check that empire agent '{agent_name} is active")
-                return {co.RETURN_CODE: -2,
+                return {co.RESULT: co.CODE_ERROR,
                         co.OUTPUT: f"Module execution timed out, check that empire agent '{agent_name} is active"}
 
         elif shell_command is not None:
@@ -146,17 +146,17 @@ class EmpireClient(utinni.EmpireApiClient):
                 execution_result = await asyncio.wait_for(try_empire_request(empire_agent.shell, shell_command), 15)
             except (utinni.EmpireModuleExecutionError, utinni.EmpireModuleExecutionTimeout) as ex:
                 logger.logger.error("Error while executing shell command on agent", err=str(ex))
-                return {co.RETURN_CODE: -2, co.OUTPUT: str(ex)}
+                return {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
             except asyncio.exceptions.TimeoutError:
                 logger.logger.error(
                     f"Shell command execution timed out, check that empire agent '{agent_name}' is alive")
-                return {co.RETURN_CODE: -2,
+                return {co.RESULT: co.CODE_ERROR,
                         co.OUTPUT: f"Shell command execution timed out, check that empire agent '{agent_name}' "
                                     f"is alive"}
         else:
-            return {co.RETURN_CODE: -2, co.OUTPUT: "Missing module_name or shell_command in arguments."}
+            return {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Missing module_name or shell_command in arguments."}
 
-        return {co.RETURN_CODE: 0, co.OUTPUT: execution_result}
+        return {co.RESULT: co.CODE_OK, co.OUTPUT: execution_result}
 
 
 class EmpireStager(utinni.EmpireObject):
@@ -212,7 +212,7 @@ async def deploy_agent(arguments: dict) -> dict:
     try:
         payload = await empire.generate_payload(arguments)
     except KeyError as err:
-        return {co.OUTPUT: str(err), co.RETURN_CODE: -2}
+        return {co.OUTPUT: str(err), co.RESULT: co.CODE_ERROR}
 
         # Check type of connection to target
     if session_id:
@@ -221,7 +221,7 @@ async def deploy_agent(arguments: dict) -> dict:
             target_ip = metasploit_obj.get_parameter_from_session(session_id, "session_host")
         except KeyError as err:
             logger.logger.error("MSF session not found.", session_id=session_id)
-            return {co.OUTPUT: f"MSF Session with id {str(err)} not found.", co.RETURN_CODE: -2}
+            return {co.OUTPUT: f"MSF Session with id {str(err)} not found.", co.RESULT: co.CODE_ERROR}
 
         logger.logger.debug("Deploying agent via MSF session.", session_id=session_id, payload=payload,
                             target_ip=target_ip)
@@ -232,11 +232,11 @@ async def deploy_agent(arguments: dict) -> dict:
             ssh_client = ssh_to_target(ssh_connection)
         except KeyError as err:
             logger.logger.error(f"Missing {str(err)} argument in ssh_connection.")
-            return {co.OUTPUT: f"Missing {str(err)} argument in ssh_connection.", co.RETURN_CODE: -2}
+            return {co.OUTPUT: f"Missing {str(err)} argument in ssh_connection.", co.RESULT: co.CODE_ERROR}
         except (paramiko.ssh_exception.AuthenticationException, paramiko.ssh_exception.NoValidConnectionsError,
                 socket.error) as ex:
             logger.logger.error("Couldn't connect to target via paramiko ssh client.", original_err=ex)
-            return {co.OUTPUT: str(ex), co.RETURN_CODE: -2}
+            return {co.OUTPUT: str(ex), co.RESULT: co.CODE_ERROR}
 
         logger.logger.debug("Connected to target via paramiko ssh client.")
         ssh_client.exec_command(payload)
@@ -244,7 +244,7 @@ async def deploy_agent(arguments: dict) -> dict:
         logger.logger.debug("Deploying agent via ssh.", credentials=ssh_connection, payload=payload)
     else:
         logger.logger.error("Missing 'ssh_connection' or 'session_id' argument.")
-        return {co.OUTPUT: "Missing 'ssh_connection' or 'session_id' argument.", co.RETURN_CODE: -2}
+        return {co.OUTPUT: "Missing 'ssh_connection' or 'session_id' argument.", co.RESULT: co.CODE_ERROR}
 
     new_agent_name = arguments[co.AGENT_NAME]  # checked during validation
 
@@ -253,9 +253,9 @@ async def deploy_agent(arguments: dict) -> dict:
     agent = await empire.agent_poller(target_ip)
 
     if agent is None:
-        return {co.OUTPUT: "Agent could not be deployed or didn't connect to the empire server", co.RETURN_CODE: -2}
+        return {co.OUTPUT: "Agent could not be deployed or didn't connect to the empire server", co.RESULT: co.CODE_ERROR}
 
     agent_rename_response = await try_empire_request(agent.rename, new_agent_name)
     logger.logger.debug(f"Agent renamed to '{agent.name}'", response=agent_rename_response)
 
-    return {co.RETURN_CODE: 0, co.OUTPUT: f"Agent '{new_agent_name}' deployed on target {target_ip}."}
+    return {co.RESULT: co.CODE_OK, co.OUTPUT: f"Agent '{new_agent_name}' deployed on target {target_ip}."}

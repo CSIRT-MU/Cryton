@@ -1,0 +1,9 @@
+# Contains Step only. This Step is an initial Step.
+---
+name: initial whoami
+step_type: worker/execute
+is_init: true
+arguments:
+  module: command
+  module_arguments:
+    command: whoami

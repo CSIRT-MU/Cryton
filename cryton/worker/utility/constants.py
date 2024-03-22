@@ -97,12 +97,12 @@ USE_ANY_SESSION_TO_TARGET = 'use_any_session_to_target'
 SSH_CONNECTION = 'ssh_connection'
 
 # Other constants
-RETURN_CODE = "return_code"
+RESULT = "result"
 OUTPUT = "output"
 SERIALIZED_OUTPUT = "serialized_output"
-CODE_ERROR = -2
-CODE_OK = 0
-CODE_KILL = -3
+CODE_ERROR = "error"
+CODE_OK = "ok"
+CODE_KILL = "terminated"
 FILE = "file"
 FILE_CONTENT = "file_content"
 FILE_ENCODING = "file_encoding"

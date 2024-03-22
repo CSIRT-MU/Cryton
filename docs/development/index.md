@@ -96,22 +96,36 @@ tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
 tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
 ```
 
-#### Isolated testing environment
-To get the same environment as in the CI/CD pipeline, use the provided `ci-python` image.
-
-Build it:
-```shell
-docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest docker/ci-python/
-```
-
-Push it:
-```shell
-docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
-```
+Use the provided [`ci-python` image](#ci-python) to get an isolated environment.
 
 ### E2E
+E2E tests will test Hive, Worker, and CLI together.
 
-[//]: # (TODO)
+Build playground with E2E tests ready:
+```shell
+docker compose -f docker-compose.yml -f docker-compose.playground.yml -f docker-compose.dev.yml -f docker-compose.e2e.yml up -d --build
+```
+
+Enter the CLI container:
+```shell
+docker exec -it cryton-cli bash
+```
+
+Run the tests:
+```shell
+/app/.venv/bin/python /app/tests_e2e/cli.py run-tests
+```
+
+??? note "Possible tests"
+
+    - `basic`
+    - `advanced`
+    - `control`
+    - `empire`
+    - `http_trigger`
+    - `msf_trigger`
+    - `datetime_trigger`
+    - `all`
 
 ## Django related
 
@@ -247,4 +261,32 @@ class TestUnitName:
 
         # Assert - assert the outcome is exactly as expected to avoid any unpleasant surprises later
         pass
+```
+
+## Docker images
+
+### production-base
+Image used for building Python applications.
+
+Build it:
+```shell
+docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest docker/production-base/
+```
+
+Push it:
+```shell
+docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base
+```
+
+### ci-python
+To get the same environment as in the CI/CD pipeline, use the provided `ci-python` image.
+
+Build it:
+```shell
+docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest docker/ci-python/
+```
+
+Push it:
+```shell
+docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
 ```

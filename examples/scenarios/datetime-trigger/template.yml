@@ -1,0 +1,21 @@
+---
+# This example shows how to use the DateTime trigger.
+# Required modules: command.
+
+plan:
+  name: DateTime trigger example
+  owner: Cryton
+  stages:
+    - name: stage-one
+      trigger_type: datetime
+      trigger_args:
+        timezone: Europe/Prague
+        hour: 16
+      steps:
+        - name: execute-command
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: command
+            module_arguments:
+              command: echo "it works!"

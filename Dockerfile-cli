@@ -1,4 +1,4 @@
-FROM registry.gitlab.ics.muni.cz:443/cryton/configurations/production-base:latest as base
+FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest as base
 
 # Set environment
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
@@ -33,3 +33,13 @@ RUN _CRYTON_CLI_COMPLETE=bash_source cryton-cli > /etc/profile.d/cryton-cli-comp
 RUN echo ". /etc/profile.d/cryton-cli-complete.sh" >> ~/.bashrc
 
 CMD [ "bash" ]
+
+FROM production as e2e-tests
+
+ENV TZ=UTC
+
+RUN apk add --no-cache \
+    curl
+
+# Install dependencies
+RUN /app/.venv/bin/pip install PyYAML
