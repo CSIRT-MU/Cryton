@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
     
     
       
@@ -1559,26 +1559,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docker-images/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Docker images
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../ansible/ansible/" class="md-nav__link">
         
   
@@ -1890,7 +1870,7 @@ Every step can have a successor(s) whose execution will follow according to prov
 <span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 <span class="nt">next</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OK</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
 <span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create-sesion</span>
 </code></pre></div></p>
 <p>To better understand what each argument means and defines, here is a short description (sub-arguments are omitted 
@@ -2169,7 +2149,7 @@ Template, a list of dictionaries <strong>containing</strong> params <strong>type
 <tbody>
 <tr>
 <td><code>result</code></td>
-<td>OK, FAIL, EXCEPTION</td>
+<td>ok, fail, error</td>
 <td>Match final <code>result</code> of the Step.</td>
 </tr>
 <tr>
@@ -2192,7 +2172,7 @@ Template, a list of dictionaries <strong>containing</strong> params <strong>type
 <h3 id="examples">Examples:<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">next</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
-<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OK</span>
+<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
 <span class="w">  </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nt">next</span><span class="p">:</span>
@@ -2280,7 +2260,7 @@ For example:
 <span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 <span class="w">  </span><span class="nt">next</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OK</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
 <span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
 <span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
@@ -2506,7 +2486,7 @@ It allows you to take the output and use it in other modules in the form of a <c
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
       
     
   </body>

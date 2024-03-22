@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
     
     
       
@@ -1250,26 +1250,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#proxy-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Proxy settings
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Infrastructure
-    </span>
-  </a>
   
 </li>
       
@@ -1452,26 +1434,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-images/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Docker images
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../ansible/ansible/" class="md-nav__link">
         
   
@@ -1619,26 +1581,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#proxy-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Proxy settings
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Infrastructure
-    </span>
-  </a>
   
 </li>
       
@@ -1667,6 +1611,7 @@
 <li>It takes minutes to build and is easy to reset</li>
 <li>It allows you to quickly run E2E tests</li>
 </ul>
+<p><img alt="Infrastructure" src="../images/playground-infrastructure.png" /></p>
 <details class="note">
 <summary>Limitations</summary>
 <p>Docker Compose configuration doesn't allow custom gateways/routers which results in creating overlying networks that simulate separated networks.</p>
@@ -1685,23 +1630,24 @@
 <span class="nb">cd</span><span class="w"> </span>cryton
 </code></pre></div></p>
 <p>Now, we build the infrastructure:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.playground.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
 </code></pre></div></p>
 <p>Once we are done, Cryton toolset and vulnerable targets should be up and running.</p>
 <h2 id="run-the-prepared-scenario">Run the prepared scenario<a class="headerlink" href="#run-the-prepared-scenario" title="Permanent link">&para;</a></h2>
 <p>We have prepared an example attack scenario that uses multiple Cryton features (<a href="../design-phase/step/#session-management">session management</a>,
 <a href="../design-phase/step/#output-sharing">output sharing</a>, <a href="../design-phase/step/#conditional-execution">conditional execution</a>, ...).</p>
-<p>First, enter the container with Cryton CLI
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>cryton-cli<span class="w"> </span>bash
-</code></pre></div></p>
-<p>and then run the following script to automatically prepare and execute the scenario:
-<div class="highlight"><pre><span></span><code>/opt/resources/run_scenario_1.sh
+<p><img alt="Attack description" src="../images/playground-attack-diagram.png" /></p>
+<p>Run the following script in the CLI container to automatically prepare and execute the scenario:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cryton_cli<span class="w"> </span>/opt/resources/run_example_scenario.sh
 </code></pre></div></p>
 <p>Progress and results can be viewed in the <em>front-end</em> at <a href="http://localhost:8080/">http://localhost:8080/</a>.</p>
 <details class="note">
 <summary>Instructions for manually running the scenario</summary>
+<p>Enter the CLI container:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>cryton_cli<span class="w"> </span>bash
+</code></pre></div></p>
 <p>Register and check the Worker:
-<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>create<span class="w"> </span>attacker
+<div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>workers<span class="w"> </span>create<span class="w"> </span>worker
 cryton-cli<span class="w"> </span>workers<span class="w"> </span>health-check<span class="w"> </span>&lt;worker-id&gt;
 </code></pre></div></p>
 <p>Validate the template:
@@ -1724,8 +1670,7 @@ cryton-cli<span class="w"> </span>runs<span class="w"> </span>create<span class=
 </details>
 <h2 id="create-your-own-scenario">Create your own scenario<a class="headerlink" href="#create-your-own-scenario" title="Permanent link">&para;</a></h2>
 <p>If you know what you're doing, you can try to come up with your own attack plan.</p>
-<p>Feel free to access the Worker container and try to find vulnerabilities and attack vectors that you could utilize in your
-final scenario. If the provided infrastructure is not ideal for your needs, you can also add more containers.</p>
+<p>Feel free to access the Worker container and try to find vulnerabilities and attack vectors that you could utilize in your final scenario. If the provided infrastructure is not ideal for your needs, you can also add more containers.</p>
 <details class="question">
 <summary>How do I access a container?</summary>
 <p>Generally you want to start an interactive session inside the container using:
@@ -1736,138 +1681,37 @@ final scenario. If the provided infrastructure is not ideal for your needs, you 
 </code></pre></div></p>
 </details>
 <h3 id="e2e-testing">E2E testing<a class="headerlink" href="#e2e-testing" title="Permanent link">&para;</a></h3>
-<p>If you're trying to develop a new feature for the Cryton toolset, you might want to run some tests. That can be troublesome
-if you need to test many components or run multiple tests multiple times.</p>
-<p>First, we need to link all necessary components to the <strong>cryton-playground</strong> directory (<strong>make sure you are in the correct directory</strong> <code>cd cryton-playground</code>):
-<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-cli<span class="w"> </span>cryton-cli
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-core<span class="w"> </span>cryton-core
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-worker<span class="w"> </span>cryton-worker
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-frontend<span class="w"> </span>cryton-frontend
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-modules<span class="w"> </span>cryton-modules
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/cryton-e2e<span class="w"> </span>cryton-e2e
-</code></pre></div></p>
-<details class="question" open="open">
-<summary>Do I need to link all components?</summary>
-<p>If you've updated only one component, there is no need to download and link other components. However, you need to
-remove the service(s) that you haven't changed (linked) from the <code>docker-compose.e2e.yml</code> file.</p>
-</details>
+<p>If you're trying to develop a new feature for the Cryton toolset, you might want to run some tests. That can be troublesome if you need to test many components or run multiple tests multiple times.</p>
 <p>Rebuild the infrastructure:
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.e2e.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
 </code></pre></div></p>
 <p>Run e2e tests:
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cryton_cli<span class="w"> </span>cryton-e2e<span class="w"> </span>run-tests
 </code></pre></div></p>
-<p>More information can be found <a href="../development/e2e-testing/">here</a>.</p>
-<hr />
+<p>More information can be found <a href="development/e2e-testing.md">here</a>.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="unable-to-build-the-infrastructure">Unable to build the infrastructure<a class="headerlink" href="#unable-to-build-the-infrastructure" title="Permanent link">&para;</a></h3>
-<p>Make sure the address pools the playground uses are available.</p>
+<p>Make sure the address pools and ports the playground uses are available.</p>
 <h3 id="services-are-not-running-correctly">Services are not running correctly<a class="headerlink" href="#services-are-not-running-correctly" title="Permanent link">&para;</a></h3>
 <p>If you're having problems with the services (they keep restarting for example):</p>
 <ol>
 <li>
 <p>Shut down the running infrastructure with no timeout:
-    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span>
+    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.playground.yml<span class="w"> </span>down<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span>
 </code></pre></div></p>
 </li>
 <li>
-<p>Remove all unused data, volumes, and images:
-    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--volumes<span class="w"> </span>--all
+<p>Remove <strong>all</strong> data, volumes, images, and containers:
+    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>--volumes<span class="w"> </span>--all<span class="w"> </span>--force
+docker<span class="w"> </span>volumes<span class="w"> </span>prune<span class="w"> </span>--all
 </code></pre></div></p>
 </li>
 <li>
 <p>Build the Infrastructure again:
-    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.playground.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
 </code></pre></div></p>
 </li>
 </ol>
-<h3 id="proxy-settings">Proxy settings<a class="headerlink" href="#proxy-settings" title="Permanent link">&para;</a></h3>
-<p>If you're using a proxy, paste the following settings into <code>~/.docker/config.json</code> on your host:
-<div class="highlight"><pre><span></span><code>{
- &quot;proxies&quot;:
- {
-   &quot;default&quot;:
-   {
-     &quot;httpProxy&quot;: &quot;&lt;proxy-address&gt;&quot;,
-     &quot;httpsProxy&quot;: &quot;&lt;proxy-address&gt;&quot;,
-     &quot;noProxy&quot;: &quot;localhost,.cryton&quot;
-   }
- }
-}
-</code></pre></div></p>
-<hr />
-<h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
-<p><strong>core.cryton</strong>
-Contains Cryton Core, Apache proxy, CLI (optionally cryton-e2e).</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.10</li>
-</ul>
-<p><strong>worker.cryton</strong>
-Contains Cryton Worker, MSF, Empire C2.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.11</li>
-<li>192.168.91.11</li>
-</ul>
-<p><strong>cryton_frontend</strong>
-Contains Cryton Frontend.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.12</li>
-</ul>
-<p><strong>db.cryton</strong>
-Contains DB server.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.13</li>
-</ul>
-<p><strong>pgbouncer.cryton</strong>
-Contains PgBouncer server.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.14</li>
-</ul>
-<p><strong>rabbit.cryton</strong>
-Contains RabbitMQ server.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.90.15</li>
-</ul>
-<p><strong>wordpress_db</strong>
-DB server for WordPress.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.93.11</li>
-</ul>
-<p><strong>wordpress_app</strong>
-WordPress application with known credentials.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.91.10</li>
-<li>192.168.92.10</li>
-<li>192.168.93.10</li>
-<li>192.168.94.10</li>
-</ul>
-<p><strong>vulnerable_ftp</strong>
-FTP server with a known exploit.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.92.20</li>
-</ul>
-<p><strong>vulnerable_db</strong>
-Postgres DB server.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.92.21</li>
-<li>192.168.94.21</li>
-</ul>
-<p><strong>vulnerable_user_machine</strong>
-Contains Ubuntu image with a running SSH service and weak credentials.</p>
-<p>IP addresses:</p>
-<ul>
-<li>192.168.94.20</li>
-</ul>
 
 
 
@@ -1967,7 +1811,7 @@ Contains Ubuntu image with a running SSH service and weak credentials.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
       
     
   </body>

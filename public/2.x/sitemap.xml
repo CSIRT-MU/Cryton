@@ -2,217 +2,207 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/acknowledgements/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/architecture/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/contribution-guide/</loc>
-         <lastmod>2024-03-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/docker-images/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-example/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/installation/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/license/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/logging/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/playground/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/production/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/quick-start/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/settings/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/ansible/ansible/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/plan-instance/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/plan/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/stage/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/step/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/design-phase/template/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/development/</loc>
-         <lastmod>2024-03-04</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/development/e2e-testing/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/development/frontend/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/development/modules/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/dynamic-execution/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/execution/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/reporting/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/execution-phase/run/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/interfaces/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/interfaces/cli/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/interfaces/frontend/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/interfaces/rest-api/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/command/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/ffuf/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/medusa/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/metasploit/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/nmap/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/script/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/wpscan/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/usage/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/usage/workflows/</loc>
-         <lastmod>2024-03-04</lastmod>
+         <lastmod>2024-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
