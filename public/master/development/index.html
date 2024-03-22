@@ -1448,21 +1448,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="tox">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#isolated-testing-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Isolated testing environment
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
           <li class="md-nav__item">
@@ -1623,6 +1608,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#docker-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker images
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#production-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      production-base
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ci-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      ci-python
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1706,15 +1724,31 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>tox<span class="w"> </span>--<span class="w"> </span>tests/integration/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration
 </code></pre></div>
-<h4 id="isolated-testing-environment">Isolated testing environment<a class="headerlink" href="#isolated-testing-environment" title="Permanent link">&para;</a></h4>
-<p>To get the same environment as in the CI/CD pipeline, use the provided <code>ci-python</code> image.</p>
-<p>Build it:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:<span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="k">)</span><span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest<span class="w"> </span>docker/ci-python/
-</code></pre></div></p>
-<p>Push it:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
-</code></pre></div></p>
+<p>Use the provided <a href="#ci-python"><code>ci-python</code> image</a> to get an isolated environment.</p>
 <h3 id="e2e">E2E<a class="headerlink" href="#e2e" title="Permanent link">&para;</a></h3>
+<p>E2E tests will test Hive, Worker, and CLI together.</p>
+<p>Build playground with E2E tests ready:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.playground.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.dev.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.e2e.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</code></pre></div></p>
+<p>Enter the CLI container:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>cryton-cli<span class="w"> </span>bash
+</code></pre></div></p>
+<p>Run the tests:
+<div class="highlight"><pre><span></span><code>/app/.venv/bin/python<span class="w"> </span>/app/tests_e2e/cli.py<span class="w"> </span>run-tests
+</code></pre></div></p>
+<details class="note">
+<summary>Possible tests</summary>
+<ul>
+<li><code>basic</code></li>
+<li><code>advanced</code></li>
+<li><code>control</code></li>
+<li><code>empire</code></li>
+<li><code>http_trigger</code></li>
+<li><code>msf_trigger</code></li>
+<li><code>datetime_trigger</code></li>
+<li><code>all</code></li>
+</ul>
+</details>
 <h2 id="django-related">Django related<a class="headerlink" href="#django-related" title="Permanent link">&para;</a></h2>
 <h2 id="custom-script-setup-with-django">Custom script setup with Django<a class="headerlink" href="#custom-script-setup-with-django" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
@@ -1819,6 +1853,23 @@ in <code>path/to/module.py</code>, then the <em>path</em> variable will be <code
 
         <span class="c1"># Assert - assert the outcome is exactly as expected to avoid any unpleasant surprises later</span>
         <span class="k">pass</span>
+</code></pre></div></p>
+<h2 id="docker-images">Docker images<a class="headerlink" href="#docker-images" title="Permanent link">&para;</a></h2>
+<h3 id="production-base">production-base<a class="headerlink" href="#production-base" title="Permanent link">&para;</a></h3>
+<p>Image used for building Python applications.</p>
+<p>Build it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:<span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="k">)</span><span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest<span class="w"> </span>docker/production-base/
+</code></pre></div></p>
+<p>Push it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base
+</code></pre></div></p>
+<h3 id="ci-python">ci-python<a class="headerlink" href="#ci-python" title="Permanent link">&para;</a></h3>
+<p>To get the same environment as in the CI/CD pipeline, use the provided <code>ci-python</code> image.</p>
+<p>Build it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:<span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="k">)</span><span class="w"> </span>--tag<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest<span class="w"> </span>docker/ci-python/
+</code></pre></div></p>
+<p>Push it:
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
 </code></pre></div></p>
 
 
