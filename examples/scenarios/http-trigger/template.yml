@@ -1,0 +1,28 @@
+---
+# This example shows the usage of the HTTPListener trigger type.
+# Required modules: command.
+# To trigger the HTTPListener, use command "curl http://<worker_ip>:8082/index?test=test".
+
+plan:
+  name: HTTPListener trigger example
+  owner: Cryton
+  stages:
+    - name: stage-http
+      trigger_type: HTTPListener
+      trigger_args:
+        host: 0.0.0.0
+        port: 8082
+        routes:
+          - path: /index
+            method: GET
+            parameters:
+              - name: test
+                value: test
+      steps:
+        - name: execute-command
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: command
+            module_arguments:
+              command: echo "it works!"

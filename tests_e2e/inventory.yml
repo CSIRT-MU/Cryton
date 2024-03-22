@@ -1,0 +1,10 @@
+---
+metasploit_host_address: 192.168.90.11
+empire_server_address: 192.168.90.11
+target:
+  address: 192.168.90.20
+  username: victim
+  password: password
+bruteforce:
+  username: victim
+  password: password

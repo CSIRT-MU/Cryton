@@ -1,8 +1,0 @@
-# Contains Step only. This Step is NOT an initial Step - cannot be the first Step added to a Stage.
----
-name: reusable step {{ id }}
-step_type: worker/execute
-arguments:
-  module: command
-  module_arguments:
-    cmd: {{ command }}

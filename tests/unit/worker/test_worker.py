@@ -92,7 +92,7 @@ class TestWorker(TestCase):
 
         self.worker_obj._kill_task({co.RESULT_PIPE: mock_pipe, co.CORRELATION_ID: "1"})
 
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_OK})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK})
 
     @patch("cryton.worker.consumer.Consumer.pop_task")
     def test__kill_task_error(self, mock_pop_task):
@@ -101,14 +101,14 @@ class TestWorker(TestCase):
         mock_pop_task.return_value = mock_task
         mock_pipe = Mock()
         self.worker_obj._kill_task({co.RESULT_PIPE: mock_pipe, co.CORRELATION_ID: "1"})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: ""})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR, co.OUTPUT: ""})
 
     @patch("cryton.worker.consumer.Consumer.pop_task")
     def test__kill_task_not_found(self, mock_pop_task):
         mock_pop_task.return_value = None
         mock_pipe = Mock()
         self.worker_obj._kill_task({co.RESULT_PIPE: mock_pipe, co.CORRELATION_ID: "1"})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: "Couldn't find the Task."})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR, co.OUTPUT: "Couldn't find the Task."})
 
     @patch("cryton.worker.consumer.Consumer.pop_task")
     def test__finish_task(self, mock_pop_task):
@@ -132,7 +132,7 @@ class TestWorker(TestCase):
         self.worker_obj._add_trigger({co.RESULT_PIPE: mock_pipe,
                                       co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
                                                 co.TRIGGER_TYPE: "HTTP"}})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_OK, co.TRIGGER_ID: test_id})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK, co.TRIGGER_ID: test_id})
 
     def test__add_trigger_existing(self):
         mock_trigger_obj = Mock()
@@ -144,7 +144,7 @@ class TestWorker(TestCase):
         self.worker_obj._add_trigger(
             {co.RESULT_PIPE: mock_pipe,
              co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_OK, co.TRIGGER_ID: test_id})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK, co.TRIGGER_ID: test_id})
 
     def test__start_trigger_existing_error_adding_trigger(self):
         mock_trigger_obj = Mock()
@@ -154,7 +154,7 @@ class TestWorker(TestCase):
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._add_trigger(
             {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_ERROR,
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR,
                                                 co.OUTPUT: "Listener 'MSF' can't contain more triggers."})
 
     def test__add_trigger_pymetasploit_error(self):
@@ -164,7 +164,7 @@ class TestWorker(TestCase):
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._add_trigger(
             {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_ERROR,
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR,
                                                 co.OUTPUT: "wrong option LHOST"})
 
     @patch("cryton.worker.worker.Listener", Mock())
@@ -178,7 +178,7 @@ class TestWorker(TestCase):
         self.worker_obj._remove_trigger({co.RESULT_PIPE: mock_pipe,
                                          co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
                                                    co.TRIGGER_TYPE: "HTTP"}})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_OK})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK})
 
     def test__remove_trigger_not_found(self):
         mock_pipe = Mock()
@@ -186,7 +186,7 @@ class TestWorker(TestCase):
                                          co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
                                                    co.TRIGGER_TYPE: "HTTP"}})
         mock_pipe.send.assert_called_once_with(
-            {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."})
+            {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."})
 
     def test__list_triggers(self):
         test_trigger = {"id": "test_id"}
@@ -195,4 +195,4 @@ class TestWorker(TestCase):
         mock_pipe = Mock()
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._list_triggers({co.RESULT_PIPE: mock_pipe})
-        mock_pipe.send.assert_called_once_with({co.RETURN_CODE: co.CODE_OK, co.TRIGGER_LIST: [test_trigger]})
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK, co.TRIGGER_LIST: [test_trigger]})

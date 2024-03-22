@@ -140,8 +140,8 @@ services:
       <<: *settings
     network_mode: host
     stdin_open: true
-    # TODO: the command has to be tested since it is possible that it wont take the env vars
-    command: [ "server", "--username", "$$CRYTON_WORKER_EMPIRE_USERNAME", "--password", "$$CRYTON_WORKER_EMPIRE_PASSWORD" ]
+    entrypoint: []
+    command: bash -c 'sudo -E poetry run python empire.py server --username $$CRYTON_WORKER_EMPIRE_USERNAME --password $$CRYTON_WORKER_EMPIRE_PASSWORD'
 
   cryton_msf:
     restart: always

@@ -160,16 +160,16 @@ class Worker:
         if task_obj is None:  # Task doesn't exist.
             err = "Couldn't find the Task."
             logger.logger.debug(err, correlation_id=correlation_id)
-            result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: err}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: err}
 
         else:  # Task found.
             try:
                 kill_action = task_obj.kill()
-                result = {co.RETURN_CODE: co.CODE_OK if kill_action else co.CODE_ERROR}
+                result = {co.RESULT: co.CODE_OK if kill_action else co.CODE_ERROR}
 
             except Exception as ex:
                 logger.logger.debug("Couldn't kill the Task.", task_correlation_id=correlation_id, error=str(ex))
-                result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: str(ex)}
+                result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
 
         result_pipe.send(result)
         logger.logger.debug("Finished process _kill_task", result=result)
@@ -230,9 +230,9 @@ class Worker:
         except (KeyError, ValueError, TypeError, exceptions.MsfModuleNotFound, exceptions.TooManyTriggers,
                 exceptions.MsfConnectionError) as err:
             # raised mostly during MSF module execution
-            result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: str(err)}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
         else:
-            result = {co.RETURN_CODE: co.CODE_OK, co.TRIGGER_ID: trigger_id}
+            result = {co.RESULT: co.CODE_OK, co.TRIGGER_ID: trigger_id}
 
         result_pipe.send(result)
         logger.logger.debug("Finished process _add_trigger", result=result)
@@ -256,12 +256,12 @@ class Worker:
                     listener_obj.remove_trigger(trigger)
                     if not listener_obj.any_trigger_exists():
                         self._listeners.remove(listener_obj)
-                    result = {co.RETURN_CODE: co.CODE_OK}
+                    result = {co.RESULT: co.CODE_OK}
                     break
 
             else:  # If Listener doesn't exist, replace it with None.
                 logger.logger.debug("Existing trigger not found", id=trigger_id)
-                result = {co.RETURN_CODE: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."}
+                result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."}
 
         result_pipe.send(result)
         logger.logger.debug("Finished process _remove_trigger", result=result)
@@ -280,6 +280,6 @@ class Worker:
             for listener_obj in self._listeners:
                 all_triggers.extend(listener_obj.get_triggers())
 
-        result = {co.RETURN_CODE: co.CODE_OK, co.TRIGGER_LIST: all_triggers}
+        result = {co.RESULT: co.CODE_OK, co.TRIGGER_LIST: all_triggers}
         result_pipe.send(result)
         logger.logger.debug("Finished process _list_triggers", result=result)

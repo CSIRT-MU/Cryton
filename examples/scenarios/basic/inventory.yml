@@ -1,0 +1,5 @@
+---
+target:
+  address: 127.0.0.1
+  username: my_user
+  password: my_pass

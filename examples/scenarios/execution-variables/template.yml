@@ -1,0 +1,35 @@
+---
+# This example shows how to use execution variables.
+# Required modules: nmap, medusa.
+
+plan:
+  name: Execution variables example
+  owner: Cryton
+  stages:
+    - name: stage-one
+      trigger_type: delta
+      trigger_args:
+        seconds: 0
+      steps:
+        - name: scan-localhost
+          is_init: true
+          step_type: worker/execute
+          arguments:
+            module: nmap
+            module_arguments:
+              target: {{ target.address }}
+              ports:
+                - 22
+          next:
+            - type: result
+              value: ok
+              step: bruteforce
+        - name: bruteforce
+          step_type: worker/execute
+          arguments:
+            module: medusa
+            module_arguments:
+              target: {{ target.address }}
+              credentials:
+                username: "{{ bruteforce.username }}"
+                password: "{{ bruteforce.password }}"
