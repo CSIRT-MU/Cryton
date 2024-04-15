@@ -1618,17 +1618,17 @@ Be aware that these commands may expose ports to network, <strong>read them firs
 <p>The following commands allow you to quickly deploy the prerequisites without studying them.<br />
 They use Cryton's default credentials and <strong>shouldn't be used for production</strong>.<br />
 Be aware that these commands may expose ports to network, <strong>read them first</strong>.</p>
-<p><a href="docker-images.md#metasploit-framework">Metasploit Framework</a>:
+<p><a href="https://hub.docker.com/r/sadparad1se/metasploit-framework">Metasploit Framework</a>:
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--detach<span class="w"> </span>--restart<span class="w"> </span>always<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>--tty<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>--name<span class="w"> </span>metasploit<span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>--env<span class="w"> </span><span class="nv">MSF_DB_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>--env<span class="w"> </span><span class="nv">MSF_DB_PORT</span><span class="o">=</span><span class="m">5432</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>--env<span class="w"> </span><span class="nv">MSF_DB_NAME</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>--env<span class="w"> </span><span class="nv">MSF_DB_USERNAME</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>--env<span class="w"> </span><span class="nv">MSF_DB_PASSWORD</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>registry.gitlab.ics.muni.cz:443/cryton/configurations/metasploit-framework:0
+<span class="w">      </span>--env<span class="w"> </span><span class="nv">METASPLOIT_DB_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>--env<span class="w"> </span><span class="nv">METASPLOIT_DB_PORT</span><span class="o">=</span><span class="m">5432</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>--env<span class="w"> </span><span class="nv">METASPLOIT_DB_NAME</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>--env<span class="w"> </span><span class="nv">METASPLOIT_DB_USERNAME</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>--env<span class="w"> </span><span class="nv">METASPLOIT_DB_PASSWORD</span><span class="o">=</span>cryton<span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>sadparad1se/metasploit-framework:rpc
 </code></pre></div></p>
 <p><a href="https://hub.docker.com/_/postgres">Postgres</a>:
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--detach<span class="w"> </span>--restart<span class="w"> </span>always<span class="w"> </span><span class="se">\</span>

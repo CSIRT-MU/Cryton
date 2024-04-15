@@ -1205,21 +1205,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Create your own scenario">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#e2e-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      E2E testing
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1536,21 +1521,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Create your own scenario">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#e2e-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      E2E testing
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1609,7 +1579,7 @@
 <li>With a single command you can run a predefined attack plan</li>
 <li>It will run on your machine</li>
 <li>It takes minutes to build and is easy to reset</li>
-<li>It allows you to quickly run E2E tests</li>
+<li>It allows you to quickly run <a href="../development/#e2e">E2E tests</a></li>
 </ul>
 <p><img alt="Infrastructure" src="../images/playground-infrastructure.png" /></p>
 <details class="note">
@@ -1680,15 +1650,6 @@ cryton-cli<span class="w"> </span>runs<span class="w"> </span>create<span class=
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>cryton_worker<span class="w"> </span>bash
 </code></pre></div></p>
 </details>
-<h3 id="e2e-testing">E2E testing<a class="headerlink" href="#e2e-testing" title="Permanent link">&para;</a></h3>
-<p>If you're trying to develop a new feature for the Cryton toolset, you might want to run some tests. That can be troublesome if you need to test many components or run multiple tests multiple times.</p>
-<p>Rebuild the infrastructure:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.e2e.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
-</code></pre></div></p>
-<p>Run e2e tests:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cryton_cli<span class="w"> </span>cryton-e2e<span class="w"> </span>run-tests
-</code></pre></div></p>
-<p>More information can be found <a href="development/e2e-testing.md">here</a>.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="unable-to-build-the-infrastructure">Unable to build the infrastructure<a class="headerlink" href="#unable-to-build-the-infrastructure" title="Permanent link">&para;</a></h3>
 <p>Make sure the address pools and ports the playground uses are available.</p>
