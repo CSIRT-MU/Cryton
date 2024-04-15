@@ -81,18 +81,18 @@ The following is a list of applications used and required by Cryton (its compone
         They use Cryton's default credentials and **shouldn't be used for production**.  
         Be aware that these commands may expose ports to network, **read them first**.
         
-        [Metasploit Framework](docker-images.md#metasploit-framework):
+        [Metasploit Framework](https://hub.docker.com/r/sadparad1se/metasploit-framework):
         ```shell
         docker run --rm --detach --restart always \
               --tty \
               --network host \
               --name metasploit \
-              --env MSF_DB_HOST=127.0.0.1 \
-              --env MSF_DB_PORT=5432 \
-              --env MSF_DB_NAME=cryton \
-              --env MSF_DB_USERNAME=cryton \
-              --env MSF_DB_PASSWORD=cryton \
-              registry.gitlab.ics.muni.cz:443/cryton/configurations/metasploit-framework:0
+              --env METASPLOIT_DB_HOST=127.0.0.1 \
+              --env METASPLOIT_DB_PORT=5432 \
+              --env METASPLOIT_DB_NAME=cryton \
+              --env METASPLOIT_DB_USERNAME=cryton \
+              --env METASPLOIT_DB_PASSWORD=cryton \
+              sadparad1se/metasploit-framework:rpc
         ```
         
         [Postgres](https://hub.docker.com/_/postgres):

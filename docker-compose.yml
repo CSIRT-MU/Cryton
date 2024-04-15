@@ -31,12 +31,12 @@ x-settings: &settings
   # RABBIT
   RABBITMQ_DEFAULT_USER: cryton
   RABBITMQ_DEFAULT_PASS: cryton
-  # MSF
-  MSF_DB_HOST: cryton-pgbouncer
-  MSF_DB_PORT: 5432
-  MSF_DB_NAME: cryton
-  MSF_DB_USERNAME: cryton
-  MSF_DB_PASSWORD: cryton
+  # METASPLOIT
+  METASPLOIT_DB_HOST: cryton-pgbouncer
+  METASPLOIT_DB_PORT: 5432
+  METASPLOIT_DB_NAME: cryton
+  METASPLOIT_DB_USERNAME: cryton
+  METASPLOIT_DB_PASSWORD: cryton
 
 version: '3.9'
 services:
@@ -145,7 +145,7 @@ services:
 
   cryton_msf:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/configurations/metasploit-framework:0
+    image: sadparad1se/metasploit-framework:rpc
     container_name: cryton-msf
     environment:
       <<: *settings

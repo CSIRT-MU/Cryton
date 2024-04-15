@@ -4,7 +4,7 @@ Playground is an isolated Docker environment where you can test Cryton's capabil
 - With a single command you can run a predefined attack plan
 - It will run on your machine
 - It takes minutes to build and is easy to reset
-- It allows you to quickly run E2E tests
+- It allows you to quickly run [E2E tests](development/index.md#e2e)
 
 ![Infrastructure](images/playground-infrastructure.png)
 
@@ -102,26 +102,6 @@ Feel free to access the Worker container and try to find vulnerabilities and att
     ```shell
     docker compose exec -it cryton_worker bash
     ```
-
-### E2E testing
-
-[//]: # (TODO: move to dev/e2e-testing?)
-
-[//]: # (TODO: update after merging e2e tests)
-
-If you're trying to develop a new feature for the Cryton toolset, you might want to run some tests. That can be troublesome if you need to test many components or run multiple tests multiple times.
-
-Rebuild the infrastructure:
-```shell
-docker compose down -t 0 && docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build
-```
-
-Run e2e tests:
-```shell
-docker compose exec cryton_cli cryton-e2e run-tests
-```
-
-More information can be found [here](development/e2e-testing.md).
 
 ## Troubleshooting
 

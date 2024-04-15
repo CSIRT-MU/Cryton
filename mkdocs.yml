@@ -109,7 +109,7 @@ nav:
       - Nmap: modules/list/nmap.md
       - Script: modules/list/script.md
       - WPScan: modules/list/wpscan.md
-  - Playground: playground.md  # TODO: update once the playground is moved
+  - Playground: playground.md
   - How to contribute: contribution-guide.md
   - Development:
       - development/index.md
