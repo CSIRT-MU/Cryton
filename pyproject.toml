@@ -61,6 +61,7 @@ pytest-mock = "^3.6.1"
 model-bakery = "^1.4.0"
 tox = "^4.4.4"
 drf-spectacular-sidecar = "^2024.1.1"
+black = "^24.4.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -148,6 +149,9 @@ all = [  # 145.2
     "scp",
     "jsonschema"
 ]
+
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]

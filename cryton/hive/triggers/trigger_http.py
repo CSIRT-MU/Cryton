@@ -6,22 +6,13 @@ from cryton.hive.config.settings import SETTINGS
 
 
 class TriggerHTTP(TriggerWorker):
-    arg_schema = schema.Schema({
-        'host': str,
-        'port': int,
-        'routes': [
-            {
-                'path': str,
-                'method': str,
-                'parameters': [
-                    {
-                        'name': str,
-                        'value': str
-                    }
-                ]
-            }
-        ]
-    })
+    arg_schema = schema.Schema(
+        {
+            "host": str,
+            "port": int,
+            "routes": [{"path": str, "method": str, "parameters": [{"name": str, "value": str}]}],
+        }
+    )
 
     def __init__(self, stage_execution):
         """

@@ -11,6 +11,7 @@ class Logger:
     """
     Default logger
     """
+
     def __init__(self, logger_config):
         self.logger_config = logger_config
         self.logger_type = constants.LOGGER_CRYTON_PRODUCTION
@@ -89,7 +90,7 @@ structlog.configure(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
-        structlog.processors.JSONRenderer()
+        structlog.processors.JSONRenderer(),
     ],
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),
@@ -100,17 +101,13 @@ structlog.configure(
 config_dict = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "simple": {
-            "format": "%(message)s"
-        }
-    },
+    "formatters": {"simple": {"format": "%(message)s"}},
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
             "level": "DEBUG",
             "formatter": "simple",
-            "stream": "ext://sys.stdout"
+            "stream": "ext://sys.stdout",
         },
         "debug_logger": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -119,7 +116,7 @@ config_dict = {
             "filename": SETTINGS.log_file,
             "maxBytes": 10485760,
             "backupCount": 20,
-            "encoding": "utf8"
+            "encoding": "utf8",
         },
         "prod_logger": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -128,31 +125,15 @@ config_dict = {
             "filename": SETTINGS.log_file,
             "maxBytes": 10485760,
             "backupCount": 20,
-            "encoding": "utf8"
-        }
+            "encoding": "utf8",
+        },
     },
-    "root": {
-        "level": "NOTSET",
-        "handlers": [],
-        "propagate": True
-    },
+    "root": {"level": "NOTSET", "handlers": [], "propagate": True},
     "loggers": {
-        "cryton-hive": {
-            "level": "INFO",
-            "handlers": ["prod_logger"],
-            "propagate": True
-        },
-        "cryton-hive-debug": {
-            "level": "DEBUG",
-            "handlers": ["debug_logger", "console"],
-            "propagate": True
-        },
-        "cryton-hive-test": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False
-        }
-    }
+        "cryton-hive": {"level": "INFO", "handlers": ["prod_logger"], "propagate": True},
+        "cryton-hive-debug": {"level": "DEBUG", "handlers": ["debug_logger", "console"], "propagate": True},
+        "cryton-hive-test": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+    },
 }
 
 logger_object = Logger(logger_config=config_dict)

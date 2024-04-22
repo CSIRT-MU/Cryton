@@ -13,12 +13,13 @@ from cryton.hive.models.step import StepExecution
 @extend_schema_view(
     list=extend_schema(description="List Step executions.", parameters=[serializers.StepExecutionListSerializer]),
     retrieve=extend_schema(description="Get existing Step execution."),
-    destroy=extend_schema(description="Delete Step execution.")
+    destroy=extend_schema(description="Delete Step execution."),
 )
 class StepExecutionViewSet(util.ExecutionViewSet):
     """
     StepExecution ViewSet.
     """
+
     queryset = StepExecutionModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.StepExecutionSerializer
@@ -36,11 +37,11 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         responses={
             200: serializers.DetailDictionarySerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["get"], detail=True)
     def report(self, _, **kwargs):
-        step_execution_id = kwargs.get('pk')
+        step_execution_id = kwargs.get("pk")
 
         try:
             step_ex_obj = StepExecution(step_execution_id=step_execution_id)
@@ -57,11 +58,11 @@ class StepExecutionViewSet(util.ExecutionViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def kill(self, _, **kwargs):
-        step_execution_id = kwargs.get('pk')
+        step_execution_id = kwargs.get("pk")
 
         try:
             step_ex_obj = StepExecution(step_execution_id=step_execution_id)
@@ -71,7 +72,7 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': '{}'.format("Step execution {} is terminated.".format(step_execution_id))}
+        msg = {"detail": "{}".format("Step execution {} is terminated.".format(step_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -81,11 +82,11 @@ class StepExecutionViewSet(util.ExecutionViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def re_execute(self, _, **kwargs):
-        step_execution_id = kwargs.get('pk')
+        step_execution_id = kwargs.get("pk")
 
         try:
             step_ex_obj = StepExecution(step_execution_id=step_execution_id)
@@ -95,5 +96,5 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': '{}'.format("Step execution {} re-executed.".format(step_execution_id))}
+        msg = {"detail": "{}".format("Step execution {} re-executed.".format(step_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)

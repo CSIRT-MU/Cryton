@@ -6,34 +6,62 @@ from cryton.hive.config.settings import SETTINGS
 
 
 class TriggerMSF(TriggerWorker):
-    arg_schema = Schema(Or(
-        {
-            Optional('identifiers'): {
-                Or('type', 'tunnel_local', 'tunnel_peer', 'via_exploit', 'via_payload', 'desc', 'info', 'workspace',
-                   'session_host', 'session_port', 'target_host', 'username', 'uuid', 'exploit_uuid', 'routes', 'arch',
-                   only_one=False): Or(str, int, bool)
+    arg_schema = Schema(
+        Or(
+            {
+                Optional("identifiers"): {
+                    Or(
+                        "type",
+                        "tunnel_local",
+                        "tunnel_peer",
+                        "via_exploit",
+                        "via_payload",
+                        "desc",
+                        "info",
+                        "workspace",
+                        "session_host",
+                        "session_port",
+                        "target_host",
+                        "username",
+                        "uuid",
+                        "exploit_uuid",
+                        "routes",
+                        "arch",
+                        only_one=False,
+                    ): Or(str, int, bool)
+                },
+                "exploit": str,
+                "payload": str,
+                Optional("exploit_arguments"): {Optional(str): Or(str, int, bool)},
+                Optional("payload_arguments"): {Optional(str): Or(str, int, bool)},
             },
-            'exploit': str,
-            'payload': str,
-            Optional("exploit_arguments"): {
-                Optional(str): Or(str, int, bool)
+            {
+                Optional("identifiers"): {
+                    Or(
+                        "type",
+                        "tunnel_local",
+                        "tunnel_peer",
+                        "via_exploit",
+                        "via_payload",
+                        "desc",
+                        "info",
+                        "workspace",
+                        "session_host",
+                        "session_port",
+                        "target_host",
+                        "username",
+                        "uuid",
+                        "exploit_uuid",
+                        "routes",
+                        "arch",
+                        only_one=False,
+                    ): Or(str, int, bool)
+                },
+                "auxiliary": str,
+                Optional("auxiliary_arguments"): {Optional(str): Or(str, int, bool)},
             },
-            Optional("payload_arguments"): {
-                Optional(str): Or(str, int, bool)
-            }
-        },
-        {
-            Optional('identifiers'): {
-                Or('type', 'tunnel_local', 'tunnel_peer', 'via_exploit', 'via_payload', 'desc', 'info', 'workspace',
-                   'session_host', 'session_port', 'target_host', 'username', 'uuid', 'exploit_uuid', 'routes', 'arch',
-                   only_one=False): Or(str, int, bool)
-            },
-            'auxiliary': str,
-            Optional("auxiliary_arguments"): {
-                Optional(str): Or(str, int, bool)
-            }
-        }
-    ))
+        )
+    )
 
     def __init__(self, stage_execution):
         """

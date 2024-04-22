@@ -6,7 +6,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Step, StepExecution
 
 
-@click.group('steps')
+@click.group("steps")
 @click.pass_context
 def step(_) -> None:
     """
@@ -18,12 +18,19 @@ def step(_) -> None:
     """
 
 
-@step.command('list')
+@step.command("list")
 @click.pass_context
 @common_list_decorators
-@click.option('-p', '--parent', type=click.INT, help='Filter Steps using Stage ID.')
-def step_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-              parameter_filters: tuple[tuple[str, Union[str, int]]], parent: int) -> None:
+@click.option("-p", "--parent", type=click.INT, help="Filter Steps using Stage ID.")
+def step_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parent: int,
+) -> None:
     """
     List existing Steps in Cryton.
 
@@ -39,19 +46,36 @@ def step_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localiz
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters['stage_model_id'] = parent
+        additional_parameters["stage_model_id"] = parent
     # TODO: update the include arguments
-    include = ['id', 'name', 'attack_module', 'attack_module_args', 'is_init', 'is_final', 'executor',
-               'create_named_session', 'use_named_session', 'use_any_session_to_target', 'output_prefix']
+    include = [
+        "id",
+        "name",
+        "attack_module",
+        "attack_module_args",
+        "is_init",
+        "is_final",
+        "executor",
+        "create_named_session",
+        "use_named_session",
+        "use_any_session_to_target",
+        "output_prefix",
+    ]
     ctx.obj.get_items(Step.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
-@step.command('create')
+@step.command("create")
 @click.pass_context
-@click.argument('stage_id', type=click.INT, required=True)
-@click.argument('file', type=click.Path(exists=True), required=True)
-@click.option('-i', '--inventory-file', 'inventory_files', type=click.Path(exists=True), multiple=True,
-              help="Inventory file used to fill the template. Can be used multiple times.")
+@click.argument("stage_id", type=click.INT, required=True)
+@click.argument("file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-i",
+    "--inventory-file",
+    "inventory_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Inventory file used to fill the template. Can be used multiple times.",
+)
 def step_create(ctx: helpers.Context, stage_id: int, file: str, inventory_files: list) -> None:
     """
     Create Step from FILE and add it to Stage with STAGE_ID.
@@ -66,7 +90,7 @@ def step_create(ctx: helpers.Context, stage_id: int, file: str, inventory_files:
     :param inventory_files: Inventory file(s) used to fill the template
     :return: None
     """
-    data = {'stage_id': stage_id}
+    data = {"stage_id": stage_id}
     files = helpers.load_files(inventory_files)
     with open(file, "rb") as f:
         files["file"] = f.read()
@@ -74,9 +98,9 @@ def step_create(ctx: helpers.Context, stage_id: int, file: str, inventory_files:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@step.command('show')
+@step.command("show")
 @click.pass_context
-@click.argument('step_id', type=click.INT, required=True)
+@click.argument("step_id", type=click.INT, required=True)
 @d_less
 @d_localize
 def step_read(ctx: helpers.Context, step_id: int, less: bool, localize: bool) -> None:
@@ -93,14 +117,25 @@ def step_read(ctx: helpers.Context, step_id: int, less: bool, localize: bool) ->
     :return: None
     """
     response = ctx.obj.api_get(Step.READ, step_id)
-    include = ['id', 'name', 'attack_module', 'attack_module_args', 'is_init', 'is_final', 'executor',
-               'create_named_session', 'use_named_session', 'use_any_session_to_target', 'output_prefix']
+    include = [
+        "id",
+        "name",
+        "attack_module",
+        "attack_module_args",
+        "is_init",
+        "is_final",
+        "executor",
+        "create_named_session",
+        "use_named_session",
+        "use_any_session_to_target",
+        "output_prefix",
+    ]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
-@step.command('delete')
+@step.command("delete")
 @click.pass_context
-@click.argument('step_id', type=click.INT, required=True)
+@click.argument("step_id", type=click.INT, required=True)
 def step_delete(ctx: helpers.Context, step_id: int) -> None:
     """
     Delete Step with STEP_ID saved in Cryton.
@@ -115,11 +150,17 @@ def step_delete(ctx: helpers.Context, step_id: int) -> None:
     ctx.obj.delete_item(Step.DELETE, step_id)
 
 
-@step.command('validate')
+@step.command("validate")
 @click.pass_context
-@click.argument('file', type=click.Path(exists=True), required=True)
-@click.option('-i', '--inventory-file', 'inventory_files', type=click.Path(exists=True), multiple=True,
-              help="Inventory file used to fill the template. Can be used multiple times.")
+@click.argument("file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-i",
+    "--inventory-file",
+    "inventory_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Inventory file used to fill the template. Can be used multiple times.",
+)
 def step_validate(ctx: helpers.Context, file: str, inventory_files: list) -> None:
     """
     Validate (syntax check) your FILE with Step.
@@ -139,10 +180,10 @@ def step_validate(ctx: helpers.Context, file: str, inventory_files: list) -> Non
     helpers.print_message(response, ctx.obj.debug)
 
 
-@step.command('execute')
+@step.command("execute")
 @click.pass_context
-@click.argument('step_id', type=click.INT, required=True)
-@click.argument('stage_execution_id', type=click.INT, required=True)
+@click.argument("step_id", type=click.INT, required=True)
+@click.argument("stage_execution_id", type=click.INT, required=True)
 def step_execute(ctx: helpers.Context, step_id: int, stage_execution_id: int) -> None:
     """
     Execute Step with STEP_ID under Stage execution with STAGE_EXECUTION_ID.
@@ -156,12 +197,12 @@ def step_execute(ctx: helpers.Context, step_id: int, stage_execution_id: int) ->
     :param stage_execution_id: ID of the Stage execution that will be set as a parent of the Step execution
     :return: None
     """
-    arguments = {'stage_execution_id': stage_execution_id}
+    arguments = {"stage_execution_id": stage_execution_id}
     response = ctx.obj.api_post(Step.EXECUTE, step_id, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@click.group('step-executions')
+@click.group("step-executions")
 @click.pass_context
 def step_execution(_) -> None:
     """
@@ -173,12 +214,19 @@ def step_execution(_) -> None:
     """
 
 
-@step_execution.command('list')
+@step_execution.command("list")
 @click.pass_context
 @common_list_decorators
-@click.option('-p', '--parent', type=click.INT, help='Filter Step executions using Stage execution ID.')
-def step_execution_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-                        parameter_filters: tuple[tuple[str, Union[str, int]]], parent: int) -> None:
+@click.option("-p", "--parent", type=click.INT, help="Filter Step executions using Stage execution ID.")
+def step_execution_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parent: int,
+) -> None:
     """
     List existing Step's executions in Cryton.
 
@@ -194,15 +242,24 @@ def step_execution_list(ctx: helpers.Context, less: bool, offset: int, limit: in
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters['stage_execution_id'] = parent
-    include = ['id', 'start_time', 'pause_time', 'finish_time', 'state', 'result', 'evidence_file', 'parent_id',
-               'valid']
+        additional_parameters["stage_execution_id"] = parent
+    include = [
+        "id",
+        "start_time",
+        "pause_time",
+        "finish_time",
+        "state",
+        "result",
+        "evidence_file",
+        "parent_id",
+        "valid",
+    ]
     ctx.obj.get_items(StepExecution.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
-@step_execution.command('delete')
+@step_execution.command("delete")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 def step_execution_delete(ctx: helpers.Context, execution_id: int) -> None:
     """
     Delete Step's execution with EXECUTION_ID saved in Cryton.
@@ -217,9 +274,9 @@ def step_execution_delete(ctx: helpers.Context, execution_id: int) -> None:
     ctx.obj.delete_item(StepExecution.DELETE, execution_id)
 
 
-@step_execution.command('show')
+@step_execution.command("show")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 @d_less
 @d_localize
 def step_execution_read(ctx: helpers.Context, execution_id: int, less: bool, localize: bool) -> None:
@@ -236,14 +293,27 @@ def step_execution_read(ctx: helpers.Context, execution_id: int, less: bool, loc
     :return: None
     """
     response = ctx.obj.api_get(StepExecution.READ, execution_id)
-    include = ['id', 'start_time', 'pause_time', 'finish_time', 'state', 'result', 'evidence_file', 'parent_id',
-               'valid', 'mod_out', 'mod_err', 'std_out', 'std_err']
+    include = [
+        "id",
+        "start_time",
+        "pause_time",
+        "finish_time",
+        "state",
+        "result",
+        "evidence_file",
+        "parent_id",
+        "valid",
+        "mod_out",
+        "mod_err",
+        "std_out",
+        "std_err",
+    ]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
-@step_execution.command('report')
+@step_execution.command("report")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 @d_save_report
 @d_less
 @d_localize
@@ -262,12 +332,12 @@ def step_execution_report(ctx: helpers.Context, execution_id: int, file: str, le
     :return: None
     """
     response = ctx.obj.api_get(StepExecution.REPORT, execution_id)
-    helpers.save_yaml(response, file, f'step-execution-{execution_id}.yml', less, less, localize, ctx.obj.debug)
+    helpers.save_yaml(response, file, f"step-execution-{execution_id}.yml", less, less, localize, ctx.obj.debug)
 
 
-@step_execution.command('kill')
+@step_execution.command("kill")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 def step_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
     """
     Kill Step's execution with EXECUTION_ID saved in Cryton.
@@ -283,9 +353,9 @@ def step_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@step_execution.command('re-execute')
+@step_execution.command("re-execute")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 def step_execution_re_execute(ctx: helpers.Context, execution_id: int) -> None:
     """
     Re-execute Step's execution with EXECUTION_ID saved in Cryton.

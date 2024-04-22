@@ -7,6 +7,7 @@ from cryton.hive.utility import exceptions, states, constants, rabbit_client
 from cryton.hive.cryton_app.models import WorkerModel
 from cryton.lib.utility.module import Result
 
+
 class Worker:
     def __init__(self, **kwargs):
         """
@@ -15,7 +16,7 @@ class Worker:
             description: str
             state: str
         """
-        worker_model_id = kwargs.get('worker_model_id')
+        worker_model_id = kwargs.get("worker_model_id")
         if worker_model_id:
             try:
                 self.model = WorkerModel.objects.get(id=worker_model_id)
@@ -103,8 +104,12 @@ class Worker:
         Declare Rabbit queues in case the Worker is not online yet.
         :return: None
         """
-        connection_parameters = {"hostname": SETTINGS.rabbit.host, "username": SETTINGS.rabbit.username,
-                                 "password": SETTINGS.rabbit.password, "port": SETTINGS.rabbit.port}
+        connection_parameters = {
+            "hostname": SETTINGS.rabbit.host,
+            "username": SETTINGS.rabbit.username,
+            "password": SETTINGS.rabbit.password,
+            "port": SETTINGS.rabbit.port,
+        }
         with amqpstorm.Connection(**connection_parameters) as connection:
             with connection.channel() as channel:
                 channel.queue.declare(self.attack_q_name)

@@ -181,7 +181,7 @@ class Listener:
             SETTINGS.rabbit.queues.attack_response: self.step_response_callback,
             SETTINGS.rabbit.queues.agent_response: self.step_response_callback,
             SETTINGS.rabbit.queues.event_response: self.event_callback,
-            SETTINGS.rabbit.queues.control_request: self.control_request_callback
+            SETTINGS.rabbit.queues.control_request: self.control_request_callback,
         }
 
     def start(self, blocking: bool = True) -> None:
@@ -250,18 +250,21 @@ class Listener:
 
         # Process finished execution
         message_body = json.loads(message.body)
-        logger.logger.info("Step execution finished", step_execution_id=step_ex_obj.model.id,
-                           message_body=message_body)
+        logger.logger.info("Step execution finished", step_execution_id=step_ex_obj.model.id, message_body=message_body)
 
         step_ex_obj.postprocess(message_body)  # Save result, output, sessions, etc.
         step_ex_obj.ignore_successors()  # Ignore successors depending on the result
         event.Event({"step_execution_id": step_ex_obj.model.id}).handle_finished_step()  # Handle FINISHED states
 
         # Check if execution is being paused, otherwise execute successors if StepExecution is in FINISHED state
-        if plan.PlanExecution(plan_execution_id=step_ex_obj.model.stage_execution.plan_execution_id).\
-                state == states.PAUSING:
+        if (
+            plan.PlanExecution(plan_execution_id=step_ex_obj.model.stage_execution.plan_execution_id).state
+            == states.PAUSING
+        ):
             self._handle_pausing(step_ex_obj)
-        elif step_ex_obj.state == states.FINISHED:  # State of successors is set to IGNORE in ignore_successors if parent step state is not FINISHED
+        elif (
+            step_ex_obj.state == states.FINISHED
+        ):  # State of successors is set to IGNORE in ignore_successors if parent step state is not FINISHED
             step_ex_obj.execute_successors()
 
     @staticmethod
@@ -358,15 +361,21 @@ class Listener:
 
         # Check if Plan execution should be paused since the Stage execution could have finished
         plan_ex_obj = plan.PlanExecution(plan_execution_id=stage_ex_obj.model.plan_execution_id)
-        if plan_ex_obj.state == states.PAUSING and not plan_ex_obj.model.stage_executions.all()\
-                .exclude(state__in=states.PLAN_STAGE_PAUSE_STATES).exists():
+        if (
+            plan_ex_obj.state == states.PAUSING
+            and not plan_ex_obj.model.stage_executions.all().exclude(state__in=states.PLAN_STAGE_PAUSE_STATES).exists()
+        ):
             plan_ex_obj.state = states.PAUSED
             plan_ex_obj.pause_time = timezone.now()
             logger.logger.info("Plan execution paused", stage_execution_id=stage_ex_obj.model.id)
 
             run_obj = run.Run(run_model_id=plan_ex_obj.model.run_id)
-            if run_obj.state == states.PAUSING and not run_obj.model.plan_executions.all()\
-                    .exclude(state__in=states.PLAN_FINAL_STATES + states.PLAN_UNPAUSE_STATES).exists():
+            if (
+                run_obj.state == states.PAUSING
+                and not run_obj.model.plan_executions.all()
+                .exclude(state__in=states.PLAN_FINAL_STATES + states.PLAN_UNPAUSE_STATES)
+                .exists()
+            ):
                 run_obj.state = states.PAUSED
                 run_obj.pause_time = timezone.now()
                 logger.logger.info("Run paused", stage_execution_id=stage_ex_obj.model.id)
@@ -379,6 +388,6 @@ class Listener:
         :param message_body: Message content
         :return: None
         """
-        properties = {'correlation_id': original_message.correlation_id}
+        properties = {"correlation_id": original_message.correlation_id}
         with rabbit_client.Client(original_message.channel) as client:
             client.send_message(original_message.reply_to, message_body, properties)

@@ -16,7 +16,7 @@ class Command(BaseCommand):
         hard_options = {
             "bind": options.get("bind", "0.0.0.0:8000"),
             "worker_class": "uvicorn.workers.UvicornWorker",
-            "workers": options.get("workers", 2)
+            "workers": options.get("workers", 2),
         }
 
         gunicorn_app = GunicornApplication(application, hard_options)

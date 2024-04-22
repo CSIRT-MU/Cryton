@@ -13,8 +13,14 @@ from django.db.models.query import QuerySet
 from django.core import exceptions as django_exc
 from django.utils import timezone
 
-from cryton.hive.cryton_app.models import StepModel, StepExecutionModel, SuccessorModel, ExecutionVariableModel, \
-    OutputMappingModel, CorrelationEventModel
+from cryton.hive.cryton_app.models import (
+    StepModel,
+    StepExecutionModel,
+    SuccessorModel,
+    ExecutionVariableModel,
+    OutputMappingModel,
+    CorrelationEventModel,
+)
 
 from cryton.hive.config.settings import SETTINGS
 from cryton.hive.utility import constants, exceptions, logger, states, util, rabbit_client
@@ -53,21 +59,20 @@ class Step:
                  name: str = None
                  step_type: str = None
         """
-        step_model_id = kwargs.get('step_model_id')
+        step_model_id = kwargs.get("step_model_id")
         if step_model_id:
             try:
                 self.model = StepModel.objects.get(id=step_model_id)
             except django_exc.ObjectDoesNotExist:
-                raise exceptions.StepObjectDoesNotExist("PlanModel with id {} does not exist."
-                                                        .format(step_model_id))
+                raise exceptions.StepObjectDoesNotExist("PlanModel with id {} does not exist.".format(step_model_id))
 
         else:
             step_obj_arguments = copy.deepcopy(kwargs)
             step_obj_arguments.pop(constants.NEXT, None)
-            step_obj_arguments.pop('output_mapping', None)
+            step_obj_arguments.pop("output_mapping", None)
             # Set default prefix as step name
-            if step_obj_arguments.get('output_prefix') is None:
-                step_obj_arguments.update({'output_prefix': step_obj_arguments.get('name')})
+            if step_obj_arguments.get("output_prefix") is None:
+                step_obj_arguments.update({"output_prefix": step_obj_arguments.get("name")})
             self.model = StepModel.objects.create(**step_obj_arguments)
 
     def delete(self):
@@ -172,13 +177,15 @@ class Step:
 
     @property
     def parents(self) -> QuerySet:
-        return StepModel.objects.filter(id__in=SuccessorModel.objects.filter(
-            successor_id=self.model.id).values_list('parent_id'))
+        return StepModel.objects.filter(
+            id__in=SuccessorModel.objects.filter(successor_id=self.model.id).values_list("parent_id")
+        )
 
     @property
     def successors(self) -> QuerySet:
-        return StepModel.objects.filter(id__in=SuccessorModel.objects.filter(
-            parent_id=self.model.id).values_list('successor_id'))
+        return StepModel.objects.filter(
+            id__in=SuccessorModel.objects.filter(parent_id=self.model.id).values_list("successor_id")
+        )
 
     @staticmethod
     def filter(**kwargs) -> QuerySet:
@@ -208,32 +215,35 @@ class Step:
         for step_object in StepModel.objects.all():
             forbidden_output_prefixes.append(step_object.name)
 
-        conf_schema = Schema({
-            'name': str,
-            SchemaOptional("meta"): dict,
-            constants.STEP_TYPE: str,
-            SchemaOptional('is_init'): bool,
-            constants.ARGUMENTS: dict,
-            SchemaOptional('next'): list,
-            SchemaOptional('output_mapping'): [{'name_from': str, 'name_to': str}],
-            SchemaOptional('output_prefix'): And(str, lambda x: (
-                    x not in forbidden_output_prefixes and ("." not in x and "&" not in x)
-            ), error="This output_prefix is not allowed")
-
-        })
+        conf_schema = Schema(
+            {
+                "name": str,
+                SchemaOptional("meta"): dict,
+                constants.STEP_TYPE: str,
+                SchemaOptional("is_init"): bool,
+                constants.ARGUMENTS: dict,
+                SchemaOptional("next"): list,
+                SchemaOptional("output_mapping"): [{"name_from": str, "name_to": str}],
+                SchemaOptional("output_prefix"): And(
+                    str,
+                    lambda x: (x not in forbidden_output_prefixes and ("." not in x and "&" not in x)),
+                    error="This output_prefix is not allowed",
+                ),
+            }
+        )
 
         try:
-            logger.logger.debug("Validating step", step_name=step_dict.get('name'))
+            logger.logger.debug("Validating step", step_name=step_dict.get("name"))
             conf_schema.validate(step_dict)
             StepType[step_dict[constants.STEP_TYPE]].value.validate(step_dict[constants.ARGUMENTS])
 
-            if 'next' in step_dict.keys():
-                for value_of_next in step_dict['next']:
+            if "next" in step_dict.keys():
+                for value_of_next in step_dict["next"]:
                     cls.validate_next_parameter(value_of_next)
         except (SchemaError, StepTypeDoesNotExist) as ex:
-            raise exceptions.StepValidationError(ex, step_name=step_dict.get('name'))
+            raise exceptions.StepValidationError(ex, step_name=step_dict.get("name"))
 
-        logger.logger.debug("Step validated", step_name=step_dict.get('name'))
+        logger.logger.debug("Step validated", step_name=step_dict.get("name"))
         return True
 
     @classmethod
@@ -246,36 +256,38 @@ class Step:
         :return: True
         """
 
-        conf_schema = Schema(Or(
-            {
-                'target': str,
-                SchemaOptional('username'): str,
-                SchemaOptional(Or(
-                    'password',
-                    'ssh_key',
-                    only_one=True,
-                    error="Arguments 'password' and 'ssh_key' cannot be used together"
-                )): str,
-                SchemaOptional('port'): int
-            }
-        ))
+        conf_schema = Schema(
+            Or(
+                {
+                    "target": str,
+                    SchemaOptional("username"): str,
+                    SchemaOptional(
+                        Or(
+                            "password",
+                            "ssh_key",
+                            only_one=True,
+                            error="Arguments 'password' and 'ssh_key' cannot be used together",
+                        )
+                    ): str,
+                    SchemaOptional("port"): int,
+                }
+            )
+        )
 
         conf_schema.validate(ssh_connection_dict)
 
     @classmethod
     def validate_next_parameter(cls, next_dict):
-        conf_schema = Schema(Or(
-            {
-                'type': And(str, lambda x: x in constants.SUCCESSOR_TYPES_WITHOUT_ANY),
-                'value': Or(str, [str]),
-                'step': Or(str, [str])
-
-            },
-            {
-                'type': And(str, lambda x: x == "any"),
-                'step': Or(str, [str])
-            }
-        ))
+        conf_schema = Schema(
+            Or(
+                {
+                    "type": And(str, lambda x: x in constants.SUCCESSOR_TYPES_WITHOUT_ANY),
+                    "value": Or(str, [str]),
+                    "step": Or(str, [str]),
+                },
+                {"type": And(str, lambda x: x == "any"), "step": Or(str, [str])},
+            )
+        )
 
         conf_schema.validate(next_dict)
 
@@ -297,20 +309,20 @@ class Step:
         if successor_type not in constants.VALID_SUCCESSOR_TYPES:
             raise exceptions.InvalidSuccessorType(
                 "Unknown successor type. Choose one of valid types: {}".format(constants.VALID_SUCCESSOR_TYPES),
-                successor_type
+                successor_type,
             )
 
         if successor_type == constants.RESULT and successor_value not in Result:
             raise exceptions.InvalidSuccessorValue(
-                "Unknown successor value. Choose one of valid types: {}".format(Result.values()),
-                successor_value
+                "Unknown successor value. Choose one of valid types: {}".format(Result.values()), successor_value
             )
 
         if successor_type == constants.ANY and successor_value is None:
             successor_value = ""
 
-        successor = SuccessorModel(parent_id=self.model.id, successor_id=successor_id, type=successor_type,
-                                   value=successor_value)
+        successor = SuccessorModel(
+            parent_id=self.model.id, successor_id=successor_id, type=successor_type, value=successor_value
+        )
         successor.save()
 
         logger.logger.debug("Step successor created", step_id=self.model.id, step_successor_id=successor_id)
@@ -329,21 +341,23 @@ class StepWorkerExecute(Step):
         """
         Validate arguments in 'worker/execute' step_type
         """
-        worker_exec_valid_schema = Schema(Or(
-            {
-                constants.MODULE: str,
-                constants.MODULE_ARGUMENTS: dict,
-                SchemaOptional(constants.CREATE_NAMED_SESSION): str,
-                SchemaOptional(constants.USE_ANY_SESSION_TO_TARGET): str
-            },
-            {
-                constants.MODULE: str,
-                constants.MODULE_ARGUMENTS: dict,
-                SchemaOptional(constants.CREATE_NAMED_SESSION): str,
-                SchemaOptional(constants.USE_NAMED_SESSION): str
-            },
-            only_one=True
-        ))
+        worker_exec_valid_schema = Schema(
+            Or(
+                {
+                    constants.MODULE: str,
+                    constants.MODULE_ARGUMENTS: dict,
+                    SchemaOptional(constants.CREATE_NAMED_SESSION): str,
+                    SchemaOptional(constants.USE_ANY_SESSION_TO_TARGET): str,
+                },
+                {
+                    constants.MODULE: str,
+                    constants.MODULE_ARGUMENTS: dict,
+                    SchemaOptional(constants.CREATE_NAMED_SESSION): str,
+                    SchemaOptional(constants.USE_NAMED_SESSION): str,
+                },
+                only_one=True,
+            )
+        )
 
         worker_exec_valid_schema.validate(step_arguments)
 
@@ -360,43 +374,43 @@ class StepEmpireAgentDeploy(Step):
         """
         Validate arguments in 'empire/agent-deploy' step type
         """
-        agent_deploy_valid_schema = Schema(Or(
-            {
-                constants.LISTENER_NAME: str,
-                SchemaOptional(constants.LISTENER_PORT): int,
-                SchemaOptional(constants.LISTENER_OPTIONS): dict,
-                SchemaOptional(constants.LISTENER_TYPE): str,
-                constants.STAGER_TYPE: str,
-                SchemaOptional(constants.STAGER_OPTIONS): dict,
-                constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error='Invalid agent_name format'),
-                SchemaOptional(Or(
-                    constants.USE_NAMED_SESSION,
-                    constants.USE_ANY_SESSION_TO_TARGET,
-                    only_one=True
-                )): str
-            },
-            {
-                constants.LISTENER_NAME: str,
-                SchemaOptional(constants.LISTENER_PORT): int,
-                SchemaOptional(constants.LISTENER_OPTIONS): dict,
-                SchemaOptional(constants.LISTENER_TYPE): str,
-                constants.STAGER_TYPE: str,
-                SchemaOptional(constants.STAGER_OPTIONS): dict,
-                constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error='Invalid agent_name format'),
-                SchemaOptional(constants.SESSION_ID): int
-            },
-            {
-                constants.LISTENER_NAME: str,
-                SchemaOptional(constants.LISTENER_PORT): int,
-                SchemaOptional(constants.LISTENER_OPTIONS): dict,
-                SchemaOptional(constants.LISTENER_TYPE): str,
-                constants.STAGER_TYPE: str,
-                SchemaOptional(constants.STAGER_OPTIONS): dict,
-                constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error='Invalid agent_name format'),
-                SchemaOptional(constants.SSH_CONNECTION): dict
-            },
-            only_one=True
-        ))
+        agent_deploy_valid_schema = Schema(
+            Or(
+                {
+                    constants.LISTENER_NAME: str,
+                    SchemaOptional(constants.LISTENER_PORT): int,
+                    SchemaOptional(constants.LISTENER_OPTIONS): dict,
+                    SchemaOptional(constants.LISTENER_TYPE): str,
+                    constants.STAGER_TYPE: str,
+                    SchemaOptional(constants.STAGER_OPTIONS): dict,
+                    constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error="Invalid agent_name format"),
+                    SchemaOptional(
+                        Or(constants.USE_NAMED_SESSION, constants.USE_ANY_SESSION_TO_TARGET, only_one=True)
+                    ): str,
+                },
+                {
+                    constants.LISTENER_NAME: str,
+                    SchemaOptional(constants.LISTENER_PORT): int,
+                    SchemaOptional(constants.LISTENER_OPTIONS): dict,
+                    SchemaOptional(constants.LISTENER_TYPE): str,
+                    constants.STAGER_TYPE: str,
+                    SchemaOptional(constants.STAGER_OPTIONS): dict,
+                    constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error="Invalid agent_name format"),
+                    SchemaOptional(constants.SESSION_ID): int,
+                },
+                {
+                    constants.LISTENER_NAME: str,
+                    SchemaOptional(constants.LISTENER_PORT): int,
+                    SchemaOptional(constants.LISTENER_OPTIONS): dict,
+                    SchemaOptional(constants.LISTENER_TYPE): str,
+                    constants.STAGER_TYPE: str,
+                    SchemaOptional(constants.STAGER_OPTIONS): dict,
+                    constants.AGENT_NAME: And(str, lambda n: n.isalnum(), error="Invalid agent_name format"),
+                    SchemaOptional(constants.SSH_CONNECTION): dict,
+                },
+                only_one=True,
+            )
+        )
 
         agent_deploy_valid_schema.validate(step_arguments)
 
@@ -416,16 +430,18 @@ class StepEmpireExecute(Step):
         empire_exec_valid_schema = Schema(
             Or(
                 {
-                    constants.USE_AGENT: And(str, lambda n: n.isalnum(), error='Invalid agent name format'),
-                    constants.SHELL_COMMAND: str
+                    constants.USE_AGENT: And(str, lambda n: n.isalnum(), error="Invalid agent name format"),
+                    constants.SHELL_COMMAND: str,
                 },
                 {
-                    constants.USE_AGENT: And(str, lambda n: n.isalnum(), error='Invalid agent name format'),
+                    constants.USE_AGENT: And(str, lambda n: n.isalnum(), error="Invalid agent name format"),
                     constants.MODULE: str,
-                    SchemaOptional(constants.MODULE_ARGUMENTS): dict
+                    SchemaOptional(constants.MODULE_ARGUMENTS): dict,
                 },
-                only_one=True
-            ), error="Wrong combination of arguments, please see documentation")
+                only_one=True,
+            ),
+            error="Wrong combination of arguments, please see documentation",
+        )
 
         empire_exec_valid_schema.validate(step_arguments)
 
@@ -438,13 +454,14 @@ class StepExecution:
         (optional) step_execution_id: int - for retrieving existing execution
         step_model_id: int - for creating new execution
         """
-        step_execution_id = kwargs.get('step_execution_id')
+        step_execution_id = kwargs.get("step_execution_id")
         if step_execution_id is not None:
             try:
                 self.model = StepExecutionModel.objects.get(id=step_execution_id)
             except django_exc.ObjectDoesNotExist:
-                raise exceptions.StepExecutionObjectDoesNotExist("StepExecutionStatsModel with id {} does not exist."
-                                                                 .format(step_execution_id))
+                raise exceptions.StepExecutionObjectDoesNotExist(
+                    "StepExecutionStatsModel with id {} does not exist.".format(step_execution_id)
+                )
 
         else:
             self.model = StepExecutionModel.objects.create(**kwargs)
@@ -470,8 +487,12 @@ class StepExecution:
         with transaction.atomic():
             StepExecutionModel.objects.select_for_update().get(id=self.model.id)
             if states.StepStateMachine(self.model.id).validate_transition(self.state, value):
-                logger.logger.debug("Step execution changed state", step_execution_id=self.model.id,
-                                    state_from=self.state, state_to=value)
+                logger.logger.debug(
+                    "Step execution changed state",
+                    step_execution_id=self.model.id,
+                    state_from=self.state,
+                    state_to=value,
+                )
                 model = self.model
                 model.state = value
                 model.save()
@@ -597,15 +618,16 @@ class StepExecution:
         :param parent_step_ex_id: ID of the parent step of the current step execution
         :return: Arguments updated for dynamic variables
         """
-        logger.logger.debug("Updating step arguments with dynamic variables", step_execution_id=self.model.id,
-                            step_arguments=arguments)
+        logger.logger.debug(
+            "Updating step arguments with dynamic variables", step_execution_id=self.model.id, step_arguments=arguments
+        )
 
         # Get list of dynamic variables
         vars_list = util.get_dynamic_variables(arguments)
 
-        dynamic_variable_separator = self.model.step_model.stage_model.plan_model. \
-            settings.get(constants.SEPARATOR,
-                         constants.SEPARATOR_DEFAULT_VALUE)
+        dynamic_variable_separator = self.model.step_model.stage_model.plan_model.settings.get(
+            constants.SEPARATOR, constants.SEPARATOR_DEFAULT_VALUE
+        )
         # Get their prefixes
         prefixes = util.get_prefixes(vars_list, dynamic_variable_separator)
         vars_dict = dict()
@@ -613,7 +635,7 @@ class StepExecution:
 
         for prefix in prefixes:
             # If prefix is parent, get parents prefix
-            if prefix == 'parent':
+            if prefix == "parent":
                 if parent_step_ex_id is None:
                     raise RuntimeError("Parent must be specified for $parent prefix.")
                 is_parent = True
@@ -622,14 +644,14 @@ class StepExecution:
             tmp_dict = dict()
 
             for step_ex in StepExecutionModel.objects.filter(
-                    step_model__output_prefix=prefix,
-                    stage_execution__plan_execution=self.model.stage_execution.plan_execution
+                step_model__output_prefix=prefix,
+                stage_execution__plan_execution=self.model.stage_execution.plan_execution,
             ):
                 if step_ex.serialized_output:
                     tmp_dict.update(step_ex.serialized_output)
             # Change parents prefix back to 'parent' for updating dictionary to substitute
             if is_parent:
-                prefix = 'parent'
+                prefix = "parent"
                 is_parent = False
             vars_dict.update({prefix: tmp_dict})
 
@@ -644,13 +666,16 @@ class StepExecution:
         :param execution_variables: Execution variables to fill the template (arguments) with
         :return: Filled arguments
         """
-        parsed_execution_variables = {variable.get('name'): variable.get('value') for variable in execution_variables}
+        parsed_execution_variables = {variable.get("name"): variable.get("value") for variable in execution_variables}
 
         env = nativetypes.NativeEnvironment(
-            undefined=StrictUndefined, block_start_string=constants.BLOCK_START_STRING,
-            block_end_string=constants.BLOCK_END_STRING, variable_start_string=constants.VARIABLE_START_STRING,
-            variable_end_string=constants.VARIABLE_END_STRING, comment_start_string=constants.COMMENT_START_STRING,
-            comment_end_string=constants.COMMENT_END_STRING
+            undefined=StrictUndefined,
+            block_start_string=constants.BLOCK_START_STRING,
+            block_end_string=constants.BLOCK_END_STRING,
+            variable_start_string=constants.VARIABLE_START_STRING,
+            variable_end_string=constants.VARIABLE_END_STRING,
+            comment_start_string=constants.COMMENT_START_STRING,
+            comment_end_string=constants.COMMENT_END_STRING,
         )
         arguments_template = env.from_string(yaml.safe_dump(arguments))
 
@@ -669,8 +694,12 @@ class StepExecution:
         execution_vars = list(ExecutionVariableModel.objects.filter(plan_execution_id=plan_execution_id).values())
 
         if execution_vars:
-            logger.logger.debug("Updating step arguments with execution variables", step_execution_id=self.model.id,
-                                step_arguments=arguments, execution_vars=execution_vars)
+            logger.logger.debug(
+                "Updating step arguments with execution variables",
+                step_execution_id=self.model.id,
+                step_arguments=arguments,
+                execution_vars=execution_vars,
+            )
             try:
                 arguments.update(self._update_arguments_with_execution_variables(arguments, execution_vars))
             except exceptions.StepValidationError as ex:
@@ -684,8 +713,7 @@ class StepExecution:
             logger.logger.error(str(ex))
             raise exceptions.MissingValueError(f"Failed to update the dynamic variables. Original error: {ex}")
 
-        logger.logger.debug("Step arguments updated", step_execution_id=self.model.id,
-                            step_arguments=arguments)
+        logger.logger.debug("Step arguments updated", step_execution_id=self.model.id, step_arguments=arguments)
         return arguments
 
     @staticmethod
@@ -705,9 +733,12 @@ class StepExecution:
             try:
                 return session.get_msf_session_id(use_named_session, plan_execution_id)
             except exceptions.SessionObjectDoesNotExist:
-                err_msg = {'message': "No session with specified name open",
-                           'session_name': use_named_session,
-                           'plan_execution_id': plan_execution_id, 'step_id': step_obj.model.id}
+                err_msg = {
+                    "message": "No session with specified name open",
+                    "session_name": use_named_session,
+                    "plan_execution_id": plan_execution_id,
+                    "step_id": step_obj.model.id,
+                }
                 logger.logger.error(**err_msg)
                 raise exceptions.SessionIsNotOpen(**err_msg)
 
@@ -719,14 +750,19 @@ class StepExecution:
                 session_msf_id_lst = []
 
             if len(session_msf_id_lst) == 0:
-                err_msg = {'message': "No session to desired target open", "session_name": None,
-                           'plan_execution_id': plan_execution_id, 'step_id': step_obj.model.id}
+                err_msg = {
+                    "message": "No session to desired target open",
+                    "session_name": None,
+                    "plan_execution_id": plan_execution_id,
+                    "step_id": step_obj.model.id,
+                }
                 logger.logger.error(**err_msg)
                 raise exceptions.SessionIsNotOpen(**err_msg)
             return session_msf_id_lst[-1]
 
-    def send_step_execution_request(self, rabbit_channel: amqpstorm.Channel, message_body: dict, reply_queue: str,
-                                    target_queue: str) -> None:
+    def send_step_execution_request(
+        self, rabbit_channel: amqpstorm.Channel, message_body: dict, reply_queue: str, target_queue: str
+    ) -> None:
         """
         Sends RPC request to execute step using RabbitMQ.
         :param rabbit_channel: Rabbit channel
@@ -735,8 +771,9 @@ class StepExecution:
         :param target_queue: Queue on which should data be sent to worker(for example)
         :return: None
         """
-        logger.logger.debug("Sending Step execution request", step_execution_id=self.model.id,
-                            message_body=message_body)
+        logger.logger.debug(
+            "Sending Step execution request", step_execution_id=self.model.id, message_body=message_body
+        )
         with rabbit_client.RpcClient(rabbit_channel) as rpc_client:
             try:
                 response = rpc_client.call(target_queue, message_body, custom_reply_queue=reply_queue)
@@ -747,10 +784,12 @@ class StepExecution:
                 return
 
             self.state = states.RUNNING
-            CorrelationEventModel.objects.create(correlation_id=rpc_client.correlation_id,
-                                                 step_execution_id=self.model.id)
-            logger.logger.debug("Received response from Step execution request ", step_execution_id=self.model.id,
-                                response=response)
+            CorrelationEventModel.objects.create(
+                correlation_id=rpc_client.correlation_id, step_execution_id=self.model.id
+            )
+            logger.logger.debug(
+                "Received response from Step execution request ", step_execution_id=self.model.id, response=response
+            )
 
     def _prepare_execution(self) -> [Type[int], worker.Worker]:
         """
@@ -783,10 +822,18 @@ class StepExecution:
         Generate report containing output from Step Execution.
         :return: Step Execution report
         """
-        report_obj = StepReport(id=self.model.id, name=self.model.step_model.name,
-                                meta=self.model.step_model.meta, state=self.state,
-                                start_time=self.start_time, finish_time=self.finish_time, result=self.result,
-                                serialized_output=self.serialized_output, output=self.output, valid=self.valid)
+        report_obj = StepReport(
+            id=self.model.id,
+            name=self.model.step_model.name,
+            meta=self.model.step_model.meta,
+            state=self.state,
+            start_time=self.start_time,
+            finish_time=self.finish_time,
+            result=self.result,
+            serialized_output=self.serialized_output,
+            output=self.output,
+            valid=self.valid,
+        )
 
         return asdict(report_obj)
 
@@ -828,12 +875,15 @@ class StepExecution:
             return None
         # If any non SKIPPED parent exists (ignoring the one that called ignore())
         for parent_step in Step(step_model_id=self.model.step_model.id).parents:
-            parent_step_exec_model = StepExecutionModel.objects.get(step_model=parent_step,
-                                                                    stage_execution=self.model.stage_execution)
+            parent_step_exec_model = StepExecutionModel.objects.get(
+                step_model=parent_step, stage_execution=self.model.stage_execution
+            )
             parent_step_exec_obj = StepExecution(step_execution_id=parent_step_exec_model.id)
             # TODO: condition after 'or' may be adding too much runtime complexity here
-            if parent_step_exec_model.state not in states.STEP_FINAL_STATES or \
-                    self.model.step_model in parent_step_exec_obj.get_successors_to_execute():
+            if (
+                parent_step_exec_model.state not in states.STEP_FINAL_STATES
+                or self.model.step_model in parent_step_exec_obj.get_successors_to_execute()
+            ):
                 return None
 
         # Set ignore state
@@ -841,8 +891,9 @@ class StepExecution:
         logger.logger.debug("Step execution ignored", step_execution_id=self.model.id)
         # Execute for all successors
         for successor_step in Step(step_model_id=self.model.step_model.id).successors:
-            step_ex_id = StepExecutionModel.objects.get(step_model=successor_step,
-                                                        stage_execution=self.model.stage_execution).id
+            step_ex_id = StepExecutionModel.objects.get(
+                step_model=successor_step, stage_execution=self.model.stage_execution
+            ).id
             step_ex_obj = StepExecution(step_execution_id=step_ex_id)
             step_ex_obj.ignore()
 
@@ -868,8 +919,9 @@ class StepExecution:
                 ret_vals[constants.RESULT] = Result.FAIL
                 logger.logger.warning("Module didn't return a session id", step_execution_id=self.model.id)
             else:
-                session.create_session(self.model.stage_execution.plan_execution_id, msf_session_id,
-                                       create_named_session)
+                session.create_session(
+                    self.model.stage_execution.plan_execution_id, msf_session_id, create_named_session
+                )
 
         # Set final state, optionally save result
         result = ret_vals.get(constants.RESULT)
@@ -894,7 +946,8 @@ class StepExecution:
 
         for successor_step in successor_list:
             successor_step_execution_model = StepExecutionModel.objects.get(
-                step_model_id=successor_step.id, stage_execution_id=self.model.stage_execution_id, state=states.PENDING)
+                step_model_id=successor_step.id, stage_execution_id=self.model.stage_execution_id, state=states.PENDING
+            )
             StepExecution(step_execution_id=successor_step_execution_model.id).parent_id = self.model.id
 
         logger.logger.debug("Step execution postprocess finished", step_execution_id=self.model.id)
@@ -909,8 +962,7 @@ class StepExecution:
         step_obj = Step(step_model_id=self.model.step_model.id)
 
         # Get all possible successors
-        all_successor_list = StepModel.objects.filter(
-            id__in=step_obj.model.successors.all().values_list('successor'))
+        all_successor_list = StepModel.objects.filter(id__in=step_obj.model.successors.all().values_list("successor"))
 
         if self.state == states.FINISHED:
             # Get correct step successor from DB which are to be executed
@@ -921,9 +973,9 @@ class StepExecution:
             successor_to_be_skipped = all_successor_list
         for successor_step in successor_to_be_skipped:
             try:
-                successor_step_exec_id = StepExecutionModel.objects.get(step_model_id=successor_step.id,
-                                                                        stage_execution=self.model.stage_execution_id,
-                                                                        state=states.PENDING).id
+                successor_step_exec_id = StepExecutionModel.objects.get(
+                    step_model_id=successor_step.id, stage_execution=self.model.stage_execution_id, state=states.PENDING
+                ).id
             except ObjectDoesNotExist:
                 # Does not exist or is not PENDING
                 continue
@@ -945,7 +997,7 @@ class StepExecution:
             successor_step_execution_model = StepExecutionModel.objects.get(
                 step_model_id=successor_step_model.id,
                 stage_execution_id=self.model.stage_execution_id,
-                state=states.PENDING
+                state=states.PENDING,
             )
             successor_step_exec = StepExecutionType[successor_step_model.step_type].value(
                 step_execution_id=successor_step_execution_model.id
@@ -962,11 +1014,13 @@ class StepExecution:
         # Set all successors to PAUSED, so they can be recognized/executed when unpaused
         successor_list = self.get_successors_to_execute()
         for step_obj in successor_list:
-            successor_exec_id = StepExecutionModel.objects.get(stage_execution=self.model.stage_execution,
-                                                               step_model_id=step_obj.id).id
+            successor_exec_id = StepExecutionModel.objects.get(
+                stage_execution=self.model.stage_execution, step_model_id=step_obj.id
+            ).id
             StepExecution(step_execution_id=successor_exec_id).state = states.PAUSED
-            logger.logger.info('Step successor paused', step_execution_id=self.model.id,
-                               successor_exec_id=successor_exec_id)
+            logger.logger.info(
+                "Step successor paused", step_execution_id=self.model.id, successor_exec_id=successor_exec_id
+            )
 
         return None
 
@@ -988,8 +1042,10 @@ class StepExecution:
         else:
             worker_obj = worker.Worker(worker_model_id=self.model.stage_execution.plan_execution.worker.id)
             correlation_id = self.model.correlation_events.first().correlation_id
-            message = {constants.EVENT_T: constants.EVENT_KILL_STEP_EXECUTION,
-                       constants.EVENT_V: {"correlation_id": correlation_id}}
+            message = {
+                constants.EVENT_T: constants.EVENT_KILL_STEP_EXECUTION,
+                constants.EVENT_V: {"correlation_id": correlation_id},
+            }
 
             with rabbit_client.RpcClient() as rpc_client:
                 try:
@@ -1000,8 +1056,11 @@ class StepExecution:
                 else:  # The state is set in the `post_process` method
                     response_value = response.get(constants.EVENT_V)
                     if response_value.get(constants.RESULT) != Result.OK:
-                        logger.logger.warning("Step execution not terminated", step_execution_id=self.model.id,
-                                              error=response_value.get('output'))
+                        logger.logger.warning(
+                            "Step execution not terminated",
+                            step_execution_id=self.model.id,
+                            error=response_value.get("output"),
+                        )
                         return
 
         logger.logger.info("Step execution terminated", step_execution_id=self.model.id)
@@ -1047,7 +1106,7 @@ class StepExecution:
 
         message = {
             constants.EVENT_T: constants.EVENT_STEP_EXECUTION_ERROR,
-            constants.EVENT_V: {"step_execution_id": self.model.id}
+            constants.EVENT_V: {"step_execution_id": self.model.id},
         }
         with rabbit_client.Client() as client:
             client.send_message(SETTINGS.rabbit.queues.event_response, message)
@@ -1067,9 +1126,13 @@ class StepExecutionWorkerExecute(StepExecution):
         """
         logger.logger.debug("Validating Cryton module", step_id=self.model.step_model_id)
         target_queue = worker.Worker(worker_model_id=self.model.stage_execution.plan_execution.worker.id).control_q_name
-        message = {constants.EVENT_T: constants.EVENT_VALIDATE_MODULE,
-                   constants.EVENT_V: {"module": self.step_instance.module_name,
-                                       "module_arguments": self.step_instance.module_arguments}}
+        message = {
+            constants.EVENT_T: constants.EVENT_VALIDATE_MODULE,
+            constants.EVENT_V: {
+                "module": self.step_instance.module_name,
+                "module_arguments": self.step_instance.module_arguments,
+            },
+        }
 
         with rabbit_client.RpcClient() as rpc_client:
             response = rpc_client.call(target_queue, message)
@@ -1085,8 +1148,9 @@ class StepExecutionWorkerExecute(StepExecution):
         :param rabbit_channel: Rabbit channel
         :return: None
         """
-        logger.logger.debug("Starting Step execution", step_execution_id=self.model.id,
-                            step_name=self.step_instance.name)
+        logger.logger.debug(
+            "Starting Step execution", step_execution_id=self.model.id, step_name=self.step_instance.name
+        )
         plan_execution_id, worker_obj = self._prepare_execution()
 
         try:
@@ -1106,16 +1170,19 @@ class StepExecutionWorkerExecute(StepExecution):
 
         message_body = {
             constants.STEP_TYPE: self.step_instance.step_type,
-            constants.ARGUMENTS: {constants.MODULE: self.step_instance.module_name,
-                                  constants.MODULE_ARGUMENTS: module_arguments}
+            constants.ARGUMENTS: {
+                constants.MODULE: self.step_instance.module_name,
+                constants.MODULE_ARGUMENTS: module_arguments,
+            },
         }
 
         target_queue = worker_obj.attack_q_name
         reply_queue = SETTINGS.rabbit.queues.attack_response
 
         self.send_step_execution_request(rabbit_channel, message_body, reply_queue, target_queue)
-        logger.logger.info("Step executed", step_execution_id=self.model.id,
-                           step_name=self.step_instance.name, status='success')
+        logger.logger.info(
+            "Step executed", step_execution_id=self.model.id, step_name=self.step_instance.name, status="success"
+        )
 
 
 class StepExecutionEmpireExecute(StepExecution):
@@ -1149,8 +1216,9 @@ class StepExecutionEmpireExecute(StepExecution):
         reply_queue = SETTINGS.rabbit.queues.attack_response
 
         self.send_step_execution_request(rabbit_channel, message_body, reply_queue, target_queue)
-        logger.logger.info("Step executed", step_execution_id=self.model.id,
-                           step_name=self.step_instance.name, status='success')
+        logger.logger.info(
+            "Step executed", step_execution_id=self.model.id, step_name=self.step_instance.name, status="success"
+        )
 
     def validate(self):
         """
@@ -1190,17 +1258,15 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
         if (session_id := step_arguments.get(constants.SESSION_ID)) is not None:
             step_arguments[constants.SESSION_ID] = int(session_id)
 
-        message_body = {
-            constants.STEP_TYPE: self.step_instance.step_type,
-            constants.ARGUMENTS: step_arguments
-        }
+        message_body = {constants.STEP_TYPE: self.step_instance.step_type, constants.ARGUMENTS: step_arguments}
 
         target_queue = worker_obj.agent_q_name
         reply_queue = SETTINGS.rabbit.queues.agent_response
 
         self.send_step_execution_request(rabbit_channel, message_body, reply_queue, target_queue)
-        logger.logger.info("Step executed", step_execution_id=self.model.id,
-                           step_name=self.step_instance.name, status='success')
+        logger.logger.info(
+            "Step executed", step_execution_id=self.model.id, step_name=self.step_instance.name, status="success"
+        )
 
     def validate(self):
         """
@@ -1215,10 +1281,11 @@ class StepTypeMeta(EnumMeta):
     """
     Overrides base metaclass of Enum in order to support custom exception when accessing not present item.
     """
+
     step_types = {
         constants.STEP_TYPE_WORKER_EXECUTE: "worker_execute",
         constants.STEP_TYPE_EMPIRE_EXECUTE: "empire_execute",
-        constants.STEP_TYPE_DEPLOY_AGENT: "empire_agent_deploy"
+        constants.STEP_TYPE_DEPLOY_AGENT: "empire_agent_deploy",
     }
 
     def __getitem__(self, item):

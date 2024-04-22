@@ -7,8 +7,7 @@ from cryton.hive.utility import exceptions, logger, constants, rabbit_client
 from cryton.hive.models import worker
 
 
-def create_session(plan_execution_id: Union[Type[int], int], session_id: str,
-                   session_name: str = None) -> SessionModel:
+def create_session(plan_execution_id: Union[Type[int], int], session_id: str, session_name: str = None) -> SessionModel:
     """
 
     :param plan_execution_id:
@@ -20,8 +19,9 @@ def create_session(plan_execution_id: Union[Type[int], int], session_id: str,
     if not PlanExecutionModel.objects.filter(id=plan_execution_id).exists():
         raise exceptions.PlanExecutionDoesNotExist(plan_execution_id=str(plan_execution_id))
 
-    session_object = SessionModel.objects.create(plan_execution_id=plan_execution_id,
-                                                 name=session_name, msf_id=session_id)
+    session_object = SessionModel.objects.create(
+        plan_execution_id=plan_execution_id, name=session_name, msf_id=session_id
+    )
     logger.logger.info("Named session created", session_id=session_id, session_name=session_name)
 
     return session_object
@@ -54,9 +54,9 @@ def get_session_ids(target_ip: str, plan_execution_id: Union[Type[int], int]) ->
     """
     logger.logger.debug("Getting session ids", target_ip=target_ip)
     worker_obj = worker.Worker(worker_model_id=PlanExecutionModel.objects.get(id=plan_execution_id).worker.id)
-    message = {constants.EVENT_T: constants.EVENT_LIST_SESSIONS, constants.EVENT_V: {'tunnel_peer': target_ip}}
+    message = {constants.EVENT_T: constants.EVENT_LIST_SESSIONS, constants.EVENT_V: {"tunnel_peer": target_ip}}
 
     with rabbit_client.RpcClient() as rpc_client:
         response = rpc_client.call(worker_obj.control_q_name, message)
 
-    return response.get(constants.EVENT_V).get('session_list')
+    return response.get(constants.EVENT_V).get("session_list")

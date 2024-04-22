@@ -14,8 +14,9 @@ class BaseSerializer(serializers.Serializer):
 
 class ListSerializer(BaseSerializer):
     order_by = serializers.CharField(required=False, help_text="The parameter used to sort the results.")
-    any_returned_parameter = serializers.CharField(required=False,
-                                                   help_text="Filter the results using any returned parameter.")
+    any_returned_parameter = serializers.CharField(
+        required=False, help_text="Filter the results using any returned parameter."
+    )
 
 
 class DetailStringSerializer(BaseSerializer):
@@ -145,8 +146,9 @@ class StageExecutionReExecuteSerializer(BaseSerializer):
 
 
 class StageExecutionListSerializer(ListSerializer):
-    plan_execution_id = serializers.IntegerField(required=False,
-                                                 help_text="Plan execution ID used to filter the results.")
+    plan_execution_id = serializers.IntegerField(
+        required=False, help_text="Plan execution ID used to filter the results."
+    )
     stage_model_id = serializers.IntegerField(required=False, help_text="Stage ID used to filter the results.")
 
 
@@ -157,8 +159,9 @@ class StepExecutionSerializer(serializers.ModelSerializer):
 
 
 class StepExecutionListSerializer(ListSerializer):
-    stage_execution_id = serializers.IntegerField(required=False,
-                                                  help_text="Stage execution ID used to filter the results.")
+    stage_execution_id = serializers.IntegerField(
+        required=False, help_text="Stage execution ID used to filter the results."
+    )
     step_model_id = serializers.IntegerField(required=False, help_text="Step ID used to filter the results.")
 
 
@@ -192,8 +195,9 @@ class ExecutionVariableCreateSerializer(BaseSerializer):
 
 
 class ExecutionVariableListSerializer(ListSerializer):
-    plan_execution_id = serializers.IntegerField(required=False,
-                                                 help_text="Plan execution ID used to filter the results.")
+    plan_execution_id = serializers.IntegerField(
+        required=False, help_text="Plan execution ID used to filter the results."
+    )
 
 
 class SuccessorSerializer(serializers.ModelSerializer):

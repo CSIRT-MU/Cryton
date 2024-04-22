@@ -76,8 +76,9 @@ class MSFListener(Listener):
         :param trigger: Desired trigger
         :return: None
         """
-        logger.logger.debug("Removing trigger from MSFListener.", trigger_id=self._trigger_id,
-                            session_identifiers=self._identifiers)
+        logger.logger.debug(
+            "Removing trigger from MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers
+        )
         with self._triggers_lock:
             self._triggers.remove(trigger)
             if not self.any_trigger_exists():
@@ -88,14 +89,15 @@ class MSFListener(Listener):
         Check regularly for created session and if is found send it.
         :return: None
         """
-        logger.logger.debug("MSFListener is looking for MSF session with matching parameters",
-                            session_identifiers=self._identifiers)
+        logger.logger.debug(
+            "MSFListener is looking for MSF session with matching parameters", session_identifiers=self._identifiers
+        )
         while not self._stopped and self.msf.is_connected():
             active_sessions = self.msf.get_sessions(**self._identifiers)
             if active_sessions:
                 message_body = {
                     co.EVENT_T: co.EVENT_TRIGGER_STAGE,
-                    co.EVENT_V: {co.TRIGGER_ID: self._trigger_id, co.TRIGGER_PARAMETERS: active_sessions[-1]}
+                    co.EVENT_V: {co.TRIGGER_ID: self._trigger_id, co.TRIGGER_PARAMETERS: active_sessions[-1]},
                 }
                 time.sleep(3)  # MSF limitation. If we use the session immediately, it may not give output.
                 self._notify(self._triggers[0].get(co.REPLY_TO), message_body)
@@ -121,13 +123,17 @@ class MSFListener(Listener):
             if not self.msf.is_connected():
                 raise exceptions.MsfConnectionError
             echo(f"Starting MSFListener. trigger_id: {self._trigger_id}, session_identifiers: {self._identifiers}")
-            logger.logger.debug("Starting MSFListener.", trigger_id=self._trigger_id,
-                                session_identifiers=self._identifiers)
+            logger.logger.debug(
+                "Starting MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers
+            )
             details = deepcopy(self._triggers[0])
             if co.EXPLOIT in details:
-                self.msf.execute_exploit(details.pop(co.EXPLOIT), details.pop(co.PAYLOAD, None),
-                                         details.pop(co.EXPLOIT_ARGUMENTS, None),
-                                         details.pop(co.PAYLOAD_ARGUMENTS, None))
+                self.msf.execute_exploit(
+                    details.pop(co.EXPLOIT),
+                    details.pop(co.PAYLOAD, None),
+                    details.pop(co.EXPLOIT_ARGUMENTS, None),
+                    details.pop(co.PAYLOAD_ARGUMENTS, None),
+                )
             elif co.AUXILIARY in details:
                 self.msf.execute_auxiliary(details.pop(co.AUXILIARY), details.pop(co.AUXILIARY_ARGUMENTS, None))
 
@@ -142,6 +148,7 @@ class MSFListener(Listener):
         """
         if not self._stopped:
             echo(f"Stopping MSFListener. trigger_id: {self._trigger_id}")
-            logger.logger.debug("Stopping MSFListener.", trigger_id=self._trigger_id,
-                                session_identifiers=self._identifiers)
+            logger.logger.debug(
+                "Stopping MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers
+            )
             self._stopped = True

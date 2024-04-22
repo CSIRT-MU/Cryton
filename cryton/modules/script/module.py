@@ -18,10 +18,10 @@ class Module(ModuleBase):
             "executable": {"type": "string"},
             "script_arguments": {"type": "string"},
             "serialize_output": {"type": "boolean"},
-            "timeout": {"type": "integer"}
+            "timeout": {"type": "integer"},
         },
         "required": ["script_path", "executable"],
-        "additionalProperties": False
+        "additionalProperties": False,
     }
 
     def __init__(self, arguments: dict):

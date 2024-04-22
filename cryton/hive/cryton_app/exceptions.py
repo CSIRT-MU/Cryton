@@ -5,11 +5,11 @@ from rest_framework import status
 
 class ApiWrongObjectState(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = _('Object is not in the correct state.')
-    default_code = 'wrong_state'
+    default_detail = _("Object is not in the correct state.")
+    default_code = "wrong_state"
 
 
 class RpcTimeout(APIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    default_detail = _('Some RPC\'s failed.')
-    default_code = 'error'
+    default_detail = _("Some RPC's failed.")
+    default_code = "error"

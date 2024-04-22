@@ -26,7 +26,7 @@ class Command(BaseCommand):
             "bind": options.get("bind", "0.0.0.0:8000"),
             "worker_class": "uvicorn.workers.UvicornWorker",
             "workers": options.get("workers", 2),
-            "loglevel": "warning"
+            "loglevel": "warning",
         }
 
         echo("Starting REST API... ", nl=False)

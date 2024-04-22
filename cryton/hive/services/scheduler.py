@@ -20,22 +20,24 @@ class SchedulerService:
             f"{SETTINGS.database.port}/{SETTINGS.database.name}"
         )
 
-        jobstores = {
-            'default': SQLAlchemyJobStore(url=db_url)
-        }
+        jobstores = {"default": SQLAlchemyJobStore(url=db_url)}
 
         executors = {
-            'default': ThreadPoolExecutor(SETTINGS.scheduler.max_threads),
+            "default": ThreadPoolExecutor(SETTINGS.scheduler.max_threads),
         }
 
         job_defaults = {
-            'coalesce': False,
-            'max_instances': SETTINGS.scheduler.max_job_instances,
-            'misfire_grace_time': SETTINGS.scheduler.misfire_grace_time
+            "coalesce": False,
+            "max_instances": SETTINGS.scheduler.max_job_instances,
+            "misfire_grace_time": SETTINGS.scheduler.misfire_grace_time,
         }
 
-        self._scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults,
-                                              timezone=pytz.timezone(SETTINGS.timezone))
+        self._scheduler = BackgroundScheduler(
+            jobstores=jobstores,
+            executors=executors,
+            job_defaults=job_defaults,
+            timezone=pytz.timezone(SETTINGS.timezone),
+        )
 
     def start(self):
         self._scheduler.start()
@@ -55,7 +57,7 @@ class SchedulerService:
                 continue
 
             action = job_details.get(constants.EVENT_ACTION)
-            arguments = job_details.get('args')
+            arguments = job_details.get("args")
             try:
                 if action == constants.ADD_JOB:
                     self.exposed_add_job(**arguments)
@@ -90,9 +92,7 @@ class SchedulerService:
         :return: Scheduled job ID
         """
         logger.logger.debug("Scheduling job in scheduler service", execute_function=execute_function)
-        job_scheduled = self._scheduler.add_job(
-            execute_function, 'date', run_date=str(start_time), args=function_args
-        )
+        job_scheduled = self._scheduler.add_job(execute_function, "date", run_date=str(start_time), args=function_args)
 
         return job_scheduled.id
 
@@ -104,9 +104,7 @@ class SchedulerService:
         :return: Scheduled job ID
         """
         logger.logger.debug("Scheduling repeating job in scheduler service", execute_function=execute_function)
-        job_scheduled = self._scheduler.add_job(
-            execute_function, 'interval', seconds=seconds
-        )
+        job_scheduled = self._scheduler.add_job(execute_function, "interval", seconds=seconds)
         return job_scheduled.id
 
     def exposed_reschedule_job(self, job_id: str):

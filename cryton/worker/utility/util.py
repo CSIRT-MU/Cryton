@@ -70,8 +70,7 @@ def get_available_modules() -> dict[str, ModuleType]:
     modules_namespace = import_module("cryton.modules")
     return {
         name: import_module(f"{name}.module")
-        for finder, name, ispkg
-        in iter_modules(modules_namespace.__path__, f"{modules_namespace.__name__}.")
+        for finder, name, ispkg in iter_modules(modules_namespace.__path__, f"{modules_namespace.__name__}.")
     }
 
 
@@ -100,9 +99,15 @@ def ssh_to_target(ssh_arguments: dict):
 
 
 class Metasploit:
-    def __init__(self, username: str = SETTINGS.metasploit.username, password: str = SETTINGS.metasploit.password,
-                 server: str = SETTINGS.metasploit.host, port: int = SETTINGS.metasploit.port,
-                 ssl: bool = SETTINGS.metasploit.ssl, **kwargs):
+    def __init__(
+        self,
+        username: str = SETTINGS.metasploit.username,
+        password: str = SETTINGS.metasploit.password,
+        server: str = SETTINGS.metasploit.host,
+        port: int = SETTINGS.metasploit.port,
+        ssl: bool = SETTINGS.metasploit.ssl,
+        **kwargs,
+    ):
         """
         Wrapper class for MsfRpcClient.
         :param username: Username used for connection
@@ -112,8 +117,9 @@ class Metasploit:
         :param kwargs: Additional arguments passed to MsfRpcClient
         """
         try:
-            self.client = MsfRpcClient(password=password, username=username, server=server, port=port, ssl=ssl,
-                                       **kwargs)
+            self.client = MsfRpcClient(
+                password=password, username=username, server=server, port=port, ssl=ssl, **kwargs
+            )
         except Exception as ex:
             logger.logger.error(str(ex))
             self.error = ex
@@ -144,7 +150,7 @@ class Metasploit:
                 return sessions[session_id][parameter]
             except KeyError:
                 logger.logger.exception(f"Parameter '{parameter}' not found'")
-                return ''
+                return ""
         else:
             logger.logger.error(f"Session with id '{session_id}' not found")
             raise exceptions.MsfSessionNotFound(session_id)
@@ -218,8 +224,15 @@ class Metasploit:
 
         return result
 
-    def execute_in_session(self, command: str, session_id: str, timeout: int = None, end_check: list = None,
-                           close: bool = False, minimal_execution_time: int = None) -> str:
+    def execute_in_session(
+        self,
+        command: str,
+        session_id: str,
+        timeout: int = None,
+        end_check: list = None,
+        close: bool = False,
+        minimal_execution_time: int = None,
+    ) -> str:
         """
         Execute command in MSF session. Optionally close it.
         :param command: Command to execute
@@ -248,8 +261,9 @@ class Metasploit:
 
         return result
 
-    def execute_exploit(self, exploit: str, payload: str = None, exploit_arguments: dict = None,
-                        payload_arguments: dict = None):
+    def execute_exploit(
+        self, exploit: str, payload: str = None, exploit_arguments: dict = None, payload_arguments: dict = None
+    ):
         """
         Execute exploit msf module.
         :param exploit: Name of msf exploit module
@@ -293,10 +307,17 @@ class Metasploit:
 
         auxiliary_module.execute()
 
-    def execute_msf_module_with_output(self, msf_console: MsfConsole, msf_module: str, msf_module_type: str,
-                                       run_as_job: bool, pipe_connection: connection.Connection,
-                                       msf_module_options: dict = None, payload: str = None,
-                                       payload_options: dict = None):
+    def execute_msf_module_with_output(
+        self,
+        msf_console: MsfConsole,
+        msf_module: str,
+        msf_module_type: str,
+        run_as_job: bool,
+        pipe_connection: connection.Connection,
+        msf_module_options: dict = None,
+        payload: str = None,
+        payload_options: dict = None,
+    ):
         """
         Execute msf module and wait for output.
         :param msf_console: Msf console in which will be module executed.
@@ -319,12 +340,10 @@ class Metasploit:
             if payload_options:
                 payload_object.update(payload_options)
             response = msf_console.run_module_with_output(
-                msf_module_object,
-                payload=payload_object,
-                run_as_job=run_as_job)
+                msf_module_object, payload=payload_object, run_as_job=run_as_job
+            )
         else:
-            response = msf_console.run_module_with_output(msf_module_object,
-                                                          run_as_job=run_as_job)
+            response = msf_console.run_module_with_output(msf_module_object, run_as_job=run_as_job)
 
         pipe_connection.send(response)
 
@@ -337,6 +356,7 @@ class PrioritizedItem:
     Timestamp parameter makes sure the order of processed items (PrioritizedItems) is preserved (AKA FIFO).
     Item parameter stores the process defining value.
     """
+
     priority: int
     item: dict = field(compare=False)
     timestamp: int = time.time_ns()

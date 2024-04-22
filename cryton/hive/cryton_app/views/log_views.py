@@ -13,6 +13,7 @@ class LogViewSet(util.BaseViewSet):
     """
     Log ViewSet.
     """
+
     http_method_names = ["get"]
     serializer_class = serializers.LogSerializer
 
@@ -21,14 +22,15 @@ class LogViewSet(util.BaseViewSet):
         parameters=[
             OpenApiParameter("offset", OpenApiTypes.NUMBER, OpenApiParameter.QUERY),
             OpenApiParameter("limit", OpenApiTypes.NUMBER, OpenApiParameter.QUERY),
-            OpenApiParameter("any", OpenApiTypes.STR, OpenApiParameter.QUERY,
-                             description="Filter results using `any` key."),
-            OpenApiParameter("page", exclude=True)
+            OpenApiParameter(
+                "any", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Filter results using `any` key."
+            ),
+            OpenApiParameter("page", exclude=True),
         ],
         responses={
             200: serializers.LogSerializer,  # 'next'/'previous' parameters are inherited by default
             500: serializers.DetailStringSerializer,
-        }
+        },
     )
     def list(self, request: Request):
         query_params = request.query_params

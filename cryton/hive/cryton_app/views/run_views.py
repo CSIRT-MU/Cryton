@@ -15,12 +15,13 @@ from cryton.hive.models.plan import Plan
 @extend_schema_view(
     list=extend_schema(description="List Runs.", parameters=[serializers.ListSerializer]),
     retrieve=extend_schema(description="Get existing Run."),
-    destroy=extend_schema(description="Delete Run.")
+    destroy=extend_schema(description="Delete Run."),
 )
 class RunViewSet(util.ExecutionFullViewSet):
     """
     Run ViewSet.
     """
+
     queryset = RunModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.RunSerializer
@@ -40,7 +41,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             201: serializers.RunCreateDetailSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     def create(self, request: Request, **kwargs):
         try:
@@ -61,9 +62,9 @@ class RunViewSet(util.ExecutionFullViewSet):
             raise exceptions.NotFound(f"Nonexistent Plan with ID {plan_id} specified.")
 
         run_obj = Run(plan_model_id=plan_id, workers=workers)
-        plan_execution_ids = run_obj.model.plan_executions.values_list('id', flat=True)
+        plan_execution_ids = run_obj.model.plan_executions.values_list("id", flat=True)
 
-        msg = {'id': run_obj.model.id, 'detail': 'Run successfully created.', 'plan_execution_ids': plan_execution_ids}
+        msg = {"id": run_obj.model.id, "detail": "Run successfully created.", "plan_execution_ids": plan_execution_ids}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -71,7 +72,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         responses={
             200: serializers.DetailDictionarySerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["get"], detail=True)
     def report(self, _, **kwargs):
@@ -91,7 +92,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def pause(self, _, **kwargs):
@@ -105,7 +106,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 
-        msg = {'detail': f"Run {run_id} is paused."}
+        msg = {"detail": f"Run {run_id} is paused."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -115,7 +116,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def unpause(self, _, **kwargs):
@@ -129,7 +130,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 
-        msg = {'detail': f"Run {run_id} is resumed."}
+        msg = {"detail": f"Run {run_id} is resumed."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -140,24 +141,24 @@ class RunViewSet(util.ExecutionFullViewSet):
                 "Schedule Run (seconds precision)",
                 description="Schedule Run to year 1999, month 2, day 1, hour 13, minute 12, second 11.",
                 value={
-                    'start_time': '1999-2-1T13:12:11Z',
+                    "start_time": "1999-2-1T13:12:11Z",
                 },
-                request_only=True
+                request_only=True,
             ),
             OpenApiExample(
                 "Schedule Run (milliseconds precision)",
                 description="Schedule Run to year 1999, month 2, day 1, hour 13, minute 12, second 11, millisecond 1.",
                 value={
-                    'start_time': '1999-2-1T13:12:11.1Z',
+                    "start_time": "1999-2-1T13:12:11.1Z",
                 },
-                request_only=True
-            )
+                request_only=True,
+            ),
         ],
         responses={
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def schedule(self, request: Request, **kwargs):
@@ -172,7 +173,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 
-        msg = {'detail': f"Run {run_id} is scheduled for {start_time}."}
+        msg = {"detail": f"Run {run_id} is scheduled for {start_time}."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -182,7 +183,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def execute(self, _, **kwargs):
@@ -193,8 +194,9 @@ class RunViewSet(util.ExecutionFullViewSet):
             raise exceptions.NotFound()
 
         if run_obj.state not in states.RUN_EXECUTE_NOW_STATES:
-            raise exceptions.ApiWrongObjectState(f'Run object in wrong state: {run_obj.state}, '
-                                                 f'must be in: {states.RUN_EXECUTE_NOW_STATES}')
+            raise exceptions.ApiWrongObjectState(
+                f"Run object in wrong state: {run_obj.state}, " f"must be in: {states.RUN_EXECUTE_NOW_STATES}"
+            )
 
         try:
             run_obj.execute()
@@ -203,7 +205,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.RpcTimeoutError as ex:
             raise exceptions.RpcTimeout(ex)
 
-        msg = {'detail': f"Run {run_id} was executed."}
+        msg = {"detail": f"Run {run_id} was executed."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -214,24 +216,24 @@ class RunViewSet(util.ExecutionFullViewSet):
                 "Reschedule Run (seconds precision)",
                 description="Reschedule Run to year 1999, month 2, day 1, hour 13, minute 12, second 11.",
                 value={
-                    'start_time': '1999-2-1T13:12:11Z',
+                    "start_time": "1999-2-1T13:12:11Z",
                 },
-                request_only=True
+                request_only=True,
             ),
             OpenApiExample(
                 "Reschedule Run (milliseconds precision)",
                 description="Reschedule Run to year 1999, month 2, day 1, hour 13, minute 1, second 2, millisecond 3.",
                 value={
-                    'start_time': '1999-2-1T13:1:2.3Z',
+                    "start_time": "1999-2-1T13:1:2.3Z",
                 },
-                request_only=True
-            )
+                request_only=True,
+            ),
         ],
         responses={
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def reschedule(self, request: Request, **kwargs):
@@ -246,7 +248,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': f"Run {run_id} is rescheduled for {start_time}."}
+        msg = {"detail": f"Run {run_id} is rescheduled for {start_time}."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -257,16 +259,16 @@ class RunViewSet(util.ExecutionFullViewSet):
                 "Postpone Run",
                 description="Postpone Run for 1 hour, 2 minutes, 3 seconds.",
                 value={
-                    'delta': '1:2:3',
+                    "delta": "1:2:3",
                 },
-                request_only=True
+                request_only=True,
             )
         ],
         responses={
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def postpone(self, request: Request, **kwargs):
@@ -277,7 +279,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             raise exceptions.NotFound()
 
         try:
-            delta = request.data['delta']
+            delta = request.data["delta"]
         except KeyError as ex:
             raise exceptions.ValidationError(ex)
 
@@ -291,7 +293,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': f"Run {run_id} is postponed by {delta}."}
+        msg = {"detail": f"Run {run_id} is postponed by {delta}."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -301,7 +303,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def unschedule(self, _, **kwargs):
@@ -314,7 +316,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': f"Run {run_id} is unscheduled."}
+        msg = {"detail": f"Run {run_id} is unscheduled."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -324,7 +326,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def kill(self, _, **kwargs):
@@ -338,7 +340,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': f"Run {run_id} is terminated."}
+        msg = {"detail": f"Run {run_id} is terminated."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -348,11 +350,11 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
             500: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def healthcheck_workers(self, _, **kwargs):
-        run_id = kwargs.get('pk')
+        run_id = kwargs.get("pk")
         try:
             run_obj = Run(run_model_id=run_id)
         except core_exceptions.RunObjectDoesNotExist:
@@ -363,7 +365,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except ConnectionError as ex:
             raise exceptions.RpcTimeout(ex)
 
-        msg = {'detail': "Run's Workers are available."}
+        msg = {"detail": "Run's Workers are available."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -373,11 +375,11 @@ class RunViewSet(util.ExecutionFullViewSet):
             200: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
             500: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def validate_modules(self, _, **kwargs):
-        run_id = kwargs.get('pk')
+        run_id = kwargs.get("pk")
         try:
             run_obj = Run(run_model_id=run_id)
         except core_exceptions.RunObjectDoesNotExist:
@@ -388,15 +390,12 @@ class RunViewSet(util.ExecutionFullViewSet):
         except core_exceptions.RpcTimeoutError:
             raise exceptions.RpcTimeout("Module's validation failed due to RPC timeout.")
 
-        msg = {'detail': "Run's modules were validated."}
+        msg = {"detail": "Run's modules were validated."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
         description="Get Plan's YAML.",
-        responses={
-            200: serializers.DetailDictionarySerializer,
-            404: serializers.DetailStringSerializer
-        }
+        responses={200: serializers.DetailDictionarySerializer, 404: serializers.DetailStringSerializer},
     )
     @action(methods=["get"], detail=True)
     def get_plan(self, _, **kwargs):

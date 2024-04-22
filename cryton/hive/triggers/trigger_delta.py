@@ -7,7 +7,7 @@ from cryton.hive.triggers.trigger_base import TriggerTime
 
 
 class TriggerDelta(TriggerTime):
-    arg_schema = schema.Schema({schema.Or('hours', 'minutes', 'seconds', only_one=False): int})
+    arg_schema = schema.Schema({schema.Or("hours", "minutes", "seconds", only_one=False): int})
 
     def __init__(self, stage_execution):
         """
@@ -31,8 +31,11 @@ class TriggerDelta(TriggerTime):
         :return: Time delta
         """
         trigger_args = self.stage_execution.model.stage_model.trigger_args
-        delta = timedelta(hours=trigger_args.get('hours', 0), minutes=trigger_args.get('minutes', 0),
-                          seconds=trigger_args.get('seconds', 0))
+        delta = timedelta(
+            hours=trigger_args.get("hours", 0),
+            minutes=trigger_args.get("minutes", 0),
+            seconds=trigger_args.get("seconds", 0),
+        )
 
         if self.stage_execution.pause_time:
             return self.stage_execution.model.plan_execution.start_time + delta - self.stage_execution.pause_time

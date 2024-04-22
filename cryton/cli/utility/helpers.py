@@ -16,6 +16,7 @@ class CLIContext:
     """
     Context object for CLI. Contains necessary data for link creation.
     """
+
     def __init__(self, host: str, port: int, ssl: bool, debug: bool):
         self._api_url = f'{"https" if ssl else "http"}://{host}:{port}/api/'
         self.debug = debug
@@ -27,23 +28,32 @@ class CLIContext:
         try:
             return requests.delete(self._build_request_url(endpoint_url, object_id))
         except requests.exceptions.ConnectionError:
-            return f'Unable to connect.'
+            return f"Unable to connect."
 
     def api_get(self, endpoint_url: str, object_id: int = None, parameters: dict = None):
         try:
             return requests.get(self._build_request_url(endpoint_url, object_id), parameters)
         except requests.exceptions.ConnectionError:
-            return f'Unable to connect.'
+            return f"Unable to connect."
 
-    def api_post(self, endpoint_url: str, object_id: int = None, data: dict = None, json: dict = None,
-                 files: dict = None):
+    def api_post(
+        self, endpoint_url: str, object_id: int = None, data: dict = None, json: dict = None, files: dict = None
+    ):
         try:
             return requests.post(self._build_request_url(endpoint_url, object_id), data, json, files=files)
         except requests.exceptions.ConnectionError:
-            return f'Unable to connect.'
+            return f"Unable to connect."
 
-    def get_items(self, endpoint: str, offset: int, limit: int, additional_parameters: dict[str, Union[str, int]],
-                  include_fields: list[str], less: bool, localize: bool) -> None:
+    def get_items(
+        self,
+        endpoint: str,
+        offset: int,
+        limit: int,
+        additional_parameters: dict[str, Union[str, int]],
+        include_fields: list[str],
+        less: bool,
+        localize: bool,
+    ) -> None:
         """
         function for getting listings.
         :param endpoint: The endpoint to use
@@ -55,10 +65,7 @@ class CLIContext:
         :param localize: If datetime variables should be converted to local timezone
         :return: None
         """
-        parameters = {
-            'offset': offset,
-            'limit': limit
-        } | additional_parameters
+        parameters = {"offset": offset, "limit": limit} | additional_parameters
 
         response = self.api_get(endpoint, parameters=parameters)
         print_items(response, include_fields, less, localize, self.debug)
@@ -72,7 +79,7 @@ class Context(click.Context):
     obj: CLIContext
 
 
-def save_yaml_to_file(content: dict, file_path: str, file_prefix: str = 'file') -> str:
+def save_yaml_to_file(content: dict, file_path: str, file_prefix: str = "file") -> str:
     """
     Save content into file.
     :param file_path: Where to save the file (default is /tmp/prefix_timestamp_tail)
@@ -80,13 +87,13 @@ def save_yaml_to_file(content: dict, file_path: str, file_prefix: str = 'file') 
     :param file_prefix: Prefix for the file name (only if path is `/tmp`)
     :return: Path to the file
     """
-    if file_path == '/tmp':
+    if file_path == "/tmp":
         time_stamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
-        file_tail = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=5))
+        file_tail = "".join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=5))
         file_path = f"/tmp/{file_prefix}_{time_stamp}_{file_tail}"
 
     try:
-        with open(file_path, 'w+') as report_file:
+        with open(file_path, "w+") as report_file:
             yaml.dump(content, report_file, sort_keys=False)
     except IOError as e:
         raise IOError(f"Unable to save file to {file_path}. Original exception: {e}")
@@ -138,13 +145,13 @@ def parse_response(response: requests.Response) -> Union[str, dict]:
     except json.JSONDecodeError:
         if response.text == "":
             return "Empty response."
-        return 'Unable to parse response details.'
+        return "Unable to parse response details."
 
     if isinstance(response_data, list):  # ValidationError can return multiple errors at once
         detailed_msg = "\n\n ".join(response_data)
-    elif (results := response_data.get('results')) is not None:
+    elif (results := response_data.get("results")) is not None:
         detailed_msg = results
-    elif (detail := response_data.get('detail')) is not None and len(response_data) == 1:
+    elif (detail := response_data.get("detail")) is not None and len(response_data) == 1:
         detailed_msg = detail
     else:
         detailed_msg = response_data
@@ -160,7 +167,7 @@ def print_message(response: Union[str, requests.Response], debug: bool = False) 
     :return: True if the response is valid or unable to decide
     """
     if isinstance(response, str):
-        click.secho(response, fg='red')
+        click.secho(response, fg="red")
         return False
 
     if debug:
@@ -188,7 +195,7 @@ def format_result_line(line: dict, to_print: List[str], localize: bool) -> str:
         return ", ".join([f"{key}: {value}" for key, value in line.items()])
 
     line_to_print = ""
-    datetime_variables = ['finish_time', 'pause_time', 'start_time', 'created_at', 'updated_at', 'schedule_time']
+    datetime_variables = ["finish_time", "pause_time", "start_time", "created_at", "updated_at", "schedule_time"]
 
     for key in to_print:
         value = line.get(key)
@@ -223,8 +230,13 @@ def format_list_results(results: list, to_print: List[str], localize: bool) -> l
     return parsed_results
 
 
-def print_items(response: Union[str, requests.Response], to_print: List[str], less: bool = False,
-                localize: bool = False, debug: bool = False) -> None:
+def print_items(
+    response: Union[str, requests.Response],
+    to_print: List[str],
+    less: bool = False,
+    localize: bool = False,
+    debug: bool = False,
+) -> None:
     """
     Remove ignored parameters and echo the rest.
     :param response: Response containing data from REST API
@@ -235,7 +247,7 @@ def print_items(response: Union[str, requests.Response], to_print: List[str], le
     :return: None
     """
     if isinstance(response, str):
-        click.secho(response, fg='red')
+        click.secho(response, fg="red")
         return
 
     if debug:
@@ -251,7 +263,7 @@ def print_items(response: Union[str, requests.Response], to_print: List[str], le
 
         parsed_results = format_list_results(parsed_response, to_print, localize)
         if not parsed_results:
-            click.secho("No matching objects...", fg='green')
+            click.secho("No matching objects...", fg="green")
         else:
             if less:
                 click.echo_via_pager(parsed_results)
@@ -268,7 +280,7 @@ def format_report(run: dict, localize: bool):
     :param localize: If datetime variables should be converted to local timezone
     :return: None
     """
-    datetime_variables = ['finish_time', 'pause_time', 'start_time', 'created_at', 'updated_at', 'schedule_time']
+    datetime_variables = ["finish_time", "pause_time", "start_time", "created_at", "updated_at", "schedule_time"]
 
     run_changes = {}
     for key, value in run.items():
@@ -304,8 +316,15 @@ def format_report(run: dict, localize: bool):
     return run
 
 
-def save_yaml(response: Union[str, requests.Response], file_path: str, file_name: str, echo_only: bool = False,
-              less: bool = False, localize: bool = False, debug: bool = False) -> None:
+def save_yaml(
+    response: Union[str, requests.Response],
+    file_path: str,
+    file_name: str,
+    echo_only: bool = False,
+    less: bool = False,
+    localize: bool = False,
+    debug: bool = False,
+) -> None:
     """
     Get yaml and save/echo it.
     :param response: Response containing data from REST API
@@ -318,7 +337,7 @@ def save_yaml(response: Union[str, requests.Response], file_path: str, file_name
     :return: None
     """
     if isinstance(response, str):
-        click.secho(response, fg='red')
+        click.secho(response, fg="red")
         return
 
     if debug:
@@ -336,9 +355,9 @@ def save_yaml(response: Union[str, requests.Response], file_path: str, file_name
             try:
                 path_to_file = save_yaml_to_file(parsed_response, file_path, file_name)
             except IOError as ex:
-                click.secho(f"{ex}", fg='red')
+                click.secho(f"{ex}", fg="red")
             else:
-                click.secho(f"Successfully saved file to {path_to_file}", fg='green')
+                click.secho(f"Successfully saved file to {path_to_file}", fg="green")
 
         else:
             if less:
@@ -359,7 +378,7 @@ def render_documentation(raw_documentation: dict, layer: int) -> str:
 
     # Create help text
     help_text = ""
-    for line in raw_documentation.get('help').split("\x0c")[0].split("\n"):
+    for line in raw_documentation.get("help").split("\x0c")[0].split("\n"):
         if new_line := line.lstrip().rstrip():
             help_text += f"{new_line}\n\n"
 
@@ -367,26 +386,26 @@ def render_documentation(raw_documentation: dict, layer: int) -> str:
 
     # Prepare arguments and options
     arguments, options = [], []
-    for parameter in raw_documentation.get('params'):
-        arguments.append(parameter) if 'argument' in parameter.get('param_type_name') else options.append(parameter)
+    for parameter in raw_documentation.get("params"):
+        arguments.append(parameter) if "argument" in parameter.get("param_type_name") else options.append(parameter)
 
     # Generate arguments for command
     if arguments:
-        doc += '**Arguments:**  \n'
+        doc += "**Arguments:**  \n"
         for argument in arguments:
             doc += f"- {argument.get('name').upper()}  \n"
 
     # Generate options for command
-    doc += '\n**Options:**  \n'
+    doc += "\n**Options:**  \n"
     for option in options:
-        opts = option.get('opts')
-        parsed_opts = f'`{opts[0]}`, `{opts[1]}`' if len(opts) != 1 else f'`{opts[0]}`'
+        opts = option.get("opts")
+        parsed_opts = f"`{opts[0]}`, `{opts[1]}`" if len(opts) != 1 else f"`{opts[0]}`"
         doc += f"- {option.get('name')} ({parsed_opts}) - {option.get('help')}  \n"
 
-    doc += '\n'
+    doc += "\n"
     # Generate documentation for sub commands
-    if raw_documentation.get('commands') is not None:
-        for cmd_detail in raw_documentation.get('commands').values():
+    if raw_documentation.get("commands") is not None:
+        for cmd_detail in raw_documentation.get("commands").values():
             doc += render_documentation(cmd_detail, layer + 1)
 
     return doc
@@ -398,4 +417,4 @@ def clean_up_documentation(documentation: str) -> str:
     :param documentation: Human-readable documentation
     :return: Clean documentation
     """
-    return documentation.replace('_', r'\_')
+    return documentation.replace("_", r"\_")

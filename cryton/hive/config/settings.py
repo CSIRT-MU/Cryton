@@ -2,7 +2,12 @@ from dataclasses import dataclass
 from os import getenv, sched_getaffinity, path
 
 from cryton.lib.config.settings import (
-    SETTINGS_HIVE, getenv_bool, getenv_int, getenv_list, LOG_DIRECTORY, EVIDENCE_DIRECTORY
+    SETTINGS_HIVE,
+    getenv_bool,
+    getenv_int,
+    getenv_list,
+    LOG_DIRECTORY,
+    EVIDENCE_DIRECTORY,
 )
 
 

@@ -80,8 +80,12 @@ class EmpireClient(utinni.EmpireApiClient):
             # create listener
             logger.logger.debug("Creating listener.", listener_name=listener_name)
             try:
-                await try_empire_request(self.listeners.create, listener_type, listener_name,
-                                         additional={"Port": listener_port, **listener_options})
+                await try_empire_request(
+                    self.listeners.create,
+                    listener_type,
+                    listener_name,
+                    additional={"Port": listener_port, **listener_options},
+                )
             except KeyError:
                 logger.logger.debug("Listener could not be created. Check if port is not already in use.")
                 raise KeyError(f"Listener could not be created. Check if port is not already in use.")
@@ -130,15 +134,18 @@ class EmpireClient(utinni.EmpireApiClient):
                 return {co.RESULT: co.CODE_ERROR, co.OUTPUT: f"Module '{module_name}' not found in Empire."}
 
             try:
-                execution_result = await asyncio.wait_for(try_empire_request(empire_agent.execute, module_name,
-                                                                             module_args), 15)
+                execution_result = await asyncio.wait_for(
+                    try_empire_request(empire_agent.execute, module_name, module_args), 15
+                )
             except (utinni.EmpireModuleExecutionError, utinni.EmpireModuleExecutionTimeout) as ex:
                 logger.logger.error("Error while executing empire module", err=str(ex))
                 return {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
             except asyncio.exceptions.TimeoutError:
                 logger.logger.error(f"Module execution timed out, check that empire agent '{agent_name} is active")
-                return {co.RESULT: co.CODE_ERROR,
-                        co.OUTPUT: f"Module execution timed out, check that empire agent '{agent_name} is active"}
+                return {
+                    co.RESULT: co.CODE_ERROR,
+                    co.OUTPUT: f"Module execution timed out, check that empire agent '{agent_name} is active",
+                }
 
         elif shell_command is not None:
             logger.logger.debug("Executing command on agent.", agent_name=agent_name, command=shell_command)
@@ -149,10 +156,13 @@ class EmpireClient(utinni.EmpireApiClient):
                 return {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
             except asyncio.exceptions.TimeoutError:
                 logger.logger.error(
-                    f"Shell command execution timed out, check that empire agent '{agent_name}' is alive")
-                return {co.RESULT: co.CODE_ERROR,
-                        co.OUTPUT: f"Shell command execution timed out, check that empire agent '{agent_name}' "
-                                    f"is alive"}
+                    f"Shell command execution timed out, check that empire agent '{agent_name}' is alive"
+                )
+                return {
+                    co.RESULT: co.CODE_ERROR,
+                    co.OUTPUT: f"Shell command execution timed out, check that empire agent '{agent_name}' "
+                    f"is alive",
+                }
         else:
             return {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Missing module_name or shell_command in arguments."}
 
@@ -175,8 +185,9 @@ class EmpireStagers(utinni.EmpireApi):
         return EmpireStager(self.api, r.json()["stagers"][0])
 
     async def generate(self, stager, listener, options):
-        r = await try_empire_request(self.client.post, f"stagers", json={"StagerName": stager, "Listener": listener,
-                                                                         **options})
+        r = await try_empire_request(
+            self.client.post, f"stagers", json={"StagerName": stager, "Listener": listener, **options}
+        )
         return r.json()[stager]["Output"]
 
 
@@ -223,8 +234,9 @@ async def deploy_agent(arguments: dict) -> dict:
             logger.logger.error("MSF session not found.", session_id=session_id)
             return {co.OUTPUT: f"MSF Session with id {str(err)} not found.", co.RESULT: co.CODE_ERROR}
 
-        logger.logger.debug("Deploying agent via MSF session.", session_id=session_id, payload=payload,
-                            target_ip=target_ip)
+        logger.logger.debug(
+            "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
+        )
         metasploit_obj.execute_in_session(payload, session_id)
     elif ssh_connection:
         # Check if 'target' is in ssh_connection arguments
@@ -233,8 +245,11 @@ async def deploy_agent(arguments: dict) -> dict:
         except KeyError as err:
             logger.logger.error(f"Missing {str(err)} argument in ssh_connection.")
             return {co.OUTPUT: f"Missing {str(err)} argument in ssh_connection.", co.RESULT: co.CODE_ERROR}
-        except (paramiko.ssh_exception.AuthenticationException, paramiko.ssh_exception.NoValidConnectionsError,
-                socket.error) as ex:
+        except (
+            paramiko.ssh_exception.AuthenticationException,
+            paramiko.ssh_exception.NoValidConnectionsError,
+            socket.error,
+        ) as ex:
             logger.logger.error("Couldn't connect to target via paramiko ssh client.", original_err=ex)
             return {co.OUTPUT: str(ex), co.RESULT: co.CODE_ERROR}
 
@@ -253,7 +268,10 @@ async def deploy_agent(arguments: dict) -> dict:
     agent = await empire.agent_poller(target_ip)
 
     if agent is None:
-        return {co.OUTPUT: "Agent could not be deployed or didn't connect to the empire server", co.RESULT: co.CODE_ERROR}
+        return {
+            co.OUTPUT: "Agent could not be deployed or didn't connect to the empire server",
+            co.RESULT: co.CODE_ERROR,
+        }
 
     agent_rename_response = await try_empire_request(agent.rename, new_agent_name)
     logger.logger.debug(f"Agent renamed to '{agent.name}'", response=agent_rename_response)

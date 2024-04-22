@@ -9,10 +9,10 @@ from cryton.cli.commands import plan_template, run, plan, step, worker, executio
 @click.group()
 @click.pass_context
 @click.version_option(message=f"%(version)s")
-@click.option('-H', '--host', type=click.STRING, help="Cryton's API address.")
-@click.option('-p', '--port', type=click.INT, help="Cryton's API address.")
-@click.option('--secure', is_flag=True, help='Use HTTPS instead of HTTP.')
-@click.option('--debug', is_flag=True, help='Do not format output.')
+@click.option("-H", "--host", type=click.STRING, help="Cryton's API address.")
+@click.option("-p", "--port", type=click.INT, help="Cryton's API address.")
+@click.option("--secure", is_flag=True, help="Use HTTPS instead of HTTP.")
+@click.option("--debug", is_flag=True, help="Do not format output.")
 def cli(ctx: click.Context, host: Optional[str], port: Optional[int], secure: bool, debug: bool) -> None:
     """
     Wrapper for Hive's REST API.
@@ -29,7 +29,7 @@ def cli(ctx: click.Context, host: Optional[str], port: Optional[int], secure: bo
         host or SETTINGS.api.host,
         port or SETTINGS.api.port,
         True if SETTINGS.api.ssl and not secure else secure,
-        True if SETTINGS.debug and not debug else debug
+        True if SETTINGS.debug and not debug else debug,
     )
 
 
@@ -46,10 +46,10 @@ cli.add_command(execution_variable.execution_variable)
 cli.add_command(log.log)
 
 
-@cli.command('generate-docs')
+@cli.command("generate-docs")
 @click.pass_context
-@click.argument('file', type=click.Path(), required=True)
-@click.option('-l', '--layer', type=click.INT, help='Highest header level.', default=2)
+@click.argument("file", type=click.Path(), required=True)
+@click.option("-l", "--layer", type=click.INT, help="Highest header level.", default=2)
 def generate_docs(ctx: helpers.Context, file: str, layer: int):
     """
     Generate Markdown documentation for CLI.

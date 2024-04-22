@@ -60,8 +60,9 @@ class RpcClient:
             self.channel.close()
             self.connection.close()
 
-    def call(self, target_queue: str, message_body: dict, properties: dict = None,
-             custom_reply_queue: str = None) -> dict:
+    def call(
+        self, target_queue: str, message_body: dict, properties: dict = None, custom_reply_queue: str = None
+    ) -> dict:
         """
         Create RPC call and wait for response.
         :param target_queue: Target RabbitMQ queue to send the message
@@ -72,9 +73,15 @@ class RpcClient:
         :return: Serialized response
         :raises: exceptions.RpcTimeoutError
         """
-        logger.logger.debug("Remote procedure call.", correlation_id=self.correlation_id, target_queue=target_queue,
-                            message_body=message_body, custom_reply_queue=custom_reply_queue, properties=properties,
-                            callback_queue=self.callback_queue)
+        logger.logger.debug(
+            "Remote procedure call.",
+            correlation_id=self.correlation_id,
+            target_queue=target_queue,
+            message_body=message_body,
+            custom_reply_queue=custom_reply_queue,
+            properties=properties,
+            callback_queue=self.callback_queue,
+        )
         self._clean_up()
         self.channel.queue.declare(target_queue)
 
@@ -93,8 +100,9 @@ class RpcClient:
         self.response = None
         self.correlation_id = None
 
-    def _create_message(self, message_body: dict, properties: dict = None,
-                        custom_reply_queue: str = None) -> amqpstorm.Message:
+    def _create_message(
+        self, message_body: dict, properties: dict = None, custom_reply_queue: str = None
+    ) -> amqpstorm.Message:
         """
         Create message. Optionally use custom reply queue.
         :param message_body: Message contents
@@ -119,15 +127,17 @@ class RpcClient:
         :return: None
         :raises: exceptions.RpcTimeoutError
         """
-        logger.logger.debug("Waiting for response.", correlation_id=self.correlation_id,
-                            callback_queue=self.callback_queue)
+        logger.logger.debug(
+            "Waiting for response.", correlation_id=self.correlation_id, callback_queue=self.callback_queue
+        )
         time_limit = time.time() + self.timeout
         while self.response is None and time.time() < time_limit:
             self.channel.process_data_events()
 
         if self.response is None:
-            logger.logger.warning("Couldn't get response in time.", correlation_id=self.correlation_id,
-                                  callback_queue=self.callback_queue)
+            logger.logger.warning(
+                "Couldn't get response in time.", correlation_id=self.correlation_id, callback_queue=self.callback_queue
+            )
             raise exceptions.RpcTimeoutError("Couldn't get response in time.")
 
     def _on_response(self, message: amqpstorm.Message) -> None:
@@ -140,8 +150,12 @@ class RpcClient:
             self.response = message.json()
             return
 
-        logger.logger.warning("Received message with an unknown correlation_id.", correlation_id=self.correlation_id,
-                              message_correlation_id=message.correlation_id, callback_queue=self.callback_queue)
+        logger.logger.warning(
+            "Received message with an unknown correlation_id.",
+            correlation_id=self.correlation_id,
+            message_correlation_id=message.correlation_id,
+            callback_queue=self.callback_queue,
+        )
 
 
 class Client:

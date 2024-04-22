@@ -11,36 +11,27 @@ class Module(ModuleBase):
         "type": "object",
         "description": "Arguments for the `command` module.",
         "properties": {
-            "command": {
-                "type": "string",
-                "description": "Command to run with syntax as in command line."
-            },
+            "command": {"type": "string", "description": "Command to run with syntax as in command line."},
             "end_checks": {
                 "type": "array",
                 "items": {
                     "type": "string",
-                    "description": "Strings to check in the output to determine whether the command has finished."
-                }
+                    "description": "Strings to check in the output to determine whether the command has finished.",
+                },
             },
-            "timeout": {
-                "type": "integer",
-                "description": "Timeout for the command (**in seconds**)."
-            },
+            "timeout": {"type": "integer", "description": "Timeout for the command (**in seconds**)."},
             "minimal_execution_time": {
                 "type": "integer",
-                "description": "Time (**in seconds**) to wait for the output before reading from the shell."
+                "description": "Time (**in seconds**) to wait for the output before reading from the shell.",
             },
             "serialize_output": {
                 "type": "boolean",
-                "description": "Try to parse the output of the command into `serialized_output`."
+                "description": "Try to parse the output of the command into `serialized_output`.",
             },
-            "session_id": {
-                "type": "integer",
-                "description": ""
-            }
+            "session_id": {"type": "integer", "description": ""},
         },
         "required": ["command"],
-        "additionalProperties": False
+        "additionalProperties": False,
     }
 
     def __init__(self, arguments: dict):
@@ -74,7 +65,7 @@ class Module(ModuleBase):
                     str(self._session_id),
                     self._timeout,
                     self._end_checks,
-                    minimal_execution_time=self._minimal_execution_time
+                    minimal_execution_time=self._minimal_execution_time,
                 )
             except Exception as ex:
                 self._data.output += str(ex)
@@ -86,11 +77,7 @@ class Module(ModuleBase):
         else:
             try:
                 process = subprocess.run(
-                    self._command,
-                    timeout=self._timeout,
-                    capture_output=True,
-                    shell=True,
-                    check=True
+                    self._command, timeout=self._timeout, capture_output=True, shell=True, check=True
                 )
             except subprocess.TimeoutExpired:
                 self._data.output += "Command execution timed out."

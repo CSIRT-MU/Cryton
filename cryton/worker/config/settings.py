@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 from os import getenv, path
 
-from cryton.lib.config.settings import (
-    SETTINGS_WORKER, getenv_bool, getenv_int, LOG_DIRECTORY, MODULES_DIRECTORY
-)
+from cryton.lib.config.settings import SETTINGS_WORKER, getenv_bool, getenv_int, LOG_DIRECTORY, MODULES_DIRECTORY
 
 
 @dataclass

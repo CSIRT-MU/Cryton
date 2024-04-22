@@ -22,18 +22,13 @@ class Module(ModuleBase):
                     "serialize_output": {"type": "boolean"},
                 },
                 "required": ["target"],
-                "additionalProperties": False
+                "additionalProperties": False,
             },
             {
-                "properties": {
-                    "command": {
-                        "type": "string",
-                        "description": "Command to run (with executable)."
-                    }
-                },
+                "properties": {"command": {"type": "string", "description": "Command to run (with executable)."}},
                 "required": ["command"],
-                "additionalProperties": False
-            }
+                "additionalProperties": False,
+            },
         ],
     }
 
@@ -55,16 +50,22 @@ class Module(ModuleBase):
             self._data.output = f"WPScan couldn't start. Original error: {str(err)}"
             return self._data
 
-        wpscan_std_out = wpscan_run.stdout.decode('utf-8')
-        wpscan_std_err = wpscan_run.stderr.decode('utf-8')
+        wpscan_std_out = wpscan_run.stdout.decode("utf-8")
+        wpscan_std_err = wpscan_run.stderr.decode("utf-8")
 
         try:
             self._data.serialized_output = json.loads(wpscan_std_out)
         except json.decoder.JSONDecodeError:
             self._data.output = wpscan_std_out
 
-        failure_strings = ["unrecognized option", "option requires an argument", "seems to be down",
-                           "but does not seem to be running WordPress.", "has not been found", "Scan Aborted"]
+        failure_strings = [
+            "unrecognized option",
+            "option requires an argument",
+            "seems to be down",
+            "but does not seem to be running WordPress.",
+            "has not been found",
+            "Scan Aborted",
+        ]
         if not any(failure_string in wpscan_std_out for failure_string in failure_strings):
             self._data.result = Result.OK
 
@@ -78,10 +79,10 @@ def parse_command(arguments) -> list[str]:
     if "command" in arguments:
         return arguments["command"].split(" ")
 
-    serialized_output: bool = arguments.get('serialized_output', True)
-    target: str = arguments.get('target')
-    command_options: str = arguments.get('options')
-    api_token: str = arguments.get('api_token')
+    serialized_output: bool = arguments.get("serialized_output", True)
+    target: str = arguments.get("target")
+    command_options: str = arguments.get("options")
+    api_token: str = arguments.get("api_token")
 
     command = ["wpscan"]
 
@@ -95,6 +96,6 @@ def parse_command(arguments) -> list[str]:
         command += ["--api-token", api_token]
 
     if command_options is not None:
-        command += command_options.split(' ')
+        command += command_options.split(" ")
 
     return command

@@ -11,6 +11,7 @@ class ModuleOutput:
     """
     Standardized module output.
     """
+
     result: Result = Result.FAIL
     output: str = ""
     serialized_output: dict = field(default_factory=dict)

@@ -14,12 +14,13 @@ from cryton.hive.models.stage import StageExecution
 @extend_schema_view(
     list=extend_schema(description="List Stage executions.", parameters=[serializers.StageExecutionListSerializer]),
     retrieve=extend_schema(description="Get existing Stage execution."),
-    destroy=extend_schema(description="Delete Stage execution.")
+    destroy=extend_schema(description="Delete Stage execution."),
 )
 class StageExecutionViewSet(util.ExecutionViewSet):
     """
     StageExecution ViewSet.
     """
+
     queryset = StageExecutionModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.StageExecutionSerializer
@@ -37,11 +38,11 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         responses={
             200: serializers.DetailDictionarySerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["get"], detail=True)
     def report(self, _, **kwargs):
-        stage_execution_id = kwargs.get('pk')
+        stage_execution_id = kwargs.get("pk")
         try:
             stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
         except core_exceptions.StageExecutionObjectDoesNotExist:
@@ -57,11 +58,11 @@ class StageExecutionViewSet(util.ExecutionViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def kill(self, _, **kwargs):
-        stage_execution_id = kwargs.get('pk')
+        stage_execution_id = kwargs.get("pk")
 
         try:
             stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
@@ -71,7 +72,7 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {'detail': '{}'.format("Stage execution {} is terminated.".format(stage_execution_id))}
+        msg = {"detail": "{}".format("Stage execution {} is terminated.".format(stage_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -81,17 +82,17 @@ class StageExecutionViewSet(util.ExecutionViewSet):
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def re_execute(self, request: Request, **kwargs):
-        stage_execution_id = kwargs.get('pk')
+        stage_execution_id = kwargs.get("pk")
         try:
             stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
         except core_exceptions.StageExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
 
-        immediately = request.data.get('immediately', True)
+        immediately = request.data.get("immediately", True)
         if not isinstance(immediately, bool):
             raise exceptions.ValidationError("Parameter 'immediately' must be of type 'bool'.")
 
@@ -100,5 +101,5 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(str(ex))
 
-        msg = {'detail': '{}'.format("Stage execution {} re-executed.".format(stage_execution_id))}
+        msg = {"detail": "{}".format("Stage execution {} re-executed.".format(stage_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)

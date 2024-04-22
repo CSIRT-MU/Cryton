@@ -39,48 +39,35 @@ class Module(ModuleBase):
                                 "extrainfo": {"type": "string"},
                                 "ostype": {"type": "string"},
                                 "method": {"type": "string"},
-                                "conf": {"type": "string"}
+                                "conf": {"type": "string"},
                             },
-                            "additionalProperties": False
-                        }
+                            "additionalProperties": False,
+                        },
                     },
-                    "additionalProperties": False
+                    "additionalProperties": False,
                 },
-                "description": ""
-            }
+                "description": "",
+            },
         },
         "oneOf": [
             {
                 "properties": {
-                    "target": {
-                        "type": "string",
-                        "description": "Scan target."
-                    },
-                    "ports": {
-                        "type": "array",
-                        "items": {"type": "integer"},
-                        "description": ""
-                    },
-                    "options": {
-                        "type": "string",
-                        "description": "Additional nmap parameters."
-                    }
+                    "target": {"type": "string", "description": "Scan target."},
+                    "ports": {"type": "array", "items": {"type": "integer"}, "description": ""},
+                    "options": {"type": "string", "description": "Additional nmap parameters."},
                 },
                 "required": ["target"],
                 # "additionalProperties": False  # TODO: solve
             },
             {
                 "properties": {
-                    "command": {
-                        "type": "string",
-                        "description": "Command to run (with executable)."
-                    },
-                    "serialize_output": {"type": "boolean"}
+                    "command": {"type": "string", "description": "Command to run (with executable)."},
+                    "serialize_output": {"type": "boolean"},
                 },
                 "required": ["command"],
                 # "additionalProperties": False  # TODO: solve
-            }
-        ]
+            },
+        ],
     }
 
     def __init__(self, arguments: dict):
@@ -138,8 +125,9 @@ class Module(ModuleBase):
         return self._data
 
 
-def execute_scan(target: str, options: Optional[str], ports: Optional[list], nmap_client: nmap3.Nmap,
-                 timeout: int) -> ElementTree.Element:
+def execute_scan(
+    target: str, options: Optional[str], ports: Optional[list], nmap_client: nmap3.Nmap, timeout: int
+) -> ElementTree.Element:
     """
     Executes Nmap scan from predefined parameters.
     :param target: Target of nmap scan
