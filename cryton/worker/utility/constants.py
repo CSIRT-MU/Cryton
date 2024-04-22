@@ -56,15 +56,15 @@ PAYLOAD_ARGUMENTS = "payload_arguments"
 
 # Step types
 STEP_TYPE = "step_type"
-STEP_TYPE_WORKER_EXECUTE = 'worker/execute'
-STEP_TYPE_DEPLOY_AGENT = 'empire/agent-deploy'
-STEP_TYPE_EMPIRE_EXECUTE = 'empire/execute'
+STEP_TYPE_WORKER_EXECUTE = "worker/execute"
+STEP_TYPE_DEPLOY_AGENT = "empire/agent-deploy"
+STEP_TYPE_EMPIRE_EXECUTE = "empire/execute"
 
 # RabbitMQ message keywords
 EVENT_T = "event_t"
 EVENT_V = "event_v"
 ARGUMENTS = "arguments"
-DEFAULT_MSG_PROPERTIES = {"content_encoding": "utf-8", 'timestamp': datetime.now()}
+DEFAULT_MSG_PROPERTIES = {"content_encoding": "utf-8", "timestamp": datetime.now()}
 TARGET_IP = "target_ip"
 SESSION_LIST = "session_list"
 MODULE_LIST = "module_list"
@@ -90,11 +90,11 @@ STAGER_OPTIONS = "stager_options"
 LISTENER_OPTIONS = "listener_options"
 
 # Session system keywords
-SESSION_ID = 'session_id'
-CREATE_NAMED_SESSION = 'create_named_session'
-USE_NAMED_SESSION = 'use_named_session'
-USE_ANY_SESSION_TO_TARGET = 'use_any_session_to_target'
-SSH_CONNECTION = 'ssh_connection'
+SESSION_ID = "session_id"
+CREATE_NAMED_SESSION = "create_named_session"
+USE_NAMED_SESSION = "use_named_session"
+USE_ANY_SESSION_TO_TARGET = "use_any_session_to_target"
+SSH_CONNECTION = "ssh_connection"
 
 # Other constants
 RESULT = "result"
@@ -113,16 +113,46 @@ REPLY_TO = "reply_to"
 # ControlTask validation schemas
 EVENT_VALIDATE_MODULE_SCHEMA = {MODULE: str, MODULE_ARGUMENTS: dict}
 EVENT_LIST_MODULES_SCHEMA = dict
-EVENT_LIST_SESSIONS_SCHEMA = {Optional(Or("type", "tunnel_local", "tunnel_peer", "via_exploit", "via_payload", "desc",
-                                          "info", "workspace", "session_host", "session_port", "target_host",
-                                          "username", "uuid", "exploit_uuid", "routes", "arch")): Or(str, int)}
+EVENT_LIST_SESSIONS_SCHEMA = {
+    Optional(
+        Or(
+            "type",
+            "tunnel_local",
+            "tunnel_peer",
+            "via_exploit",
+            "via_payload",
+            "desc",
+            "info",
+            "workspace",
+            "session_host",
+            "session_port",
+            "target_host",
+            "username",
+            "uuid",
+            "exploit_uuid",
+            "routes",
+            "arch",
+        )
+    ): Or(str, int)
+}
 EVENT_KILL_STEP_EXECUTION_SCHEMA = {"correlation_id": str}
 EVENT_HEALTH_CHECK_SCHEMA = {}
-EVENT_ADD_TRIGGER_HTTP_SCHEMA = {"host": str, "port": int, "trigger_type": "HTTP", "reply_to": str, "routes": [
-    {"path": str, "method": str, "parameters": [{"name": str, "value": str}]}]}
-EVENT_ADD_TRIGGER_MSF_SCHEMA = {"host": str, "port": int, "exploit": str,
-                                Optional("exploit_arguments"): {Optional(str): Or(str, int)},
-                                  "payload": str, Optional("payload_arguments"): {Optional(str): Or(str, int)},
-                                  "trigger_type": "MSF", "reply_to": str}
+EVENT_ADD_TRIGGER_HTTP_SCHEMA = {
+    "host": str,
+    "port": int,
+    "trigger_type": "HTTP",
+    "reply_to": str,
+    "routes": [{"path": str, "method": str, "parameters": [{"name": str, "value": str}]}],
+}
+EVENT_ADD_TRIGGER_MSF_SCHEMA = {
+    "host": str,
+    "port": int,
+    "exploit": str,
+    Optional("exploit_arguments"): {Optional(str): Or(str, int)},
+    "payload": str,
+    Optional("payload_arguments"): {Optional(str): Or(str, int)},
+    "trigger_type": "MSF",
+    "reply_to": str,
+}
 EVENT_REMOVE_TRIGGER_SCHEMA = {"trigger_id": str}
 EVENT_LIST_TRIGGERS_SCHEMA = {}

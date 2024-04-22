@@ -15,12 +15,13 @@ from cryton.hive.models.plan import Plan, PlanExecution
 @extend_schema_view(
     list=extend_schema(description="List Stages.", parameters=[serializers.ListSerializer]),
     retrieve=extend_schema(description="Get existing Stage."),
-    destroy=extend_schema(description="Delete Stage.")
+    destroy=extend_schema(description="Delete Stage."),
 )
 class StageViewSet(util.InstanceFullViewSet):
     """
     Stage ViewSet.
     """
+
     queryset = StageModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.StageSerializer
@@ -39,8 +40,8 @@ class StageViewSet(util.InstanceFullViewSet):
         responses={
             200: serializers.CreateDetailSerializer,
             400: serializers.DetailStringSerializer,
-            404: serializers.DetailStringSerializer
-        }
+            404: serializers.DetailStringSerializer,
+        },
     )
     def create(self, request: Request, *args, **kwargs):
         try:  # Get Plan ID and check if the Plan exists
@@ -70,16 +71,13 @@ class StageViewSet(util.InstanceFullViewSet):
 
         stage_id = creator.create_stage(stage_data, plan_id)
 
-        msg = {'id': stage_id, 'detail': 'Stage successfully created.'}
+        msg = {"id": stage_id, "detail": "Stage successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         description="Validate Stage YAML. There is no limit or naming convention for inventory files.",
         request=serializers.StageValidateSerializer,
-        responses={
-            200: serializers.DetailStringSerializer,
-            400: serializers.DetailStringSerializer
-        }
+        responses={200: serializers.DetailStringSerializer, 400: serializers.DetailStringSerializer},
     )
     @action(methods=["post"], detail=False)
     def validate(self, request: Request):
@@ -87,7 +85,7 @@ class StageViewSet(util.InstanceFullViewSet):
 
         # Get dynamic parameter from request
         try:
-            dynamic = request.data.get('dynamic', '').lower() == 'true'
+            dynamic = request.data.get("dynamic", "").lower() == "true"
         except AttributeError:
             raise exceptions.ValidationError(f"The dynamic parameter must be string and can contain `true`/`false`.")
 
@@ -96,7 +94,7 @@ class StageViewSet(util.InstanceFullViewSet):
         except core_exceptions.ValidationError as ex:
             raise exceptions.ValidationError(f"Stage is not valid. Original error: {ex}")
 
-        msg = {'detail': 'Stage is valid.'}
+        msg = {"detail": "Stage is valid."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -105,8 +103,8 @@ class StageViewSet(util.InstanceFullViewSet):
         responses={
             200: serializers.ExecutionCreateDetailSerializer,
             400: serializers.DetailStringSerializer,
-            404: serializers.DetailStringSerializer
-        }
+            404: serializers.DetailStringSerializer,
+        },
     )
     @action(methods=["post"], detail=True)
     def start_trigger(self, request: Request, **kwargs):
@@ -136,16 +134,18 @@ class StageViewSet(util.InstanceFullViewSet):
             )
 
         if plan_ex.model.stage_executions.filter(stage_model=stage_obj.model).exists():
-            raise exceptions.ValidationError("Multiple instances of the same Stage can't run under the same Plan "
-                                             "execution.")
+            raise exceptions.ValidationError(
+                "Multiple instances of the same Stage can't run under the same Plan " "execution."
+            )
 
         if plan_ex.state not in states.STAGE_PLAN_EXECUTE_STATES:
-            raise exceptions.ApiWrongObjectState(f"Plan execution's state must be "
-                                                 f"{', or'.join(states.STAGE_PLAN_EXECUTE_STATES)}.")
+            raise exceptions.ApiWrongObjectState(
+                f"Plan execution's state must be " f"{', or'.join(states.STAGE_PLAN_EXECUTE_STATES)}."
+            )
 
         # Create and start Stage trigger
         stage_ex_obj = StageExecution(stage_model_id=stage_id, plan_execution_id=plan_ex_id)
         stage_ex_obj.trigger.start()
 
-        msg = {'detail': 'Started Stage trigger.', "execution_id": stage_ex_obj.model.id}
+        msg = {"detail": "Started Stage trigger.", "execution_id": stage_ex_obj.model.id}
         return Response(msg, status=status.HTTP_200_OK)

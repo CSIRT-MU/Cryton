@@ -21,7 +21,7 @@ from django.utils import timezone
 
 class Plan:
     def __init__(self, **kwargs):
-        plan_model_id = kwargs.get('plan_model_id')
+        plan_model_id = kwargs.get("plan_model_id")
         if plan_model_id:
             try:
                 self.model = PlanModel.objects.get(id=plan_model_id)
@@ -91,7 +91,7 @@ class Plan:
         model = self.model
         model.meta = value
         model.save()
-        
+
     @staticmethod
     def filter(**kwargs) -> QuerySet:
         """
@@ -122,34 +122,38 @@ class Plan:
         session_names = []
         agent_names = []
 
-        for stage_dict in plan_dict.get('stages'):
+        for stage_dict in plan_dict.get("stages"):
             # validate unique stage names in plan
-            if (stage_name := stage_dict['name']) in stage_names:
-                raise exceptions.DuplicateNameInPlan(unique_argument="Stage", duplicate_name=stage_name,
-                                                     plan_name=plan_dict.get("name"))
+            if (stage_name := stage_dict["name"]) in stage_names:
+                raise exceptions.DuplicateNameInPlan(
+                    unique_argument="Stage", duplicate_name=stage_name, plan_name=plan_dict.get("name")
+                )
             stage_names.append(stage_name)
 
             if stage_dict.get(constants.TRIGGER_TYPE) == constants.MSF_LISTENER:
                 session_names.append(f"{stage_name}_session")
 
-            for step in stage_dict.get('steps'):
+            for step in stage_dict.get("steps"):
                 # validate unique step names in plan
-                if (step_name := step['name']) in step_names:
-                    raise exceptions.DuplicateNameInPlan(unique_argument="Step", duplicate_name=step_name,
-                                                         plan_name=plan_dict.get("name"))
+                if (step_name := step["name"]) in step_names:
+                    raise exceptions.DuplicateNameInPlan(
+                        unique_argument="Step", duplicate_name=step_name, plan_name=plan_dict.get("name")
+                    )
                 step_names.append(step_name)
 
                 # validate unique empire agent names in plan
                 if step[constants.STEP_TYPE] == constants.STEP_TYPE_DEPLOY_AGENT:
                     if (agent_name := step[constants.ARGUMENTS][constants.AGENT_NAME]) in agent_names:
-                        raise exceptions.DuplicateNameInPlan(unique_argument="Empire Agent", duplicate_name=agent_name,
-                                                             plan_name=plan_dict.get("name"))
+                        raise exceptions.DuplicateNameInPlan(
+                            unique_argument="Empire Agent", duplicate_name=agent_name, plan_name=plan_dict.get("name")
+                        )
                     agent_names.append(agent_name)
 
                 if constants.CREATE_NAMED_SESSION in step[constants.ARGUMENTS]:
                     if (session_name := step[constants.ARGUMENTS][constants.CREATE_NAMED_SESSION]) in session_names:
-                        raise exceptions.DuplicateNameInPlan(unique_argument="Session", duplicate_name=session_name,
-                                                             plan_name=plan_dict.get("name"))
+                        raise exceptions.DuplicateNameInPlan(
+                            unique_argument="Session", duplicate_name=session_name, plan_name=plan_dict.get("name")
+                        )
                     session_names.append(session_name)
 
     @staticmethod
@@ -164,19 +168,19 @@ class Plan:
             exceptions.StepValidationError
         :return: True if dictionary is valid
         """
-        conf_schema = Schema({
-            "name": str,
-            SchemaOptional("owner"): str,
-            SchemaOptional("dynamic"): bool,
-            SchemaOptional("meta"): dict,
-            SchemaOptional('settings'): {
-                SchemaOptional(constants.SEPARATOR): str
-            },
-            "stages": list
-        })
+        conf_schema = Schema(
+            {
+                "name": str,
+                SchemaOptional("owner"): str,
+                SchemaOptional("dynamic"): bool,
+                SchemaOptional("meta"): dict,
+                SchemaOptional("settings"): {SchemaOptional(constants.SEPARATOR): str},
+                "stages": list,
+            }
+        )
 
         try:
-            logger.logger.debug("Validating plan", plan_name=plan_dict.get('name'))
+            logger.logger.debug("Validating plan", plan_name=plan_dict.get("name"))
             conf_schema.validate(plan_dict)
         except SchemaError as ex:
             raise exceptions.PlanValidationError(ex, plan_name=plan_dict.get("name"))
@@ -192,15 +196,16 @@ class Plan:
 
         # Check if there is at least one Stage when using static Plan
         if not dynamic and len(stage_names) == 0:
-            raise exceptions.PlanValidationError("Plan has to contain at least one Stage.",
-                                                 plan_name=plan_dict.get("name"))
+            raise exceptions.PlanValidationError(
+                "Plan has to contain at least one Stage.", plan_name=plan_dict.get("name")
+            )
 
         # validate stage dependencies
         for stage_dependency in set(stage_dependencies):
             if stage_dependency not in stage_names:
                 raise exceptions.PlanValidationError(
-                    f"Stage dependency '{stage_dependency}' does not exist in the "
-                    f"plan", plan_name=plan_dict["name"])
+                    f"Stage dependency '{stage_dependency}' does not exist in the " f"plan", plan_name=plan_dict["name"]
+                )
 
         Plan.validate_unique_values(plan_dict)
 
@@ -213,23 +218,26 @@ class Plan:
         for stage_obj in self.model.stages.all():
             steps = []
             for step_obj in stage_obj.steps.all():
-                step_data = model_to_dict(step_obj, exclude=['stage_model'])
+                step_data = model_to_dict(step_obj, exclude=["stage_model"])
 
                 successors = []
                 for successor_obj in step_obj.successors.all():
-                    successor_data = {'type': successor_obj.type, 'value': successor_obj.value,
-                                      'step': successor_obj.successor.name}
+                    successor_data = {
+                        "type": successor_obj.type,
+                        "value": successor_obj.value,
+                        "step": successor_obj.successor.name,
+                    }
                     successors.append(successor_data)
 
-                step_data['next'] = successors
+                step_data["next"] = successors
                 steps.append(step_data)
 
-            stage_data = model_to_dict(stage_obj, exclude=['plan_model'])
-            stage_data['steps'] = steps
+            stage_data = model_to_dict(stage_obj, exclude=["plan_model"])
+            stage_data["steps"] = steps
             stages.append(stage_data)
 
         plan_data = model_to_dict(self.model)
-        plan_data['stages'] = stages
+        plan_data["stages"] = stages
 
         return plan_data
 
@@ -268,8 +276,12 @@ class PlanExecution:
         with transaction.atomic():
             PlanExecutionModel.objects.select_for_update().get(id=self.model.id)
             if st.PlanStateMachine(self.model.id).validate_transition(self.state, value):
-                logger.logger.debug("Plan execution changed state", state_from=self.state, state_to=value,
-                                    plan_execution_id=self.model.id)
+                logger.logger.debug(
+                    "Plan execution changed state",
+                    state_from=self.state,
+                    state_to=value,
+                    plan_execution_id=self.model.id,
+                )
                 model = self.model
                 model.state = value
                 model.save()
@@ -343,8 +355,9 @@ class PlanExecution:
         Generate directory for storing execution evidence.
         :return: None
         """
-        worker_evidence_directory = os.path.join(SETTINGS.evidence_directory, f"run_{self.model.run_id}",
-                                                 f"worker_{self.model.worker.name}")
+        worker_evidence_directory = os.path.join(
+            SETTINGS.evidence_directory, f"run_{self.model.run_id}", f"worker_{self.model.worker.name}"
+        )
 
         os.makedirs(worker_evidence_directory, exist_ok=True)
         self.evidence_directory = worker_evidence_directory
@@ -354,9 +367,9 @@ class PlanExecution:
         Prepare execution for each Stage.
         :return: None
         """
-        stage_execution_kwargs = {'plan_execution': self.model}
+        stage_execution_kwargs = {"plan_execution": self.model}
         for stage_obj in self.model.plan_model.stages.all():
-            stage_execution_kwargs.update({'stage_model': stage_obj})
+            stage_execution_kwargs.update({"stage_model": stage_obj})
             StageExecution(**stage_execution_kwargs)
 
     def schedule(self, schedule_time: datetime) -> None:
@@ -371,13 +384,14 @@ class PlanExecution:
         logger.logger.debug("Scheduling Plan execution", plan_execution_id=self.model.id)
         st.PlanStateMachine(self.model.id).validate_state(self.state, st.PLAN_SCHEDULE_STATES)
 
-        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.models.plan:execution", [self.model.id],
-                                                             schedule_time)
+        self.aps_job_id = scheduler_client.schedule_function(
+            "cryton.hive.models.plan:execution", [self.model.id], schedule_time
+        )
 
         if isinstance(self.aps_job_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)
             self.state = st.SCHEDULED
-            logger.logger.info("Plan execution scheduled", plan_execution_id=self.model.id, status='success')
+            logger.logger.info("Plan execution scheduled", plan_execution_id=self.model.id, status="success")
         else:
             raise RuntimeError("Could not schedule Plan execution")
 
@@ -398,7 +412,7 @@ class PlanExecution:
 
         # Start triggers
         self.start_triggers()
-        logger.logger.info("Plan execution executed", plan_execution_id=self.model.id, status='success')
+        logger.logger.info("Plan execution executed", plan_execution_id=self.model.id, status="success")
 
     def unschedule(self) -> None:
         """
@@ -411,7 +425,7 @@ class PlanExecution:
         scheduler_client.remove_job(self.aps_job_id)
         self.aps_job_id, self.schedule_time = "", None
         self.state = st.PENDING
-        logger.logger.info("Plan execution unscheduled", plan_execution_id=self.model.id, status='success')
+        logger.logger.info("Plan execution unscheduled", plan_execution_id=self.model.id, status="success")
 
     def reschedule(self, new_time: datetime) -> None:
         """
@@ -428,7 +442,7 @@ class PlanExecution:
 
         self.unschedule()
         self.schedule(new_time)
-        logger.logger.info("Plan execution rescheduled", plan_execution_id=self.model.id, status='success')
+        logger.logger.info("Plan execution rescheduled", plan_execution_id=self.model.id, status="success")
 
     def pause(self) -> None:
         """
@@ -439,7 +453,7 @@ class PlanExecution:
         st.PlanStateMachine(self.model.id).validate_state(self.state, st.PLAN_PAUSE_STATES)
 
         self.state = st.PAUSING
-        logger.logger.info("Plan execution pausing", plan_execution_id=self.model.id, status='success')
+        logger.logger.info("Plan execution pausing", plan_execution_id=self.model.id, status="success")
 
         for stage_ex in self.model.stage_executions.all():  # Pause StageExecutions.
             StageExecution(stage_execution_id=stage_ex.id).trigger.pause()
@@ -447,7 +461,7 @@ class PlanExecution:
         if not self.model.stage_executions.exclude(state__in=st.PLAN_STAGE_PAUSE_STATES).exists():
             self.state = st.PAUSED
             self.pause_time = timezone.now()
-            logger.logger.info("Plan execution paused", plan_execution_id=self.model.id, status='success')
+            logger.logger.info("Plan execution paused", plan_execution_id=self.model.id, status="success")
 
     def unpause(self) -> None:
         logger.logger.debug("Unpausing Plan execution", plan_execution_id=self.model.id)
@@ -458,8 +472,10 @@ class PlanExecution:
 
         for stage_execution_model in self.model.stage_executions.all():
             stage_ex = StageExecution(stage_execution_id=stage_execution_model.id)
-            if stage_ex.model.stage_model.trigger_type == constants.DELTA \
-                    and stage_ex.state in st.STAGE_SCHEDULE_STATES:
+            if (
+                stage_ex.model.stage_model.trigger_type == constants.DELTA
+                and stage_ex.state in st.STAGE_SCHEDULE_STATES
+            ):
                 stage_ex.trigger.start()
             else:
                 try:
@@ -475,7 +491,7 @@ class PlanExecution:
         """
         logger.logger.debug("Validating Plan execution modules", plan_execution_id=self.model.id)
 
-        for stage_execution_id in self.model.stage_executions.values_list('id', flat=True):
+        for stage_execution_id in self.model.stage_executions.values_list("id", flat=True):
             stage_execution = StageExecution(stage_execution_id=stage_execution_id)
             stage_execution.validate_modules()
         logger.logger.info("Plan execution modules validated", plan_execution_id=self.model.id)
@@ -491,9 +507,10 @@ class PlanExecution:
         for stage_execution_model in self.model.stage_executions.all():
             stage_execution = StageExecution(stage_execution_id=stage_execution_model.id)
             stage_execution.trigger.start()
-            logger.logger.debug("Trigger started", plan_execution_id=self.model.id,
-                                trigger=str(stage_execution.trigger))
-        logger.logger.info("Triggers started", plan_execution_id=self.model.id, status='success')
+            logger.logger.debug(
+                "Trigger started", plan_execution_id=self.model.id, trigger=str(stage_execution.trigger)
+            )
+        logger.logger.info("Triggers started", plan_execution_id=self.model.id, status="success")
 
     @staticmethod
     def filter(**kwargs) -> QuerySet:
@@ -519,16 +536,25 @@ class PlanExecution:
         logger.logger.debug("Generating report", plan_execution_id=self.model.id)
 
         report_dict = dict()
-        report_dict.update({'id': self.model.id, 'plan_name': self.model.plan_model.name,
-                            'meta': self.model.plan_model.meta, 'state': self.state,
-                            'schedule_time': self.schedule_time, 'start_time': self.start_time,
-                            'finish_time': self.finish_time, 'pause_time': self.pause_time,
-                            'worker_id': self.model.worker_id, 'worker_name': self.model.worker.name,
-                            'evidence_directory': self.evidence_directory})
-        report_dict.update({'stage_executions': []})
-        for stage_execution_obj in StageExecutionModel.objects.filter(plan_execution_id=self.model.id).order_by('id'):
+        report_dict.update(
+            {
+                "id": self.model.id,
+                "plan_name": self.model.plan_model.name,
+                "meta": self.model.plan_model.meta,
+                "state": self.state,
+                "schedule_time": self.schedule_time,
+                "start_time": self.start_time,
+                "finish_time": self.finish_time,
+                "pause_time": self.pause_time,
+                "worker_id": self.model.worker_id,
+                "worker_name": self.model.worker.name,
+                "evidence_directory": self.evidence_directory,
+            }
+        )
+        report_dict.update({"stage_executions": []})
+        for stage_execution_obj in StageExecutionModel.objects.filter(plan_execution_id=self.model.id).order_by("id"):
             stage_ex_report = StageExecution(stage_execution_id=stage_execution_obj.id).report()
-            report_dict['stage_executions'].append(stage_ex_report)
+            report_dict["stage_executions"].append(stage_ex_report)
 
         return report_dict
 
@@ -564,8 +590,9 @@ class PlanExecution:
 
         self.finish_time = timezone.now()
         self.state = st.TERMINATED
-        logger.logger.info("Plan execution killed", plan_execution_id=self.model.id,
-                           plan_id=self.model.plan_model_id, status='success')
+        logger.logger.info(
+            "Plan execution killed", plan_execution_id=self.model.id, plan_id=self.model.plan_model_id, status="success"
+        )
 
         return None
 

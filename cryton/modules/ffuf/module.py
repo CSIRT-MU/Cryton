@@ -13,37 +13,25 @@ class Module(ModuleBase):
         "oneOf": [
             {
                 "properties": {
-                    "target": {
-                        "type": "string",
-                        "description": "Scan target."
-                    },
-                    "wordlist": {
-                        "type": "string",
-                        "description": "The wordlist for fuzzing the webserver."
-                    },
-                    "options": {
-                        "type": "string",
-                        "description": "Additional FFUF parameters."
-                    },
-                    "serialize_output": {
-                        "type": "boolean",
-                        "description": "Use FFUF's serialization."
-                    }
+                    "target": {"type": "string", "description": "Scan target."},
+                    "wordlist": {"type": "string", "description": "The wordlist for fuzzing the webserver."},
+                    "options": {"type": "string", "description": "Additional FFUF parameters."},
+                    "serialize_output": {"type": "boolean", "description": "Use FFUF's serialization."},
                 },
                 "required": ["target", "wordlist"],
-                "additionalProperties": False
+                "additionalProperties": False,
             },
             {
                 "properties": {
                     "command": {
                         "type": "string",
-                        "description": "Command to run with syntax as in command line (with executable)."
+                        "description": "Command to run with syntax as in command line (with executable).",
                     }
                 },
                 "required": ["command"],
-                "additionalProperties": False
-            }
-        ]
+                "additionalProperties": False,
+            },
+        ],
     }
 
     def __init__(self, arguments: dict):

@@ -54,10 +54,10 @@ class LoggerWrapper:
                 structlog.processors.StackInfoRenderer(),
                 structlog.processors.format_exc_info,
                 structlog.processors.UnicodeDecoder(),
-                structlog.processors.JSONRenderer()
+                structlog.processors.JSONRenderer(),
             ],
             logger_factory=structlog.stdlib.LoggerFactory(),
-            cache_logger_on_first_use=True
+            cache_logger_on_first_use=True,
         )
 
     def set_config(self):
@@ -65,17 +65,13 @@ class LoggerWrapper:
             {
                 "version": 1,
                 "disable_existing_loggers": False,
-                "formatters": {
-                    "simple": {
-                        "format": "%(message)s"
-                    }
-                },
+                "formatters": {"simple": {"format": "%(message)s"}},
                 "handlers": {
                     "console": {
                         "class": "logging.StreamHandler",
                         "level": "DEBUG",
                         "formatter": "simple",
-                        "stream": "ext://sys.stdout"
+                        "stream": "ext://sys.stdout",
                     },
                     "file": {
                         "class": "logging.handlers.RotatingFileHandler",
@@ -84,31 +80,19 @@ class LoggerWrapper:
                         "filename": path.join(LOG_DIRECTORY, self.file_name),
                         "maxBytes": 10485760,
                         "backupCount": 20,
-                        "encoding": "utf8"
-                    }
-                },
-                "root": {
-                    "level": "NOTSET",
-                    "handlers": [],
-                    "propagate": True
-                },
-                "loggers": {
-                    f"{self.name}": {
-                        "level": "INFO",
-                        "handlers": ["prod_logger"],
-                        "propagate": True
+                        "encoding": "utf8",
                     },
+                },
+                "root": {"level": "NOTSET", "handlers": [], "propagate": True},
+                "loggers": {
+                    f"{self.name}": {"level": "INFO", "handlers": ["prod_logger"], "propagate": True},
                     f"{self.name}-debug": {
                         "level": "DEBUG",
                         "handlers": ["debug_logger", "console"],
-                        "propagate": True
+                        "propagate": True,
                     },
-                    "cryton-hive-test": {
-                        "level": "DEBUG",
-                        "handlers": ["console"],
-                        "propagate": False
-                    }
-                }
+                    "cryton-hive-test": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+                },
             }
         )
 
@@ -123,5 +107,6 @@ class LoggedProcess(Process):
         root.setLevel(logging.DEBUG)
         if not root.hasHandlers():
             root.addHandler(queue_handler)
+
 
 logger = LoggerWrapper().logger

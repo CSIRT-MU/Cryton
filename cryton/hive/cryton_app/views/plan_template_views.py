@@ -10,25 +10,27 @@ from cryton.hive.cryton_app.models import PlanTemplateModel
 
 @extend_schema_view(
     list=extend_schema(description="List templates.", parameters=[serializers.ListSerializer]),
-    create=extend_schema(description="Create new template.",
-                         examples=[
-                             OpenApiExample(
-                                 "File upload",
-                                 description="Upload template file.",
-                                 value={
-                                     'file': "file content in bytes format",
-                                 },
-                                 request_only=True
-                             )
-                         ],
-                         ),
+    create=extend_schema(
+        description="Create new template.",
+        examples=[
+            OpenApiExample(
+                "File upload",
+                description="Upload template file.",
+                value={
+                    "file": "file content in bytes format",
+                },
+                request_only=True,
+            )
+        ],
+    ),
     retrieve=extend_schema(description="Get existing template."),
-    destroy=extend_schema(description="Delete template.")
+    destroy=extend_schema(description="Delete template."),
 )
 class PlanTemplateViewSet(util.InstanceFullViewSet):
     """
     Plan's template ViewSet.
     """
+
     queryset = PlanTemplateModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.PlanTemplateSerializer
@@ -47,7 +49,7 @@ class PlanTemplateViewSet(util.InstanceFullViewSet):
             200: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
             500: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["get"], detail=True)
     def get_template(self, _, **kwargs):

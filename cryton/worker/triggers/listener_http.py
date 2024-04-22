@@ -13,6 +13,7 @@ class MyWSGIRefServer(bottle.ServerAdapter):
     """
     WSGIRef server wrapper.
     """
+
     server = None
 
     def run(self, handler) -> None:
@@ -22,9 +23,12 @@ class MyWSGIRefServer(bottle.ServerAdapter):
         :return: None
         """
         if self.quiet:
+
             class QuietHandler(WSGIRequestHandler):
-                def log_request(*args, **kw): pass
-            self.options['handler_class'] = QuietHandler
+                def log_request(*args, **kw):
+                    pass
+
+            self.options["handler_class"] = QuietHandler
         self.server = make_server(self.host, self.port, handler, **self.options)
         self.server.serve_forever()
 
@@ -38,7 +42,7 @@ class MyWSGIRefServer(bottle.ServerAdapter):
 
 
 class HTTPListener(Listener):
-    def __init__(self,  main_queue: PriorityQueue, host: str, port: int):
+    def __init__(self, main_queue: PriorityQueue, host: str, port: int):
         """
         Class for HTTPListeners (wrapper for Bottle).
         :param main_queue: Worker's queue for internal request processing
@@ -46,10 +50,7 @@ class HTTPListener(Listener):
         :param port: Listener port
         """
         super().__init__(main_queue)
-        self._identifiers = {
-            co.LISTENER_HOST: host,
-            co.LISTENER_PORT: port
-        }
+        self._identifiers = {co.LISTENER_HOST: host, co.LISTENER_PORT: port}
         self._app = bottle.Bottle()
         self._stopped = True
         self.server: Optional[MyWSGIRefServer] = None
@@ -90,8 +91,9 @@ class HTTPListener(Listener):
         :param trigger: Desired trigger
         :return: None
         """
-        logger.logger.debug("Removing trigger from HTTPListener.", identifiers=self._identifiers,
-                            trigger_id=trigger.get(co.TRIGGER_ID))
+        logger.logger.debug(
+            "Removing trigger from HTTPListener.", identifiers=self._identifiers, trigger_id=trigger.get(co.TRIGGER_ID)
+        )
         with self._triggers_lock:
             self._triggers.remove(trigger)
             self._restart()
@@ -132,8 +134,10 @@ class HTTPListener(Listener):
                         if request_parameters is not None:
                             message_body = {
                                 co.EVENT_T: co.EVENT_TRIGGER_STAGE,
-                                co.EVENT_V: {co.TRIGGER_ID: trigger.get(co.TRIGGER_ID),
-                                             co.TRIGGER_PARAMETERS: request_parameters}
+                                co.EVENT_V: {
+                                    co.TRIGGER_ID: trigger.get(co.TRIGGER_ID),
+                                    co.TRIGGER_PARAMETERS: request_parameters,
+                                },
                             }
                             self._notify(trigger.get(co.REPLY_TO), message_body)
 
@@ -171,8 +175,9 @@ class HTTPListener(Listener):
         :param identifiers: Data containing identifiers
         :return: True if identifiers match Listener's
         """
-        if self._identifiers[co.LISTENER_HOST] == identifiers.get(co.LISTENER_HOST) and \
-                self._identifiers[co.LISTENER_PORT] == identifiers.get(co.LISTENER_PORT):
+        if self._identifiers[co.LISTENER_HOST] == identifiers.get(co.LISTENER_HOST) and self._identifiers[
+            co.LISTENER_PORT
+        ] == identifiers.get(co.LISTENER_PORT):
             return True
         return False
 
@@ -196,8 +201,12 @@ class HTTPListener(Listener):
             host=self._identifiers[co.LISTENER_HOST], port=self._identifiers[co.LISTENER_PORT]
         )
         self._app.run(
-            **{co.LISTENER_HOST: self._identifiers[co.LISTENER_HOST],
-               co.LISTENER_PORT: self._identifiers[co.LISTENER_PORT], "quiet": True, "server": self.server}
+            **{
+                co.LISTENER_HOST: self._identifiers[co.LISTENER_HOST],
+                co.LISTENER_PORT: self._identifiers[co.LISTENER_PORT],
+                "quiet": True,
+                "server": self.server,
+            }
         )
 
     def stop(self) -> None:

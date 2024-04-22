@@ -55,9 +55,10 @@ class Event:
         """
         logger.logger.debug("Running event: kill_step_execution", event_details=self._event_details)
         correlation_id = self._event_details.get(co.CORRELATION_ID)
-        item = util.PrioritizedItem(co.MEDIUM_PRIORITY, {co.ACTION: co.ACTION_KILL_TASK,
-                                                         co.RESULT_PIPE: self._request_pipe,
-                                                         co.CORRELATION_ID: correlation_id})
+        item = util.PrioritizedItem(
+            co.MEDIUM_PRIORITY,
+            {co.ACTION: co.ACTION_KILL_TASK, co.RESULT_PIPE: self._request_pipe, co.CORRELATION_ID: correlation_id},
+        )
         self._main_queue.put(item)
         return self._response_pipe.recv()
 
@@ -76,9 +77,10 @@ class Event:
         :return: Details about the event result
         """
         logger.logger.debug("Running event: add_trigger", event_details=self._event_details)
-        item = util.PrioritizedItem(co.MEDIUM_PRIORITY, {co.ACTION: co.ACTION_ADD_TRIGGER,
-                                                         co.RESULT_PIPE: self._request_pipe,
-                                                         co.DATA: self._event_details})
+        item = util.PrioritizedItem(
+            co.MEDIUM_PRIORITY,
+            {co.ACTION: co.ACTION_ADD_TRIGGER, co.RESULT_PIPE: self._request_pipe, co.DATA: self._event_details},
+        )
         self._main_queue.put(item)
         return self._response_pipe.recv()
 
@@ -88,9 +90,10 @@ class Event:
         :return: Details about the event result
         """
         logger.logger.debug("Running event: remove_trigger", event_details=self._event_details)
-        item = util.PrioritizedItem(co.MEDIUM_PRIORITY, {co.ACTION: co.ACTION_REMOVE_TRIGGER,
-                                                         co.RESULT_PIPE: self._request_pipe,
-                                                         co.DATA: self._event_details})
+        item = util.PrioritizedItem(
+            co.MEDIUM_PRIORITY,
+            {co.ACTION: co.ACTION_REMOVE_TRIGGER, co.RESULT_PIPE: self._request_pipe, co.DATA: self._event_details},
+        )
         self._main_queue.put(item)
         return self._response_pipe.recv()
 
@@ -100,7 +103,8 @@ class Event:
         :return: Details about the event result
         """
         logger.logger.debug("Running event: list_triggers", event_details=self._event_details)
-        item = util.PrioritizedItem(co.MEDIUM_PRIORITY, {co.ACTION: co.ACTION_LIST_TRIGGERS,
-                                                         co.RESULT_PIPE: self._request_pipe})
+        item = util.PrioritizedItem(
+            co.MEDIUM_PRIORITY, {co.ACTION: co.ACTION_LIST_TRIGGERS, co.RESULT_PIPE: self._request_pipe}
+        )
         self._main_queue.put(item)
         return self._response_pipe.recv()

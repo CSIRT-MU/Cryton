@@ -13,7 +13,7 @@ from cryton.hive.utility import exceptions, logger
 from django.utils import timezone
 
 
-def convert_to_utc(original_datetime: datetime, time_zone: str = 'utc', offset_aware: bool = False) -> datetime:
+def convert_to_utc(original_datetime: datetime, time_zone: str = "utc", offset_aware: bool = False) -> datetime:
     """
     Convert datetime in specified timezone to UTC timezone
     :param original_datetime: datetime to convert
@@ -65,8 +65,10 @@ def split_into_lists(input_list: List, target_number_of_lists: int) -> List[List
     :returns: list of lists containing original items
     """
     quotient, reminder = divmod(len(input_list), target_number_of_lists)
-    return [input_list[i * quotient + min(i, reminder):(i + 1) * quotient + min(i + 1, reminder)] for i in
-            range(target_number_of_lists)]
+    return [
+        input_list[i * quotient + min(i, reminder) : (i + 1) * quotient + min(i + 1, reminder)]
+        for i in range(target_number_of_lists)
+    ]
 
 
 def run_executions_in_threads(step_executions: List) -> None:
@@ -76,8 +78,12 @@ def run_executions_in_threads(step_executions: List) -> None:
 
     :param step_executions: list of step execution objects
     """
-    connection_parameters = {"hostname": SETTINGS.rabbit.host, "username": SETTINGS.rabbit.username,
-                             "password": SETTINGS.rabbit.password, "port": SETTINGS.rabbit.port}
+    connection_parameters = {
+        "hostname": SETTINGS.rabbit.host,
+        "username": SETTINGS.rabbit.username,
+        "password": SETTINGS.rabbit.password,
+        "port": SETTINGS.rabbit.port,
+    }
     with amqpstorm.Connection(**connection_parameters) as connection:
         # Split executions into threads
         thread_lists = split_into_lists(step_executions, SETTINGS.threads_per_process)
@@ -141,7 +147,7 @@ def parse_dot_argument(dot_argument: str) -> List[str]:
     if list_indexes is not None:  # Get each List index in '[index]' format and get index only.
         parsed_list_indexes = re.findall(r"(\[[0-9]+])", list_indexes.group())
         parsed_list_indexes = [index for index in parsed_list_indexes]
-        return [dot_argument[0:list_indexes.start()]] + parsed_list_indexes
+        return [dot_argument[0 : list_indexes.start()]] + parsed_list_indexes
     return [dot_argument]  # If no List Indexes are present.
 
 
@@ -157,7 +163,7 @@ def get_from_dict(dict_in: dict, value: str, separator: str):
     :param separator: separator for dynamic variable
     :return: value from dict_in
     """
-    dynamic_var_arguments = value.lstrip('$').split(separator)  # Get keys using '.' separator.
+    dynamic_var_arguments = value.lstrip("$").split(separator)  # Get keys using '.' separator.
     all_args = []  # Dict keys and List indexes.
     for argument in dynamic_var_arguments:  # Go through dot_args and separate all args.
         all_args.extend(parse_dot_argument(argument))
@@ -186,8 +192,7 @@ def _finditem(obj, key):
                 return item
 
 
-def fill_dynamic_variables(dict_to_update: dict, dynamic_variables_dict: dict, separator: str,
-                           startswith: str = '$'):
+def fill_dynamic_variables(dict_to_update: dict, dynamic_variables_dict: dict, separator: str, startswith: str = "$"):
     """
 
     Fill variables in dict_to_update with dynamic_variables_dict.
@@ -231,7 +236,7 @@ def get_all_values(input_container):
         yield input_container
 
 
-def get_dynamic_variables(in_dict, prefix='$'):
+def get_dynamic_variables(in_dict, prefix="$"):
     """
     Get list of dynamic variables for input dict
     :param in_dict:
@@ -253,7 +258,7 @@ def get_prefixes(vars_list: list, separator: str):
     :return:
     """
     for i in vars_list:
-        yield i.split(separator)[0].lstrip('$')
+        yield i.split(separator)[0].lstrip("$")
 
 
 def pop_key(in_dict, val):
@@ -286,7 +291,7 @@ def add_key(in_dict, path, val):
     first = True
     tmp_dict = {}
 
-    for i in path.split('.')[::-1]:
+    for i in path.split(".")[::-1]:
         if first is True:
             tmp_dict = {i: val}
             first = False
@@ -312,7 +317,7 @@ def rename_key(in_dict, rename_from, rename_to):
     :return: Changes inplace
     :raises KeyError, if rename_from key is not found
     """
-    new_val = pop_key(in_dict, rename_from.split('.'))
+    new_val = pop_key(in_dict, rename_from.split("."))
     add_key(in_dict, rename_to, new_val)
 
 

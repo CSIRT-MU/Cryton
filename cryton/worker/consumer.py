@@ -37,8 +37,18 @@ class ChannelConsumer:
 
 
 class Consumer:
-    def __init__(self, main_queue: PriorityQueue, rabbit_host: str, rabbit_port: int, rabbit_username: str,
-                 rabbit_password: str, worker_name: str, consumer_count: int, max_retries: int, persistent: bool):
+    def __init__(
+        self,
+        main_queue: PriorityQueue,
+        rabbit_host: str,
+        rabbit_port: int,
+        rabbit_username: str,
+        rabbit_password: str,
+        worker_name: str,
+        consumer_count: int,
+        max_retries: int,
+        persistent: bool,
+    ):
         """
         Consumer takes care of the connection between Worker and RabbitMQ server and launching callbacks for the
         defined queues.
@@ -57,8 +67,11 @@ class Consumer:
         attack_q = f"cryton.worker.{worker_name}.attack.request"  # TODO: rename to cryton.attack.request.{}?
         agent_q = f"cryton.worker.{worker_name}.agent.request"  # TODO: rename to cryton.agent.request.{}?
         control_q = f"cryton.worker.{worker_name}.control.request"  # TODO: rename to cryton.control.request.{}?
-        self._queues = {attack_q: self._callback_attack, control_q: self._callback_control,
-                        agent_q: self._callback_agent}
+        self._queues = {
+            attack_q: self._callback_attack,
+            control_q: self._callback_control,
+            agent_q: self._callback_agent,
+        }
 
         self._hostname = rabbit_host
         self._port = rabbit_port
@@ -87,9 +100,16 @@ class Consumer:
         Establish connection, start channel consumers in thread and keep self alive.
         :return: None
         """
-        logger.logger.debug("Consumer started.", hostname=self._hostname, port=self._port, username=self._username,
-                            queues=self._queues, max_retries=self._max_retries, persistent=self._persistent,
-                            channel_consumer_count=self._channel_consumer_count)
+        logger.logger.debug(
+            "Consumer started.",
+            hostname=self._hostname,
+            port=self._port,
+            username=self._username,
+            queues=self._queues,
+            max_retries=self._max_retries,
+            persistent=self._persistent,
+            channel_consumer_count=self._channel_consumer_count,
+        )
         self._stopped.clear()
 
         while self.is_running():  # Keep self and connection alive and check for stop.
@@ -257,8 +277,9 @@ class Consumer:
             channel = self._connection.channel()
         except amqpstorm.AMQPError:
             self._undelivered_messages.append(util.UndeliveredMessage(queue, message_body, message_properties))
-            logger.logger.error("Unable to send the message.", queue=queue, message=message_body,
-                                properties=message_properties)
+            logger.logger.error(
+                "Unable to send the message.", queue=queue, message=message_body, properties=message_properties
+            )
             return
 
         channel.queue.declare(queue)

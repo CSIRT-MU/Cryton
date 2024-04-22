@@ -14,12 +14,13 @@ from cryton.hive.models.worker import Worker
 @extend_schema_view(
     list=extend_schema(description="List Workers.", parameters=[serializers.ListSerializer]),
     retrieve=extend_schema(description="Get existing Worker."),
-    destroy=extend_schema(description="Delete Worker.")
+    destroy=extend_schema(description="Delete Worker."),
 )
 class WorkerViewSet(util.InstanceFullViewSet):
     """
     Worker ViewSet.
     """
+
     queryset = WorkerModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.WorkerSerializer
@@ -38,17 +39,17 @@ class WorkerViewSet(util.InstanceFullViewSet):
         responses={
             201: serializers.CreateDetailSerializer,
             400: serializers.DetailStringSerializer,
-        }
+        },
     )
     def create(self, request: Request):
         try:
-            params = {key: request.data.get(key, "") for key in ['name', 'description']}
+            params = {key: request.data.get(key, "") for key in ["name", "description"]}
             force = request.data.get("force", False)
             worker_obj_id = creator.create_worker(force=force, **params)
         except core_exceptions.WrongParameterError as ex:
             raise exceptions.ParseError(ex)
 
-        msg = {'id': worker_obj_id, 'detail': 'Worker created.'}
+        msg = {"id": worker_obj_id, "detail": "Worker created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -56,16 +57,16 @@ class WorkerViewSet(util.InstanceFullViewSet):
         request=None,
         responses={
             200: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=True)
     def healthcheck(self, _, **kwargs):
-        worker_id = kwargs.get('pk')
+        worker_id = kwargs.get("pk")
         try:
             worker_obj = Worker(worker_model_id=worker_id)
         except core_exceptions.WorkerObjectDoesNotExist:
             raise exceptions.NotFound()
         worker_obj.healthcheck()
 
-        msg = {'detail': f"Worker with ID {worker_id} is {worker_obj.state}."}
+        msg = {"detail": f"Worker with ID {worker_id} is {worker_obj.state}."}
         return Response(msg, status=status.HTTP_200_OK)

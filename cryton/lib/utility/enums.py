@@ -20,6 +20,7 @@ class Result(StrEnum):  # StrEnum + auto() introduced in Py3.11
     """
     Module result options.
     """
+
     OK = "ok"
     FAIL = "fail"
     ERROR = "error"

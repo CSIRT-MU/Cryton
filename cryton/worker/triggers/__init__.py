@@ -10,6 +10,7 @@ class ListenerTypeMeta(EnumMeta):
     """
     Overrides base metaclass of Enum in order to support custom exception when accessing not present item.
     """
+
     def __getitem__(self, item):
         try:
             return super().__getitem__(item).value
@@ -21,6 +22,7 @@ class ListenerEnum(Enum, metaclass=ListenerTypeMeta):
     """
     Keys according to lib.util.constants
     """
+
     HTTP = HTTPListener
     MSF = MSFListener
 
@@ -29,5 +31,6 @@ class ListenerIdentifiersEnum(Enum, metaclass=ListenerTypeMeta):
     """
     Keys according to lib.util.constants
     """
+
     HTTP = [constants.LISTENER_PORT, constants.LISTENER_HOST]
     MSF = [constants.IDENTIFIERS]

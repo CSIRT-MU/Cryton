@@ -37,8 +37,8 @@ class Run:
             plan_model_id: int
             workers: list
         """
-        if kwargs.get('run_model_id'):
-            run_id = kwargs.get('run_model_id')
+        if kwargs.get("run_model_id"):
+            run_id = kwargs.get("run_model_id")
 
             try:
                 self.model = RunModel.objects.get(id=run_id)
@@ -46,7 +46,7 @@ class Run:
                 raise exceptions.RunObjectDoesNotExist(run_id=run_id)
             self.workers = [pex.worker for pex in self.model.plan_executions.all()]
         else:
-            workers: list = kwargs.pop('workers', [])
+            workers: list = kwargs.pop("workers", [])
             if not workers:
                 raise exceptions.WrongParameterError(message="Parameter cannot be empty.", param_name="workers")
 
@@ -183,18 +183,25 @@ class Run:
         Prepare execution for each worker.
         :return: None
         """
-        plan_execution_kwargs = {'run': self.model, 'plan_model_id': self.model.plan_model_id}
+        plan_execution_kwargs = {"run": self.model, "plan_model_id": self.model.plan_model_id}
         for worker_obj in self.workers:
-            plan_execution_kwargs.update({'worker': worker_obj})
+            plan_execution_kwargs.update({"worker": worker_obj})
             PlanExecution(**plan_execution_kwargs)
 
     def report(self) -> dict:
-        report_obj = RunReport(id=self.model.id, plan_id=self.model.plan_model.id,
-                               plan_name=self.model.plan_model.name, state=self.state,
-                               schedule_time=self.schedule_time, start_time=self.start_time,
-                               finish_time=self.finish_time, pause_time=self.pause_time, plan_executions=[])
+        report_obj = RunReport(
+            id=self.model.id,
+            plan_id=self.model.plan_model.id,
+            plan_name=self.model.plan_model.name,
+            state=self.state,
+            schedule_time=self.schedule_time,
+            start_time=self.start_time,
+            finish_time=self.finish_time,
+            pause_time=self.pause_time,
+            plan_executions=[],
+        )
 
-        for plan_execution_obj in PlanExecutionModel.objects.filter(run_id=self.model.id).order_by('id'):
+        for plan_execution_obj in PlanExecutionModel.objects.filter(run_id=self.model.id).order_by("id"):
             plan_ex_report = PlanExecution(plan_execution_id=plan_execution_obj.id).report()
             report_obj.plan_executions.append(plan_ex_report)
 
@@ -213,12 +220,13 @@ class Run:
         st.RunStateMachine(self.model.id).validate_state(self.state, st.RUN_SCHEDULE_STATES)
 
         # Schedule execution
-        self.aps_job_id = scheduler_client.schedule_function("cryton.hive.models.run:execution",
-                                                             [self.model.id], schedule_time)
+        self.aps_job_id = scheduler_client.schedule_function(
+            "cryton.hive.models.run:execution", [self.model.id], schedule_time
+        )
         if isinstance(self.aps_job_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)
             self.state = st.SCHEDULED
-            logger.logger.info("Run scheduled", run_id=self.model.id, status='success')
+            logger.logger.info("Run scheduled", run_id=self.model.id, status="success")
         else:
             raise RuntimeError("Could not schedule run")
 
@@ -234,7 +242,7 @@ class Run:
         scheduler_client.remove_job(self.aps_job_id)
         self.aps_job_id, self.schedule_time = "", None
         self.state = st.PENDING
-        logger.logger.info("Run unscheduled", run_id=self.model.id, status='success')
+        logger.logger.info("Run unscheduled", run_id=self.model.id, status="success")
 
     def reschedule(self, schedule_time: datetime) -> None:
         """
@@ -249,7 +257,7 @@ class Run:
         self.unschedule()
         self.schedule(schedule_time)
 
-        logger.logger.info("Run rescheduled", run_id=self.model.id, status='success')
+        logger.logger.info("Run rescheduled", run_id=self.model.id, status="success")
 
     def pause(self) -> None:
         """
@@ -268,7 +276,7 @@ class Run:
         if not self.model.plan_executions.exclude(state__in=st.RUN_PLAN_PAUSE_STATES).exists():
             self.state = st.PAUSED
             self.pause_time = timezone.now()
-            logger.logger.info("Run paused", run_id=self.model.id, status='success')
+            logger.logger.info("Run paused", run_id=self.model.id, status="success")
 
     def unpause(self) -> None:
         """
@@ -285,7 +293,7 @@ class Run:
         for plan_execution_model in self.model.plan_executions.all():
             PlanExecution(plan_execution_id=plan_execution_model.id).unpause()
 
-        logger.logger.info("Run unpaused", run_id=self.model.id, status='success')
+        logger.logger.info("Run unpaused", run_id=self.model.id, status="success")
 
     def postpone(self, delta: timedelta) -> None:
         """
@@ -302,7 +310,7 @@ class Run:
         self.unschedule()
         self.schedule(schedule_time)
 
-        logger.logger.info("Run postponed", run_id=self.model.id, status='success')
+        logger.logger.info("Run postponed", run_id=self.model.id, status="success")
 
     def healthcheck_workers(self) -> None:
         """
@@ -332,7 +340,7 @@ class Run:
             plan_execution_model = self.model.plan_executions.get(worker_id=worker_obj.id)
             PlanExecution(plan_execution_id=plan_execution_model.id).execute()
 
-        logger.logger.info("Run executed", run_id=self.model.id, status='success')
+        logger.logger.info("Run executed", run_id=self.model.id, status="success")
 
     def kill(self) -> None:
         """
@@ -365,7 +373,7 @@ class Run:
 
         self.finish_time = timezone.now()
         self.state = st.TERMINATED
-        logger.logger.info("Run killed", run_id=self.model.id, status='success')
+        logger.logger.info("Run killed", run_id=self.model.id, status="success")
 
         return None
 
@@ -375,7 +383,7 @@ class Run:
         """
         logger.logger.debug("Run modules validation started", run_id=self.model.id)
 
-        for plan_execution_id in self.model.plan_executions.values_list('id', flat=True):
+        for plan_execution_id in self.model.plan_executions.values_list("id", flat=True):
             plan_execution = PlanExecution(plan_execution_id=plan_execution_id)
             plan_execution.validate_modules()
         logger.logger.debug("Run modules validated", run_id=self.model.id)

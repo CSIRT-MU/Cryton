@@ -6,7 +6,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Log
 
 
-@click.group('logs')
+@click.group("logs")
 @click.pass_context
 def log(_) -> None:
     """
@@ -18,11 +18,17 @@ def log(_) -> None:
     """
 
 
-@log.command('list')
+@log.command("list")
 @click.pass_context
 @common_list_decorators
-def log_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-             parameter_filters: tuple[tuple[str, Union[str, int]]]) -> None:
+def log_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+) -> None:
     """
     List existing Logs.
 

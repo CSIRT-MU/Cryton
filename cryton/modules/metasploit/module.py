@@ -39,36 +39,32 @@ class Module(ModuleBase):
                     "exploit_uuid": {"type": "string"},
                     "routes": {"type": "string"},
                     "arch": {"type": "string"},
-                    "platform": {"type": "string"}
+                    "platform": {"type": "string"},
                 },
-                "additionalProperties": False
+                "additionalProperties": False,
             },
             "ignore_old_sessions": {"type": "boolean", "description": ""},
             "module_type": {
                 "type": "string",
                 "enum": ["exploit", "post", "encoder", "auxiliary", "nop", "payload"],
-                "description": ""
+                "description": "",
             },
             "module": {"type": "string", "description": ""},
             "wait_for_result": {"type": "boolean", "description": ""},
             "module_retries": {"type": "integer", "description": ""},
             "module_timeout": {"type": "integer", "description": ""},
             "module_options": {"type": "object", "description": ""},
-            "if": {
-                "properties": {
-                    "module_type": {"const": "exploit"}
-                }
-            },
+            "if": {"properties": {"module_type": {"const": "exploit"}}},
             "then": {
                 "properties": {
                     "payload": {"type": "string", "description": ""},
-                    "payload_options": {"type": "object", "description": ""}
+                    "payload_options": {"type": "object", "description": ""},
                 },
-                "additionalProperties": False
+                "additionalProperties": False,
             },
             # "additionalProperties": False  # TODO: solve
         },
-        "required": ["module_type", "module"]
+        "required": ["module_type", "module"],
     }
 
     def __init__(self, arguments: dict):
@@ -157,10 +153,15 @@ class Module(ModuleBase):
             self._data.output += all_console_outputs
 
         # TODO: maybe not accurate for all modules/exploits, needs further testing
-        if 'Success' in output_from_console or 'Command shell session' in output_from_console or 'Meterpreter session' \
-                in output_from_console or "Upgrading session ID:" in output_from_console or \
-                "Command Stager progress - 100.00%" in output_from_console or '[+]' in output_from_console or \
-                "Starting the SOCKS proxy server" in output_from_console:
+        if (
+            "Success" in output_from_console
+            or "Command shell session" in output_from_console
+            or "Meterpreter session" in output_from_console
+            or "Upgrading session ID:" in output_from_console
+            or "Command Stager progress - 100.00%" in output_from_console
+            or "[+]" in output_from_console
+            or "Starting the SOCKS proxy server" in output_from_console
+        ):
             self._data.result = Result.OK
 
         # Check for Error or Success
@@ -192,8 +193,7 @@ def create_msf_command(mod, payload: PayloadModule = None, run_as_job=False) -> 
             pass
         elif isinstance(payload, PayloadModule):
             if payload.modulename not in mod.payloads:
-                raise ValueError(
-                    "Invalid payload ({}) for given target ({}).".format(payload.modulename, mod.target))
+                raise ValueError("Invalid payload ({}) for given target ({}).".format(payload.modulename, mod.target))
             options_str += "set payload {}\n".format(payload.modulename)
             for payload_parameter, payload_value in payload.runoptions.items():
                 if payload_value is None or (isinstance(payload_value, str) and not payload_value):

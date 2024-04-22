@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
@@ -20,8 +21,8 @@ from django.views.generic.base import RedirectView
 from cryton.hive.config.settings import SETTINGS
 
 urlpatterns = [
-    path(SETTINGS.api.root, include('cryton.hive.cryton_app.urls')),
-    path('admin/', admin.site.urls),
-    re_path(r'^|doc/$', RedirectView.as_view(pattern_name='swagger-ui', permanent=False)),
-    path('redoc/', RedirectView.as_view(pattern_name='redoc-ui', permanent=False)),
+    path(SETTINGS.api.root, include("cryton.hive.cryton_app.urls")),
+    path("admin/", admin.site.urls),
+    re_path(r"^|doc/$", RedirectView.as_view(pattern_name="swagger-ui", permanent=False)),
+    path("redoc/", RedirectView.as_view(pattern_name="redoc-ui", permanent=False)),
 ]

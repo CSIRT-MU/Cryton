@@ -38,23 +38,28 @@ def filter_decorator(func):
         filters_dict = {key: value for key, value in self.request.query_params.items()}
 
         # Get rid of parameters that would get in a way of filter
-        order_by_param = filters_dict.pop('order_by', 'id')
-        filters_dict.pop('limit', None)
-        filters_dict.pop('offset', None)
+        order_by_param = filters_dict.pop("order_by", "id")
+        filters_dict.pop("limit", None)
+        filters_dict.pop("offset", None)
 
         # Obtain queryset
         queryset: QuerySet = func(self)
 
         # Update filters (optionally with __icontains)
         unsearchable_keys = [
-            'run_id', 'plan_execution_id', 'stage_execution_id', 'step_execution_id', 'plan_model_id',
-            'stage_model_id', 'step_model_id'
+            "run_id",
+            "plan_execution_id",
+            "stage_execution_id",
+            "step_execution_id",
+            "plan_model_id",
+            "stage_model_id",
+            "step_model_id",
         ]
         filters_dict_update = {}
 
         for key, value in filters_dict.items():
             if key not in unsearchable_keys:
-                filters_dict_update.update({key + '__icontains': value})
+                filters_dict_update.update({key + "__icontains": value})
             else:
                 filters_dict_update.update({key: value})
 
@@ -73,9 +78,9 @@ def get_start_time(request_data: dict) -> datetime:
     :param request_data: Incoming request data
     :return: Normalized start time
     """
-    time_zone = request_data.get('time_zone', 'utc')
+    time_zone = request_data.get("time_zone", "utc")
     try:
-        str_start_time = request_data['start_time']
+        str_start_time = request_data["start_time"]
     except KeyError:
         raise exceptions.ValidationError("'start_time' parameter unfilled!")
 
@@ -85,8 +90,10 @@ def get_start_time(request_data: dict) -> datetime:
         try:
             start_time = datetime.strptime(str_start_time, constants.TIME_FORMAT_DETAILED)
         except ValueError:
-            raise exceptions.ValidationError(f"'start_time' parameter must be in '{constants.TIME_FORMAT}' or "
-                                             f"'{constants.TIME_FORMAT_DETAILED}' format!")
+            raise exceptions.ValidationError(
+                f"'start_time' parameter must be in '{constants.TIME_FORMAT}' or "
+                f"'{constants.TIME_FORMAT_DETAILED}' format!"
+            )
 
     try:
         start_time = core_util.convert_to_utc(start_time, time_zone)
@@ -141,20 +148,21 @@ def get_inventory_variables_from_files(files: MultiValueDict) -> dict:
         try:
             inventory_variables.update(parse_inventory(file_content))
         except ValueError as ex:
-            raise exceptions.ValidationError(f"Cannot read inventory file. Original exception: {ex}. "
-                                             f"Inventory file: {inventory_file}.")
+            raise exceptions.ValidationError(
+                f"Cannot read inventory file. Original exception: {ex}. " f"Inventory file: {inventory_file}."
+            )
 
     return inventory_variables
 
 
 class IgnoreNestedUndefined(ChainableUndefined, DebugUndefined):
     def __getattr__(self, attr: str) -> "IgnoreNestedUndefined":
-        self._undefined_name += f'.{attr}'
+        self._undefined_name += f".{attr}"
 
         return self
 
     def __getitem__(self, item: str) -> "IgnoreNestedUndefined":
-        self._undefined_name += f'[{item}]'
+        self._undefined_name += f"[{item}]"
 
         return self
 
@@ -209,6 +217,7 @@ class InstanceViewSet(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, BaseV
     """
     A ViewSet that provides default retrieve(), destroy(), and list() actions.
     """
+
     @filter_decorator
     def get_queryset(self):
         queryset = self.queryset
@@ -220,10 +229,10 @@ class InstanceViewSet(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, BaseV
         responses={
             204: serializers.BaseSerializer,
             404: serializers.DetailStringSerializer,
-        }
+        },
     )
     def destroy(self, _, *args, **kwargs):
-        model_id = kwargs.get('pk')
+        model_id = kwargs.get("pk")
         try:
             self._destroy(model_id)
         except (ObjectDoesNotExist, core_exceptions.ObjectDoesNotExist):

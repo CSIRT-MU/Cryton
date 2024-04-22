@@ -51,13 +51,13 @@ class PlanModel(DescriptiveModel):
 
 
 class StageModel(DescriptiveModel):
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name='stages')
+    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="stages")
     trigger_type = models.TextField()
     trigger_args = models.JSONField()
 
 
 class StepModel(DescriptiveModel):
-    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name='steps')
+    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name="steps")
     step_type = models.TextField()
     arguments = models.JSONField()
     is_init = models.BooleanField(default=False)
@@ -71,39 +71,39 @@ class WorkerModel(InstanceModel):
 
 
 class RunModel(ExtendedExecutionModel):
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name='runs')
+    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="runs")
 
 
 class PlanExecutionModel(ExtendedExecutionModel):
-    run = models.ForeignKey(RunModel, on_delete=models.CASCADE, related_name='plan_executions')
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name='plan_executions')
-    worker = models.ForeignKey(WorkerModel, related_name='plan_executions', on_delete=models.PROTECT)
+    run = models.ForeignKey(RunModel, on_delete=models.CASCADE, related_name="plan_executions")
+    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="plan_executions")
+    worker = models.ForeignKey(WorkerModel, related_name="plan_executions", on_delete=models.PROTECT)
     evidence_directory = models.TextField()
 
 
 class StageExecutionModel(ExtendedExecutionModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name='stage_executions')
-    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name='stage_executions')
+    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="stage_executions")
+    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name="stage_executions")
     trigger_id = models.TextField()
 
 
 class StepExecutionModel(ExecutionModel):
-    stage_execution = models.ForeignKey(StageExecutionModel, on_delete=models.CASCADE, related_name='step_executions')
-    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name='step_executions')
-    result = models.TextField(default='')
+    stage_execution = models.ForeignKey(StageExecutionModel, on_delete=models.CASCADE, related_name="step_executions")
+    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name="step_executions")
+    result = models.TextField(default="")
     serialized_output = models.JSONField(default=dict)
-    output = models.TextField(default='')
+    output = models.TextField(default="")
     valid = models.BooleanField(default=False)
     parent_id = models.IntegerField(null=True)
 
 
 class SessionModel(InstanceModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name='sessions')
+    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="sessions")
     msf_id = models.TextField()
 
 
 class ExecutionVariableModel(InstanceModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name='execution_variables')
+    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="execution_variables")
     value = models.JSONField()
 
 
@@ -124,11 +124,11 @@ class PlanTemplateModel(models.Model):
 
 
 class OutputMappingModel(models.Model):
-    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name='output_mappings')
+    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name="output_mappings")
     name_from = models.TextField()
     name_to = models.TextField()
 
 
 class DependencyModel(models.Model):
-    stage_model = models.ForeignKey(StageModel, related_name='dependencies', on_delete=models.CASCADE)
-    dependency = models.ForeignKey(StageModel, related_name='subjects_to', on_delete=models.CASCADE)
+    stage_model = models.ForeignKey(StageModel, related_name="dependencies", on_delete=models.CASCADE)
+    dependency = models.ForeignKey(StageModel, related_name="subjects_to", on_delete=models.CASCADE)

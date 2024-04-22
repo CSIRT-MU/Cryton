@@ -19,12 +19,14 @@ def schedule_function(execute_function: callable, function_args: list, start_tim
     logger.debug("Scheduling function", execute_function=str(execute_function))
     with RpcClient() as rpc:
         args = {
-            'execute_function': execute_function,
-            'function_args': function_args,
-            'start_time': start_time.isoformat()
+            "execute_function": execute_function,
+            "function_args": function_args,
+            "start_time": start_time.isoformat(),
         }
-        message = {constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
-                   constants.EVENT_V: {constants.EVENT_ACTION: constants.ADD_JOB, "args": args}}
+        message = {
+            constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
+            constants.EVENT_V: {constants.EVENT_ACTION: constants.ADD_JOB, "args": args},
+        }
         logger.debug("Scheduling job", execute_function=execute_function)
 
         response = rpc.call(SETTINGS.rabbit.queues.control_request, message)
@@ -46,11 +48,13 @@ def schedule_repeating_function(execute_function: callable, seconds: int) -> str
     logger.debug("Scheduling repeating function", execute_function=str(execute_function))
     with RpcClient() as rpc:
         args = {
-            'execute_function': execute_function,
-            'seconds': seconds,
+            "execute_function": execute_function,
+            "seconds": seconds,
         }
-        message = {constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
-                   constants.EVENT_V: {constants.EVENT_ACTION: constants.ADD_REPEATING_JOB, 'args': args}}
+        message = {
+            constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
+            constants.EVENT_V: {constants.EVENT_ACTION: constants.ADD_REPEATING_JOB, "args": args},
+        }
         response = rpc.call(SETTINGS.rabbit.queues.control_request, message)
         job_scheduled_id = response.get(constants.RETURN_VALUE)
 
@@ -65,11 +69,11 @@ def remove_job(job_id: str) -> int:
     """
     logger.debug("Removing job", job_id=job_id)
     with RpcClient() as rpc:
-        args = {
-            'job_id': job_id
+        args = {"job_id": job_id}
+        message = {
+            constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
+            constants.EVENT_V: {constants.EVENT_ACTION: constants.REMOVE_JOB, "args": args},
         }
-        message = {constants.EVENT_T: constants.EVENT_UPDATE_SCHEDULER,
-                   constants.EVENT_V: {constants.EVENT_ACTION: constants.REMOVE_JOB, 'args': args}}
         rpc.call(SETTINGS.rabbit.queues.control_request, message)
 
     return 0

@@ -7,58 +7,29 @@ from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 class Module(ModuleBase):
     SCHEMA = {
         "definitions": {
-            "username": {
-                "type": "string",
-                "description": "Username."
-            },
-            "username_file": {
-                "type": "string",
-                "description": "Absolute path to file with usernames."
-            },
-            "password": {
-                "type": "string",
-                "description": "Password."
-            },
-            "password_file": {
-                "type": "string",
-                "description": "Absolute path to file with passwords."
-            },
-            "combo_file": {
-                "type": "string",
-                "description": "Absolute path to file with username and password pairs."
-            }
+            "username": {"type": "string", "description": "Username."},
+            "username_file": {"type": "string", "description": "Absolute path to file with usernames."},
+            "password": {"type": "string", "description": "Password."},
+            "password_file": {"type": "string", "description": "Absolute path to file with passwords."},
+            "combo_file": {"type": "string", "description": "Absolute path to file with username and password pairs."},
         },
         "type": "object",
         "description": "Arguments for the `medusa` module.",
         "oneOf": [
             {
                 "properties": {
-                    "target": {
-                        "type": "string",
-                        "description": "Bruteforce target."
-                    },
-                    "mod": {
-                        "type": "string",
-                        "description": "mod (service) to attack."
-                    },
-                    "tasks": {
-                        "type": "integer",
-                        "description": "Number of login pairs tested concurrently."
-                    },
-                    "options": {
-                        "type": "string",
-                        "description": "Additional Medusa parameters."
-                    },
+                    "target": {"type": "string", "description": "Bruteforce target."},
+                    "mod": {"type": "string", "description": "mod (service) to attack."},
+                    "tasks": {"type": "integer", "description": "Number of login pairs tested concurrently."},
+                    "options": {"type": "string", "description": "Additional Medusa parameters."},
                     "credentials": {
                         "type": "object",
                         "description": "",
                         "oneOf": [
                             {
-                                "properties": {
-                                    "combo_file": {"$ref": "#/definitions/combo_file"}
-                                },
+                                "properties": {"combo_file": {"$ref": "#/definitions/combo_file"}},
                                 "minProperties": 1,
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
                             {
                                 "properties": {
@@ -66,7 +37,7 @@ class Module(ModuleBase):
                                     "password": {"$ref": "#/definitions/password"},
                                 },
                                 "minProperties": 2,
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
                             {
                                 "properties": {
@@ -74,7 +45,7 @@ class Module(ModuleBase):
                                     "password_file": {"$ref": "#/definitions/password_file"},
                                 },
                                 "minProperties": 2,
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
                             {
                                 "properties": {
@@ -82,7 +53,7 @@ class Module(ModuleBase):
                                     "password": {"$ref": "#/definitions/password"},
                                 },
                                 "minProperties": 2,
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
                             {
                                 "properties": {
@@ -90,25 +61,25 @@ class Module(ModuleBase):
                                     "password_file": {"$ref": "#/definitions/password_file"},
                                 },
                                 "minProperties": 2,
-                                "additionalProperties": False
+                                "additionalProperties": False,
                             },
-                        ]
-                    }
+                        ],
+                    },
                 },
                 "required": ["target", "credentials"],
-                "additionalProperties": False
+                "additionalProperties": False,
             },
             {
                 "properties": {
                     "command": {
                         "type": "string",
-                        "description": "Command to run with syntax as in command line (with executable)."
+                        "description": "Command to run with syntax as in command line (with executable).",
                     }
                 },
                 "required": ["command"],
-                "additionalProperties": False
-            }
-        ]
+                "additionalProperties": False,
+            },
+        ],
     }
 
     def __init__(self, arguments: dict):
@@ -207,7 +178,9 @@ class Module(ModuleBase):
                 json_credentials.append({"username": str(found_username), "password": str(found_password)})
 
         if json_credentials:
-            json_credentials = {"username": json_credentials[0]["username"],
-                                "password": json_credentials[0]["password"],
-                                "all_credentials": json_credentials}
+            json_credentials = {
+                "username": json_credentials[0]["username"],
+                "password": json_credentials[0]["password"],
+                "all_credentials": json_credentials,
+            }
         return json_credentials

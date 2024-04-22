@@ -11,8 +11,18 @@ from cryton.worker.triggers import Listener, ListenerEnum, ListenerIdentifiersEn
 
 
 class Worker:
-    def __init__(self, rabbit_host: str, rabbit_port: int, rabbit_username: str, rabbit_password: str, worker_name: str,
-                 consumer_count: int, processor_count: int, max_retries: int, persistent: bool):
+    def __init__(
+        self,
+        rabbit_host: str,
+        rabbit_port: int,
+        rabbit_username: str,
+        rabbit_password: str,
+        worker_name: str,
+        consumer_count: int,
+        processor_count: int,
+        max_retries: int,
+        persistent: bool,
+    ):
         """
         Worker processes internal requests using self._main_queue and communicates with RabbitMQ server using Consumer.
         :param rabbit_host: Rabbit's server port
@@ -33,8 +43,17 @@ class Worker:
         self._stopped = Event()
         self._main_queue = PriorityQueue()
         self._processor_count = processor_count if processor_count > 0 else 1
-        self._consumer = consumer.Consumer(self._main_queue, rabbit_host, rabbit_port, rabbit_username, rabbit_password,
-                                           worker_name, consumer_count, max_retries, persistent)
+        self._consumer = consumer.Consumer(
+            self._main_queue,
+            rabbit_host,
+            rabbit_port,
+            rabbit_username,
+            rabbit_password,
+            worker_name,
+            consumer_count,
+            max_retries,
+            persistent,
+        )
 
     def start(self) -> None:
         """
@@ -140,8 +159,12 @@ class Worker:
                 action_callable(request.item)
             except Exception as ex:
                 logger.logger.warning("Request threw an exception in the process.", request=request, error=str(ex))
-                logger.logger.debug("Request threw an exception in the process.", request=request, error=str(ex),
-                                    traceback=traceback.format_exc())
+                logger.logger.debug(
+                    "Request threw an exception in the process.",
+                    request=request,
+                    error=str(ex),
+                    traceback=traceback.format_exc(),
+                )
                 continue
 
         logger.logger.debug("Threaded processor stopped.", thread_id=thread_id)
@@ -214,21 +237,31 @@ class Worker:
         with self._triggers_lock:  # Try to find specified Listener.
             for listener_obj in self._listeners:
                 if listener_obj.compare_identifiers(trigger_data):
-                    logger.logger.debug("Found existing Listener", type=listener_type,
-                                        listener_triggers=listener_obj.get_triggers())
+                    logger.logger.debug(
+                        "Found existing Listener", type=listener_type, listener_triggers=listener_obj.get_triggers()
+                    )
                     break
             else:  # If Listener doesn't exist, create new one.
                 logger.logger.debug("Creating new Listener", type=listener_type)
                 # Decides which listener identifiers to parse from trigger_data based on Listener type
-                listener_identifiers = {key: value for key, value in trigger_data.items() if key in
-                                        ListenerIdentifiersEnum[trigger_data.get(co.TRIGGER_TYPE)]}
+                listener_identifiers = {
+                    key: value
+                    for key, value in trigger_data.items()
+                    if key in ListenerIdentifiersEnum[trigger_data.get(co.TRIGGER_TYPE)]
+                }
                 listener_obj = listener_type(self._main_queue, **listener_identifiers)
                 self._listeners.append(listener_obj)
 
         try:
             trigger_id = listener_obj.add_trigger(trigger_data)
-        except (KeyError, ValueError, TypeError, exceptions.MsfModuleNotFound, exceptions.TooManyTriggers,
-                exceptions.MsfConnectionError) as err:
+        except (
+            KeyError,
+            ValueError,
+            TypeError,
+            exceptions.MsfModuleNotFound,
+            exceptions.TooManyTriggers,
+            exceptions.MsfConnectionError,
+        ) as err:
             # raised mostly during MSF module execution
             result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
         else:

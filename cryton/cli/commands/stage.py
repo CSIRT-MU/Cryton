@@ -6,7 +6,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Stage, StageExecution
 
 
-@click.group('stages')
+@click.group("stages")
 @click.pass_context
 def stage(_) -> None:
     """
@@ -18,12 +18,19 @@ def stage(_) -> None:
     """
 
 
-@stage.command('list')
+@stage.command("list")
 @click.pass_context
 @common_list_decorators
-@click.option('-p', '--parent', type=click.INT, help='Filter Stages using Plan ID.')
-def stage_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-               parameter_filters: tuple[tuple[str, Union[str, int]]], parent: int) -> None:
+@click.option("-p", "--parent", type=click.INT, help="Filter Stages using Plan ID.")
+def stage_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parent: int,
+) -> None:
     """
     List existing Stages in Cryton.
 
@@ -39,17 +46,23 @@ def stage_list(ctx: helpers.Context, less: bool, offset: int, limit: int, locali
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters['plan_model_id'] = parent
-    include = ['id', 'name', 'trigger_type', 'trigger_args', 'executor']
+        additional_parameters["plan_model_id"] = parent
+    include = ["id", "name", "trigger_type", "trigger_args", "executor"]
     ctx.obj.get_items(Stage.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
-@stage.command('create')
+@stage.command("create")
 @click.pass_context
-@click.argument('plan_id', type=click.INT, required=True)
-@click.argument('file', type=click.Path(exists=True), required=True)
-@click.option('-i', '--inventory-file', 'inventory_files', type=click.Path(exists=True), multiple=True,
-              help="Inventory file used to fill the template. Can be used multiple times.")
+@click.argument("plan_id", type=click.INT, required=True)
+@click.argument("file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-i",
+    "--inventory-file",
+    "inventory_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Inventory file used to fill the template. Can be used multiple times.",
+)
 def stage_create(ctx: helpers.Context, plan_id: int, file: str, inventory_files: list) -> None:
     """
     Create Stage from FILE and add it to Plan with PLAN_ID.
@@ -64,7 +77,7 @@ def stage_create(ctx: helpers.Context, plan_id: int, file: str, inventory_files:
     :param inventory_files: Inventory file(s) used to fill the template
     :return: None
     """
-    data = {'plan_id': plan_id}
+    data = {"plan_id": plan_id}
     files = helpers.load_files(inventory_files)
     with open(file, "rb") as f:
         files["file"] = f.read()
@@ -72,9 +85,9 @@ def stage_create(ctx: helpers.Context, plan_id: int, file: str, inventory_files:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@stage.command('show')
+@stage.command("show")
 @click.pass_context
-@click.argument('stage_id', type=click.INT, required=True)
+@click.argument("stage_id", type=click.INT, required=True)
 @d_less
 @d_localize
 def stage_read(ctx: helpers.Context, stage_id: int, less: bool, localize: bool) -> None:
@@ -91,13 +104,13 @@ def stage_read(ctx: helpers.Context, stage_id: int, less: bool, localize: bool) 
     :return: None
     """
     response = ctx.obj.api_get(Stage.READ, stage_id)
-    include = ['id', 'name', 'trigger_type', 'trigger_args', 'executor']
+    include = ["id", "name", "trigger_type", "trigger_args", "executor"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
-@stage.command('delete')
+@stage.command("delete")
 @click.pass_context
-@click.argument('stage_id', type=click.INT, required=True)
+@click.argument("stage_id", type=click.INT, required=True)
 def stage_delete(ctx: helpers.Context, stage_id: int) -> None:
     """
     Delete Stage with STAGE_ID.
@@ -112,12 +125,18 @@ def stage_delete(ctx: helpers.Context, stage_id: int) -> None:
     ctx.obj.delete_item(Stage.DELETE, stage_id)
 
 
-@stage.command('validate')
+@stage.command("validate")
 @click.pass_context
-@click.argument('file', type=click.Path(exists=True), required=True)
-@click.option('-i', '--inventory-file', 'inventory_files', type=click.Path(exists=True), multiple=True,
-              help="Inventory file used to fill the template. Can be used multiple times.")
-@click.option('-D', '--dynamic', is_flag=True, help='If Stage will be used with a dynamic Plan.')
+@click.argument("file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-i",
+    "--inventory-file",
+    "inventory_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Inventory file used to fill the template. Can be used multiple times.",
+)
+@click.option("-D", "--dynamic", is_flag=True, help="If Stage will be used with a dynamic Plan.")
 def stage_validate(ctx: helpers.Context, file: str, inventory_files: list, dynamic: bool) -> None:
     """
     Validate (syntax check) your FILE with Stage.
@@ -139,10 +158,10 @@ def stage_validate(ctx: helpers.Context, file: str, inventory_files: list, dynam
     helpers.print_message(response, ctx.obj.debug)
 
 
-@stage.command('start-trigger')
+@stage.command("start-trigger")
 @click.pass_context
-@click.argument('stage_id', type=click.INT, required=True)
-@click.argument('plan_execution_id', type=click.INT, required=True)
+@click.argument("stage_id", type=click.INT, required=True)
+@click.argument("plan_execution_id", type=click.INT, required=True)
 def stage_start_trigger(ctx: helpers.Context, stage_id: int, plan_execution_id: int) -> None:
     """
     Start Stage's trigger with STAGE_ID under Plan execution with PLAN_EXECUTION_ID.
@@ -156,12 +175,12 @@ def stage_start_trigger(ctx: helpers.Context, stage_id: int, plan_execution_id: 
     :param plan_execution_id: ID of the Plan execution that will be set as a parent of the Stage execution
     :return: None
     """
-    arguments = {'plan_execution_id': plan_execution_id}
+    arguments = {"plan_execution_id": plan_execution_id}
     response = ctx.obj.api_post(Stage.START_TRIGGER, stage_id, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@click.group('stage-executions')
+@click.group("stage-executions")
 @click.pass_context
 def stage_execution(_) -> None:
     """
@@ -173,12 +192,19 @@ def stage_execution(_) -> None:
     """
 
 
-@stage_execution.command('list')
+@stage_execution.command("list")
 @click.pass_context
 @common_list_decorators
-@click.option('-p', '--parent', type=click.INT, help='Filter Stage executions using Plan execution ID.')
-def stage_execution_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-                         parameter_filters: tuple[tuple[str, Union[str, int]]], parent: int) -> None:
+@click.option("-p", "--parent", type=click.INT, help="Filter Stage executions using Plan execution ID.")
+def stage_execution_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parent: int,
+) -> None:
     """
     List existing Stage's executions in Cryton.
 
@@ -194,14 +220,14 @@ def stage_execution_list(ctx: helpers.Context, less: bool, offset: int, limit: i
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters['plan_execution_id'] = parent
-    include = ['id', 'schedule_time', 'start_time', 'pause_time', 'finish_time', 'state']
+        additional_parameters["plan_execution_id"] = parent
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state"]
     ctx.obj.get_items(StageExecution.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
-@stage_execution.command('delete')
+@stage_execution.command("delete")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 def stage_execution_delete(ctx: helpers.Context, execution_id: int) -> None:
     """
     Delete Stage's execution with EXECUTION_ID.
@@ -216,9 +242,9 @@ def stage_execution_delete(ctx: helpers.Context, execution_id: int) -> None:
     ctx.obj.delete_item(StageExecution.DELETE, execution_id)
 
 
-@stage_execution.command('show')
+@stage_execution.command("show")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 @d_less
 @d_localize
 def stage_execution_read(ctx: helpers.Context, execution_id: int, less: bool, localize: bool) -> None:
@@ -235,13 +261,13 @@ def stage_execution_read(ctx: helpers.Context, execution_id: int, less: bool, lo
     :return: None
     """
     response = ctx.obj.api_get(StageExecution.READ, execution_id)
-    include = ['id', 'schedule_time', 'start_time', 'pause_time', 'finish_time', 'state']
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
-@stage_execution.command('report')
+@stage_execution.command("report")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 @d_save_report
 @d_less
 @d_localize
@@ -260,12 +286,12 @@ def stage_execution_report(ctx: helpers.Context, execution_id: int, file: str, l
     :return: None
     """
     response = ctx.obj.api_get(StageExecution.REPORT, execution_id)
-    helpers.save_yaml(response, file, f'stage-execution-{execution_id}.yml', less, less, localize, ctx.obj.debug)
+    helpers.save_yaml(response, file, f"stage-execution-{execution_id}.yml", less, less, localize, ctx.obj.debug)
 
 
-@stage_execution.command('kill')
+@stage_execution.command("kill")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
+@click.argument("execution_id", type=click.INT, required=True)
 def stage_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
     """
     Kill Stage's execution with EXECUTION_ID.
@@ -281,10 +307,10 @@ def stage_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@stage_execution.command('re-execute')
+@stage_execution.command("re-execute")
 @click.pass_context
-@click.argument('execution_id', type=click.INT, required=True)
-@click.option('--immediately', is_flag=True, help='Re-execute StageExecution immediately without starting its Trigger.')
+@click.argument("execution_id", type=click.INT, required=True)
+@click.option("--immediately", is_flag=True, help="Re-execute StageExecution immediately without starting its Trigger.")
 def stage_execution_re_execute(ctx: helpers.Context, execution_id: int, immediately: bool) -> None:
     """
     Re-execute Stage's execution with EXECUTION_ID.

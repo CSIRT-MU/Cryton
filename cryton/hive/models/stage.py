@@ -12,12 +12,7 @@ from django.db import transaction, connections
 from cryton.hive.cryton_app.models import StageModel, StageExecutionModel, StepExecutionModel, DependencyModel
 from cryton.hive.utility import exceptions, logger, states as st, util, constants
 from cryton.hive.triggers import TriggerType, TriggerDelta, TriggerHTTP, TriggerMSF, TriggerDateTime
-from cryton.hive.models.step import (
-    StepExecution,
-    StepExecutionWorkerExecute,
-    Step,
-    StepExecutionType
-)
+from cryton.hive.models.step import StepExecution, StepExecutionWorkerExecute, Step, StepExecutionType
 from cryton.hive.config.settings import SETTINGS
 
 from dataclasses import dataclass, asdict
@@ -46,7 +41,7 @@ class Stage:
             trigger_type: str = None,
             trigger_args: dict = None
         """
-        stage_model_id = kwargs.get('stage_model_id')
+        stage_model_id = kwargs.get("stage_model_id")
         if stage_model_id:
             try:
                 self.model = StageModel.objects.get(id=stage_model_id)
@@ -57,7 +52,7 @@ class Stage:
 
         else:
             stage_obj_arguments = copy.deepcopy(kwargs)
-            stage_obj_arguments.pop('depends_on', None)
+            stage_obj_arguments.pop("depends_on", None)
             self.model = StageModel.objects.create(**stage_obj_arguments)
 
     def delete(self):
@@ -173,51 +168,54 @@ class Stage:
             exceptions.StepValidationError
         :return True if Stage's dictionary is valid
         """
-        conf_schema = Schema({
-            'name': str,
-            SchemaOptional("meta"): dict,
-            'trigger_type': Or(*[trigger.name for trigger in list(TriggerType)]),
-            'trigger_args': dict,
-            'steps': list,
-            SchemaOptional('depends_on'): list
-        })
+        conf_schema = Schema(
+            {
+                "name": str,
+                SchemaOptional("meta"): dict,
+                "trigger_type": Or(*[trigger.name for trigger in list(TriggerType)]),
+                "trigger_args": dict,
+                "steps": list,
+                SchemaOptional("depends_on"): list,
+            }
+        )
 
         try:
-            logger.logger.debug("Validating stage", stage_name=stage_dict.get('name'))
+            logger.logger.debug("Validating stage", stage_name=stage_dict.get("name"))
             conf_schema.validate(stage_dict)
         except SchemaError as ex:
-            raise exceptions.StageValidationError(ex, stage_name=stage_dict.get('name'))
+            raise exceptions.StageValidationError(ex, stage_name=stage_dict.get("name"))
 
-        trigger = TriggerType[stage_dict.get('trigger_type')].value
+        trigger = TriggerType[stage_dict.get("trigger_type")].value
         arg_schema = trigger.arg_schema
         try:
-            arg_schema.validate(stage_dict.get('trigger_args'))
+            arg_schema.validate(stage_dict.get("trigger_args"))
         except SchemaError as ex:
-            raise exceptions.StageValidationError(ex, stage_name=stage_dict.get('name'))
+            raise exceptions.StageValidationError(ex, stage_name=stage_dict.get("name"))
 
-        if not dynamic and len(stage_dict.get('steps')) == 0:
+        if not dynamic and len(stage_dict.get("steps")) == 0:
             raise exceptions.StageValidationError(
-                'Stage cannot exist without steps!', stage_name=stage_dict.get('name'))
+                "Stage cannot exist without steps!", stage_name=stage_dict.get("name")
+            )
 
         steps_graph = dict()
         init_steps = set()
         all_steps_set = set()
         all_successors_set = set()
-        for step_dict in stage_dict.get('steps'):
+        for step_dict in stage_dict.get("steps"):
             Step.validate(step_dict)
 
             # Get needed information for reachability check
-            if step_dict.get('is_init'):
-                init_steps.add(step_dict.get('name'))
+            if step_dict.get("is_init"):
+                init_steps.add(step_dict.get("name"))
             succ_set = set()
-            for succ_obj in step_dict.get('next', []):
-                step_successors = succ_obj.get('step')
+            for succ_obj in step_dict.get("next", []):
+                step_successors = succ_obj.get("step")
                 if not isinstance(step_successors, list):
                     step_successors = [step_successors]
                 succ_set.update(step_successors)
-                steps_graph.update({step_dict.get('name'): succ_set})
+                steps_graph.update({step_dict.get("name"): succ_set})
             all_successors_set.update(succ_set)
-            all_steps_set.add(step_dict.get('name'))
+            all_steps_set.add(step_dict.get("name"))
 
         # Check reachability
         reachable_steps_set = set()
@@ -225,22 +223,24 @@ class Stage:
             try:
                 reachable_steps_set.update(Stage._dfs_reachable(set(), set(), steps_graph, init_step))
             except exceptions.StageCycleDetected:
-                raise exceptions.StageValidationError("Cycle detected in Stage", stage_name=stage_dict.get('name'))
+                raise exceptions.StageValidationError("Cycle detected in Stage", stage_name=stage_dict.get("name"))
         if all_steps_set != reachable_steps_set:
             if len(reachable_steps_set) == 0:
                 reachable_steps_set = None
             raise exceptions.StageValidationError(
-                f'There is a problem with steps. Check that all steps are reachable, only existing steps are set as '
-                f'successors, and at least one initial step exists. '
-                f'All steps: {all_steps_set}, reachable steps: {reachable_steps_set}', )
+                f"There is a problem with steps. Check that all steps are reachable, only existing steps are set as "
+                f"successors, and at least one initial step exists. "
+                f"All steps: {all_steps_set}, reachable steps: {reachable_steps_set}",
+            )
 
         # Check that init steps are not set as successors
         if not init_steps.isdisjoint(all_successors_set):
             invalid_steps = init_steps.intersection(all_successors_set)
             raise exceptions.StageValidationError(
-                f"One or more successors are set as init steps. Invalid steps are {invalid_steps}.")
+                f"One or more successors are set as init steps. Invalid steps are {invalid_steps}."
+            )
 
-        logger.logger.debug("Stage validated", stage_name=stage_dict.get('name'))
+        logger.logger.debug("Stage validated", stage_name=stage_dict.get("name"))
         return True
 
     def add_dependency(self, dependency_id: int) -> int:
@@ -264,7 +264,7 @@ class StageExecution:
         (optional) stage_execution_id: int - for retrieving existing execution
         stage_model_id: int - for creating new execution
         """
-        stage_execution_id = kwargs.get('stage_execution_id')
+        stage_execution_id = kwargs.get("stage_execution_id")
         if stage_execution_id:
             try:
                 self.model = StageExecutionModel.objects.get(id=stage_execution_id)
@@ -298,8 +298,12 @@ class StageExecution:
         with transaction.atomic():
             StageExecutionModel.objects.select_for_update().get(id=self.model.id)
             if st.StageStateMachine(self.model.id).validate_transition(self.state, value):
-                logger.logger.debug("Stage execution changed state", state_from=self.state, state_to=value,
-                                    stage_execution_id=self.model.id)
+                logger.logger.debug(
+                    "Stage execution changed state",
+                    state_from=self.state,
+                    state_to=value,
+                    stage_execution_id=self.model.id,
+                )
                 model = self.model
                 model.state = value
                 model.save()
@@ -375,9 +379,12 @@ class StageExecution:
 
     @property
     def all_dependencies_finished(self) -> bool:
-        dependency_ids = self.model.stage_model.dependencies.all().values_list('dependency_id', flat=True)
-        cond = self.filter(stage_model_id__in=dependency_ids, plan_execution_id=self.model.plan_execution_id) \
-            .exclude(state=st.FINISHED).exists()
+        dependency_ids = self.model.stage_model.dependencies.all().values_list("dependency_id", flat=True)
+        cond = (
+            self.filter(stage_model_id__in=dependency_ids, plan_execution_id=self.model.plan_execution_id)
+            .exclude(state=st.FINISHED)
+            .exists()
+        )
 
         return not cond
 
@@ -401,9 +408,9 @@ class StageExecution:
         Prepare execution for each Step.
         :return: None
         """
-        step_execution_kwargs = {'stage_execution': self.model}
+        step_execution_kwargs = {"stage_execution": self.model}
         for step_obj in self.model.stage_model.steps.all():
-            step_execution_kwargs.update({'step_model': step_obj})
+            step_execution_kwargs.update({"step_model": step_obj})
             StepExecution(**step_execution_kwargs)
 
     @staticmethod
@@ -418,8 +425,13 @@ class StageExecution:
         processes = []
         for step_executions in step_exec_lists:
             if step_executions:
-                processes.append(logger.LoggedProcess(logg_queue=logger.logger_object.log_queue,
-                                                      target=util.run_executions_in_threads, args=(step_executions,)))
+                processes.append(
+                    logger.LoggedProcess(
+                        logg_queue=logger.logger_object.log_queue,
+                        target=util.run_executions_in_threads,
+                        args=(step_executions,),
+                    )
+                )
 
         # Close django db connections and run processes
         connections.close_all()
@@ -442,8 +454,9 @@ class StageExecution:
         # Get initial Steps in Stage
         step_executions = []
         for step_ex_model in self.model.step_executions.filter(state=st.PENDING, step_model__is_init=True):
-            step_executions.append(StepExecutionType[step_ex_model.step_model.step_type].
-                                   value(step_execution_id=step_ex_model.id))
+            step_executions.append(
+                StepExecutionType[step_ex_model.step_model.step_type].value(step_execution_id=step_ex_model.id)
+            )
 
         # Pause waiting and awaiting StageExecutions if PlanExecution isn't running.
         if self.state in [st.WAITING, st.AWAITING] and self.model.plan_execution.state != st.RUNNING:
@@ -460,8 +473,12 @@ class StageExecution:
 
         self._run_step_executions(step_executions)
 
-        logger.logger.info("Stage execution executed", stage_execution_id=self.model.id,
-                           stage_name=self.model.stage_model.name, status='success')
+        logger.logger.info(
+            "Stage execution executed",
+            stage_execution_id=self.model.id,
+            stage_name=self.model.stage_model.name,
+            status="success",
+        )
 
     def validate_modules(self) -> None:
         """
@@ -469,18 +486,27 @@ class StageExecution:
         """
         logger.logger.debug("Validating stage modules", stage_execution_id=self.model.id)
         for step_ex_id in self.model.step_executions.filter(
-                step_model__step_type=constants.STEP_TYPE_WORKER_EXECUTE).values_list('id', flat=True):
+            step_model__step_type=constants.STEP_TYPE_WORKER_EXECUTE
+        ).values_list("id", flat=True):
             StepExecutionWorkerExecute(step_execution_id=step_ex_id).validate()
 
         return None
 
     def report(self) -> dict:
         logger.logger.debug("Generating Stage report", stage_execution_id=self.model.id)
-        report_obj = StageReport(id=self.model.id, name=self.model.stage_model.name, meta=self.model.stage_model.meta,
-                                 state=self.state, schedule_time=self.schedule_time, start_time=self.start_time,
-                                 finish_time=self.finish_time, pause_time=self.pause_time, step_executions=[])
+        report_obj = StageReport(
+            id=self.model.id,
+            name=self.model.stage_model.name,
+            meta=self.model.stage_model.meta,
+            state=self.state,
+            schedule_time=self.schedule_time,
+            start_time=self.start_time,
+            finish_time=self.finish_time,
+            pause_time=self.pause_time,
+            step_executions=[],
+        )
 
-        for step_execution_obj in StepExecutionModel.objects.filter(stage_execution_id=self.model.id).order_by('id'):
+        for step_execution_obj in StepExecutionModel.objects.filter(stage_execution_id=self.model.id).order_by("id"):
             step_ex_report = StepExecution(step_execution_id=step_execution_obj.id).report()
             report_obj.step_executions.append(step_ex_report)
 
@@ -520,8 +546,12 @@ class StageExecution:
 
         self.finish_time = timezone.now()
         self.state = st.TERMINATED
-        logger.logger.info("Stage execution killed", stage_execution_id=self.model.id,
-                           stage_name=self.model.stage_model.name, status='success')
+        logger.logger.info(
+            "Stage execution killed",
+            stage_execution_id=self.model.id,
+            stage_name=self.model.stage_model.name,
+            status="success",
+        )
 
     def execute_subjects_to_dependency(self) -> None:
         """
@@ -529,10 +559,10 @@ class StageExecution:
         :return: None
         """
         logger.logger.debug("Executing Stage dependency subjects", stage_execution_id=self.model.id)
-        subject_to_ids = self.model.stage_model.subjects_to.all().values_list('stage_model_id', flat=True)
-        subject_to_exs = self.filter(stage_model_id__in=subject_to_ids,
-                                     plan_execution_id=self.model.plan_execution_id,
-                                     state=st.WAITING)
+        subject_to_ids = self.model.stage_model.subjects_to.all().values_list("stage_model_id", flat=True)
+        subject_to_exs = self.filter(
+            stage_model_id__in=subject_to_ids, plan_execution_id=self.model.plan_execution_id, state=st.WAITING
+        )
         for subject_to_ex in subject_to_exs:
             subject_to_ex_obj = StageExecution(stage_execution_id=subject_to_ex.id)
             Thread(target=subject_to_ex_obj.execute).run()

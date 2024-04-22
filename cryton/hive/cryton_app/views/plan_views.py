@@ -17,12 +17,13 @@ from cryton.hive.models.run import Run
 @extend_schema_view(
     list=extend_schema(description="List Plans.", parameters=[serializers.ListSerializer]),
     retrieve=extend_schema(description="Get existing Plan."),
-    destroy=extend_schema(description="Delete Plan.")
+    destroy=extend_schema(description="Delete Plan."),
 )
 class PlanViewSet(util.InstanceFullViewSet):
     """
     Plan ViewSet.
     """
+
     queryset = PlanModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.PlanSerializer
@@ -43,11 +44,11 @@ class PlanViewSet(util.InstanceFullViewSet):
                 "Multiple files upload",
                 description="Uploading multiple inventory files.",
                 value={
-                    'template_id': 1,
-                    'file1': "file content in bytes format",
-                    'file2': "file content in bytes format",
+                    "template_id": 1,
+                    "file1": "file content in bytes format",
+                    "file2": "file content in bytes format",
                 },
-                request_only=True
+                request_only=True,
             )
         ],
         responses={
@@ -55,12 +56,12 @@ class PlanViewSet(util.InstanceFullViewSet):
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
             500: serializers.DetailStringSerializer,
-        }
+        },
     )
     def create(self, request: Request, **kwargs):
         # Get plan template ID from request
         try:
-            template_id = int(request.data['template_id'])
+            template_id = int(request.data["template_id"])
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(ex)
 
@@ -88,8 +89,9 @@ class PlanViewSet(util.InstanceFullViewSet):
             raise exceptions.ValidationError("The plan is invalid. Make sure the template isn't empty.")
 
         if plan_data.get("plan") is None:
-            raise exceptions.ValidationError("The plan is invalid. The root `plan` parameter is either "
-                                             "missing or empty.")
+            raise exceptions.ValidationError(
+                "The plan is invalid. The root `plan` parameter is either " "missing or empty."
+            )
 
         # Validate plan and create Plan Instance
         try:
@@ -97,7 +99,7 @@ class PlanViewSet(util.InstanceFullViewSet):
         except (core_exceptions.ValidationError, core_exceptions.CreationFailedError) as ex:
             raise exceptions.ValidationError(f"Couldn't create the plan. Original exception: {ex}")
 
-        msg = {'id': plan_obj_id, 'detail': 'Plan created.'}
+        msg = {"id": plan_obj_id, "detail": "Plan created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -106,34 +108,31 @@ class PlanViewSet(util.InstanceFullViewSet):
         responses={
             200: serializers.DetailStringSerializer,
             400: serializers.DetailStringSerializer,
-        }
+        },
     )
     @action(methods=["post"], detail=False)
     def validate(self, request: Request):
         plan_data = util.parse_object_from_files(request.FILES)
         try:
-            plan_to_validate = plan_data.get('plan')
+            plan_to_validate = plan_data.get("plan")
             Plan.validate(plan_to_validate, plan_to_validate.get("dynamic", False))
         except (core_exceptions.ValidationError, AttributeError) as ex:
             raise exceptions.ValidationError(f"Plan is not valid. Original error: {ex}")
 
-        msg = {'detail': "Plan is valid."}
+        msg = {"detail": "Plan is valid."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
         description="Create new PlanExecution and execute it.",
         request=serializers.PlanExecuteSerializer,
-        responses={
-            200: serializers.DetailStringSerializer,
-            400: serializers.DetailStringSerializer
-        }
+        responses={200: serializers.DetailStringSerializer, 400: serializers.DetailStringSerializer},
     )
     @action(methods=["post"], detail=True)
     def execute(self, request: Request, **kwargs):
         try:
             plan_id = int(kwargs.get("pk"))
-            run_id = int(request.data['run_id'])
-            worker_id = int(request.data['worker_id'])
+            run_id = int(request.data["run_id"])
+            worker_id = int(request.data["worker_id"])
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(f"Wrong input. Original error: {ex}")
 
@@ -151,21 +150,19 @@ class PlanViewSet(util.InstanceFullViewSet):
             )
 
         if run_obj.state not in states.PLAN_RUN_EXECUTE_STATES:
-            raise exceptions.ApiWrongObjectState(f"Run's state must be "
-                                                 f"{', or'.join(states.PLAN_RUN_EXECUTE_STATES)}.")
+            raise exceptions.ApiWrongObjectState(
+                f"Run's state must be " f"{', or'.join(states.PLAN_RUN_EXECUTE_STATES)}."
+            )
 
         plan_exec = PlanExecution(plan_model_id=plan_id, worker_id=worker_id, run_id=run_id)
         plan_exec.execute()
 
-        msg = {'detail': f'PlanExecution with ID {plan_exec.model.id} successfully created and executed.'}
+        msg = {"detail": f"PlanExecution with ID {plan_exec.model.id} successfully created and executed."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
         description="Get Plan's YAML.",
-        responses={
-            200: serializers.DetailDictionarySerializer,
-            404: serializers.DetailStringSerializer
-        }
+        responses={200: serializers.DetailDictionarySerializer, 404: serializers.DetailStringSerializer},
     )
     @action(methods=["get"], detail=True)
     def get_plan(self, _, **kwargs):

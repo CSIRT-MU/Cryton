@@ -126,8 +126,9 @@ def create_step(step_dict: dict, stage_model_id: int) -> int:
     return step_model_id
 
 
-def create_successor(parent_step: step.Step, stage_id: int, successor_name: str, successor_type: str,
-                     successor_values: Union[list, str]):
+def create_successor(
+    parent_step: step.Step, stage_id: int, successor_name: str, successor_type: str, successor_values: Union[list, str]
+):
     """
     Add successor and its links between parent and successor Step to DB.
     :param parent_step: Parent Step
@@ -177,8 +178,9 @@ def create_worker(name: str, description: str, force: bool = False) -> int:
         raise exceptions.WrongParameterError(message="Parameter cannot be empty", param_name="name")
 
     elif not force and worker.WorkerModel.objects.filter(name=name).exists():
-        raise exceptions.WrongParameterError(message="Inserted Worker with such parameter already exists",
-                                             param_name="name")
+        raise exceptions.WrongParameterError(
+            message="Inserted Worker with such parameter already exists", param_name="name"
+        )
 
     worker_obj = worker.Worker(name=name, description=description)
     return worker_obj.model.id

@@ -64,8 +64,9 @@ class Task:
         #   they're finished, less messages == better
         # Remove Task from Consumer
         if reply_sent:
-            item = util.PrioritizedItem(co.HIGH_PRIORITY, {co.ACTION: co.ACTION_FINISH_TASK,
-                                                           co.CORRELATION_ID: self.correlation_id})
+            item = util.PrioritizedItem(
+                co.HIGH_PRIORITY, {co.ACTION: co.ACTION_FINISH_TASK, co.CORRELATION_ID: self.correlation_id}
+            )
             self._main_queue.put(item)
 
         echo(f"Finished Task processing. correlation_id: {self.correlation_id}")
@@ -94,7 +95,7 @@ class Task:
         :param args: Arguments to pass to the callable
         :return: Result from the callable or a custom one in case of an error
         """
-        ctx = get_context('spawn')
+        ctx = get_context("spawn")
         response_pipe, request_pipe = ctx.Pipe()
         # TODO: run in a logged process?
         self._process = ctx.Process(target=self._pipe_results, args=(request_pipe, to_run, *args))
@@ -158,8 +159,9 @@ class Task:
             channel = self._connection.channel()
         except amqpstorm.AMQPError:
             self.undelivered_messages.append(util.UndeliveredMessage(recipient, message_body, properties))
-            logger.logger.error("Unable to send the message.", recipient=recipient, message=message_body,
-                                properties=properties)
+            logger.logger.error(
+                "Unable to send the message.", recipient=recipient, message=message_body, properties=properties
+            )
             return False
 
         channel.queue.declare(recipient)
@@ -188,30 +190,26 @@ class AttackTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: None
         """
-        validation_schema = Schema({
-            co.ACK_QUEUE: str,
-            co.STEP_TYPE: Or(
-                co.STEP_TYPE_WORKER_EXECUTE, co.STEP_TYPE_EMPIRE_EXECUTE
-            ),
-            co.ARGUMENTS: Or(
-                {
-                    SchemaOptional(co.USE_NAMED_SESSION): str,
-                    SchemaOptional(co.CREATE_NAMED_SESSION): str,
-                    SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
-                    co.MODULE: str,
-                    co.MODULE_ARGUMENTS: dict,
-                },
-                {
-                    co.USE_AGENT: str,
-                    co.MODULE: str,
-                    SchemaOptional(co.MODULE_ARGUMENTS): dict
-                },
-                {
-                    co.USE_AGENT: str,
-                    co.EMPIRE_SHELL_COMMAND: str,
-                }
-            )
-        })
+        validation_schema = Schema(
+            {
+                co.ACK_QUEUE: str,
+                co.STEP_TYPE: Or(co.STEP_TYPE_WORKER_EXECUTE, co.STEP_TYPE_EMPIRE_EXECUTE),
+                co.ARGUMENTS: Or(
+                    {
+                        SchemaOptional(co.USE_NAMED_SESSION): str,
+                        SchemaOptional(co.CREATE_NAMED_SESSION): str,
+                        SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
+                        co.MODULE: str,
+                        co.MODULE_ARGUMENTS: dict,
+                    },
+                    {co.USE_AGENT: str, co.MODULE: str, SchemaOptional(co.MODULE_ARGUMENTS): dict},
+                    {
+                        co.USE_AGENT: str,
+                        co.EMPIRE_SHELL_COMMAND: str,
+                    },
+                ),
+            }
+        )
 
         validation_schema.validate(message_body)
 
@@ -260,11 +258,11 @@ class AgentTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: None
         """
-        validation_schema = Schema({
-            co.ACK_QUEUE: str,
-            co.STEP_TYPE: co.STEP_TYPE_DEPLOY_AGENT,
-            co.ARGUMENTS:
-                {
+        validation_schema = Schema(
+            {
+                co.ACK_QUEUE: str,
+                co.STEP_TYPE: co.STEP_TYPE_DEPLOY_AGENT,
+                co.ARGUMENTS: {
                     SchemaOptional(co.SESSION_ID): str,
                     SchemaOptional(co.USE_NAMED_SESSION): str,
                     SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
@@ -277,7 +275,8 @@ class AgentTask(Task):
                     SchemaOptional(co.LISTENER_OPTIONS): dict,
                     SchemaOptional(co.STAGER_OPTIONS): dict,
                 },
-        })
+            }
+        )
 
         validation_schema.validate(message_body)
 
@@ -315,14 +314,22 @@ class ControlTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: None
         """
-        validation_schema = Schema({
-            co.EVENT_T: str,
-            co.EVENT_V: Or(
-                co.EVENT_VALIDATE_MODULE_SCHEMA, co.EVENT_LIST_MODULES_SCHEMA, co.EVENT_LIST_SESSIONS_SCHEMA,
-                co.EVENT_KILL_STEP_EXECUTION_SCHEMA, co.EVENT_HEALTH_CHECK_SCHEMA, co.EVENT_ADD_TRIGGER_HTTP_SCHEMA,
-                co.EVENT_ADD_TRIGGER_MSF_SCHEMA, co.EVENT_REMOVE_TRIGGER_SCHEMA, co.EVENT_LIST_TRIGGERS_SCHEMA
-            )
-        })
+        validation_schema = Schema(
+            {
+                co.EVENT_T: str,
+                co.EVENT_V: Or(
+                    co.EVENT_VALIDATE_MODULE_SCHEMA,
+                    co.EVENT_LIST_MODULES_SCHEMA,
+                    co.EVENT_LIST_SESSIONS_SCHEMA,
+                    co.EVENT_KILL_STEP_EXECUTION_SCHEMA,
+                    co.EVENT_HEALTH_CHECK_SCHEMA,
+                    co.EVENT_ADD_TRIGGER_HTTP_SCHEMA,
+                    co.EVENT_ADD_TRIGGER_MSF_SCHEMA,
+                    co.EVENT_REMOVE_TRIGGER_SCHEMA,
+                    co.EVENT_LIST_TRIGGERS_SCHEMA,
+                ),
+            }
+        )
 
         validation_schema.validate(message_body)
 
@@ -348,8 +355,13 @@ class ControlTask(Task):
             try:
                 event_v = event_obj_method()
             except Exception as ex:
-                event_v = {co.OUTPUT: {"ex_type": str(ex.__class__), "error": ex.__str__(),
-                                       "traceback": traceback.format_exc()}}
+                event_v = {
+                    co.OUTPUT: {
+                        "ex_type": str(ex.__class__),
+                        "error": ex.__str__(),
+                        "traceback": traceback.format_exc(),
+                    }
+                }
 
         logger.logger.info("Finished ControlTask._execute().", correlation_id=self.correlation_id)
         return {co.EVENT_T: event_t, co.EVENT_V: event_v}

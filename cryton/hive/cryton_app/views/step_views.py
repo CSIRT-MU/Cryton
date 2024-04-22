@@ -15,12 +15,13 @@ from cryton.hive.models.stage import Stage, StageExecution
 @extend_schema_view(
     list=extend_schema(description="List Steps.", parameters=[serializers.ListSerializer]),
     retrieve=extend_schema(description="Get existing Step."),
-    destroy=extend_schema(description="Delete Step.")
+    destroy=extend_schema(description="Delete Step."),
 )
 class StepViewSet(util.InstanceFullViewSet):
     """
     Step ViewSet.
     """
+
     queryset = StepModel.objects.all()
     http_method_names = ["get", "post", "delete"]
     serializer_class = serializers.StepSerializer
@@ -39,8 +40,8 @@ class StepViewSet(util.InstanceFullViewSet):
         responses={
             200: serializers.CreateDetailSerializer,
             400: serializers.DetailStringSerializer,
-            404: serializers.DetailStringSerializer
-        }
+            404: serializers.DetailStringSerializer,
+        },
     )
     def create(self, request: Request, *args, **kwargs):
         try:  # Get Stage ID and check if the Stage exists
@@ -60,8 +61,7 @@ class StepViewSet(util.InstanceFullViewSet):
 
         # Check if the name is unique
         step_name = step_data.get("name")
-        if StepModel.objects.filter(stage_model__plan_model_id=plan_model_obj.id,
-                                    name=step_name).exists():
+        if StepModel.objects.filter(stage_model__plan_model_id=plan_model_obj.id, name=step_name).exists():
             raise exceptions.ValidationError(f"Step with the name `{step_name}` already exists.")
 
         # Validate Step
@@ -80,16 +80,13 @@ class StepViewSet(util.InstanceFullViewSet):
             parent_step = Step(step_model_id=parent_step_model.id)
             creator.create_successor(parent_step, stage_id, step_name, "any", "")
 
-        msg = {'id': step_id, 'detail': 'Step successfully created.'}
+        msg = {"id": step_id, "detail": "Step successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         description="Validate Step YAML. There is no limit or naming convention for inventory files.",
         request=serializers.CreateWithFilesSerializer,
-        responses={
-            200: serializers.DetailStringSerializer,
-            400: serializers.DetailStringSerializer
-        }
+        responses={200: serializers.DetailStringSerializer, 400: serializers.DetailStringSerializer},
     )
     @action(methods=["post"], detail=False)
     def validate(self, request: Request):
@@ -100,7 +97,7 @@ class StepViewSet(util.InstanceFullViewSet):
         except (core_exceptions.ValidationError, core_exceptions.StepTypeDoesNotExist) as ex:
             raise exceptions.ValidationError(f"Step is not valid. Original error: {ex}")
 
-        msg = {'detail': "Step is valid."}
+        msg = {"detail": "Step is valid."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -109,8 +106,8 @@ class StepViewSet(util.InstanceFullViewSet):
         responses={
             200: serializers.ExecutionCreateDetailSerializer,
             400: serializers.DetailStringSerializer,
-            404: serializers.DetailStringSerializer
-        }
+            404: serializers.DetailStringSerializer,
+        },
     )
     @action(methods=["post"], detail=True)
     def execute(self, request: Request, **kwargs):
@@ -140,12 +137,14 @@ class StepViewSet(util.InstanceFullViewSet):
             )
 
         if stage_ex.model.step_executions.filter(step_model=step_obj.model).exists():
-            raise exceptions.ValidationError("Multiple instances of the same Step can't run under the same Stage "
-                                             "execution.")
+            raise exceptions.ValidationError(
+                "Multiple instances of the same Step can't run under the same Stage " "execution."
+            )
 
         if stage_ex.state not in states.STEP_STAGE_EXECUTE_STATES:
-            raise exceptions.ApiWrongObjectState(f"Stage execution's state must be "
-                                                 f"{', or'.join(states.STEP_STAGE_EXECUTE_STATES)}.")
+            raise exceptions.ApiWrongObjectState(
+                f"Stage execution's state must be " f"{', or'.join(states.STEP_STAGE_EXECUTE_STATES)}."
+            )
 
         # Create and start Step execution
         step_ex_obj = StepExecution(step_model_id=step_id, stage_execution_id=stage_ex_id)
@@ -154,5 +153,5 @@ class StepViewSet(util.InstanceFullViewSet):
         )
         step_ex_obj_typed.execute()
 
-        msg = {'detail': 'Started Step execution.', "execution_id": step_ex_obj.model.id}
+        msg = {"detail": "Started Step execution.", "execution_id": step_ex_obj.model.id}
         return Response(msg, status=status.HTTP_200_OK)

@@ -17,7 +17,7 @@ structlog.configure(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
-        structlog.processors.JSONRenderer()
+        structlog.processors.JSONRenderer(),
     ],
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),
@@ -38,7 +38,7 @@ config_dict = {
             "class": "logging.StreamHandler",
             "level": "DEBUG",
             "formatter": "simple",
-            "stream": "ext://sys.stdout"
+            "stream": "ext://sys.stdout",
         },
         "debug_logger": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -47,7 +47,7 @@ config_dict = {
             "filename": SETTINGS.log_file,
             "maxBytes": 10485760,
             "backupCount": 20,
-            "encoding": "utf8"
+            "encoding": "utf8",
         },
         "prod_logger": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -56,31 +56,15 @@ config_dict = {
             "filename": SETTINGS.log_file,
             "maxBytes": 10485760,
             "backupCount": 20,
-            "encoding": "utf8"
-        }
+            "encoding": "utf8",
+        },
     },
-    "root": {
-        "level": "NOTSET",
-        "handlers": [],
-        "propagate": True
-    },
+    "root": {"level": "NOTSET", "handlers": [], "propagate": True},
     "loggers": {
-        "cryton-worker": {
-            "level": "INFO",
-            "handlers": ["prod_logger"],
-            "propagate": True
-        },
-        "cryton-worker-debug": {
-            "level": "DEBUG",
-            "handlers": ["debug_logger", "console"],
-            "propagate": True
-        },
-        "cryton-worker-test": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False
-        }
-    }
+        "cryton-worker": {"level": "INFO", "handlers": ["prod_logger"], "propagate": True},
+        "cryton-worker-debug": {"level": "DEBUG", "handlers": ["debug_logger", "console"], "propagate": True},
+        "cryton-worker-test": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+    },
 }
 
 logging.config.dictConfig(config_dict)

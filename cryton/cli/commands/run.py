@@ -6,7 +6,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Run, SETTINGS
 
 
-@click.group('runs')
+@click.group("runs")
 @click.pass_context
 def run(_) -> None:
     """
@@ -18,11 +18,17 @@ def run(_) -> None:
     """
 
 
-@run.command('list')
+@run.command("list")
 @click.pass_context
 @common_list_decorators
-def run_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize: bool,
-             parameter_filters: tuple[tuple[str, Union[str, int]]]) -> None:
+def run_list(
+    ctx: helpers.Context,
+    less: bool,
+    offset: int,
+    limit: int,
+    localize: bool,
+    parameter_filters: tuple[tuple[str, Union[str, int]]],
+) -> None:
     """
     List existing Runs in Cryton.
 
@@ -36,14 +42,14 @@ def run_list(ctx: helpers.Context, less: bool, offset: int, limit: int, localize
     :return: None
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
-    include = ['id', 'schedule_time', 'start_time', 'pause_time', 'finish_time', 'state', 'plan_model']
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan_model"]
     ctx.obj.get_items(Run.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
-@run.command('create')
+@run.command("create")
 @click.pass_context
-@click.argument('plan_id', type=click.INT, required=True)
-@click.argument('worker_ids', type=click.INT, nargs=-1, required=True)
+@click.argument("plan_id", type=click.INT, required=True)
+@click.argument("worker_ids", type=click.INT, nargs=-1, required=True)
 def run_create(ctx: helpers.Context, plan_id: int, worker_ids: list) -> None:
     """
     Create new Run with PLAN_ID and WORKER_IDS.
@@ -58,14 +64,14 @@ def run_create(ctx: helpers.Context, plan_id: int, worker_ids: list) -> None:
     :param worker_ids: List of IDs you want to use for Run
     :return: None
     """
-    arguments = {'plan_id': plan_id, 'worker_ids': worker_ids}
+    arguments = {"plan_id": plan_id, "worker_ids": worker_ids}
     response = ctx.obj.api_post(Run.CREATE, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('show')
+@run.command("show")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 @d_less
 @d_localize
 def run_read(ctx: helpers.Context, run_id: int, less: bool, localize: bool) -> None:
@@ -83,13 +89,13 @@ def run_read(ctx: helpers.Context, run_id: int, less: bool, localize: bool) -> N
     """
     response = ctx.obj.api_get(Run.READ, run_id)
     # TODO: move include into a global variable on top of the file
-    include = ['id', 'schedule_time', 'start_time', 'pause_time', 'finish_time', 'state', 'plan_model']
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan_model"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
-@run.command('delete')
+@run.command("delete")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_delete(ctx: helpers.Context, run_id: int) -> None:
     """
     Delete Run with RUN_ID saved in Cryton.
@@ -104,10 +110,10 @@ def run_delete(ctx: helpers.Context, run_id: int) -> None:
     ctx.obj.delete_item(Run.DELETE, run_id)
 
 
-@run.command('execute')
+@run.command("execute")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
-@click.option('-S', '--skip-checks', is_flag=True, help="Skip health-checks and modules validation.")
+@click.argument("run_id", type=click.INT, required=True)
+@click.option("-S", "--skip-checks", is_flag=True, help="Skip health-checks and modules validation.")
 def run_execute(ctx: helpers.Context, run_id: int, skip_checks: bool) -> None:
     """
     Execute Run saved in Cryton with RUN_ID.
@@ -133,9 +139,9 @@ def run_execute(ctx: helpers.Context, run_id: int, skip_checks: bool) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('pause')
+@run.command("pause")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_pause(ctx: helpers.Context, run_id: int) -> None:
     """
     Pause Run saved in Cryton with RUN_ID.
@@ -151,10 +157,10 @@ def run_pause(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('postpone')
+@run.command("postpone")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
-@click.argument('to_postpone', type=click.STRING, required=True)
+@click.argument("run_id", type=click.INT, required=True)
+@click.argument("to_postpone", type=click.STRING, required=True)
 def run_postpone(ctx: helpers.Context, run_id: int, to_postpone: str) -> None:
     """
     Postpone Run saved in Cryton with RUN_ID by TIME (hh:mm:ss).
@@ -169,14 +175,14 @@ def run_postpone(ctx: helpers.Context, run_id: int, to_postpone: str) -> None:
     :param to_postpone: Time to add to the Run's start time
     :return: None
     """
-    arguments = {'delta': to_postpone}
+    arguments = {"delta": to_postpone}
     response = ctx.obj.api_post(Run.POSTPONE, run_id, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('report')
+@run.command("report")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 @d_save_report
 @d_less
 @d_localize
@@ -195,15 +201,15 @@ def run_report(ctx: helpers.Context, run_id: int, file: str, less: bool, localiz
     :return: None
     """
     response = ctx.obj.api_get(Run.REPORT, run_id)
-    helpers.save_yaml(response, file, f'run-{run_id}.yml', less, less, localize, ctx.obj.debug)
+    helpers.save_yaml(response, file, f"run-{run_id}.yml", less, less, localize, ctx.obj.debug)
 
 
-@run.command('reschedule')
+@run.command("reschedule")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
-@click.argument('to_date', type=click.STRING, required=True)
-@click.argument('to_time', type=click.STRING, required=True)
-@click.option('--utc-timezone', is_flag=True, help='Input time in UTC timezone.')
+@click.argument("run_id", type=click.INT, required=True)
+@click.argument("to_date", type=click.STRING, required=True)
+@click.argument("to_time", type=click.STRING, required=True)
+@click.option("--utc-timezone", is_flag=True, help="Input time in UTC timezone.")
 def run_reschedule(ctx: helpers.Context, run_id: int, to_date: str, to_time: str, utc_timezone: bool) -> None:
     """
     Reschedule Run saved in Cryton with RUN_ID to specified DATE and TIME.
@@ -222,17 +228,17 @@ def run_reschedule(ctx: helpers.Context, run_id: int, to_date: str, to_time: str
     :param utc_timezone: Use UTC timezone instead of local timezone
     :return: None
     """
-    arguments = {'start_time': f"{to_date}T{to_time}Z", 'time_zone': "UTC" if utc_timezone else SETTINGS.timezone}
+    arguments = {"start_time": f"{to_date}T{to_time}Z", "time_zone": "UTC" if utc_timezone else SETTINGS.timezone}
     response = ctx.obj.api_post(Run.RESCHEDULE, run_id, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('schedule')
+@run.command("schedule")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
-@click.argument('to_date', type=click.STRING, required=True)
-@click.argument('to_time', type=click.STRING, required=True)
-@click.option('--utc-timezone', is_flag=True, help='Input time in UTC timezone.')
+@click.argument("run_id", type=click.INT, required=True)
+@click.argument("to_date", type=click.STRING, required=True)
+@click.argument("to_time", type=click.STRING, required=True)
+@click.option("--utc-timezone", is_flag=True, help="Input time in UTC timezone.")
 def run_schedule(ctx: helpers.Context, run_id: int, to_date: str, to_time: str, utc_timezone: bool) -> None:
     """
     Schedule Run saved in Cryton with RUN_ID to specified DATE and TIME.
@@ -251,14 +257,14 @@ def run_schedule(ctx: helpers.Context, run_id: int, to_date: str, to_time: str, 
     :param utc_timezone: Use UTC timezone instead of local timezone
     :return: None
     """
-    arguments = {'start_time': f"{to_date}T{to_time}Z", 'time_zone': "UTC" if utc_timezone else SETTINGS.timezone}
+    arguments = {"start_time": f"{to_date}T{to_time}Z", "time_zone": "UTC" if utc_timezone else SETTINGS.timezone}
     response = ctx.obj.api_post(Run.SCHEDULE, run_id, json=arguments)
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('resume')
+@run.command("resume")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_unpause(ctx: helpers.Context, run_id: int) -> None:
     """
     Resume Run saved in Cryton with RUN_ID.
@@ -274,9 +280,9 @@ def run_unpause(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('unschedule')
+@run.command("unschedule")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_unschedule(ctx: helpers.Context, run_id: int) -> None:
     """
     Unschedule Run saved in Cryton with RUN_ID.
@@ -292,9 +298,9 @@ def run_unschedule(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('kill')
+@run.command("kill")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_kill(ctx: helpers.Context, run_id: int) -> None:
     """
     Kill Run saved in Cryton with RUN_ID.
@@ -310,9 +316,9 @@ def run_kill(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('health-check-workers')
+@run.command("health-check-workers")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_health_check_workers(ctx: helpers.Context, run_id: int) -> bool:
     """
     Check Workers for Run with RUN_ID saved in Cryton.
@@ -328,9 +334,9 @@ def run_health_check_workers(ctx: helpers.Context, run_id: int) -> bool:
     return helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('validate-modules')
+@run.command("validate-modules")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
+@click.argument("run_id", type=click.INT, required=True)
 def run_validate_modules(ctx: helpers.Context, run_id: int) -> bool:
     """
     Validate modules for Run with RUN_ID saved in Cryton.
@@ -346,11 +352,12 @@ def run_validate_modules(ctx: helpers.Context, run_id: int) -> bool:
     return helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command('get-plan')
+@run.command("get-plan")
 @click.pass_context
-@click.argument('run_id', type=click.INT, required=True)
-@click.option('-f', '--file', type=click.Path(exists=True), default='/tmp',
-              help='File to save the plan to (default is /tmp).')
+@click.argument("run_id", type=click.INT, required=True)
+@click.option(
+    "-f", "--file", type=click.Path(exists=True), default="/tmp", help="File to save the plan to (default is /tmp)."
+)
 @d_less
 @d_localize
 def run_get_plan(ctx: helpers.Context, run_id: int, file: str, less: bool, localize: bool) -> None:
@@ -368,4 +375,4 @@ def run_get_plan(ctx: helpers.Context, run_id: int, file: str, less: bool, local
     :return: None
     """
     response = ctx.obj.api_get(Run.GET_PLAN, run_id)
-    helpers.save_yaml(response, file, f'plan-used-in-run-{run_id}.yml', less, less, localize, ctx.obj.debug)
+    helpers.save_yaml(response, file, f"plan-used-in-run-{run_id}.yml", less, less, localize, ctx.obj.debug)

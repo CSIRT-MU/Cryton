@@ -51,6 +51,21 @@ integration_tests:
     - tox run-parallel -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
     - cat coverage.readable
 
+black:
+  stage: test
+  rules:
+    - changes:
+        - cryton/**/*
+        - tests/**/*
+        - .gitlab-ci.yml
+        - poetry.lock
+        - pyproject.toml
+    - when: never
+  before_script:
+    - poetry install
+  script:
+    - poetry run black --check --diff cryton/
+
 build_documentation:
   extends: .documentation
   stage: test

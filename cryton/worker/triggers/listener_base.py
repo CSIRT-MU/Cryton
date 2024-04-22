@@ -94,10 +94,15 @@ class Listener:
         :param message_body: Message content
         :return: None
         """
-        echo(f"Notifying about successful trigger call. trigger_type: {self.__class__}, "
-             f"identifiers: {self._identifiers}")
-        logger.logger.debug("Notifying about successful trigger call.", trigger_type=self.__class__,
-                            identifiers=self._identifiers)
-        item = util.PrioritizedItem(co.HIGH_PRIORITY, {co.ACTION: co.ACTION_SEND_MESSAGE, co.QUEUE_NAME: queue_name,
-                                                       co.DATA: message_body, co.PROPERTIES: {}})
+        echo(
+            f"Notifying about successful trigger call. trigger_type: {self.__class__}, "
+            f"identifiers: {self._identifiers}"
+        )
+        logger.logger.debug(
+            "Notifying about successful trigger call.", trigger_type=self.__class__, identifiers=self._identifiers
+        )
+        item = util.PrioritizedItem(
+            co.HIGH_PRIORITY,
+            {co.ACTION: co.ACTION_SEND_MESSAGE, co.QUEUE_NAME: queue_name, co.DATA: message_body, co.PROPERTIES: {}},
+        )
         self._main_queue.put(item)

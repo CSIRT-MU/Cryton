@@ -1,44 +1,45 @@
 from cryton.hive.utility import exceptions
 
 # States
-PENDING = 'PENDING'
-SCHEDULED = 'SCHEDULED'
-STARTING = 'STARTING'
-RUNNING = 'RUNNING'
-PAUSING = 'PAUSING'
-PAUSED = 'PAUSED'
-FINISHED = 'FINISHED'
-IGNORED = 'IGNORED'
-ERROR = 'ERROR'
-WAITING = 'WAITING'
-TERMINATED = 'TERMINATED'
-TERMINATING = 'TERMINATING'
-AWAITING = 'AWAITING'
+PENDING = "PENDING"
+SCHEDULED = "SCHEDULED"
+STARTING = "STARTING"
+RUNNING = "RUNNING"
+PAUSING = "PAUSING"
+PAUSED = "PAUSED"
+FINISHED = "FINISHED"
+IGNORED = "IGNORED"
+ERROR = "ERROR"
+WAITING = "WAITING"
+TERMINATED = "TERMINATED"
+TERMINATING = "TERMINATING"
+AWAITING = "AWAITING"
 
-UP = 'UP'
-DOWN = 'DOWN'
+UP = "UP"
+DOWN = "DOWN"
 
 # Worker related
-WORKER_STATES = [
-    UP, DOWN
-]
+WORKER_STATES = [UP, DOWN]
 
-WORKER_TRANSITIONS = [
-    (UP, DOWN), (DOWN, UP)
-]
+WORKER_TRANSITIONS = [(UP, DOWN), (DOWN, UP)]
 
 # Run related
-RUN_STATES = [
-    PENDING, SCHEDULED, RUNNING, FINISHED, PAUSED, PAUSING, TERMINATING, TERMINATED
-]
+RUN_STATES = [PENDING, SCHEDULED, RUNNING, FINISHED, PAUSED, PAUSING, TERMINATING, TERMINATED]
 
 RUN_TRANSITIONS = [
-    (PENDING, SCHEDULED), (PENDING, RUNNING),
-    (SCHEDULED, PENDING), (SCHEDULED, RUNNING),
-    (RUNNING, PAUSING), (RUNNING, FINISHED), (RUNNING, TERMINATING),
-    (PAUSING, PAUSED), (PAUSING, FINISHED), (PAUSING, TERMINATING),
-    (PAUSED, RUNNING), (PAUSED, TERMINATING),
-    (TERMINATING, TERMINATED)
+    (PENDING, SCHEDULED),
+    (PENDING, RUNNING),
+    (SCHEDULED, PENDING),
+    (SCHEDULED, RUNNING),
+    (RUNNING, PAUSING),
+    (RUNNING, FINISHED),
+    (RUNNING, TERMINATING),
+    (PAUSING, PAUSED),
+    (PAUSING, FINISHED),
+    (PAUSING, TERMINATING),
+    (PAUSED, RUNNING),
+    (PAUSED, TERMINATING),
+    (TERMINATING, TERMINATED),
 ]
 
 RUN_PREPARE_STATES = [PENDING]
@@ -74,19 +75,46 @@ PLAN_RUN_EXECUTE_STATES = [RUNNING, FINISHED]
 
 # StageExecution related
 STAGE_STATES = [
-    PENDING, SCHEDULED, STARTING, RUNNING, FINISHED, PAUSING, PAUSED, WAITING, AWAITING, TERMINATING, TERMINATED, ERROR
+    PENDING,
+    SCHEDULED,
+    STARTING,
+    RUNNING,
+    FINISHED,
+    PAUSING,
+    PAUSED,
+    WAITING,
+    AWAITING,
+    TERMINATING,
+    TERMINATED,
+    ERROR,
 ]
 
 STAGE_TRANSITIONS = [
-    (PENDING, SCHEDULED), (PENDING, WAITING), (PENDING, STARTING), (PENDING, RUNNING),
-    (STARTING, AWAITING), (STARTING, ERROR),
-    (SCHEDULED, PENDING), (SCHEDULED, WAITING), (SCHEDULED, RUNNING),
-    (RUNNING, FINISHED), (RUNNING, PAUSING), (RUNNING, TERMINATING),
-    (PAUSING, FINISHED), (PAUSING, PAUSED), (PAUSING, TERMINATING),
-    (PAUSED, RUNNING), (PAUSED, TERMINATING),
-    (WAITING, RUNNING), (WAITING, PAUSED), (WAITING, TERMINATING),
-    (AWAITING, WAITING), (AWAITING, RUNNING), (AWAITING, PAUSED), (AWAITING, TERMINATING),
-    (TERMINATING, TERMINATED)
+    (PENDING, SCHEDULED),
+    (PENDING, WAITING),
+    (PENDING, STARTING),
+    (PENDING, RUNNING),
+    (STARTING, AWAITING),
+    (STARTING, ERROR),
+    (SCHEDULED, PENDING),
+    (SCHEDULED, WAITING),
+    (SCHEDULED, RUNNING),
+    (RUNNING, FINISHED),
+    (RUNNING, PAUSING),
+    (RUNNING, TERMINATING),
+    (PAUSING, FINISHED),
+    (PAUSING, PAUSED),
+    (PAUSING, TERMINATING),
+    (PAUSED, RUNNING),
+    (PAUSED, TERMINATING),
+    (WAITING, RUNNING),
+    (WAITING, PAUSED),
+    (WAITING, TERMINATING),
+    (AWAITING, WAITING),
+    (AWAITING, RUNNING),
+    (AWAITING, PAUSED),
+    (AWAITING, TERMINATING),
+    (TERMINATING, TERMINATED),
 ]
 
 STAGE_EXECUTE_STATES = [PENDING, SCHEDULED, PAUSED, WAITING, AWAITING]
@@ -100,16 +128,20 @@ STAGE_FINAL_STATES = [FINISHED, TERMINATED, ERROR]
 STAGE_PLAN_EXECUTE_STATES = [RUNNING, FINISHED]
 
 # StepExecution related
-STEP_STATES = [
-    PENDING, STARTING, RUNNING, FINISHED, IGNORED, PAUSED, ERROR, TERMINATING, TERMINATED
-]
+STEP_STATES = [PENDING, STARTING, RUNNING, FINISHED, IGNORED, PAUSED, ERROR, TERMINATING, TERMINATED]
 
 STEP_TRANSITIONS = [
-    (PENDING, STARTING), (PENDING, IGNORED), (PENDING, PAUSED),
-    (STARTING, RUNNING), (STARTING, ERROR),
-    (RUNNING, FINISHED), (RUNNING, ERROR), (RUNNING, TERMINATING),
-    (PAUSED, STARTING), (PAUSED, TERMINATING),
-    (TERMINATING, TERMINATED)
+    (PENDING, STARTING),
+    (PENDING, IGNORED),
+    (PENDING, PAUSED),
+    (STARTING, RUNNING),
+    (STARTING, ERROR),
+    (RUNNING, FINISHED),
+    (RUNNING, ERROR),
+    (RUNNING, TERMINATING),
+    (PAUSED, STARTING),
+    (PAUSED, TERMINATING),
+    (TERMINATING, TERMINATED),
 ]
 
 STEP_EXECUTE_STATES = [PENDING, PAUSED]
@@ -143,19 +175,22 @@ class StateMachine:
         """
         if state_from not in self.valid_states:
             raise exceptions.InvalidStateError(
-                'Invalid state {}!'.format(state_from), self.execution_id, state_from, self.valid_states
+                "Invalid state {}!".format(state_from), self.execution_id, state_from, self.valid_states
             )
         if state_to not in self.valid_states:
             raise exceptions.InvalidStateError(
-                'Invalid state {}!'.format(state_to), self.execution_id, state_to, self.valid_states
+                "Invalid state {}!".format(state_to), self.execution_id, state_to, self.valid_states
             )
         if state_from == state_to:
             return False
 
         if (state_from, state_to) not in self.valid_transitions:
             raise exceptions.StateTransitionError(
-                'Invalid state transition from {} to {}!'.format(state_from, state_to), self.execution_id, state_from,
-                state_to, self.valid_transitions
+                "Invalid state transition from {} to {}!".format(state_from, state_to),
+                self.execution_id,
+                state_from,
+                state_to,
+                self.valid_transitions,
             )
 
         return True
@@ -197,11 +232,11 @@ class RunStateMachine(StateMachine):
             return self._check_transition_validity(state_from, state_to)
         except exceptions.StateTransitionError as e:
             raise exceptions.RunStateTransitionError(
-                e.message.get('message'), self.execution_id, state_from, state_to, RUN_TRANSITIONS
+                e.message.get("message"), self.execution_id, state_from, state_to, RUN_TRANSITIONS
             )
         except exceptions.InvalidStateError as e:
             raise exceptions.RunInvalidStateError(
-                e.message.get('message'), self.execution_id, e.message.get('state'), RUN_STATES
+                e.message.get("message"), self.execution_id, e.message.get("state"), RUN_STATES
             )
 
     def validate_state(self, state: str, valid_states: list) -> None:
@@ -217,8 +252,10 @@ class RunStateMachine(StateMachine):
             return self._check_valid_state(state, valid_states)
         except exceptions.InvalidStateError:
             raise exceptions.RunInvalidStateError(
-                "Desired action cannot be performed due to Run's incorrect state.", self.execution_id, state,
-                valid_states
+                "Desired action cannot be performed due to Run's incorrect state.",
+                self.execution_id,
+                state,
+                valid_states,
             )
 
 
@@ -242,11 +279,11 @@ class PlanStateMachine(StateMachine):
             return self._check_transition_validity(state_from, state_to)
         except exceptions.StateTransitionError as e:
             raise exceptions.PlanStateTransitionError(
-                e.message.get('message'), self.execution_id, state_from, state_to, PLAN_TRANSITIONS
+                e.message.get("message"), self.execution_id, state_from, state_to, PLAN_TRANSITIONS
             )
         except exceptions.InvalidStateError as e:
             raise exceptions.PlanInvalidStateError(
-                e.message.get('message'), self.execution_id, e.message.get('state'), PLAN_STATES
+                e.message.get("message"), self.execution_id, e.message.get("state"), PLAN_STATES
             )
 
     def validate_state(self, state: str, valid_states: list) -> None:
@@ -262,8 +299,10 @@ class PlanStateMachine(StateMachine):
             return self._check_valid_state(state, valid_states)
         except exceptions.InvalidStateError:
             raise exceptions.PlanInvalidStateError(
-                "Desired action cannot be performed due to PlanExecution's incorrect state.", self.execution_id, state,
-                valid_states
+                "Desired action cannot be performed due to PlanExecution's incorrect state.",
+                self.execution_id,
+                state,
+                valid_states,
             )
 
 
@@ -287,11 +326,11 @@ class StageStateMachine(StateMachine):
             return self._check_transition_validity(state_from, state_to)
         except exceptions.StateTransitionError as e:
             raise exceptions.StageStateTransitionError(
-                e.message.get('message'), self.execution_id, state_from, state_to, STAGE_TRANSITIONS
+                e.message.get("message"), self.execution_id, state_from, state_to, STAGE_TRANSITIONS
             )
         except exceptions.InvalidStateError as e:
             raise exceptions.StageInvalidStateError(
-                e.message.get('message'), self.execution_id, e.message.get('state'), STAGE_STATES
+                e.message.get("message"), self.execution_id, e.message.get("state"), STAGE_STATES
             )
 
     def validate_state(self, state: str, valid_states: list) -> None:
@@ -307,8 +346,10 @@ class StageStateMachine(StateMachine):
             return self._check_valid_state(state, valid_states)
         except exceptions.InvalidStateError:
             raise exceptions.StageInvalidStateError(
-                "Desired action cannot be performed due to StageExecution's incorrect state.", self.execution_id, state,
-                valid_states
+                "Desired action cannot be performed due to StageExecution's incorrect state.",
+                self.execution_id,
+                state,
+                valid_states,
             )
 
 
@@ -332,11 +373,11 @@ class StepStateMachine(StateMachine):
             return self._check_transition_validity(state_from, state_to)
         except exceptions.StateTransitionError as e:
             raise exceptions.StepStateTransitionError(
-                e.message.get('message'), self.execution_id, state_from, state_to, STEP_TRANSITIONS
+                e.message.get("message"), self.execution_id, state_from, state_to, STEP_TRANSITIONS
             )
         except exceptions.InvalidStateError as e:
             raise exceptions.StepInvalidStateError(
-                e.message.get('message'), self.execution_id, e.message.get('state'), STEP_STATES
+                e.message.get("message"), self.execution_id, e.message.get("state"), STEP_STATES
             )
 
     def validate_state(self, state: str, valid_states: list) -> None:
@@ -352,6 +393,8 @@ class StepStateMachine(StateMachine):
             return self._check_valid_state(state, valid_states)
         except exceptions.InvalidStateError:
             raise exceptions.StepInvalidStateError(
-                "Desired action cannot be performed due to StepExecution's incorrect state.", self.execution_id, state,
-                valid_states
+                "Desired action cannot be performed due to StepExecution's incorrect state.",
+                self.execution_id,
+                state,
+                valid_states,
             )
