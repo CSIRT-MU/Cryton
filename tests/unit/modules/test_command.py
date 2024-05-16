@@ -4,6 +4,7 @@ from pytest_mock import MockerFixture
 import pytest
 
 from cryton.modules.command.module import Module, Result
+from snek_sploit import Error as MSFError
 
 
 class TestModuleCommand:
@@ -11,7 +12,7 @@ class TestModuleCommand:
 
     @pytest.fixture
     def f_metasploit(self, mocker: MockerFixture):
-        return mocker.patch(f"{self.path}.Metasploit")
+        return mocker.patch(f"{self.path}.MetasploitClientUpdated")
 
     @pytest.fixture
     def f_subprocess_run(self, mocker: MockerFixture):
@@ -28,6 +29,7 @@ class TestModuleCommand:
                 "minimal_execution_time": 1,
                 "serialize_output": True,
                 "session_id": 1,
+                "force_shell": True,
             },
         ]
     )
@@ -38,7 +40,8 @@ class TestModuleCommand:
         "p_arguments",
         [
             {},
-            {"non_existent": "placeholder"}
+            {"non_existent": "placeholder"},
+            {"command": "placeholder", "non_existent": "placeholder"}
         ]
     )
     def test_schema_error(self, p_arguments: dict):
@@ -52,7 +55,8 @@ class TestModuleCommand:
             "timeout": 1,
             "minimal_execution_time": 1,
             "serialize_output": True,
-            "session_id": 1
+            "session_id": 1,
+            "force_shell": False
         }
         module = Module(arguments)
 
@@ -60,15 +64,27 @@ class TestModuleCommand:
         assert module._end_checks == arguments.get("end_checks")
         assert module._timeout == arguments.get("timeout")
         assert module._minimal_execution_time == arguments.get("minimal_execution_time")
-        assert module._serialize_output == arguments.get("serialize_output")
+        assert module._serialize_output_flag == arguments.get("serialize_output")
         assert module._session_id == arguments.get("session_id")
+        assert module._force_shell == arguments.get("force_shell")
 
-    def test_check_requirements(self, f_metasploit):
-        f_metasploit.return_value.is_connected.return_value = False
+    def test_check_requirements_no_session(self, f_metasploit):
+        assert Module({"command": "placeholder"}).check_requirements() is None
+
+    def test_check_requirements_no_msf_connection(self, f_metasploit):
+        f_metasploit.return_value.health.rpc.check.side_effect = [ConnectionError]
 
         module = Module({"command": "placeholder", "session_id": 1})
 
         with pytest.raises(ConnectionError):
+            module.check_requirements()
+
+    def test_check_requirements_wrong_msf_credentials(self, f_metasploit):
+        f_metasploit.return_value.login.side_effect = [MSFError]
+
+        module = Module({"command": "placeholder", "session_id": 1})
+
+        with pytest.raises(RuntimeError):
             module.check_requirements()
 
     def test_execute(self, f_subprocess_run):
@@ -77,7 +93,7 @@ class TestModuleCommand:
         f_subprocess_run.return_value.stdout = b"placeholder"
         f_subprocess_run.return_value.stderr = b""
 
-        module.serialize_output = Mock(return_value={"example": "example"})
+        module._serialize_output = Mock(return_value={"example": "example"})
 
         result = module.execute()
 
@@ -124,7 +140,7 @@ class TestModuleCommand:
         f_subprocess_run.return_value.stdout = b"output"
         f_subprocess_run.return_value.stderr = b""
 
-        module.serialize_output = Mock(side_effect=TypeError("error"))
+        module._serialize_output = Mock(side_effect=TypeError("error"))
 
         result = module.execute()
 
@@ -134,8 +150,10 @@ class TestModuleCommand:
 
     def test_execute_session(self, f_metasploit):
         module = Module({"command": "placeholder", "session_id": 1})
-        
-        f_metasploit.return_value.execute_in_session.return_value = "output"
+
+        mock_session = Mock()
+        mock_session.execute.return_value = "output"
+        f_metasploit.return_value.sessions.get.return_value = mock_session
 
         result = module.execute()
     
@@ -146,7 +164,9 @@ class TestModuleCommand:
     def test_execute_session_error(self, f_metasploit):
         module = Module({"command": "placeholder", "session_id": 1})
 
-        f_metasploit.return_value.execute_in_session.side_effect = Exception("error")
+        mock_session = Mock()
+        mock_session.execute.side_effect = Exception("error")
+        f_metasploit.return_value.sessions.get.return_value = mock_session
 
         result = module.execute()
 
@@ -157,14 +177,14 @@ class TestModuleCommand:
     def test_serialize_output(self):
         module = Module({"command": "placeholder"})
 
-        result = module.serialize_output('"output"')
+        result = module._serialize_output('"output"')
 
         assert result == {"auto_serialized": "output"}
 
     def test_serialize_output_session(self):
         module = Module({"command": "placeholder", "session_id": 1})
 
-        result = module.serialize_output('placeholder "output"')
+        result = module._serialize_output('placeholder "output"')
 
         assert result == {"auto_serialized": "output"}
 
@@ -172,4 +192,4 @@ class TestModuleCommand:
         module = Module({"command": "placeholder"})
 
         with pytest.raises(TypeError):
-            module.serialize_output('output')
+            module._serialize_output('output')

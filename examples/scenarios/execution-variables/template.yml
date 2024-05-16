@@ -31,5 +31,5 @@ plan:
             module_arguments:
               target: {{ target.address }}
               credentials:
-                username: "{{ bruteforce.username }}"
-                password: "{{ bruteforce.password }}"
+                username: '{{ bruteforce.username }}'
+                password: '{{ bruteforce.password }}'

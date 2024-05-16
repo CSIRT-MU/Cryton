@@ -4,10 +4,12 @@ from threading import Thread, Lock, Event
 from queue import PriorityQueue
 import time
 import traceback
+from snek_sploit import Error as MSFError
 
 from cryton.worker import consumer
-from cryton.worker.utility import constants as co, logger, util, exceptions
+from cryton.worker.utility import constants as co, logger, util
 from cryton.worker.triggers import Listener, ListenerEnum, ListenerIdentifiersEnum
+from cryton.lib.metasploit import MetasploitClientUpdated
 
 
 class Worker:
@@ -64,10 +66,10 @@ class Worker:
         echo(f"Starting Worker {self._name}..")
         echo("To exit press CTRL+C")
         try:
-            if util.Metasploit().is_connected():
-                echo("Connected to MSF RPC server.")
-            else:
-                echo("Couldn't connect to MSF RPC server.")
+            try:
+                MetasploitClientUpdated()
+            except MSFError as ex:
+                raise RuntimeError(f"Unable to login to the MSF RPC server. Original error: {ex}")
 
             self._start_consumer()
             self._start_threaded_processors()
@@ -254,16 +256,9 @@ class Worker:
 
         try:
             trigger_id = listener_obj.add_trigger(trigger_data)
-        except (
-            KeyError,
-            ValueError,
-            TypeError,
-            exceptions.MsfModuleNotFound,
-            exceptions.TooManyTriggers,
-            exceptions.MsfConnectionError,
-        ) as err:
+        except Exception as ex:
             # raised mostly during MSF module execution
-            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
+            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
         else:
             result = {co.RESULT: co.CODE_OK, co.TRIGGER_ID: trigger_id}
 

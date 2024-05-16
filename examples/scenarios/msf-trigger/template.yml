@@ -11,12 +11,9 @@ plan:
     - name: stage-msf # creates `stage-msf_session`
       trigger_type: MSFListener
       trigger_args:
-        identifiers:
-          via_exploit: exploit/multi/handler
-          via_payload: python/shell_reverse_tcp
-        exploit: multi/handler
-        payload: python/shell_reverse_tcp
-        payload_arguments:
+        module_name: multi/handler
+        datastore:
+          PAYLOAD: python/shell_reverse_tcp
           LHOST: {{ metasploit_host_address }}
           LPORT: 4444
       steps:

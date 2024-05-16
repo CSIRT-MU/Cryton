@@ -21,13 +21,16 @@ x-settings: &settings
   RABBITMQ_DEFAULT_USER: cryton
   RABBITMQ_DEFAULT_PASS: cryton
   # METASPLOIT
-  METASPLOIT_DB_HOST: cryton-pgbouncer
+  METASPLOIT_RPC_USERNAME: cryton
+  METASPLOIT_RPC_PASSWORD: cryton
+  METASPLOIT_DB_HOST: 127.0.0.1
   METASPLOIT_DB_PORT: 5432
   METASPLOIT_DB_NAME: cryton
   METASPLOIT_DB_USERNAME: cryton
   METASPLOIT_DB_PASSWORD: cryton
+  METASPLOIT_DB_PREPARED_STATEMENTS: false
+  METASPLOIT_DB_ADVISORY_LOCKS: false
 
-version: '3.9'
 services:
   cryton_db:
     restart: always
@@ -45,7 +48,7 @@ services:
 
   cryton_pgbouncer:
     restart: always
-    image: bitnami/pgbouncer:1.21.0
+    image: bitnami/pgbouncer:1.22.1
     container_name: cryton-pgbouncer
     depends_on:
       cryton_db:
@@ -82,6 +85,7 @@ services:
       <<: *settings
     network_mode: host
     stdin_open: true
+    entrypoint: []
     command: bash -c 'sudo -E poetry run python empire.py server --username $$CRYTON_WORKER_EMPIRE_USERNAME --password $$CRYTON_WORKER_EMPIRE_PASSWORD'
 
   cryton_msf:

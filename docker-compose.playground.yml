@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   cryton_cli:
     network_mode: service:cryton_hive

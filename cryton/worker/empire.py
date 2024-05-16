@@ -2,14 +2,15 @@ import asyncio
 import socket
 import time
 from typing import Optional
-
 import paramiko
 import utinni
+from httpx import TransportError
 
-from cryton.worker.utility.util import Metasploit, ssh_to_target
+from cryton.worker.utility.util import ssh_to_target
 from cryton.worker.config.settings import SETTINGS
 from cryton.worker.utility import logger, constants as co
-from httpx import TransportError
+from cryton.lib.metasploit import MetasploitClientUpdated
+from snek_sploit import Error as MSFError
 
 
 class EmpireClient(utinni.EmpireApiClient):
@@ -227,17 +228,20 @@ async def deploy_agent(arguments: dict) -> dict:
 
         # Check type of connection to target
     if session_id:
-        metasploit_obj = Metasploit()
+        metasploit_obj = MetasploitClientUpdated()
         try:
-            target_ip = metasploit_obj.get_parameter_from_session(session_id, "session_host")
-        except KeyError as err:
+            session_to_use = metasploit_obj.sessions.get(session_id)
+        except MSFError as ex:
             logger.logger.error("MSF session not found.", session_id=session_id)
-            return {co.OUTPUT: f"MSF Session with id {str(err)} not found.", co.RESULT: co.CODE_ERROR}
+            return {co.OUTPUT: f"MSF Session with id {session_id} not found. {ex}", co.RESULT: co.CODE_ERROR}
+
+        target_ip = session_to_use.info.session_host
 
         logger.logger.debug(
             "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
         )
-        metasploit_obj.execute_in_session(payload, session_id)
+        session_to_use.execute_in_shell(payload)
+
     elif ssh_connection:
         # Check if 'target' is in ssh_connection arguments
         try:

