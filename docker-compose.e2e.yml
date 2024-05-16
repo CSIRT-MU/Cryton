@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   cryton_cli:
     image: cryton-cli

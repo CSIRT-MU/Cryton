@@ -30,7 +30,7 @@ class SettingsMetasploit:
         self.port = getenv_int("CRYTON_WORKER_METASPLOIT_PORT", raw_settings.get("port", 55553))
         self.username = getenv("CRYTON_WORKER_METASPLOIT_USERNAME", raw_settings.get("username", "cryton"))
         self.password = getenv("CRYTON_WORKER_METASPLOIT_PASSWORD", raw_settings.get("password", "cryton"))
-        self.ssl = getenv_bool("CRYTON_WORKER_METASPLOIT_SSL", raw_settings.get("ssl", False))
+        self.ssl = getenv_bool("CRYTON_WORKER_METASPLOIT_SSL", raw_settings.get("ssl", True))
 
 
 @dataclass

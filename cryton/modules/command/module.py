@@ -1,8 +1,10 @@
+import re
 import json
 import subprocess
-from typing import Union
+from typing import Union, Optional
+from snek_sploit import Error as MSFError, RPCError as MSFRPCError, SessionType
 
-from cryton.worker.utility.util import Metasploit
+from cryton.lib.metasploit import MetasploitClientUpdated
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
@@ -28,7 +30,11 @@ class Module(ModuleBase):
                 "type": "boolean",
                 "description": "Try to parse the output of the command into `serialized_output`.",
             },
-            "session_id": {"type": "integer", "description": ""},
+            "session_id": {"type": "integer", "description": "ID of the session to use."},
+            "force_shell": {
+                "type": "boolean",
+                "description": "Run the `command` in shell even in a Meterpreter session.",
+            },
         },
         "required": ["command"],
         "additionalProperties": False,
@@ -36,37 +42,58 @@ class Module(ModuleBase):
 
     def __init__(self, arguments: dict):
         super().__init__(arguments)
+        self._msf_client = MetasploitClientUpdated(log_in=False)
 
         self._command: str = self._arguments["command"]
-        self._end_checks: list[str] = self._arguments.get("end_checks")
-        self._timeout: int = self._arguments.get("timeout")
-        self._minimal_execution_time: int = self._arguments.get("minimal_execution_time")
-        self._serialize_output: bool = self._arguments.get("serialize_output", False)
-        self._session_id: int = self._arguments.get("session_id")
+        self._end_checks: Optional[list[str]] = self._arguments.get("end_checks", None)
+        self._timeout: Optional[int] = self._arguments.get("timeout", None)
+        self._minimal_execution_time: Optional[int] = self._arguments.get("minimal_execution_time", 3)
+        self._serialize_output_flag: bool = self._arguments.get("serialize_output", False)
+        self._session_id: Optional[int] = self._arguments.get("session_id", None)
+        self._force_shell: Optional[int] = self._arguments.get("force_shell", True)
 
     def check_requirements(self) -> None:
         """
         In case the `session_id` is defined, check for MSF RPC connection.
         :return: None
         """
-        if self._session_id is not None and not Metasploit().is_connected():
-            raise ConnectionError("Could not connect to MSF RPC.")
+        if not self._session_id:
+            return
+
+        try:
+            self._msf_client.health.rpc.check()
+        except MSFRPCError as ex:
+            raise ConnectionError(
+                f"Unable to establish connection with MSF RPC. "
+                f"Check if the service is running and connection parameters. Original error: {ex}"
+            )
+        try:
+            self._msf_client.login()
+        except MSFError as ex:
+            raise RuntimeError(f"Unable to authenticate with the MSF RPC server. Original error: {ex}")
 
     def execute(self) -> ModuleOutput:
         """
-        Check if the user defined a `session_id`
+        Execute a command localy or in a Metasploit session.
         :return:
         """
-        if self._session_id is not None:
+        if self._session_id:
             try:
-                msf = Metasploit()
-                process_output = msf.execute_in_session(
-                    self._command,
-                    str(self._session_id),
-                    self._timeout,
-                    self._end_checks,
-                    minimal_execution_time=self._minimal_execution_time,
-                )
+                session = self._msf_client.sessions.get(self._session_id)
+                if session.info.type == SessionType.METERPRETER:
+                    if self._force_shell:
+                        command = self._command.split()
+                        process_output = session.execute_in_shell(
+                            command[0], command[1:], self._minimal_execution_time, self._timeout, self._end_checks
+                        )
+                    else:
+                        process_output = session.execute(
+                            self._command, self._minimal_execution_time, self._timeout, self._end_checks
+                        )
+                else:
+                    process_output = session.execute(
+                        self._command, self._minimal_execution_time, self._timeout, self._end_checks
+                    )
             except Exception as ex:
                 self._data.output += str(ex)
                 return self._data
@@ -96,37 +123,49 @@ class Module(ModuleBase):
             if not process_error:
                 self._data.result = Result.OK
 
-        if self._serialize_output:
+        if self._serialize_output_flag:
             try:
-                self._data.serialized_output = self.serialize_output(process_output)
+                self._data.serialized_output = self._serialize_output(process_output)
             except TypeError as ex:
                 self._data.output += f"\n{ex}"
                 self._data.result = Result.FAIL
 
         return self._data
 
-    def serialize_output(self, output: str) -> Union[list, dict]:
+    def _sanitize_output(self, output: str) -> str:
+        """
+        Remove command unrelated output from session execution.
+        :param output:
+        :return: Sanitized output
+        """
+        # Commands executed inside of a Meterpreter session in a channel.
+        output = re.sub(r"Process \d+ created\.\nChannel \d+ created\.\n", "", output, 1)
+        # This is basically just a guessing game when it comes to Windows shells.
+        # It will get better with more data to test.
+        # Tested cases:
+        #   cmd: Powershell -C "whoami | ConvertTo-Json"
+        output = output.replace(self._command, "", 1).rsplit("\r\n\r\n", 1)[0]
+
+        return output
+
+    def _serialize_output(self, output: str) -> Union[list, dict]:
         """
         Try to serialize the output.
         :param output: String containing a valid JSON
         :return: Serialized output
         :exception TypeError: If the supplied output is not a valid json
         """
-        # This is basically just a guessing game when it comes to Windows shells.
-        # It will get better with more data to test.
-        # Tested cases:
-        #   cmd: Powershell -C "whoami | ConvertTo-Json"
-        if self._session_id is not None:
-            processed_output = output.replace(self._command, "", 1).rsplit("\r\n\r\n", 1)[0]
-        else:
-            processed_output = output
+        if self._session_id:
+            output = self._sanitize_output(output)
 
         try:
-            serialized_output = json.loads(processed_output)
+            serialized_output = json.loads(output)
         except (json.JSONDecodeError, TypeError):
             raise TypeError("Unable to serialize the output - invalid JSON.")
 
         if isinstance(serialized_output, str):
-            serialized_output = {"auto_serialized": serialized_output}
-
-        return serialized_output
+            return {"auto_serialized": serialized_output}
+        elif isinstance(serialized_output, dict) or isinstance(serialized_output, list):
+            return serialized_output
+        else:
+            return {}

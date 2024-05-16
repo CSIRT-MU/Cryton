@@ -1,7 +1,10 @@
 from multiprocessing import Pipe
 from queue import PriorityQueue
+from dataclasses import asdict
 
 from cryton.worker.utility import util, constants as co, logger
+from cryton.lib.metasploit import MetasploitClientUpdated
+from snek_sploit import Error as MSFError, SessionInformation
 
 
 class Event:
@@ -23,7 +26,7 @@ class Event:
         logger.logger.debug("Running event: validate_module", event_details=self._event_details)
         attack_module = self._event_details.get(co.MODULE)
         module_arguments = self._event_details.get(co.MODULE_ARGUMENTS)
-        return util.validate_module(attack_module, module_arguments)
+        return asdict(util.run_module(attack_module, module_arguments, validate_only=True))
 
     def list_modules(self) -> dict:
         """
@@ -31,7 +34,7 @@ class Event:
         :return: Details about the event result
         """
         logger.logger.debug("Running event: list_modules", event_details=self._event_details)
-        result = util.list_modules()
+        result = [module_path.removeprefix("cryton.modules.") for module_path in util.get_available_modules().keys()]
         return {co.MODULE_LIST: result}
 
     def list_sessions(self) -> dict:
@@ -41,12 +44,12 @@ class Event:
         """
         logger.logger.debug("Running event: list_sessions", event_details=self._event_details)
         options = self._event_details
-        msf = util.Metasploit()
-        if msf.is_connected():
-            result = {co.SESSION_LIST: msf.get_sessions(**options)}
-        else:
-            result = {co.SESSION_LIST: [], co.OUTPUT: str(msf.error)}
-        return result
+        try:
+            msf = MetasploitClientUpdated()
+            sessions = msf.sessions.filter(SessionInformation(**options))
+            return {co.SESSION_LIST: list(sessions.keys())}
+        except MSFError as ex:
+            return {co.SESSION_LIST: [], co.OUTPUT: str(ex)}
 
     def kill_step_execution(self) -> dict:
         """

@@ -20,7 +20,7 @@ class TestWorker(TestCase):
     @patch("cryton.worker.worker.Worker._start_threaded_processors", Mock())
     @patch("cryton.worker.worker.Worker.stop")
     @patch("cryton.worker.worker.time.sleep")
-    @patch("cryton.worker.utility.util.Metasploit", Mock())
+    @patch("cryton.worker.worker.MetasploitClientUpdated", Mock())
     def test_start(self, mock_sleep, mock_stop):
         mock_sleep.side_effect = KeyboardInterrupt
         self.worker_obj.start()

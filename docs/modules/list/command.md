@@ -9,8 +9,6 @@ In case you want to execute code remotely, Metasploit must be accessible from Wo
 
 ## Input parameters
 
-[//]: # (TODO: instead of passing session_id, pass session? All of its parameters &#40;shell, meterpreter, other&#40;using paramiko&#41;&#41; or gather that from metasploit? Might be better to get information from MSF)
-
 ### `command`
 Command to execute.
 
@@ -37,7 +35,7 @@ Time (**in seconds**) to wait for the output before reading from the shell.
 
 | Name                     | Type    | Required | Default value | Example value |
 |--------------------------|---------|----------|---------------|---------------|
-| `minimal_execution_time` | integer | &cross;  |               | `5`           |
+| `minimal_execution_time` | integer | &cross;  | `3`           | `5`           |
 
 ### `session_id`
 Metasploit sessions to use.
@@ -52,6 +50,13 @@ Try to parse the output of the command into `serialized_output`.
 | Name               | Type    | Required | Default value | Example value |
 |--------------------|---------|----------|---------------|---------------|
 | `serialize_output` | boolean | &cross;  | `false`       | `true`        |
+
+### `force_shell`
+Run the command in shell even in a Meterpreter session. To run the command in the Meterpreter shell, set this to `false`.
+
+| Name          | Type    | Required | Default value | Example value |
+|---------------|---------|----------|---------------|---------------|
+| `force_shell` | boolean | &cross;  | `true`        | `false`       |
 
 ## Examples
 
@@ -85,7 +90,7 @@ It allows you to take the output and use it in other modules in the form of a `s
 It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.
 
 ### Examples
-*whoami* on Linux (Debian): `echo \"$(whoami)\"`
+*whoami* on Linux (Debian): `echo \\"$(whoami)\\"`
 ```json
 {
   "output": "\"username\"",
