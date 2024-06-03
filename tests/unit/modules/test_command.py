@@ -24,9 +24,7 @@ class TestModuleCommand:
             {"command": "placeholder"},
             {
                 "command": "placeholder",
-                "end_checks": ["placeholder"],
                 "timeout": 1,
-                "minimal_execution_time": 1,
                 "serialize_output": True,
                 "session_id": 1,
                 "force_shell": True,
@@ -51,9 +49,7 @@ class TestModuleCommand:
     def test_init(self):
         arguments = {
             "command": "placeholder",
-            "end_checks": ["placeholder"],
             "timeout": 1,
-            "minimal_execution_time": 1,
             "serialize_output": True,
             "session_id": 1,
             "force_shell": False
@@ -61,9 +57,7 @@ class TestModuleCommand:
         module = Module(arguments)
 
         assert module._command == arguments.get("command")
-        assert module._end_checks == arguments.get("end_checks")
         assert module._timeout == arguments.get("timeout")
-        assert module._minimal_execution_time == arguments.get("minimal_execution_time")
         assert module._serialize_output_flag == arguments.get("serialize_output")
         assert module._session_id == arguments.get("session_id")
         assert module._force_shell == arguments.get("force_shell")
