@@ -16,26 +16,12 @@ Command to execute.
 |-----------|--------|----------|---------------|---------------|
 | `command` | string | &check;  |               | `whoami`      |
 
-### `end_checks`
-Strings to check in the command output to determine whether the execution has finished.
-
-| Name         | Type            | Required | Default value | Example value   |
-|--------------|-----------------|----------|---------------|-----------------|
-| `end_checks` | array\[string\] | &cross;  |               | `[root, admin]` |
-
 ### `timeout`
 Timeout for the command (**in seconds**).
 
 | Name      | Type    | Required | Default value | Example value |
 |-----------|---------|----------|---------------|---------------|
 | `timeout` | integer | &cross;  |               | `60`          |
-
-### `minimal_execution_time`
-Time (**in seconds**) to wait for the output before reading from the shell.
-
-| Name                     | Type    | Required | Default value | Example value |
-|--------------------------|---------|----------|---------------|---------------|
-| `minimal_execution_time` | integer | &cross;  | `3`           | `5`           |
 
 ### `session_id`
 Metasploit sessions to use.
@@ -65,9 +51,7 @@ Run the command in shell even in a Meterpreter session. To run the command in th
 Input:
 ```yaml
 module_arguments:
-  cmd: cat /etc/passwd; echo end_flag716282
-  end_checks: 
-  - end_flag716282
+  command: cat /etc/passwd
   session_id: 1
 ```
 
@@ -75,7 +59,7 @@ Output:
 ```json
 {
   "result": "ok",
-  "output": "<contents of passwd file on target> end_flag716282",
+  "output": "<contents of passwd file on target>",
   "serialized_output": {}
 }
 ```

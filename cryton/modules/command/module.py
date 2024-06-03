@@ -14,18 +14,7 @@ class Module(ModuleBase):
         "description": "Arguments for the `command` module.",
         "properties": {
             "command": {"type": "string", "description": "Command to run with syntax as in command line."},
-            "end_checks": {
-                "type": "array",
-                "items": {
-                    "type": "string",
-                    "description": "Strings to check in the output to determine whether the command has finished.",
-                },
-            },
             "timeout": {"type": "integer", "description": "Timeout for the command (**in seconds**)."},
-            "minimal_execution_time": {
-                "type": "integer",
-                "description": "Time (**in seconds**) to wait for the output before reading from the shell.",
-            },
             "serialize_output": {
                 "type": "boolean",
                 "description": "Try to parse the output of the command into `serialized_output`.",
@@ -45,9 +34,7 @@ class Module(ModuleBase):
         self._msf_client = MetasploitClientUpdated(log_in=False)
 
         self._command: str = self._arguments["command"]
-        self._end_checks: Optional[list[str]] = self._arguments.get("end_checks", None)
         self._timeout: Optional[int] = self._arguments.get("timeout", None)
-        self._minimal_execution_time: Optional[int] = self._arguments.get("minimal_execution_time", 3)
         self._serialize_output_flag: bool = self._arguments.get("serialize_output", False)
         self._session_id: Optional[int] = self._arguments.get("session_id", None)
         self._force_shell: Optional[int] = self._arguments.get("force_shell", True)
@@ -74,7 +61,7 @@ class Module(ModuleBase):
 
     def execute(self) -> ModuleOutput:
         """
-        Execute a command localy or in a Metasploit session.
+        Execute a command locally or in a Metasploit session.
         :return:
         """
         if self._session_id:
@@ -83,17 +70,11 @@ class Module(ModuleBase):
                 if session.info.type == SessionType.METERPRETER:
                     if self._force_shell:
                         command = self._command.split()
-                        process_output = session.execute_in_shell(
-                            command[0], command[1:], self._minimal_execution_time, self._timeout, self._end_checks
-                        )
+                        process_output = session.execute_in_shell(command[0], command[1:], self._timeout)
                     else:
-                        process_output = session.execute(
-                            self._command, self._minimal_execution_time, self._timeout, self._end_checks
-                        )
+                        process_output = session.execute(self._command, self._timeout)
                 else:
-                    process_output = session.execute(
-                        self._command, self._minimal_execution_time, self._timeout, self._end_checks
-                    )
+                    process_output = session.execute(self._command, self._timeout)
             except Exception as ex:
                 self._data.output += str(ex)
                 return self._data
