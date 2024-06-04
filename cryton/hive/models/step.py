@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from typing import Union, Type, Optional
 import re
@@ -168,6 +169,10 @@ class Step:
         model.save()
 
     @property
+    def output(self) -> dict:
+        return self.model.output
+
+    @property
     def execution_stats_list(self) -> QuerySet:
         """
         Returns StepExecutionStatsModel QuerySet. If the latest is needed, use '.latest()' on result.
@@ -229,6 +234,7 @@ class Step:
                     lambda x: (x not in forbidden_output_prefixes and ("." not in x and "&" not in x)),
                     error="This output_prefix is not allowed",
                 ),
+                SchemaOptional("output"): dict,
             }
         )
 
@@ -938,6 +944,9 @@ class StepExecution:
             except ValueError:
                 self.result = Result.UNKNOWN
 
+        if self.state == states.FINISHED:
+            self._alter_output(ret_vals.get(constants.OUTPUT), ret_vals.get(constants.SERIALIZED_OUTPUT))
+
         # Store job output and error message
         self.save_output(ret_vals)
 
@@ -952,6 +961,17 @@ class StepExecution:
 
         logger.logger.debug("Step execution postprocess finished", step_execution_id=self.model.id)
         return None
+
+    def _alter_output(self, output: str, serialized_output: dict) -> tuple[str, dict]:
+        converted_serialized_output = json.dumps(serialized_output)
+        replace_rules: dict[str, str] = self.model.step_model.output.get("replace")
+        if replace_rules:
+            for rule, replace_with in replace_rules.items():
+                regex_rule = re.compile(rule)
+                output = regex_rule.sub(replace_with, output)
+                converted_serialized_output = regex_rule.sub(replace_with, converted_serialized_output)
+
+        return output, json.loads(converted_serialized_output)
 
     def ignore_successors(self) -> None:
         """
