@@ -835,6 +835,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#output-replacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output replacing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1834,6 +1843,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#output-replacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output replacing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1868,6 +1886,9 @@ Every step can have a successor(s) whose execution will follow according to prov
 <span class="w">    </span><span class="nt">credentials</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 <span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
+<span class="w">    </span><span class="s">&quot;^((25[0-5]|(2[0-4]|1</span><span class="err">\</span><span class="s">d|[1-9]|)</span><span class="err">\</span><span class="s">d)</span><span class="err">\</span><span class="s">.?\b){4}$&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">removed-ip</span>
 <span class="nt">next</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
@@ -2387,6 +2408,16 @@ For <code>empire/agent-deploy</code> or <code>empire/execute</code> you can use 
 <p>Automatic output serialization is an experimental feature.<br />
 It allows you to take the output and use it in other modules in the form of a <code>serialized_output</code>. For this to work, the <strong>command output must be a valid JSON</strong> (<code>"some text"</code>, <code>{"a": "b"}</code>, <code>["a", "b"]</code>).</p>
 <p>It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.</p>
+<h2 id="output-replacing">Output replacing<a class="headerlink" href="#output-replacing" title="Permanent link">&para;</a></h2>
+<p>In case you want to replace some parts of your output, you can define a dictionary of rules (regexes) and strings to replace the matches with.<br />
+Keep in mind, that the rules are applied <strong>in order</strong>.</p>
+<p>Here is an example of matching IPv4 and replacing it with <code>removed-ip</code>:
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">replace</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;^((25[0-5]|(2[0-4]|1</span><span class="err">\</span><span class="s">d|[1-9]|)</span><span class="err">\</span><span class="s">d)</span><span class="err">\</span><span class="s">.?\b){4}$&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">removed-ip</span>
+</code></pre></div></p>
 
 
 
