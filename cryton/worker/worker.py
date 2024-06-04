@@ -4,7 +4,6 @@ from threading import Thread, Lock, Event
 from queue import PriorityQueue
 import time
 import traceback
-from snek_sploit import Error as MSFError
 
 from cryton.worker import consumer
 from cryton.worker.utility import constants as co, logger, util
@@ -68,8 +67,9 @@ class Worker:
         try:
             try:
                 MetasploitClientUpdated()
-            except MSFError as ex:
-                raise RuntimeError(f"Unable to login to the MSF RPC server. Original error: {ex}")
+            except Exception as ex:
+                echo("Unable to connect to the MSF RPC server..")
+                logger.logger.warning(f"Unable to connect to the MSF RPC server.. Original error: {ex}")
 
             self._start_consumer()
             self._start_threaded_processors()

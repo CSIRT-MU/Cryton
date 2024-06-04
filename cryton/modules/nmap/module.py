@@ -159,7 +159,7 @@ def filter_nmap_output_ports(serialized_output: dict, desired_port_parameters: l
     """
     module_failed = True
     for key in serialized_output.keys():
-        if re.match("^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", key):
+        if re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", key):
             ports_result = deepcopy(serialized_output[key]["ports"])
             for port in serialized_output[key]["ports"]:
                 if port["state"] != "open":

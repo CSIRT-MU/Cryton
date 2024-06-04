@@ -17,6 +17,9 @@ arguments:
     credentials:
       username: admin
       password: admin
+output:
+  replace:
+    "^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$": removed-ip
 next:
   - type: result
     value: ok
@@ -429,3 +432,15 @@ It allows you to take the output and use it in other modules in the form of a `s
 
 It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.
 
+## Output replacing
+In case you want to replace some parts of your output, you can define a dictionary of rules (regexes) and strings to replace the matches with.  
+Keep in mind, that the rules are applied **in order**.
+
+Here is an example of matching IPv4 and replacing it with `removed-ip`:
+```yaml
+- name: step
+  ...
+  output:
+    replace:
+      "^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$": removed-ip
+```

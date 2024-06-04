@@ -63,6 +63,7 @@ class StepModel(DescriptiveModel):
     is_init = models.BooleanField(default=False)
     is_final = models.BooleanField(default=False)
     output_prefix = models.TextField()
+    output = models.JSONField(default=dict)
 
 
 class WorkerModel(InstanceModel):
