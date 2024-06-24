@@ -10,7 +10,7 @@ create an empty Plan/Stage and create their agent to control the execution inste
 ## Limitations
 - Dynamic plan must have the `dynamic` variable set to *True*
 - If you don't want to pass any Stages/Steps you must provide an empty list
-- Each Stage and Step must have a unique name in the same Plan (utilize [inventory variables](design-phase/plan-instance.md#inventory-files) to overcome this limitation)
+- Each Stage and Step must have a unique name in the same Plan (utilize [inventory variables](../design-phase/plan-instance.md#inventory-files) to overcome this limitation)
 - The Stage/Step you're trying to add must be valid
 - Run's Plan must contain the instance (Stage/Step) you are trying to execute
 - You cannot create multiple executions for an instance (you can execute an instance only once) under the same Plan execution

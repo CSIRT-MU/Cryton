@@ -29,7 +29,7 @@ To run tests, we use a testing logger to avoid saving unwanted logs.
 ## Worker
 Each request and its processing are logged for later analysis.
 
-You can switch between the debug and the production loggers by changing the [settings](settings.md#debug-1). 
+You can switch between the debug and the production loggers by changing the [settings](settings.md#debug_1). 
 To run tests, we use a testing logger to avoid saving unwanted logs.
 
 **Production** (`cryton-worker`)
