@@ -427,16 +427,8 @@ RUN\_ID is ID of the Run you want to execute.
 - RUN\_ID  
 
 **Options:**  
-- skip\_checks (`-S`, `--skip-checks`) - Skip health-checks and modules validation. [:octicons-tag-24: CLI 1.1.0]({{{ releases.cli }}}1.1.0){target="_blank"}  
-- help (`--help`) - Show this message and exit.  
-
-!!! info "Changes"
-
-    [:octicons-tag-24: CLI 1.1.0]({{{ releases.cli }}}1.1.0){target="_blank"} [:octicons-tag-24: Core 1.2.0]({{{ releases.core }}}1.2.0){target="_blank"}
-    
-    Since the CLI release 1.1.0 the command checks if the selected Workers are available and modules are valid. If everything is OK, it executes the Run.
-
-    If you're running Core with a lower version than 1.2.0, use the `-S` option.
+- skip\_checks (`-S`, `--skip-checks`) - Skip health-checks and modules validation.  
+- help (`--help`) - Show this message and exit.
 
 ### get-plan
 Get plan from Run with RUN\_ID saved in Cryton.
@@ -453,9 +445,6 @@ RUN\_ID is ID of the Run you want to get plan from.
 - help (`--help`) - Show this message and exit.  
 
 ### health-check-workers
-
-[:octicons-tag-24: CLI 1.1.0]({{{ releases.cli }}}1.1.0){target="_blank"}
-
 Check Workers for Run with RUN\_ID saved in Cryton.
 
 RUN\_ID is ID of the Run you want to check Workers for.

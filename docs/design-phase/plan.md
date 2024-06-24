@@ -25,4 +25,4 @@ To better understand what each argument means and defines, here is a short descr
 - **owner** - Name of the person who created the Plan.
 - **stages** - List of [Stages](stage.md) that will be executed during the Plan's execution.
 - **settings** - Parameters for customization of specific functionalities (only `separator` for now, more about `separator` [here](step.md#custom-separator))
-- **dynamic** - Whether the Plan will be static or the user can temper with it afterward. More information can be found [here](../dynamic-execution.md).
+- **dynamic** - Whether the Plan will be static or the user can temper with it afterward. More information can be found [here](../execution-phase/dynamic-execution.md).

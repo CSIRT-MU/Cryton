@@ -225,7 +225,7 @@ testing if all the functionality works across the whole Cryton toolset.
 - Settings for Pytest can be found in a *pyproject.toml* file
 - Tests (that test the same code part/class) are grouped using classes
 - Each class that works with the Django DB has to be marked with `@pytest.mark.django_db`
-- Each class should be patched to use the test logger if possible ([Core](logging.md#core); [worker](logging.md#worker))
+- Each class should be patched to use the test logger if possible ([Core](../logging.md#core); [worker](../logging.md#worker))
 - Unit tests shouldn't interact with the DB. 
 - Use the `model_bakery` library instead of mocking the DB interactions for the integration tests
 - For easier mocking, each test class should have a `path` class variable. If we are testing a class 

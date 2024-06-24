@@ -7,7 +7,7 @@ In case you need a testing environment or an advanced example, feel free to use 
     It is assumed that you've followed the [quick-start](quick-start.md) guide.
 
 ## Create a plan template
-The first step to run an automated attack is to create its description - [template](design-phase/template.md).
+The first step to run an automated attack is to create its description - [template](design-phase/index.md).
 
 We will be using [this example](https://gitlab.ics.muni.cz/cryton/cryton/-/tree/{{{ git_release }}}/examples/basic-example/template.yml){target="_blank"}.  
 It describes an attack scenario with 2 steps (actions). First, it scans the target host and checks if SSH (port 22) is open. If it's open, it checks if the provided credentials are correct.
@@ -130,7 +130,7 @@ cryton-cli workers health-check <WORKER_ID>
     ```
 
 ## Create a Run
-Finally, we create a new [Run](execution-phase/run.md) using the previously created Plan instance and Worker:
+Finally, we create a new [Run](execution-phase/index.md) using the previously created Plan instance and Worker:
 ```shell
 cryton-cli runs create <PLAN_INSTANCE_ID> <WORKER_ID>
 ```

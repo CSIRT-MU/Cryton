@@ -83,15 +83,13 @@ nav:
       - Workflows: usage/workflows.md
   - Settings: settings.md
   - Creating a scenario:  # TODO: re-think
-      - design-phase/index.md
-      - Template (attack scenario): design-phase/template.md  # update
+      - design-phase/index.md  # update
       - Plan: design-phase/plan.md  # update
       - Stage: design-phase/stage.md  # update
       - Step: design-phase/step.md  # update
       - Plan instance: design-phase/plan-instance.md  # update
   - Running a scenario:
-      - execution-phase/index.md
-      - What is Run: execution-phase/run.md  # update
+      - execution-phase/index.md  # update
       - Execution statistics: execution-phase/execution.md  # update
       - Reporting: execution-phase/reporting.md  # update
       - Dynamic execution: execution-phase/dynamic-execution.md  # update  # TODO: re-think
@@ -115,7 +113,7 @@ nav:
       - development/index.md
       - Modules: development/modules.md
       - Front-end: development/frontend.md
-  - Production: production.md  # update  # TODO: re-think
+#  - Production: production.md  # update  # TODO: re-think
   - Logging: logging.md  # update
   - Ansible: ansible/ansible.md  # update
   - Acknowledgements: acknowledgements.md

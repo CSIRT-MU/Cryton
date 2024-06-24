@@ -48,7 +48,7 @@ It tells the Worker component what arguments to expect and what functions to run
 | Step type                                                           | Purpose                                                               |
 |---------------------------------------------------------------------|-----------------------------------------------------------------------|
 | [`worker/execute`](#execute-attack-module-on-worker)                | Execution of attack modules.                                          |
-| [`empire/agent-deploy`](#deploy-Empire-agent-on-a-target)           | Deployment of Empire agent on target.                                 |
+| [`empire/agent-deploy`](#deploy-empire-agent-on-a-target)           | Deployment of Empire agent on target.                                 |
 | [`empire/execute`](#execute-shell-script-or-empire-module-on-agent) | Execution of shell commands or Empire modules on active Empire agent. |
 
 ### Execute attack module on Worker
