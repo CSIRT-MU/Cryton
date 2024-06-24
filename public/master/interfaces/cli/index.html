@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -189,7 +189,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -484,8 +484,6 @@
       
         
       
-        
-      
     
     
     
@@ -522,27 +520,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../design-phase/template/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Template (attack scenario)
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -655,8 +632,6 @@
       
         
       
-        
-      
     
     
     
@@ -693,27 +668,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../execution-phase/run/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    What is Run
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -2125,26 +2079,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../production/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Production
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../logging/" class="md-nav__link">
         
   
@@ -3355,14 +3289,8 @@ Commands:
 <p><strong>Arguments:</strong><br />
 - RUN_ID  </p>
 <p><strong>Options:</strong><br />
-- skip_checks (<code>-S</code>, <code>--skip-checks</code>) - Skip health-checks and modules validation. <a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a><br />
-- help (<code>--help</code>) - Show this message and exit.  </p>
-<div class="admonition info">
-<p class="admonition-title">Changes</p>
-<p><a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a> <a href="{{ no such element: dict object['core'] }}1.2.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> Core 1.2.0</a></p>
-<p>Since the CLI release 1.1.0 the command checks if the selected Workers are available and modules are valid. If everything is OK, it executes the Run.</p>
-<p>If you're running Core with a lower version than 1.2.0, use the <code>-S</code> option.</p>
-</div>
+- skip_checks (<code>-S</code>, <code>--skip-checks</code>) - Skip health-checks and modules validation.<br />
+- help (<code>--help</code>) - Show this message and exit.</p>
 <h3 id="get-plan_1">get-plan<a class="headerlink" href="#get-plan_1" title="Permanent link">&para;</a></h3>
 <p>Get plan from Run with RUN_ID saved in Cryton.</p>
 <p>RUN_ID is ID of the Run you want to get plan from.</p>
@@ -3374,7 +3302,6 @@ Commands:
 - localize (<code>--localize</code>) - Convert UTC datetime to local timezone.<br />
 - help (<code>--help</code>) - Show this message and exit.  </p>
 <h3 id="health-check-workers">health-check-workers<a class="headerlink" href="#health-check-workers" title="Permanent link">&para;</a></h3>
-<p><a href="{{ no such element: dict object['cli'] }}1.1.0" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.75 6.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/><path d="M2.5 1h8.44a1.5 1.5 0 0 1 1.06.44l10.25 10.25a1.5 1.5 0 0 1 0 2.12l-8.44 8.44a1.5 1.5 0 0 1-2.12 0L1.44 12A1.497 1.497 0 0 1 1 10.94V2.5A1.5 1.5 0 0 1 2.5 1Zm0 1.5v8.44l10.25 10.25 8.44-8.44L10.94 2.5Z"/></svg></span> CLI 1.1.0</a></p>
 <p>Check Workers for Run with RUN_ID saved in Cryton.</p>
 <p>RUN_ID is ID of the Run you want to check Workers for.</p>
 <p><strong>Arguments:</strong><br />
@@ -3845,7 +3772,7 @@ Commands:
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>

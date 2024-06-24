@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -189,7 +189,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -583,8 +583,6 @@
       
         
       
-        
-      
     
     
     
@@ -621,27 +619,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../design-phase/template/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Template (attack scenario)
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -754,8 +731,6 @@
       
         
       
-        
-      
     
     
     
@@ -792,27 +767,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../execution-phase/run/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    What is Run
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -1382,26 +1336,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../production/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Production
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../logging/" class="md-nav__link">
         
   
@@ -1586,7 +1520,7 @@
 <p>It is assumed that you've followed the <a href="../quick-start/">quick-start</a> guide.</p>
 </div>
 <h2 id="create-a-plan-template">Create a plan template<a class="headerlink" href="#create-a-plan-template" title="Permanent link">&para;</a></h2>
-<p>The first step to run an automated attack is to create its description - <a href="../design-phase/template/">template</a>.</p>
+<p>The first step to run an automated attack is to create its description - <a href="../design-phase/">template</a>.</p>
 <p>We will be using <a href="https://gitlab.ics.muni.cz/cryton/cryton/-/tree/stable/2/examples/basic-example/template.yml" target="_blank">this example</a>.<br />
 It describes an attack scenario with 2 steps (actions). First, it scans the target host and checks if SSH (port 22) is open. If it's open, it checks if the provided credentials are correct.</p>
 <details class="note">
@@ -1683,7 +1617,7 @@ The inventory file can be found <a href="https://gitlab.ics.muni.cz/cryton/cryto
 </code></pre></div></p>
 </details>
 <h2 id="create-a-run">Create a Run<a class="headerlink" href="#create-a-run" title="Permanent link">&para;</a></h2>
-<p>Finally, we create a new <a href="../execution-phase/run/">Run</a> using the previously created Plan instance and Worker:
+<p>Finally, we create a new <a href="../execution-phase/">Run</a> using the previously created Plan instance and Worker:
 <div class="highlight"><pre><span></span><code>cryton-cli<span class="w"> </span>runs<span class="w"> </span>create<span class="w"> </span>&lt;PLAN_INSTANCE_ID&gt;<span class="w"> </span>&lt;WORKER_ID&gt;
 </code></pre></div></p>
 <details class="example">
@@ -1864,7 +1798,7 @@ The inventory file can be found <a href="https://gitlab.ics.muni.cz/cryton/cryto
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>
