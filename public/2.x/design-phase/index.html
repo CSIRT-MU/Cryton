@@ -14,11 +14,11 @@
         <link rel="prev" href="../settings/">
       
       
-        <link rel="next" href="template/">
+        <link rel="next" href="plan/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -72,6 +72,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#what-is-the-attack-scenario" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -184,7 +189,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -481,8 +486,6 @@
       
         
       
-        
-      
     
     
     
@@ -519,27 +522,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="template/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Template (attack scenario)
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -652,8 +634,6 @@
       
         
       
-        
-      
     
     
     
@@ -690,27 +670,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../execution-phase/run/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    What is Run
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -1280,26 +1239,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../production/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Production
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../logging/" class="md-nav__link">
         
   
@@ -1391,6 +1330,32 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-the-attack-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is the attack scenario
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-plan-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is a plan template
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1406,7 +1371,36 @@
 
   <h1>Index</h1>
 
-
+<h2 id="what-is-the-attack-scenario">What is the attack scenario<a class="headerlink" href="#what-is-the-attack-scenario" title="Permanent link">&para;</a></h2>
+<p>Let's start with the description of the attack scenario. Scenario and Plan can be used interchangeably - <a href="plan/">Plan</a> is just 
+the name of the element in the formal description of the attack scenario.</p>
+<p>An attack scenario is a sequence of steps with some common objective. This objective may be data ex-filtration, access to 
+target systems, denial of service, or any other harmful action. For some exercises, every attack should be 
+divisible into different <a href="stage/">stages</a>. Imagine you have to attack infrastructure with multiple machines - each machine can 
+be a separate stage. Or you want to attack according to some kill-chain, e.g. the first stage would be scanning of the 
+infrastructure, the second is brute force attack on credentials to found systems, etc.</p>
+<p>The last and most important element of the Plan description is the <a href="step/">step</a>. This is the execution of an attack script or tool 
+against the target. A step can be running a Metasploit exploit, or running a Nmap scan. Steps are dependent on each other, 
+and so they create an execution tree, where each of them has set the list of successors based on some condition. The 
+condition may be a success or a string value returned by its predecessor.</p>
+<p>Putting this all together you get the whole attack scenario (called <strong><a href="plan/">Plan</a></strong>), which is divided into different stages 
+(called <strong><a href="stage/">Stage</a></strong>). Every stage is set to run at a specific time, as this is often required by the exercise. And finally, each 
+stage consists of attack steps (called <strong><a href="step/">Step</a></strong>), which are organized in a non-binary tree described above.</p>
+<p>The lifecycle of the attack scenario in the Cryton context can be seen in the following picture:
+<img alt="" src="../images/lifecycle.png" /></p>
+<h2 id="what-is-a-plan-template">What is a plan template<a class="headerlink" href="#what-is-a-plan-template" title="Permanent link">&para;</a></h2>
+<p>The first step in designing a Plan (attack scenario) is creating a plan template. A template is basically a Plan object written in YAML - a description of the actions required to run during attack execution.
+<img alt="" src="../images/design-template.png" /></p>
+<p>The template itself is not a fully described attack scenario. The structure of the Attack (execution tree) is correct, 
+but there are still unfilled places (e.g. IP addresses of targets or other <a href="plan-instance/#inventory-files">inventory variables</a>). 
+This way a template can be designed before knowing these details and used in multiple different environments.</p>
+<p>An abstract Plan can look like this:
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">Stage 1</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Step 1</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Step 2</span>
+<span class="l l-Scalar l-Scalar-Plain">Stage 2</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Step 3</span>
+</code></pre></div></p>
 
 
 
@@ -1461,13 +1455,13 @@
         
         
           
-          <a href="template/" class="md-footer__link md-footer__link--next" aria-label="Next: Template (attack scenario)">
+          <a href="plan/" class="md-footer__link md-footer__link--next" aria-label="Next: Plan">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Template (attack scenario)
+                Plan
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1506,7 +1500,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>
