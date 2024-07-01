@@ -23,6 +23,7 @@ class Worker:
         processor_count: int,
         max_retries: int,
         persistent: bool,
+        require_metasploit: bool,
     ):
         """
         Worker processes internal requests using self._main_queue and communicates with RabbitMQ server using Consumer.
@@ -37,8 +38,10 @@ class Worker:
         (higher == more responsive internal requests processing, but heavier processor usage)
         :param max_retries: How many times to try to connect
         :param persistent: Keep Worker alive and keep on trying forever (if True)
+        :param require_metasploit: Require Metasploit on startup and keep on trying forever (if True)
         """
         self._name = worker_name
+        self._require_metasploit = require_metasploit
         self._listeners: List[Listener] = []
         self._triggers_lock = Lock()  # Lock to prevent modifying, while performing time-consuming actions.
         self._stopped = Event()
@@ -65,12 +68,7 @@ class Worker:
         echo(f"Starting Worker {self._name}..")
         echo("To exit press CTRL+C")
         try:
-            try:
-                MetasploitClientUpdated()
-            except Exception as ex:
-                echo("Unable to connect to the MSF RPC server..")
-                logger.logger.warning(f"Unable to connect to the MSF RPC server.. Original error: {ex}")
-
+            self._check_metasploit_connection()
             self._start_consumer()
             self._start_threaded_processors()
             while not self._stopped.is_set() and self._consumer.is_running():  # Keep self alive and check for stops.
@@ -80,6 +78,35 @@ class Worker:
             pass
 
         self.stop()
+
+    def _check_metasploit_connection(self):
+        echo("Trying to connect to Metasploit.. ", nl=False)
+        msf_client = MetasploitClientUpdated(log_in=False)
+
+        while True:
+            try:
+                connected = msf_client.health.rpc.check()
+                if connected:
+                    echo("OK")
+                    break
+                elif not connected and not self._require_metasploit:
+                    echo("FAIL")
+                    return
+            except Exception as ex:
+                if not self._require_metasploit:
+                    echo(f"FAIL ({ex})")
+                    return
+
+        echo("Trying to log in to Metasploit.. ", nl=False)
+        try:
+            msf_client.login()
+        except Exception as ex:
+            echo("FAIL")
+            logger.logger.warning(f"Unable to login to the MSF RPC server - wrong credentials? Original error: {ex}")
+            if self._require_metasploit:
+                raise RuntimeError(f"Unable to login to the MSF RPC server - wrong credentials? Original error: {ex}")
+        else:
+            echo("OK")
 
     def stop(self) -> None:
         """

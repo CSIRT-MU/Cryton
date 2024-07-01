@@ -1,4 +1,4 @@
-FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest as base
+FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest AS base
 
 # Set environment
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
@@ -13,7 +13,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E hive
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E hive
 
-FROM python:3.12-slim-bullseye as production
+FROM python:3.12-slim-bullseye AS production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

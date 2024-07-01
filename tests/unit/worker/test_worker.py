@@ -9,11 +9,11 @@ from cryton.worker.utility import constants as co, logger, util, exceptions
 class TestWorker(TestCase):
     def setUp(self):
         self.mock_main_queue = Mock()
-        self.worker_obj = worker.Worker("host", 1, "user", "pass", "prefix", 3, 3, 3, False)
+        self.worker_obj = worker.Worker("host", 1, "user", "pass", "prefix", 3, 3, 3, False, False)
         self.worker_obj._main_queue = self.mock_main_queue
 
     def test_init_wrong_consumers(self):
-        worker_obj = worker.Worker("host", 1, "user", "pass", "prefix", 3, 0, 3, False)
+        worker_obj = worker.Worker("host", 1, "user", "pass", "prefix", 3, 0, 3, False, False)
         self.assertEqual(worker_obj._processor_count, 1)
 
     @patch("cryton.worker.worker.Worker._start_consumer", Mock())
@@ -58,7 +58,7 @@ class TestWorker(TestCase):
     def test__threaded_processor_action_unknown(self):
         self.mock_main_queue.get.side_effect = [
             util.PrioritizedItem(0, {co.ACTION: "UNKNOWN"}),
-            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR})
+            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR}),
         ]
         with self.assertLogs("cryton-worker-debug", level="WARNING") as cm:
             self.worker_obj._threaded_processor(1)
@@ -67,7 +67,7 @@ class TestWorker(TestCase):
     def test__threaded_processor_empty_action(self):
         self.mock_main_queue.get.side_effect = [
             util.PrioritizedItem(0, {}),
-            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR})
+            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR}),
         ]
         with self.assertLogs("cryton-worker-debug", level="WARNING") as cm:
             self.worker_obj._threaded_processor(1)
@@ -77,7 +77,7 @@ class TestWorker(TestCase):
     def test__threaded_processor_action_exception(self, mock_action):
         self.mock_main_queue.get.side_effect = [
             util.PrioritizedItem(0, {co.ACTION: co.ACTION_SEND_MESSAGE}),
-            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR})
+            util.PrioritizedItem(0, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR}),
         ]
         mock_action.side_effect = RuntimeError
         with self.assertLogs("cryton-worker-debug", level="WARNING") as cm:
@@ -129,9 +129,9 @@ class TestWorker(TestCase):
         mock_pipe = Mock()
         test_id = "test_id"
         mock_add_trigger.return_value = test_id
-        self.worker_obj._add_trigger({co.RESULT_PIPE: mock_pipe,
-                                      co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
-                                                co.TRIGGER_TYPE: "HTTP"}})
+        self.worker_obj._add_trigger(
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}}
+        )
         mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK, co.TRIGGER_ID: test_id})
 
     def test__add_trigger_existing(self):
@@ -142,8 +142,8 @@ class TestWorker(TestCase):
         mock_pipe = Mock()
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._add_trigger(
-            {co.RESULT_PIPE: mock_pipe,
-             co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}})
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}}
+        )
         mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK, co.TRIGGER_ID: test_id})
 
     def test__start_trigger_existing_error_adding_trigger(self):
@@ -153,9 +153,11 @@ class TestWorker(TestCase):
         mock_pipe = Mock()
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._add_trigger(
-            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}})
-        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR,
-                                                co.OUTPUT: "Listener 'MSF' can't contain more triggers."})
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}}
+        )
+        mock_pipe.send.assert_called_once_with(
+            {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Listener 'MSF' can't contain more triggers."}
+        )
 
     def test__add_trigger_pymetasploit_error(self):
         mock_trigger_obj = Mock()
@@ -163,9 +165,9 @@ class TestWorker(TestCase):
         mock_pipe = Mock()
         self.worker_obj._listeners.append(mock_trigger_obj)
         self.worker_obj._add_trigger(
-            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}})
-        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR,
-                                                co.OUTPUT: "wrong option LHOST"})
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "MSF"}}
+        )
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR, co.OUTPUT: "wrong option LHOST"})
 
     @patch("cryton.worker.worker.Listener", Mock())
     def test__remove_trigger_exists(self):
@@ -175,18 +177,17 @@ class TestWorker(TestCase):
         mock_trigger_obj.remove_trigger.return_value = None
         mock_pipe = Mock()
         self.worker_obj._listeners.append(mock_trigger_obj)
-        self.worker_obj._remove_trigger({co.RESULT_PIPE: mock_pipe,
-                                         co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
-                                                   co.TRIGGER_TYPE: "HTTP"}})
+        self.worker_obj._remove_trigger(
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}}
+        )
         mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_OK})
 
     def test__remove_trigger_not_found(self):
         mock_pipe = Mock()
-        self.worker_obj._remove_trigger({co.RESULT_PIPE: mock_pipe,
-                                         co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "",
-                                                   co.TRIGGER_TYPE: "HTTP"}})
-        mock_pipe.send.assert_called_once_with(
-            {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."})
+        self.worker_obj._remove_trigger(
+            {co.RESULT_PIPE: mock_pipe, co.DATA: {co.LISTENER_HOST: "", co.LISTENER_PORT: "", co.TRIGGER_TYPE: "HTTP"}}
+        )
+        mock_pipe.send.assert_called_once_with({co.RESULT: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."})
 
     def test__list_triggers(self):
         test_trigger = {"id": "test_id"}

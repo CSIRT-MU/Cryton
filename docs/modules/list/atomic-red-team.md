@@ -65,7 +65,7 @@ Powershell related options.
 |--------------|--------|----------|---------------|---------------------|
 | `powershell` | object | &cross;  | `{}`          | `{"install": true}` |
 
-!!! ""
+!!! note ""
 
     Only one of the two following properties can be set.
 

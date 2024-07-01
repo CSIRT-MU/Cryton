@@ -47,6 +47,7 @@ worker:
     ssl: true
     username: cryton
     password: cryton
+    require: false
 
 cli:
   debug: false

@@ -3,7 +3,6 @@ import pyfiglet
 
 from cryton.worker.config.settings import SETTINGS
 from cryton.worker import worker
-from cryton.worker.utility import util
 
 
 @click.group()
@@ -70,7 +69,14 @@ def cli() -> None:
     show_default=True,
     help="How many times to try to connect.",
 )
-@click.option("-P", "--persistent", is_flag=True, help="If Worker should stay alive and keep on trying forever.")
+@click.option("-P", "--persistent", is_flag=True, help="Waif forever for Rabbit connection.")
+@click.option(
+    "-RM",
+    "--require-metasploit",
+    default=SETTINGS.metasploit.require,
+    is_flag=True,
+    help="Require Metasploit on startup. (try forever)",
+)
 def start_worker(
     rabbit_username: str,
     rabbit_password: str,
@@ -80,6 +86,7 @@ def start_worker(
     name: str,
     consumer_count: int,
     max_retries: int,
+    require_metasploit: bool,
 ) -> None:
     """
     Start worker and optionally install requirements.
@@ -94,6 +101,7 @@ def start_worker(
     :param rabbit_password: Rabbit's password
     :param max_retries: How many times to try to connect
     :param persistent: Keep Worker alive and keep on trying forever (if True)
+    :param require_metasploit: Require Metasploit on startup (if True)
     :return: None
     """
     pyfiglet.print_figlet("Worker", "graffiti", "RED")
@@ -107,5 +115,6 @@ def start_worker(
         consumer_count,
         max_retries,
         persistent,
+        require_metasploit,
     )
     worker_obj.start()
