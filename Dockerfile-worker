@@ -1,4 +1,4 @@
-FROM kalilinux/kali-last-release:latest as kali
+FROM kalilinux/kali-last-release:latest AS kali
 
 # Install packages
 RUN apt update && apt install -y \
@@ -9,7 +9,7 @@ RUN apt update && apt install -y \
     ffuf \
     && rm -rf /var/lib/apt/lists/*
 
-FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest as base
+FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest AS base
 
 # Set environment
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
@@ -24,7 +24,7 @@ RUN poetry install --without dev --no-root --no-interaction --no-ansi -E worker
 COPY . .
 RUN poetry install --only-root --no-interaction --no-ansi -E worker
 
-FROM kali as production
+FROM kali AS production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

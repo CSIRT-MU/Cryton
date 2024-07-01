@@ -945,7 +945,9 @@ class StepExecution:
                 self.result = Result.UNKNOWN
 
         if self.state == states.FINISHED:
-            self._alter_output(ret_vals.get(constants.OUTPUT), ret_vals.get(constants.SERIALIZED_OUTPUT))
+            ret_vals[constants.OUTPUT], ret_vals[constants.SERIALIZED_OUTPUT] = self._alter_output(
+                ret_vals.get(constants.OUTPUT), ret_vals.get(constants.SERIALIZED_OUTPUT)
+            )
 
         # Store job output and error message
         self.save_output(ret_vals)

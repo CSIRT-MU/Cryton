@@ -346,6 +346,14 @@ Password for Metasploit RPC server login.
 |--------|---------|---------|----------------------------|-----------------------------------|
 | string | cryton  | admin   | worker.metasploit.password | CRYTON_WORKER_METASPLOIT_PASSWORD |
 
+#### Metasploit require
+Require Metasploit connection on startup.  
+Waits forever. In case of wrong credentials Worker shutdowns.
+
+| type    | default | example | YAML variable path        | Environment variable             |
+|---------|---------|---------|---------------------------|----------------------------------|
+| boolean | false   | true    | worker.metasploit.require | CRYTON_WORKER_METASPLOIT_REQUIRE |
+
 ### CLI
 
 #### Debug

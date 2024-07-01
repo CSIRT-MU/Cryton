@@ -100,6 +100,7 @@ nav:
       - REST API: interfaces/rest-api.md  # update
   - Modules:
       - modules/index.md
+      - Atomic Red Team: modules/list/atomic-red-team.md
       - Command: modules/list/command.md
       - FFUF: modules/list/ffuf.md
       - Medusa: modules/list/medusa.md
