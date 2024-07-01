@@ -859,6 +859,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#metasploit-require" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit require
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1368,6 +1377,8 @@
       
         
       
+        
+      
     
     
     
@@ -1404,6 +1415,27 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/list/atomic-red-team/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Atomic Red Team
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2171,6 +2203,15 @@
   <a href="#metasploit-password" class="md-nav__link">
     <span class="md-ellipsis">
       Metasploit password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metasploit-require" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metasploit require
     </span>
   </a>
   
@@ -3110,6 +3151,29 @@
 <td>admin</td>
 <td>worker.metasploit.password</td>
 <td>CRYTON_WORKER_METASPLOIT_PASSWORD</td>
+</tr>
+</tbody>
+</table>
+<h4 id="metasploit-require">Metasploit require<a class="headerlink" href="#metasploit-require" title="Permanent link">&para;</a></h4>
+<p>Require Metasploit connection on startup.<br />
+Waits forever. In case of wrong credentials Worker shutdowns.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>default</th>
+<th>example</th>
+<th>YAML variable path</th>
+<th>Environment variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>true</td>
+<td>worker.metasploit.require</td>
+<td>CRYTON_WORKER_METASPLOIT_REQUIRE</td>
 </tr>
 </tbody>
 </table>
