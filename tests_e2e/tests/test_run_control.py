@@ -7,8 +7,15 @@ class TestRunControl(TestRun):
     """
     Base class for Run control testing.
     """
-    def __init__(self, template: str, workers: List[Dict], inventories: Optional[List[str]],
-                 execution_variables: Optional[List[str]], max_timeout: int):
+
+    def __init__(
+        self,
+        template: str,
+        workers: List[Dict],
+        inventories: Optional[List[str]],
+        execution_variables: Optional[List[str]],
+        max_timeout: int,
+    ):
         super().__init__(template, workers, inventories, execution_variables, max_timeout)
         self.description = "Call all commands used for executing a Run"
 
@@ -27,12 +34,22 @@ class TestRunControl(TestRun):
         self.test("Getting Run's Plan", ["runs", "get-plan", str(self.run_id)], "detail")
 
         # Schedule Run
-        self.test("Scheduling Run", ["runs", "schedule", str(self.run_id), "2050-01-01", "20:00:00"], "scheduled",
-                  "SCHEDULED", 5)
+        self.test(
+            "Scheduling Run",
+            ["runs", "schedule", str(self.run_id), "2050-01-01", "20:00:00"],
+            "scheduled",
+            "SCHEDULED",
+            5,
+        )
 
         # Reschedule Run
-        self.test("Rescheduling Run", ["runs", "reschedule", str(self.run_id), "2050-01-01", "21:00:00"], "rescheduled",
-                  "SCHEDULED", 5)
+        self.test(
+            "Rescheduling Run",
+            ["runs", "reschedule", str(self.run_id), "2050-01-01", "21:00:00"],
+            "rescheduled",
+            "SCHEDULED",
+            5,
+        )
 
         # Postpone Run
         self.test("Postponing Run", ["runs", "postpone", str(self.run_id), "1:1:1"], "postponed", "SCHEDULED", 5)

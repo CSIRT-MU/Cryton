@@ -371,7 +371,7 @@ class TestCli:
         with open(file, 'w') as f:
             yaml.dump({"stage": "stage"}, f)
 
-        result = self.runner.invoke(cli, ['stages', 'validate', file, '-i', file])
+        result = self.runner.invoke(cli, ['stages', 'validate', file, '1', '-i', file])
 
         assert 0 == result.exit_code
 
@@ -453,7 +453,7 @@ class TestCli:
         with open(file, 'w') as f:
             yaml.dump({"step": "step"}, f)
 
-        result = self.runner.invoke(cli, ['steps', 'validate', file, '-i', file])
+        result = self.runner.invoke(cli, ['steps', 'validate', file, '1', '-i', file])
 
         assert 0 == result.exit_code
 

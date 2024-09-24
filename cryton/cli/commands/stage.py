@@ -46,8 +46,8 @@ def stage_list(
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters["plan_model_id"] = parent
-    include = ["id", "name", "trigger_type", "trigger_args", "executor"]
+        additional_parameters["plan_id"] = parent
+    include = ["id", "name", "metadata", "type", "arguments"]
     ctx.obj.get_items(Stage.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
@@ -104,7 +104,7 @@ def stage_read(ctx: helpers.Context, stage_id: int, less: bool, localize: bool) 
     :return: None
     """
     response = ctx.obj.api_get(Stage.READ, stage_id)
-    include = ["id", "name", "trigger_type", "trigger_args", "executor"]
+    include = ["id", "name", "metadata", "type", "arguments"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
@@ -128,6 +128,7 @@ def stage_delete(ctx: helpers.Context, stage_id: int) -> None:
 @stage.command("validate")
 @click.pass_context
 @click.argument("file", type=click.Path(exists=True), required=True)
+@click.argument("plan_id", type=click.INT, required=True)
 @click.option(
     "-i",
     "--inventory-file",
@@ -136,21 +137,21 @@ def stage_delete(ctx: helpers.Context, stage_id: int) -> None:
     multiple=True,
     help="Inventory file used to fill the template. Can be used multiple times.",
 )
-@click.option("-D", "--dynamic", is_flag=True, help="If Stage will be used with a dynamic Plan.")
-def stage_validate(ctx: helpers.Context, file: str, inventory_files: list, dynamic: bool) -> None:
+def stage_validate(ctx: helpers.Context, file: str, plan_id: int, inventory_files: list) -> None:
     """
-    Validate (syntax check) your FILE with Stage.
+    Validate FILE containing stage against a plan with PLAN_ID.
 
     FILE is path/to/your/file that you want to validate.
+    PLAN_ID is an ID of the plan you want to validate the stage against.
 
     \f
     :param ctx: Click ctx object
+    :param plan_id: ID of the Plan to use
     :param file: File containing your Stage in yaml
     :param inventory_files: Inventory file(s) used to fill the template
-    :param dynamic: If Stage will be used with a dynamic Plan
     :return: None
     """
-    data = {"dynamic": dynamic}
+    data = {"plan_id": plan_id}
     files = helpers.load_files(inventory_files)
     with open(file, "rb") as f:
         files["file"] = f.read()

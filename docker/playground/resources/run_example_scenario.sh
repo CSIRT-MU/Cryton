@@ -43,9 +43,9 @@ function test() {
 function runWaitForState() {
   runId=$1
   state=$2
-  timeOut=$(($3*2))
+  timeOut=$3
   while : ; do
-    currentState=$(cryton-cli runs show "$runId" | sed -n "s/^.*state: \(.*\), plan_model.*$/\1/p")
+    currentState=$(cryton-cli runs show "$runId" | sed -n "s/^.\+state\":\"\([A-Z]\+\)\",.\+$/\1/ p")
     if [[ "$currentState" == "$state" ]]; then
       echo 0
       break
@@ -53,7 +53,7 @@ function runWaitForState() {
       echo 1
       break
     fi
-    sleep 0.5
+    sleep 1
     ((timeOut--))
   done
 }
@@ -75,52 +75,53 @@ function isNumber() {
 }
 
 
-checkWord="successfully"
+templateDirectory="/app/examples/scenarios/playground"
+idRegex="s/^.\+id\":\([0-9]\+\),.\+$/\1/ p"
 
 
 # Create Worker
-resultRaw=$(test "cryton-cli workers create worker -f" "s/^.*'id': \(.*\),.*$/\1/p" "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli workers create worker -f" "$idRegex" "id" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 workerId=${resultParsed[0]};
 echo "${resultParsed[2]}"
 
 
 # Health-check Worker
-resultRaw=$(test "cryton-cli workers health-check $workerId" -1 "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli workers health-check $workerId" -1 "UP" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 echo "${resultParsed[2]}"
 
 
 # Validate template
-resultRaw=$(test "cryton-cli plans validate /opt/resources/template.yml -i /opt/resources/inventory.yml" -1 "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli plans validate $templateDirectory/template.yml -i $templateDirectory/inventory.yml" -1 "valid" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 echo "${resultParsed[2]}"
 
 
 # Template create
-resultRaw=$(test "cryton-cli plan-templates create /opt/resources/template.yml" "s/^.*'id': \(.*\),.*$/\1/p" "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli plan-templates create $templateDirectory/template.yml" "$idRegex" "id" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 templateId=${resultParsed[0]}
 echo "${resultParsed[2]}"
 
 
 # Plan create
-resultRaw=$(test "cryton-cli plans create $templateId -i /opt/resources/inventory.yml" "s/^.*'id': \(.*\),.*$/\1/p" "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli plans create $templateId -i $templateDirectory/inventory.yml" "$idRegex" "id" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 planId=${resultParsed[0]}
 echo "${resultParsed[2]}"
 
 
 # Run create
-resultRaw=$(test "cryton-cli runs create $planId $workerId" "s/^.*'id': \([0-9]*\), .*$/\1/p" "$checkWord" -1 "" 0)
+resultRaw=$(test "cryton-cli runs create $planId $workerId" "$idRegex" "id" -1 "" 0)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 runId=${resultParsed[0]}
 echo "${resultParsed[2]}"
 
 
 # Run execute
-echo "Run executed. This may take a while.. "
-resultRaw=$(test "cryton-cli runs execute $runId" -1 "$checkWord" "$runId" "FINISHED" 1000)
+echo "Executing run. This may take a while.. "
+resultRaw=$(test "cryton-cli runs execute $runId" -1 "executed" "$runId" "FINISHED" 600)
 IFS="ˇ" read -ra resultParsed <<< "$resultRaw"
 _=${resultParsed[0]}
 echo "${resultParsed[2]}"

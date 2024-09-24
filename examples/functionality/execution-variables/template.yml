@@ -1,0 +1,12 @@
+---
+name: Execution variables example
+metadata:
+  description: This example shows how to use execution variables.
+stages:
+  do-stuff-on-worker:
+    steps:
+      print-execution-variable:
+        is_init: true
+        module: command
+        arguments:
+          command: echo '{{ my_variable }}'

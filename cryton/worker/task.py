@@ -5,13 +5,12 @@ from threading import Thread
 import amqpstorm
 import json
 import traceback
-from schema import Schema, Or, SchemaError, Optional as SchemaOptional
-from utinni import EmpireLoginError
-import asyncio
+from jsonschema import validate, ValidationError
 from typing import Optional, Callable, List
 from dataclasses import asdict
+from importlib import import_module
 
-from cryton.worker import event, empire
+from cryton.worker import event
 from cryton.worker.utility import util, constants as co, logger
 
 
@@ -52,7 +51,7 @@ class Task:
 
         try:
             self._validate(message_body)
-        except SchemaError as ex:
+        except ValidationError as ex:
             result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
         else:
             result = self._execute(message_body)
@@ -190,28 +189,16 @@ class AttackTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: None
         """
-        validation_schema = Schema(
-            {
-                co.ACK_QUEUE: str,
-                co.STEP_TYPE: Or(co.STEP_TYPE_WORKER_EXECUTE, co.STEP_TYPE_EMPIRE_EXECUTE),
-                co.ARGUMENTS: Or(
-                    {
-                        SchemaOptional(co.USE_NAMED_SESSION): str,
-                        SchemaOptional(co.CREATE_NAMED_SESSION): str,
-                        SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
-                        co.MODULE: str,
-                        co.MODULE_ARGUMENTS: dict,
-                    },
-                    {co.USE_AGENT: str, co.MODULE: str, SchemaOptional(co.MODULE_ARGUMENTS): dict},
-                    {
-                        co.USE_AGENT: str,
-                        co.EMPIRE_SHELL_COMMAND: str,
-                    },
-                ),
-            }
-        )
-
-        validation_schema.validate(message_body)
+        schema = {  # TODO: this is the same as in hive...schemas.py
+            "type": "object",
+            "properties": {
+                co.ACK_QUEUE: {"type": "string"},
+                co.MODULE: {"type": "string"},
+                co.ARGUMENTS: {"type": "object"},
+            },
+            "required": [co.ACK_QUEUE, co.MODULE, co.ARGUMENTS],
+        }
+        validate(message_body, schema)
 
     def _execute(self, message_body: dict) -> dict:
         """
@@ -221,81 +208,11 @@ class AttackTask(Task):
         :return: Execution's result
         """
         logger.logger.info("Running AttackTask._execute().", correlation_id=self.correlation_id)
+        module = message_body.pop(co.MODULE)
+        arguments = message_body.pop(co.ARGUMENTS)
+        result = asdict(self._run_in_process(util.run_module, *(module, arguments)))
+        logger.logger.info("Finished AttackTask._execute().", correlation_id=self.correlation_id)
 
-        # Extract needed data.
-        step_type = message_body.pop(co.STEP_TYPE)
-        arguments = message_body.pop(co.ARGUMENTS, {})
-
-        # Start module execution.
-        if step_type == co.STEP_TYPE_EMPIRE_EXECUTE:
-            empire_client = empire.EmpireClient()
-            try:
-                result = asyncio.run(empire_client.execute_on_agent(arguments))
-            except ConnectionError as err:
-                result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
-
-        else:
-            module_path = arguments.pop(co.MODULE)
-            module_arguments = arguments.pop(co.MODULE_ARGUMENTS)
-            result = asdict(self._run_in_process(util.run_module, *(module_path, module_arguments)))
-
-        logger.logger.info("Finished AttackTask._execute().", correlation_id=self.correlation_id, step_type=step_type)
-        return result
-
-
-class AgentTask(Task):
-    def __init__(self, message: amqpstorm.Message, main_queue: PriorityQueue, connection: amqpstorm.Connection):
-        """
-        Class for processing agent callbacks.
-        :param message: Received RabbitMQ Message
-        :param main_queue: Worker's queue for internal request processing
-        """
-        super().__init__(message, main_queue, connection)
-
-    def _validate(self, message_body: dict) -> None:
-        """
-        Custom validation for callback processing.
-        :param message_body: Received RabbitMQ Message's
-        :return: None
-        """
-        validation_schema = Schema(
-            {
-                co.ACK_QUEUE: str,
-                co.STEP_TYPE: co.STEP_TYPE_DEPLOY_AGENT,
-                co.ARGUMENTS: {
-                    SchemaOptional(co.SESSION_ID): str,
-                    SchemaOptional(co.USE_NAMED_SESSION): str,
-                    SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
-                    SchemaOptional(co.SSH_CONNECTION): dict,
-                    co.EMPIRE_LISTENER_NAME: str,
-                    co.STAGER_TYPE: str,
-                    co.AGENT_NAME: str,
-                    SchemaOptional(co.EMPIRE_LISTENER_TYPE): str,
-                    SchemaOptional(co.EMPIRE_LISTENER_PORT): int,
-                    SchemaOptional(co.LISTENER_OPTIONS): dict,
-                    SchemaOptional(co.STAGER_OPTIONS): dict,
-                },
-            }
-        )
-
-        validation_schema.validate(message_body)
-
-    def _execute(self, message_body: dict) -> dict:
-        """
-        Custom execution for agent callback processing.
-        Deploy agent.
-        :param message_body: Received RabbitMQ Message's
-        :return: Execution's result
-        """
-        logger.logger.info("Running AgentTask._execute().", correlation_id=self.correlation_id)
-
-        arguments = message_body.pop(co.ARGUMENTS, {})
-        try:
-            result = asyncio.run(empire.deploy_agent(arguments))
-        except (ConnectionError, EmpireLoginError) as err:
-            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(err)}
-
-        logger.logger.info("Finished AgentTask._execute().", correlation_id=self.correlation_id)
         return result
 
 
@@ -314,24 +231,164 @@ class ControlTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: None
         """
-        validation_schema = Schema(
-            {
-                co.EVENT_T: str,
-                co.EVENT_V: Or(
-                    co.EVENT_VALIDATE_MODULE_SCHEMA,
-                    co.EVENT_LIST_MODULES_SCHEMA,
-                    co.EVENT_LIST_SESSIONS_SCHEMA,
-                    co.EVENT_KILL_STEP_EXECUTION_SCHEMA,
-                    co.EVENT_HEALTH_CHECK_SCHEMA,
-                    co.EVENT_ADD_TRIGGER_HTTP_SCHEMA,
-                    co.EVENT_ADD_TRIGGER_MSF_SCHEMA,
-                    co.EVENT_REMOVE_TRIGGER_SCHEMA,
-                    co.EVENT_LIST_TRIGGERS_SCHEMA,
-                ),
-            }
-        )
-
-        validation_schema.validate(message_body)
+        schema = {  # TODO: this is the same as in hive...schemas.py rework with triggers?
+            "type": "object",
+            "properties": {"event_t": {"type": "string"}},
+            "required": ["event_t"],
+            "allOf": [
+                {
+                    "if": {"properties": {"event_t": {"const": "VALIDATE_MODULE"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {
+                            "event_v": {
+                                "type": "object",
+                                "properties": {co.MODULE: {"type": "string"}, co.ARGUMENTS: {"type": "object"}},
+                                "required": [co.MODULE, co.ARGUMENTS],
+                            }
+                        },
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "LIST_MODULES"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {"event_v": {"type": "object"}},
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "LIST_SESSIONS"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {
+                            "event_v": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {"type": "string"},
+                                    "tunnel_local": {"type": "string"},
+                                    "tunnel_peer": {"type": "string"},
+                                    "via_exploit": {"type": "string"},
+                                    "via_payload": {"type": "string"},
+                                    "desc": {"type": "string"},
+                                    "info": {"type": "string"},
+                                    "workspace": {"type": "string"},
+                                    "session_host": {"type": "string"},
+                                    "session_port": {"type": "integer"},
+                                    "target_host": {"type": "string"},
+                                    "username": {"type": "string"},
+                                    "uuid": {"type": "string"},
+                                    "exploit_uuid": {"type": "string"},
+                                    "routes": {"type": "string"},
+                                    "arch": {"type": "string"},
+                                },
+                            }
+                        },
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "KILL_STEP_EXECUTION"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {
+                            "event_v": {"type": "object", "properties": {"correlation_id": {"type": "string"}}}
+                        },
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "HEALTH_CHECK"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {"event_v": {"type": "object"}},
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "ADD_TRIGGER"}}, "required": ["event_t"]},
+                    "then": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "event_v": {
+                                        "type": "object",
+                                        "properties": {
+                                            "trigger_type": {"type": "string"},
+                                            "reply_to": {"type": "string"},
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                "properties": {
+                                    "event_v": {
+                                        "type": "object",
+                                        "properties": {
+                                            "host": {"type": "string"},
+                                            "port": {"type": "integer"},
+                                            "routes": {
+                                                "description": "List of routes the listener will check for requests.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "path": {"type": "string", "description": "Request's path."},
+                                                        "method": {
+                                                            "type": "string",
+                                                            "description": "Request's allowed method.",
+                                                        },
+                                                        "parameters": {
+                                                            "description": "Request's required parameters.",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "description": "Parameter's name.",
+                                                                    },
+                                                                    "value": {
+                                                                        "type": "string",
+                                                                        "description": "Parameter's value.",
+                                                                    },
+                                                                },
+                                                                "required": ["name", "value"],
+                                                                "additionalProperties": False,
+                                                            },
+                                                            "minItems": 1,
+                                                        },
+                                                    },
+                                                    "required": ["path", "method", "parameters"],
+                                                    "additionalProperties": False,
+                                                },
+                                                "minItems": 1,
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                            {
+                                "properties": {
+                                    "event_v": import_module("cryton.modules.metasploit.module").Module.SCHEMA
+                                },
+                            },
+                        ]
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "REMOVE_TRIGGER"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {"event_v": {"type": "object", "properties": {"trigger_id": {"type": "string"}}}},
+                        "required": ["event_v"],
+                    },
+                },
+                {
+                    "if": {"properties": {"event_t": {"const": "LIST_TRIGGERS"}}, "required": ["event_t"]},
+                    "then": {
+                        "properties": {"event_v": {"type": "object"}},
+                        "required": ["event_v"],
+                    },
+                },
+            ],
+        }
+        validate(message_body, schema)
 
     def _execute(self, message_body: dict) -> dict:
         """

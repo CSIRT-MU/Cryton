@@ -10,8 +10,15 @@ class TestRun(Test):
     """
     Base class for Run testing.
     """
-    def __init__(self, template: str, workers: List[Dict], inventories: Optional[List[str]],
-                 execution_variables: Optional[List[str]], max_timeout: int):
+
+    def __init__(
+        self,
+        template: str,
+        workers: List[Dict],
+        inventories: Optional[List[str]],
+        execution_variables: Optional[List[str]],
+        max_timeout: int,
+    ):
         super().__init__()
         self.max_timeout = max_timeout
 
@@ -35,24 +42,24 @@ class TestRun(Test):
         """
         click.echo("Preparing Workers... ", nl=False)
         self._prepare_workers()
-        click.secho("OK", fg='green')
+        click.secho("OK", fg="green")
 
         click.echo("Preparing template... ", nl=False)
         self._prepare_template()
-        click.secho("OK", fg='green')
+        click.secho("OK", fg="green")
 
         click.echo("Preparing Plan... ", nl=False)
         self._prepare_plan()
-        click.secho("OK", fg='green')
+        click.secho("OK", fg="green")
 
         click.echo("Preparing Run... ", nl=False)
         self._prepare_run()
-        click.secho("OK", fg='green')
+        click.secho("OK", fg="green")
 
         if self.execution_variables is not None:
             click.echo("Preparing execution variables... ", nl=False)
             self._prepare_execution_variables()
-            click.secho("OK", fg='green')
+            click.secho("OK", fg="green")
 
     def _prepare_workers(self):
         """
@@ -146,10 +153,13 @@ class TestRun(Test):
         :return: Information that will be printed to the user
         """
         return {
-            "CLI executable": self._executable, "template_id": self.template_id, "plan_id": self.plan_id,
-            "worker_ids": ", ".join(map(str, self.worker_ids)), "run_id": self.run_id,
+            "CLI executable": self._executable,
+            "template_id": self.template_id,
+            "plan_id": self.plan_id,
+            "worker_ids": ", ".join(map(str, self.worker_ids)),
+            "run_id": self.run_id,
             "plan_execution_ids": ", ".join(map(str, self.plan_execution_ids)),
-            "execution_variable_ids": ", ".join(map(str, self.execution_variable_ids))
+            "execution_variable_ids": ", ".join(map(str, self.execution_variable_ids)),
         }
 
     def run_wait_for_state(self, state: str, timeout: int):
@@ -170,7 +180,7 @@ class TestRun(Test):
                 raise CannotParseResponseError(f"Couldn't get the state. Original result: {result}")
 
             if current_state == state:
-                click.secho("OK", fg='green')
+                click.secho("OK", fg="green")
                 return
 
         raise TimeOutError(f"State change timeout after {timeout} seconds.")
@@ -185,7 +195,7 @@ class TestRun(Test):
         """
         if check_word not in result.lower():
             raise UnexpectedResponse(f"Got an unexpected response. Original result: {result}")
-        parsed_result = result.replace('\n', '')
+        parsed_result = result.replace("\n", "")
         click.echo(f"{click.style('OK', 'green')} - {parsed_result}")
 
     def test(self, test_info: str, cmd: List, check_word: str, state: str = None, timeout: int = None):

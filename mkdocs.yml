@@ -82,26 +82,26 @@ nav:
       - usage/index.md
       - Workflows: usage/workflows.md
   - Settings: settings.md
-  - Creating a scenario:  # TODO: re-think
-      - design-phase/index.md  # update
-      - Plan: design-phase/plan.md  # update
-      - Stage: design-phase/stage.md  # update
-      - Step: design-phase/step.md  # update
-      - Plan instance: design-phase/plan-instance.md  # update
+  - Creating a scenario:
+      - design-phase/index.md  # Would be worth to possibly reword this as it's too long and hard to read
+      - Plan: design-phase/plan.md
+      - Stage: design-phase/stage.md
+      - Step: design-phase/step.md
   - Running a scenario:
-      - execution-phase/index.md  # update
-      - Execution statistics: execution-phase/execution.md  # update
-      - Reporting: execution-phase/reporting.md  # update
-      - Dynamic execution: execution-phase/dynamic-execution.md  # update  # TODO: re-think
+      - execution-phase/index.md  # TODO: update
+      - Execution statistics: execution-phase/execution.md  # TODO: update
+      - Reporting: execution-phase/reporting.md  # TODO: update
+      - Dynamic execution: execution-phase/dynamic-execution.md  # TODO: re-think
   - Interfaces:
       - interfaces/index.md
       - CLI: interfaces/cli.md
-      - Frontend: interfaces/frontend.md  # update
-      - REST API: interfaces/rest-api.md  # update
+      - Frontend: interfaces/frontend.md  # TODO: update
+      - REST API: interfaces/rest-api.md  # TODO: update
   - Modules:
       - modules/index.md
       - Atomic Red Team: modules/list/atomic-red-team.md
       - Command: modules/list/command.md
+      - Empire: modules/list/empire.md
       - FFUF: modules/list/ffuf.md
       - Medusa: modules/list/medusa.md
       - Metasploit: modules/list/metasploit.md
@@ -114,8 +114,8 @@ nav:
       - development/index.md
       - Modules: development/modules.md
       - Front-end: development/frontend.md
-#  - Production: production.md  # update  # TODO: re-think
-  - Logging: logging.md  # update
-  - Ansible: ansible/ansible.md  # update
+#  - Production: production.md  # TODO: re-think
+  - Logging: logging.md  # TODO: update
+  - Ansible: ansible/ansible.md  # TODO: update
   - Acknowledgements: acknowledgements.md
   - License: license.md

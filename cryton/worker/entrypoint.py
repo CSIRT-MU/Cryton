@@ -5,6 +5,5 @@ except ImportError as ex:
     print(f"Original error: {ex}")
     exit(1)
 
-
 if __name__ == "__main__":
     cli()

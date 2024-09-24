@@ -1,6 +1,5 @@
 from datetime import datetime
 from django.utils import timezone
-import schema
 
 from cryton.hive.models import stage, worker, step
 from cryton.hive.utility.rabbit_client import RpcClient
@@ -9,15 +8,13 @@ from cryton.lib.utility.module import Result
 
 
 class TriggerBase:
-    arg_schema = schema.Schema({})
-
     def __init__(self, stage_execution):  # Not using typing since it's causing loop import error
         """
         :param stage_execution: StageExecution's object
         """
         self.stage_execution: stage.StageExecution = stage_execution
         self.stage_execution_id = self.stage_execution.model.id
-        self.trigger_args = self.stage_execution.model.stage_model.trigger_args
+        self.trigger_args = self.stage_execution.model.stage.arguments
 
     def start(self) -> None:
         pass
@@ -43,9 +40,10 @@ class TriggerBase:
 
         if self.stage_execution.all_steps_finished:
             self.stage_execution.finish()
-        else:
-            for step_exec in self.stage_execution.model.step_executions.filter(state=states.PAUSED):
-                step.StepExecutionType[step_exec.step_model.step_type].value(step_execution_id=step_exec.id).execute()
+            return
+
+        for step_exec in self.stage_execution.model.step_executions.filter(state=states.PAUSED):
+            step.StepExecution(step_execution_id=step_exec.id).execute()
 
 
 class TriggerTime(TriggerBase):
@@ -74,11 +72,10 @@ class TriggerTime(TriggerBase):
         Schedule stage execution.
         :return: None
         """
-
         states.StageStateMachine(self.stage_execution_id).validate_state(
             self.stage_execution.state, states.STAGE_SCHEDULE_STATES
         )
-        if self.stage_execution.model.stage_model.trigger_type not in [constants.DELTA, constants.DATETIME]:
+        if self.stage_execution.model.stage.type not in [constants.DELTA, constants.TIME]:
             raise exceptions.UnexpectedValue(
                 "StageExecution with ID {} cannot be scheduled due to not having delta or datetime parameter".format(
                     self.stage_execution_id
@@ -97,7 +94,7 @@ class TriggerTime(TriggerBase):
         logger.logger.info(
             "Stage execution scheduled",
             stage_execution_id=self.stage_execution_id,
-            stage_name=self.stage_execution.model.stage_model.name,
+            stage_name=self.stage_execution.model.stage.name,
             status="success",
         )
 
@@ -120,7 +117,7 @@ class TriggerTime(TriggerBase):
         logger.logger.info(
             "Stage execution unscheduled",
             stage_execution_id=self.stage_execution_id,
-            stage_name=self.stage_execution.model.stage_model.name,
+            stage_name=self.stage_execution.model.stage.name,
             status="success",
         )
 
@@ -159,7 +156,7 @@ class TriggerWorker(TriggerBase):
             trigger_id=self.stage_execution.trigger_id,
         )
 
-        worker_obj = worker.Worker(worker_model_id=self.stage_execution.model.plan_execution.worker.id)
+        worker_obj = worker.Worker(self.stage_execution.model.plan_execution.worker.id)
         event_v.update(self.trigger_args)
         message = {constants.EVENT_T: constants.EVENT_ADD_TRIGGER, constants.EVENT_V: event_v}
 
@@ -195,7 +192,7 @@ class TriggerWorker(TriggerBase):
             stage_execution_id=self.stage_execution_id,
             trigger_id=self.stage_execution.trigger_id,
         )
-        worker_obj = worker.Worker(worker_model_id=self.stage_execution.model.plan_execution.worker.id)
+        worker_obj = worker.Worker(self.stage_execution.model.plan_execution.worker.id)
         message = {
             constants.EVENT_T: constants.EVENT_REMOVE_TRIGGER,
             constants.EVENT_V: {constants.TRIGGER_ID: self.stage_execution.trigger_id},

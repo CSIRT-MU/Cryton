@@ -42,7 +42,7 @@ def run_list(
     :return: None
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
-    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan_model"]
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan"]
     ctx.obj.get_items(Run.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
@@ -89,7 +89,7 @@ def run_read(ctx: helpers.Context, run_id: int, less: bool, localize: bool) -> N
     """
     response = ctx.obj.api_get(Run.READ, run_id)
     # TODO: move include into a global variable on top of the file
-    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan_model"]
+    include = ["id", "schedule_time", "start_time", "pause_time", "finish_time", "state", "plan"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 

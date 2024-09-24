@@ -34,8 +34,7 @@ docker compose -f docker-compose.yml -f docker-compose.playground.yml up -d --bu
 Once we are done, Cryton toolset and vulnerable targets should be up and running.
 
 ## Run the prepared scenario
-We have prepared an example attack scenario that uses multiple Cryton features ([session management](design-phase/step.md#session-management),
-[output sharing](design-phase/step.md#output-sharing), [conditional execution](design-phase/step.md#conditional-execution), ...).
+We have prepared an example attack scenario that uses multiple Cryton features and is complex enough for showcasing.
 
 ![Attack description](images/playground-attack-diagram.png)
 
@@ -61,13 +60,13 @@ Progress and results can be viewed in the *front-end* at [http://localhost:8080/
     
     Validate the template:
     ```shell
-    cryton-cli plans validate /opt/resources/template.yml -i /opt/resources/inventory.yml
+    cryton-cli plans validate /app/examples/scenarios/playground/template.yml -i /app/examples/scenarios/playground/inventory.yml
     ```
     
     Upload the template, create a Plan and a Run:
     ```shell
-    cryton-cli plan-templates create /opt/resources/template.yml
-    cryton-cli plans create <plan-template-id> -i /opt/resources/inventory.yml
+    cryton-cli plan-templates create /app/examples/scenarios/playground/template.yml
+    cryton-cli plans create <plan-template-id> -i /app/examples/scenarios/playground/inventory.yml
     cryton-cli runs create <plan-id> <worker-id>
     ```
     

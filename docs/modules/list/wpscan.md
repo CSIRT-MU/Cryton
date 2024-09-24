@@ -53,9 +53,12 @@ A module for scanning WordPress pages using the [WPScan](https://wpscan.com/) to
 ### Example with serialized output
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE_ME
-  options: --max-threads 7
+my-step:
+  module: wpscan
+  arguments:
+    target: {{ target }}
+    options: --max-threads 7
+
 ```
 
 Output:
@@ -70,10 +73,13 @@ Output:
 ### Example with text output
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE_ME
-  options: --max-threads 7
-  serialized_output: False
+my-step:
+  module: wpscan
+  arguments:
+    target: {{ target }}
+    options: --max-threads 7
+    serialized_output: false
+
 ```
 
 Output:

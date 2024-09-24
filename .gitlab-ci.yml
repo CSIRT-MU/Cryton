@@ -85,7 +85,7 @@ build_documentation:
 .build_docker_image:
   extends: .publish
   image:
-    name: gcr.io/kaniko-project/executor:v1.19.2-debug
+    name: gcr.io/kaniko-project/executor:latest
     entrypoint: [ "" ]
   variables:
     BUILD_TARGET: "production"

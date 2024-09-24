@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from cryton.hive.cryton_app import util, serializers, exceptions
 from cryton.hive.cryton_app.models import WorkerModel
-from cryton.hive.utility import exceptions as core_exceptions, creator
+from cryton.hive.utility import exceptions as core_exceptions
 from cryton.hive.models.worker import Worker
 
 
@@ -31,7 +31,7 @@ class WorkerViewSet(util.InstanceFullViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        Worker(worker_model_id=model_id).delete()
+        Worker(model_id).delete()
 
     @extend_schema(
         description="Create new Worker.",
@@ -45,7 +45,7 @@ class WorkerViewSet(util.InstanceFullViewSet):
         try:
             params = {key: request.data.get(key, "") for key in ["name", "description"]}
             force = request.data.get("force", False)
-            worker_obj_id = creator.create_worker(force=force, **params)
+            worker_obj_id = Worker.create_model(**params, force=force).id
         except core_exceptions.WrongParameterError as ex:
             raise exceptions.ParseError(ex)
 
@@ -63,7 +63,7 @@ class WorkerViewSet(util.InstanceFullViewSet):
     def healthcheck(self, _, **kwargs):
         worker_id = kwargs.get("pk")
         try:
-            worker_obj = Worker(worker_model_id=worker_id)
+            worker_obj = Worker(worker_id)
         except core_exceptions.WorkerObjectDoesNotExist:
             raise exceptions.NotFound()
         worker_obj.healthcheck()

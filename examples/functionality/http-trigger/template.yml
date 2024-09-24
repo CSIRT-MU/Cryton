@@ -1,0 +1,23 @@
+---
+name: HTTP trigger example
+metadata:
+  description: This example shows how to use the HTTP trigger.
+stages:
+  do-stuff-on-worker:
+    type: http
+    arguments:
+      port: 8082
+      routes:
+        - path: /index
+          method: GET
+          parameters:
+            - name: test
+              value: test
+    metadata:
+      description: This stage will start once you access http://<worker_ip>:8082/index?test=test
+    steps:
+      print-success:
+        is_init: true
+        module: command
+        arguments:
+          command: echo "it works!"

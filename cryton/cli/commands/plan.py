@@ -42,7 +42,7 @@ def plan_list(
     :return: None
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
-    include = ["id", "name", "owner", "evidence_dir"]
+    include = ["id", "name", "metadata", "evidence_dir"]
     ctx.obj.get_items(Plan.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
@@ -94,7 +94,7 @@ def plan_read(ctx: helpers.Context, plan_id: int, less: bool, localize: bool) ->
     :return: None
     """
     response = ctx.obj.api_get(Plan.READ, plan_id)
-    include = ["id", "name", "owner", "evidence_dir"]
+    include = ["id", "name", "metadata", "evidence_dir"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 

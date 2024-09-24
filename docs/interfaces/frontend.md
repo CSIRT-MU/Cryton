@@ -55,9 +55,9 @@ Variables can be found in `src/environments/`. For production modify the _enviro
 #### crytonRESTApiHost 
 Cryton Core's API address.
 
-| value  | default   | example          |
-|--------|-----------|------------------|
-| string | 127.0.0.1 | cryton-core.host |
+| value  | default   | example         |
+|--------|-----------|-----------------|
+| string | 127.0.0.1 | cryton-hive |
 
 #### crytonRESTApiPort
 Cryton Core's API port.

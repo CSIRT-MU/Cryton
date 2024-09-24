@@ -1,0 +1,54 @@
+---
+name: Output sharing example
+metadata:
+  description: This example shows how to share output between the steps.
+stages:
+  create-object:
+    steps:
+      create-command:
+        is_init: true
+        module: command
+        arguments:
+          command: "echo '{\"command\": \"whoami\"}'"
+          serialize_output: true
+        output:
+          alias: command-builder
+
+  create-a-different-object:
+    depends_on:
+      - create-object
+    steps:
+      create-a-different-command:
+        is_init: true
+        module: command
+        arguments:
+          command: "echo '{\"different-command\": \"id -u\"}'"
+          serialize_output: true
+        output:
+          alias: command-builder
+          mapping:
+            - from: different-command
+              to: command
+        next:
+          - type: result
+            value: ok
+            step:
+              - run-parent-command
+              - run-command-from-step
+              - run-command-from-alias
+
+      run-parent-command:
+        module: command
+        arguments:
+          session_id: $parent.command
+          command: $parent.command
+
+      run-command-from-step:
+        module: command
+        arguments:
+          command: $create-command.command
+
+      run-command-from-alias:
+        module: command
+        arguments:
+          command: $command-builder.command

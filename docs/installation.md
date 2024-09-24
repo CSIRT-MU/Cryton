@@ -132,12 +132,12 @@ It is **highly recommended** to use *pipx*, since it creates and manages an isol
 
     **pipx**
     ```shell
-    pipx install cryton[hive]=={{{ release_version }}}.*
+    pipx install cryton[hive,modules]=={{{ release_version }}}.*
     ```
     
     **pip**
     ```shell
-    pip install --user cryton[hive]=={{{ release_version }}}.*
+    pip install --user cryton[hive,modules]=={{{ release_version }}}.*
     ```
 
 === "Worker"

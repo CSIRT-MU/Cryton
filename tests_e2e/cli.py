@@ -8,8 +8,8 @@ from tests_e2e.util import config
 
 @click.group()
 @click.version_option(message=f"%(prog)s, version %(version)s")
-@click.option('-wa', '--worker-address', type=click.STRING, help="Worker's address")
-@click.option('-wn', '--worker-name', type=click.STRING, help="Worker's name")
+@click.option("-wa", "--worker-address", type=click.STRING, help="Worker's address")
+@click.option("-wn", "--worker-name", type=click.STRING, help="Worker's name")
 def cli(worker_address: str, worker_name: str) -> None:
     """
     A CLI for Cryton E2E.
@@ -19,8 +19,8 @@ def cli(worker_address: str, worker_name: str) -> None:
     """
 
 
-@cli.command('run-tests')
-@click.option('-t', '--test', 'test_types', type=click.STRING, help='Choose what tests to run.', multiple=True)
+@cli.command("run-tests")
+@click.option("-t", "--test", "test_types", type=click.STRING, help="Choose what tests to run.", multiple=True)
 def run_tests(test_types: List[str]):
     """
     Run E2E tests.
@@ -30,7 +30,7 @@ def run_tests(test_types: List[str]):
     :return: None
     """
     terminal_width = get_terminal_size().columns
-    section_separator = f"{'- '*(terminal_width//2-1)}\n\n"
+    section_separator = f"{'- ' * (terminal_width // 2 - 1)}\n\n"
 
     if not test_types:
         test_types = ["all"]
@@ -68,8 +68,9 @@ def run_tests(test_types: List[str]):
 
     if "all" in test_types or "advanced" in test_types:
         template_advanced = path.join(config.TEMPLATES_DIRECTORY, "advanced/template.yml")
-        tests.TestAdvancedExecution(template_advanced, default_workers, [default_inventory],
-                                    [default_execution_variables], 30).run()
+        tests.TestAdvancedExecution(
+            template_advanced, default_workers, [default_inventory], [default_execution_variables], 30
+        ).run()
         click.echo(section_separator)
 
     if "all" in test_types or "control" in test_types:
@@ -77,18 +78,42 @@ def run_tests(test_types: List[str]):
         tests.TestAdvancedControl(template, default_workers, [default_inventory], None, 30).run()
 
 
-@cli.command('run-custom')
-@click.argument('template', type=click.Path(exists=True), required=True)
-@click.option('-i', '--inventory-file', 'inventory_files', type=click.Path(exists=True), multiple=True,
-              help="Inventory file used to fill the template. Can be used multiple times.")
-@click.option('-e', '--execution-variable-file', 'execution_variable_files', type=click.Path(exists=True),
-              multiple=True, help="Execution variable file used to fill the template. Can be used multiple times.")
-@click.option('-w', '--worker-name', type=click.STRING, help="Worker to use.", default=config.WORKER_NAME)
-@click.option('-T', '--timeout', type=click.INT, help='Set timeout for each check in the test.', default=30)
-@click.option('-r', '--runs', 'number_of_runs', type=click.INT, default=1,
-              help='How many times to run the test. Set `0` to run until error.')
-def run_custom_template(template: str, timeout: int, inventory_files: List[str], execution_variable_files: List[str],
-                        worker_name: str, number_of_runs: int):
+@cli.command("run-custom")
+@click.argument("template", type=click.Path(exists=True), required=True)
+@click.option(
+    "-i",
+    "--inventory-file",
+    "inventory_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Inventory file used to fill the template. Can be used multiple times.",
+)
+@click.option(
+    "-e",
+    "--execution-variable-file",
+    "execution_variable_files",
+    type=click.Path(exists=True),
+    multiple=True,
+    help="Execution variable file used to fill the template. Can be used multiple times.",
+)
+@click.option("-w", "--worker-name", type=click.STRING, help="Worker to use.", default=config.WORKER_NAME)
+@click.option("-T", "--timeout", type=click.INT, help="Set timeout for each check in the test.", default=30)
+@click.option(
+    "-r",
+    "--runs",
+    "number_of_runs",
+    type=click.INT,
+    default=1,
+    help="How many times to run the test. Set `0` to run until error.",
+)
+def run_custom_template(
+    template: str,
+    timeout: int,
+    inventory_files: List[str],
+    execution_variable_files: List[str],
+    worker_name: str,
+    number_of_runs: int,
+):
     """
     Run a test with a custom TEMPLATE.
     TEMPLATE is path/to/your/template.
@@ -97,7 +122,7 @@ def run_custom_template(template: str, timeout: int, inventory_files: List[str],
     :return: None
     """
     terminal_width = get_terminal_size().columns
-    separator_visuals = '- ' * (terminal_width // 4 - 4)
+    separator_visuals = "- " * (terminal_width // 4 - 4)
 
     workers = [{"name": worker_name, "description": "e2e tests - custom worker"}]
 
@@ -133,5 +158,5 @@ def run_custom_template(template: str, timeout: int, inventory_files: List[str],
         raise caught_exception
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

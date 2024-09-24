@@ -1,13 +1,10 @@
 from types import ModuleType
 from importlib import import_module
 from pkgutil import iter_modules
-import paramiko
-
 import traceback
 import time
 from dataclasses import dataclass, field
 
-from cryton.worker.utility import logger
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
@@ -69,30 +66,6 @@ def get_available_modules() -> dict[str, ModuleType]:
         name: import_module(f"{name}.module")
         for finder, name, ispkg in iter_modules(modules_namespace.__path__, f"{modules_namespace.__name__}.")
     }
-
-
-def ssh_to_target(ssh_arguments: dict):
-    """
-    SSH connection to target with provided arguments.
-    :param ssh_arguments: Arguments for ssh connection
-    :return: Paramiko SSH client
-    """
-
-    target = ssh_arguments["target"]
-    username = ssh_arguments.get("username")
-    password = ssh_arguments.get("password")
-    ssh_key = ssh_arguments.get("ssh_key")
-    port = ssh_arguments.get("port", 22)
-
-    ssh_client = paramiko.SSHClient()
-    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-    logger.logger.debug("Connecting to target via paramiko ssh client.", target=target)
-    if ssh_key is not None:
-        ssh_client.connect(target, username=username, key_filename=ssh_key, port=port, timeout=10)
-    elif username and password is not None:
-        ssh_client.connect(target, username=username, password=password, port=port, timeout=10)
-    return ssh_client
 
 
 @dataclass(order=True)

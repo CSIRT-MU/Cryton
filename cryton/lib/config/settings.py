@@ -16,19 +16,19 @@ def load_config(app_directory: str) -> dict:
 def getenv_bool(key: str, default: bool):
     env = getenv(key)
 
-    return default if env is None else env.lower() == "true"
+    return default if not env else env.lower() == "true"
 
 
 def getenv_int(key: str, default: int, min_value: int = 1, fallback: int = 1):
     env = getenv(key)
-    value = default if env is None else int(env)
+    value = default if not env else int(env)
 
     return fallback if value < min_value else value
 
 
 def getenv_list(key: str, default: Union[list, str]):
     env = getenv(key)
-    value = default if env is None else env
+    value = default if not env else env
 
     return value.split(" ") if isinstance(value, str) else value
 

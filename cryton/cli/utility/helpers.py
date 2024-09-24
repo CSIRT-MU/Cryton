@@ -2,7 +2,6 @@ from datetime import datetime
 import yaml
 import string
 import random
-import json
 from typing import List, Union, Dict  # TODO: replace Dict/List with dict/list
 import pytz
 import click
@@ -25,24 +24,27 @@ class CLIContext:
         return f"{self._api_url}{endpoint_url if object_id is None else endpoint_url.format(object_id)}"
 
     def api_delete(self, endpoint_url: str, object_id: int):
+        url = self._build_request_url(endpoint_url, object_id)
         try:
-            return requests.delete(self._build_request_url(endpoint_url, object_id))
+            return requests.delete(url)
         except requests.exceptions.ConnectionError:
-            return f"Unable to connect."
+            return f"Unable to connect to {url}."
 
     def api_get(self, endpoint_url: str, object_id: int = None, parameters: dict = None):
+        url = self._build_request_url(endpoint_url, object_id)
         try:
-            return requests.get(self._build_request_url(endpoint_url, object_id), parameters)
+            return requests.get(url, parameters)
         except requests.exceptions.ConnectionError:
-            return f"Unable to connect."
+            return f"Unable to connect to {url}."
 
     def api_post(
         self, endpoint_url: str, object_id: int = None, data: dict = None, json: dict = None, files: dict = None
     ):
+        url = self._build_request_url(endpoint_url, object_id)
         try:
-            return requests.post(self._build_request_url(endpoint_url, object_id), data, json, files=files)
+            return requests.post(url, data, json, files=files)
         except requests.exceptions.ConnectionError:
-            return f"Unable to connect."
+            return f"Unable to connect to {url}."
 
     def get_items(
         self,
@@ -142,8 +144,8 @@ def parse_response(response: requests.Response) -> Union[str, dict]:
     """
     try:
         response_data = response.json()
-    except json.JSONDecodeError:
-        if response.text == "":
+    except requests.exceptions.JSONDecodeError:
+        if not response.text:
             return "Empty response."
         return "Unable to parse response details."
 

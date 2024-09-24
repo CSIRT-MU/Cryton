@@ -25,23 +25,18 @@ class TestModuleMedusa:
                 "mod": "placeholder",
                 "tasks": 1,
                 "options": "placeholder",
-                "credentials": {"combo_file": "test"}
+                "credentials": {"combo_file": "test"},
             },
             {"target": "placeholder", "credentials": {"username": "test", "password": "test"}},
             {"target": "placeholder", "credentials": {"username": "test", "password_file": "test"}},
             {"target": "placeholder", "credentials": {"username_file": "test", "password": "test"}},
             {"target": "placeholder", "credentials": {"username_file": "test", "password_file": "test"}},
-        ]
+        ],
     )
     def test_schema(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
-    @pytest.mark.parametrize(
-        "p_arguments",
-        [
-            {"command": "placeholder"}
-        ]
-    )
+    @pytest.mark.parametrize("p_arguments", [{"command": "placeholder"}])
     def test_schema_custom(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
@@ -59,8 +54,8 @@ class TestModuleMedusa:
             {"target": "placeholder", "credentials": {"combo_file": "test", "username_file": "test"}},
             {"target": "placeholder", "credentials": {"combo_file": "test", "password": "test"}},
             {"target": "placeholder", "credentials": {"combo_file": "test", "password_file": "test"}},
-            {"target": "placeholder", "credentials": {"username": "test", "password": "test", "password_file": "test"}}
-        ]
+            {"target": "placeholder", "credentials": {"username": "test", "password": "test", "password_file": "test"}},
+        ],
     )
     def test_schema_error(self, p_arguments: dict):
         with pytest.raises(Exception):
@@ -91,7 +86,7 @@ class TestModuleMedusa:
             {"credentials": {"combo_file": "test"}},
             {"credentials": {"username_file": "test"}},
             {"credentials": {"password_file": "test"}},
-        ]
+        ],
     )
     def test_check_requirements_files(self, p_arguments, f_is_file):
         module = Module(p_arguments)
@@ -180,25 +175,25 @@ class TestModuleMedusa:
         [
             (
                 {"target": "placeholder", "options": "a b", "credentials": {"combo_file": "test"}},
-                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-C", "test", "a", "b"]
+                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-C", "test", "a", "b"],
             ),
             (
                 {"target": "placeholder", "credentials": {"username": "test", "password": "test"}},
-                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-u", "test", "-p", "test"]
+                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-u", "test", "-p", "test"],
             ),
             (
                 {"target": "placeholder", "credentials": {"username": "test", "password_file": "test"}},
-                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-u", "test", "-P", "test"]
+                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-u", "test", "-P", "test"],
             ),
             (
                 {"target": "placeholder", "credentials": {"username_file": "test", "password": "test"}},
-                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-U", "test", "-p", "test"]
+                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-U", "test", "-p", "test"],
             ),
             (
                 {"target": "placeholder", "credentials": {"username_file": "test", "password_file": "test"}},
-                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-U", "test", "-P", "test"]
+                ["medusa", "-h", "placeholder", "-t", "4", "-M", "ssh", "-U", "test", "-P", "test"],
             ),
-        ]
+        ],
     )
     def test__build_command(self, p_arguments, p_outcome):
         module = Module(p_arguments)
@@ -215,5 +210,5 @@ class TestModuleMedusa:
         assert result == {
             "username": "username",
             "password": "password",
-            "all_credentials": [{"username": "username", "password": "password"}]
+            "all_credentials": [{"username": "username", "password": "password"}],
         }

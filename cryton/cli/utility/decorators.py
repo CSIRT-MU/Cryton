@@ -1,6 +1,5 @@
 from click import option, INT, STRING, Path
 
-
 d_less = option("--less", is_flag=True, help="Show less like output.")
 d_offset = option("-o", "--offset", type=INT, default=0, help="The initial index from which to return the results.")
 d_limit = option("-l", "--limit", type=INT, default=20, help="Number of results to return per page.")

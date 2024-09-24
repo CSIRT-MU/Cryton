@@ -17,7 +17,6 @@ from cryton.hive.config.settings import SETTINGS, DJANGO_STATIC_ROOT, DJANGO_USE
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -100,14 +99,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = SETTINGS.timezone
 USE_I18N = True
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -138,7 +135,6 @@ if DJANGO_USE_STATIC_FILES:
             "REDOC_DIST": "SIDECAR",
         }
     )
-
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10000000

@@ -2,7 +2,7 @@
 ## Description
 A module that allows local and remote command execution.
 
-The module is used to run a single shell command.  By default, the command is executed locally. If you specify a [session](../../design-phase/step.md#session-management), it will be executed in the respective session's context.
+The module is used to run a single shell command.  By default, the command is executed locally. If you specify a session, it will be executed in the respective session's context.
 
 ## Prerequisites
 In case you want to execute code remotely, Metasploit must be accessible from Worker it will be executed on.
@@ -24,7 +24,7 @@ Timeout for the command (**in seconds**).
 | `timeout` | integer | &cross;  |               | `60`          |
 
 ### `session_id`
-Metasploit sessions to use.
+Metasploit session to use.
 
 | Name         | Type    | Required | Default value | Example value |
 |--------------|---------|----------|---------------|---------------|
@@ -50,9 +50,12 @@ Run the command in shell even in a Meterpreter session. To run the command in th
 
 Input:
 ```yaml
-module_arguments:
-  command: cat /etc/passwd
-  session_id: 1
+my-step:
+  module: command
+  arguments:
+    command: cat /etc/passwd
+    session_id: 1
+
 ```
 
 Output:
@@ -65,7 +68,7 @@ Output:
 ```
 
 ## Troubleshooting
-Known issues, limitations, tips, and workarounds.
+So far so good.
 
 ## Output serialization
 Automatic output serialization is an experimental feature.  

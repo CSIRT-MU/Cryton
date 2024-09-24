@@ -12,11 +12,11 @@ coverage.readable
 .coverage.*
 
 # Runtime
-cryton_core/uploads
+cryton_hive/uploads
 jobs.sqlite
 uploads
 
 site/
 
 # Other
-examples/scenarios/metasploitable3-example/.vagrant
+examples/scenarios/metasploitable3/.vagrant

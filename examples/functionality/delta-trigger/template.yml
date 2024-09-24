@@ -1,0 +1,17 @@
+---
+name: Delta trigger example
+metadata:
+  description: This example shows how to use the delta trigger.
+stages:
+  do-stuff-on-worker:
+    type: delta
+    arguments:
+      seconds: 10
+    metadata:
+      description: This stage will start 10 seconds after the plan is executed!
+    steps:
+      print-success:
+        is_init: true
+        module: command
+        arguments:
+          command: echo "it works!"

@@ -1,7 +1,4 @@
-# Contains Stage only, `steps` must be at least an empty list.
+# Contains Stage only, the `steps` parameter must be defined.
 ---
-name: no delay stage {{ id }}
-trigger_type: delta
-trigger_args:
-  seconds: 0
-steps: []
+no-delay-stage-{{ id }}:
+  steps: {}

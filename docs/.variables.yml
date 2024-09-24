@@ -17,4 +17,3 @@ releases:
   frontend: https://gitlab.ics.muni.cz/cryton/cryton-frontend/-/releases/
 
 empire_version: 4.10.0
-metasploit_version: 6.3.33

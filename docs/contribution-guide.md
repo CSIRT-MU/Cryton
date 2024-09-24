@@ -1,6 +1,6 @@
-Any help is appreciated.
+All help is appreciated.
 
-Any identified bugs should be posted as an issue in the respective [gitlab repository](https://gitlab.com/cryton-toolset/){target="_blank"}.
+Open a feature request or report bugs on the [GitHub](https://github.com/CSIRT-MU/Cryton){target="_blank"}.
 
 !!! warning ""
 
