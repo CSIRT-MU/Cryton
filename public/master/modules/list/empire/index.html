@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/command/">
+        <link rel="canonical" href="https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/modules/list/empire/">
       
       
-        <link rel="prev" href="../atomic-red-team/">
+        <link rel="prev" href="../command/">
       
       
-        <link rel="next" href="../empire/">
+        <link rel="next" href="../ffuf/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Command - Cryton toolset</title>
+        <title>Empire - Cryton toolset</title>
       
     
     
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Command
+              Empire
             
           </span>
         </div>
@@ -940,6 +940,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../command/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -954,7 +975,7 @@
           
   
   <span class="md-ellipsis">
-    Command
+    Empire
   </span>
   
 
@@ -965,7 +986,7 @@
         
   
   <span class="md-ellipsis">
-    Command
+    Empire
   </span>
   
 
@@ -1013,18 +1034,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#command" class="md-nav__link">
+  <a href="#agent_name" class="md-nav__link">
     <span class="md-ellipsis">
-      command
+      agent_name
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#timeout" class="md-nav__link">
+  <a href="#action" class="md-nav__link">
     <span class="md-ellipsis">
-      timeout
+      action
     </span>
   </a>
   
@@ -1040,20 +1061,128 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#serialize_output" class="md-nav__link">
+  <a href="#listener" class="md-nav__link">
     <span class="md-ellipsis">
-      serialize_output
+      listener
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="listener">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    <span class="md-ellipsis">
+      name
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#force_shell" class="md-nav__link">
+  <a href="#port" class="md-nav__link">
     <span class="md-ellipsis">
-      force_shell
+      port
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stager" class="md-nav__link">
+    <span class="md-ellipsis">
+      stager
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      command
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module" class="md-nav__link">
+    <span class="md-ellipsis">
+      module
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      arguments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1073,9 +1202,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#read-file-on-remote-system-using-session" class="md-nav__link">
+  <a href="#deploy-agent" class="md-nav__link">
     <span class="md-ellipsis">
-      Read file on remote system using session
+      Deploy agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-command-on-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute command on agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-module-on-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute module on agent
     </span>
   </a>
   
@@ -1102,48 +1249,12 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Output serialization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../empire/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Empire
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1559,18 +1670,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#command" class="md-nav__link">
+  <a href="#agent_name" class="md-nav__link">
     <span class="md-ellipsis">
-      command
+      agent_name
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#timeout" class="md-nav__link">
+  <a href="#action" class="md-nav__link">
     <span class="md-ellipsis">
-      timeout
+      action
     </span>
   </a>
   
@@ -1586,20 +1697,128 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#serialize_output" class="md-nav__link">
+  <a href="#listener" class="md-nav__link">
     <span class="md-ellipsis">
-      serialize_output
+      listener
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="listener">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    <span class="md-ellipsis">
+      name
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#force_shell" class="md-nav__link">
+  <a href="#port" class="md-nav__link">
     <span class="md-ellipsis">
-      force_shell
+      port
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stager" class="md-nav__link">
+    <span class="md-ellipsis">
+      stager
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      command
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module" class="md-nav__link">
+    <span class="md-ellipsis">
+      module
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#name_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      arguments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1619,9 +1838,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#read-file-on-remote-system-using-session" class="md-nav__link">
+  <a href="#deploy-agent" class="md-nav__link">
     <span class="md-ellipsis">
-      Read file on remote system using session
+      Deploy agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-command-on-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute command on agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-module-on-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execute module on agent
     </span>
   </a>
   
@@ -1648,21 +1885,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Output serialization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -1680,16 +1902,272 @@
                   
 
 
-  <h1>Command</h1>
+  <h1>Empire</h1>
 
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
-<p>A module that allows local and remote command execution.</p>
-<p>The module is used to run a single shell command.  By default, the command is executed locally. If you specify a session, it will be executed in the respective session's context.</p>
+<p>Module orchestrates <a href="https://github.com/BC-SECURITY/Empire">Empire</a>. It allows you to deploy and use its agents.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p>In case you want to execute code remotely, Metasploit must be accessible from Worker it will be executed on.</p>
+<p>Empire C2 server must be accessible from Worker it will be executed on.</p>
 <h2 id="input-parameters">Input parameters<a class="headerlink" href="#input-parameters" title="Permanent link">&para;</a></h2>
+<h3 id="agent_name"><code>agent_name</code><a class="headerlink" href="#agent_name" title="Permanent link">&para;</a></h3>
+<p>Name of the deployed agent.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agent_name</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>myAgent</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="action"><code>action</code><a class="headerlink" href="#action" title="Permanent link">&para;</a></h3>
+<p>Which type of action you want to perform.</p>
+<p>Current options are:</p>
+<ul>
+<li><code>deploy</code> - deploy a new agent</li>
+<li><code>execute-command</code> - execute a command on an existing agent</li>
+<li><code>execute-module</code> - execute an Empire module on an existing agent</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>deploy</code></td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Deploy agent</label><label for="__tabbed_1_2">Execute command</label><label for="__tabbed_1_3">Execute module</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<h3 id="session_id"><code>session_id</code><a class="headerlink" href="#session_id" title="Permanent link">&para;</a></h3>
+<p>Metasploit session to use.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>integer</td>
+<td>&check;</td>
+<td></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="listener"><code>listener</code><a class="headerlink" href="#listener" title="Permanent link">&para;</a></h3>
+<p>Arguments used for listener creation.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listener</code></td>
+<td>object</td>
+<td>&check;</td>
+<td></td>
+<td><code>{"name": "my-name"}</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="name"><code>name</code><a class="headerlink" href="#name" title="Permanent link">&para;</a></h4>
+<p>Name of listener in Empire for identification. If listener with this name already exists in Empire, it will be used for
+stager generation.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>myName</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="port"><code>port</code><a class="headerlink" href="#port" title="Permanent link">&para;</a></h4>
+<p>Port on which should be listener communicating with Agents.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>port</code></td>
+<td>integer</td>
+<td>&cross;</td>
+<td><code>80</code></td>
+<td><code>8080</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="type"><code>type</code><a class="headerlink" href="#type" title="Permanent link">&para;</a></h4>
+<p>Type of the listener.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>&cross;</td>
+<td><code>http</code></td>
+<td><code>smb</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="options"><code>options</code><a class="headerlink" href="#options" title="Permanent link">&para;</a></h4>
+<p>Additional adjustable parameters for creating listener. More
+on <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/listeners" target="_blank">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>options</code></td>
+<td>object</td>
+<td>&cross;</td>
+<td></td>
+<td><code>{"BindIP": "0.0.0.0"}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="stager"><code>stager</code><a class="headerlink" href="#stager" title="Permanent link">&para;</a></h3>
+<p>Arguments used for stager creation.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stager</code></td>
+<td>object</td>
+<td>&check;</td>
+<td></td>
+<td><code>{"type": "multi/bash"}</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="type_1"><code>type</code><a class="headerlink" href="#type_1" title="Permanent link">&para;</a></h4>
+<p>Type of stager that should be generated in form of path. For stager types
+look <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/stagers" target="_blank">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>multi/bash</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="options_1"><code>options</code><a class="headerlink" href="#options_1" title="Permanent link">&para;</a></h4>
+<p>Additional adjustable parameters for generating stager. Parameters can be viewed in individual stager python files or
+through Empire client.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>options</code></td>
+<td>object</td>
+<td>&cross;</td>
+<td></td>
+<td><code>{"Language": "python"}</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
 <h3 id="command"><code>command</code><a class="headerlink" href="#command" title="Permanent link">&para;</a></h3>
-<p>Command to execute.</p>
+<p>Command to execute on the agent.</p>
 <table>
 <thead>
 <tr>
@@ -1710,8 +2188,10 @@
 </tr>
 </tbody>
 </table>
-<h3 id="timeout"><code>timeout</code><a class="headerlink" href="#timeout" title="Permanent link">&para;</a></h3>
-<p>Timeout for the command (<strong>in seconds</strong>).</p>
+</div>
+<div class="tabbed-block">
+<h3 id="module"><code>module</code><a class="headerlink" href="#module" title="Permanent link">&para;</a></h3>
+<p>Arguments used for Empire module execution.</p>
 <table>
 <thead>
 <tr>
@@ -1724,115 +2204,130 @@
 </thead>
 <tbody>
 <tr>
-<td><code>timeout</code></td>
-<td>integer</td>
+<td><code>module</code></td>
+<td>object</td>
+<td>&check;</td>
+<td></td>
+<td><code>{"name": "collection/sniffer"}</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="name_1"><code>name</code><a class="headerlink" href="#name_1" title="Permanent link">&para;</a></h4>
+<p>Name of the Empire module in form of a path. Available Empire
+modules <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/modules" target="_blank">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>&check;</td>
+<td></td>
+<td><code>collection/sniffer</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="arguments"><code>arguments</code><a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h4>
+<p>Additional arguments for the Empire module.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arguments</code></td>
+<td>object</td>
 <td>&cross;</td>
 <td></td>
-<td><code>60</code></td>
+<td><code>{"IpFilter": "127.0.0.1"}</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="session_id"><code>session_id</code><a class="headerlink" href="#session_id" title="Permanent link">&para;</a></h3>
-<p>Metasploit session to use.</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default value</th>
-<th>Example value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>session_id</code></td>
-<td>integer</td>
-<td>&cross;</td>
-<td></td>
-<td><code>1</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="serialize_output"><code>serialize_output</code><a class="headerlink" href="#serialize_output" title="Permanent link">&para;</a></h3>
-<p>Try to parse the output of the command into <code>serialized_output</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default value</th>
-<th>Example value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>serialize_output</code></td>
-<td>boolean</td>
-<td>&cross;</td>
-<td><code>false</code></td>
-<td><code>true</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="force_shell"><code>force_shell</code><a class="headerlink" href="#force_shell" title="Permanent link">&para;</a></h3>
-<p>Run the command in shell even in a Meterpreter session. To run the command in the Meterpreter shell, set this to <code>false</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Required</th>
-<th>Default value</th>
-<th>Example value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>force_shell</code></td>
-<td>boolean</td>
-<td>&cross;</td>
-<td><code>true</code></td>
-<td><code>false</code></td>
-</tr>
-</tbody>
-</table>
+</div>
+</div>
+</div>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<h3 id="read-file-on-remote-system-using-session">Read file on remote system using session<a class="headerlink" href="#read-file-on-remote-system-using-session" title="Permanent link">&para;</a></h3>
-<p>Input:
+<h3 id="deploy-agent">Deploy agent<a class="headerlink" href="#deploy-agent" title="Permanent link">&para;</a></h3>
+<p>Input:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">command</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire</span>
 <span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat /etc/passwd</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="w">    </span><span class="nt">agent_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span>
 <span class="w">    </span><span class="nt">session_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-</code></pre></div></p>
-<p>Output:
+<span class="w">    </span><span class="nt">listener</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testing</span>
+<span class="w">    </span><span class="nt">stager</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi/bash</span>
+</code></pre></div>
+<p>Output:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;contents of passwd file on target&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agent &#39;MyAgent&#39; deployed on target 192.168.61.12.&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
+<h3 id="execute-command-on-agent">Execute command on agent<a class="headerlink" href="#execute-command-on-agent" title="Permanent link">&para;</a></h3>
+<p>Input:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execute-command</span>
+<span class="w">    </span><span class="nt">agent_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">whoami</span>
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{&#39;agent&#39;: &#39;E5XSKQ4F&#39;, &#39;command&#39;: &#39;whoami&#39;, &#39;results&#39;: &#39;victim&#39;, &#39;taskID&#39;: 2, &#39;user_id&#39;: 1, &#39;username&#39;: &#39;empireadmin&#39;}&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="execute-module-on-agent">Execute module on agent<a class="headerlink" href="#execute-module-on-agent" title="Permanent link">&para;</a></h3>
+<p>Input:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execute-module</span>
+<span class="w">    </span><span class="nt">agent_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span>
+<span class="w">    </span><span class="nt">module</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collection/sniffer</span>
+<span class="w">      </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">IpFilter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.33.12</span>
+<span class="w">        </span><span class="nt">PortFilter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;output from the module execution&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<p>So far so good.</p>
+<p>Only the 4.10.0 version is supported.</p>
+<ul>
+<li>Some Metasploit sessions may be unsuitable for deploying Empire agents</li>
+<li>Make sure the Empire host is set correctly in the scenario and is reachable from the target</li>
+<li>Currently, the <code>multi/launcher</code> option is the recommended stager for use with Windows machines</li>
+<li>For Empire stagers to work on newer versions of Windows OS, you need to disable all <strong>firewall</strong> and <strong>antivirus</strong>
+  protection on the target</li>
+</ul>
 <h2 id="output-serialization">Output serialization<a class="headerlink" href="#output-serialization" title="Permanent link">&para;</a></h2>
-<p>Automatic output serialization is an experimental feature.<br />
-It allows you to take the output and use it in other modules in the form of a <code>serialized_output</code>. For this to work, the <strong>command output must be a valid JSON</strong> (<code>"some text"</code>, <code>{"a": "b"}</code>, <code>["a", "b"]</code>).</p>
-<p>It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.</p>
-<h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
-<p><em>whoami</em> on Linux (Debian): <code>echo \\"$(whoami)\\"</code>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\&quot;username\&quot;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;auto_serialized&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p><em>whoami</em> on Windows 10: <code>Powershell -C "whoami | ConvertTo-Json"</code>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\&quot;username\&quot;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;serialized_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;auto_serialized&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;username&quot;</span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></p>
+<p>The output is not serialized.</p>
 
 
 
@@ -1870,7 +2365,7 @@ It allows you to take the output and use it in other modules in the form of a <c
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../atomic-red-team/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Atomic Red Team">
+          <a href="../command/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Command">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1880,20 +2375,20 @@ It allows you to take the output and use it in other modules in the form of a <c
                 Previous
               </span>
               <div class="md-ellipsis">
-                Atomic Red Team
+                Command
               </div>
             </div>
           </a>
         
         
           
-          <a href="../empire/" class="md-footer__link md-footer__link--next" aria-label="Next: Empire">
+          <a href="../ffuf/" class="md-footer__link md-footer__link--next" aria-label="Next: FFUF">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Empire
+                FFUF
               </div>
             </div>
             <div class="md-footer__button md-icon">

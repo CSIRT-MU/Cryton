@@ -14,11 +14,11 @@
         <link rel="prev" href="../stage/">
       
       
-        <link rel="next" href="../plan-instance/">
+        <link rel="next" href="../../execution-phase/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.06209087.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -48,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#step-types" class="md-skip">
+        <a href="#conditional-execution" class="md-skip">
           Skip to content
         </a>
       
@@ -109,12 +109,12 @@
     <a href="../.." title="Cryton toolset" class="md-header__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -142,7 +142,7 @@
     <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
@@ -152,7 +152,7 @@
     <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
   
@@ -160,13 +160,13 @@
       
     
     
-      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
       <label class="md-header__button md-icon" for="__search">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
       </label>
       <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
@@ -175,15 +175,15 @@
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
       
@@ -206,7 +206,7 @@
         <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
   </div>
   <div class="md-source__repository">
     Gitlab
@@ -242,7 +242,7 @@
     <a href="../.." title="Cryton toolset" class="md-nav__button md-logo" aria-label="Cryton toolset" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     Cryton toolset
@@ -252,7 +252,7 @@
       <a href="https://gitlab.ics.muni.cz/cryton" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
   </div>
   <div class="md-source__repository">
     Gitlab
@@ -484,8 +484,6 @@
       
         
       
-        
-      
     
     
     
@@ -615,96 +613,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step types
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#execute-attack-module-on-worker" class="md-nav__link">
-    <span class="md-ellipsis">
-      Execute attack module on Worker
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-empire-agent-on-a-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy Empire agent on a target
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Deploy Empire agent on a target">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#arguments-for-ssh_connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Arguments for ssh_connection
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#execute-shell-script-or-empire-module-on-agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      Execute shell script or Empire module on agent
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Execute shell script or Empire module on agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#conditional-execution" class="md-nav__link">
     <span class="md-ellipsis">
       Conditional execution
@@ -729,15 +637,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      Session management
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#output-sharing" class="md-nav__link">
     <span class="md-ellipsis">
       Output sharing
@@ -748,27 +647,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-prefix" class="md-nav__link">
+  <a href="#going-through-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Output prefix
+      Going through the data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-separator" class="md-nav__link">
+  <a href="#accessing-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom separator
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output mapping
+      Accessing the data
     </span>
   </a>
   
@@ -776,6 +666,48 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output alias
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output alias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parent-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parent alias
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output mapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-replacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output replacing
+    </span>
+  </a>
   
 </li>
       
@@ -803,49 +735,10 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#output-serialization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output serialization
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-replacing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output replacing
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../plan-instance/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Plan instance
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1141,6 +1034,8 @@
       
         
       
+        
+      
     
     
     
@@ -1212,6 +1107,27 @@
   
   <span class="md-ellipsis">
     Command
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/list/empire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Empire
   </span>
   
 
@@ -1603,96 +1519,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step types
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#execute-attack-module-on-worker" class="md-nav__link">
-    <span class="md-ellipsis">
-      Execute attack module on Worker
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-empire-agent-on-a-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy Empire agent on a target
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Deploy Empire agent on a target">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#arguments-for-ssh_connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Arguments for ssh_connection
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#execute-shell-script-or-empire-module-on-agent" class="md-nav__link">
-    <span class="md-ellipsis">
-      Execute shell script or Empire module on agent
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Execute shell script or Empire module on agent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#conditional-execution" class="md-nav__link">
     <span class="md-ellipsis">
       Conditional execution
@@ -1717,15 +1543,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      Session management
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#output-sharing" class="md-nav__link">
     <span class="md-ellipsis">
       Output sharing
@@ -1736,27 +1553,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-prefix" class="md-nav__link">
+  <a href="#going-through-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Output prefix
+      Going through the data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-separator" class="md-nav__link">
+  <a href="#accessing-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom separator
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output mapping
+      Accessing the data
     </span>
   </a>
   
@@ -1764,6 +1572,48 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output alias
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output alias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parent-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parent alias
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output mapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-replacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output replacing
+    </span>
+  </a>
   
 </li>
       
@@ -1791,24 +1641,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#output-serialization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output serialization
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-replacing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output replacing
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1826,296 +1658,66 @@
 
   <h1>Step</h1>
 
-<p>As the name suggests, a Step is equal to one action. All the possible actions will be described later. 
-Every step can have a successor(s) whose execution will follow according to provided conditions.</p>
-<p>Example of defining Step using YAML:
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">get-credentials</span>
-<span class="nt">meta</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is an example description</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="nt">is_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">output_prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">credentials_from_localhost</span>
-<span class="nt">arguments</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medusa</span>
-<span class="w">  </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<span class="w">    </span><span class="nt">credentials</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
-<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
-<span class="nt">output</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&quot;^((25[0-5]|(2[0-4]|1</span><span class="err">\</span><span class="s">d|[1-9]|)</span><span class="err">\</span><span class="s">d)</span><span class="err">\</span><span class="s">.?\b){4}$&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">removed-ip</span>
-<span class="nt">next</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
-<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create-sesion</span>
+<p>Step is equal to one action - module execution. Every step can have a successor(s) whose execution will follow according to the provided conditions.</p>
+<p>Example of defining a step using YAML:
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is an example description</span>
+<span class="w">  </span><span class="nt">is_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module-name</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">credentials-from-localhost</span>
+<span class="w">    </span><span class="nt">replace</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;^((25[0-5]|(2[0-4]|1</span><span class="err">\</span><span class="s">d|[1-9]|)</span><span class="err">\</span><span class="s">d)</span><span class="err">\</span><span class="s">.?\b){4}$&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">removed-ip</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth_token</span>
+<span class="w">        </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
+<span class="w">  </span><span class="nt">next</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
+<span class="w">      </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other-steps-name</span>
 </code></pre></div></p>
-<p>To better understand what each argument means and defines, here is a short description (sub-arguments are omitted 
-since they will be discussed in more depth in their section):  </p>
+<p>The name of the step is defined by the root element that holds it. In this case it's <code>my-step</code> (the name <strong>must be unique</strong> for each stage and step).</p>
+<p>To better understand what each argument means and defines, here is a short description (sub-arguments are described in depth in their section):</p>
 <ul>
-<li><strong>name</strong> - Sets the name of the Step, which is mainly used to define its purpose (<strong>must be unique</strong> across the Plan).</li>
-<li><strong>meta</strong> - An undefined dictionary containing metadata. The <code>description</code> parameter is just an example, you can define your own.</li>
-<li><strong>step_type</strong> - Sets what action will the Step perform and what <code>arguments</code> will the Step use, more info <a href="#step-types">below</a>.</li>
-<li><strong>is_init</strong> - Defines if the step is initial (is executed first) and is not a successor.</li>
-<li><strong>output_prefix</strong> - If you want to use a custom name for sharing Step's results (<em>serialized_output</em>) you can define this parameter.
-By default, the Step's <em>name</em> is used. For more details see <a href="#output-prefix">Output prefix</a>.</li>
-<li><strong>arguments</strong> - Dictionary of arguments different for each <em>step_type</em>. To check out all possible parameters and 
-types see <a href="#step-types">types section</a>.</li>
+<li><strong>metadata</strong> - An undefined dictionary containing metadata. The <code>description</code> parameter is just an example, you can define your own.</li>
+<li><strong>is_init</strong> - Defines if the step is initial (is executed once the stage has started) and is not a successor.</li>
+<li><strong>module</strong> - Name of the module to use. See <a href="../../modules/">modules</a> for more information.</li>
+<li><strong>arguments</strong> - Dictionary containing arguments that will be passed to the module. See <a href="../../modules/">modules</a> for more information.</li>
+<li><strong>output</strong> - If you want to modify/share the step's output later, you can do so with this parameter. For more details check out the <a href="#output-sharing">output sharing</a> section.</li>
 <li><strong>next</strong> - Defines Step's successors, more info <a href="#conditional-execution">below</a>.</li>
 </ul>
-<h2 id="step-types">Step types<a class="headerlink" href="#step-types" title="Permanent link">&para;</a></h2>
-<p>Step types are represented by the mandatory <code>step_type</code> parameter which defines what action should be executed in Step.
-It tells the Worker component what arguments to expect and what functions to run based on them.</p>
-<p><strong>Currently, there are 3 types:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Step type</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="#execute-attack-module-on-worker"><code>worker/execute</code></a></td>
-<td>Execution of attack modules.</td>
-</tr>
-<tr>
-<td><a href="#deploy-empire-agent-on-a-target"><code>empire/agent-deploy</code></a></td>
-<td>Deployment of Empire agent on target.</td>
-</tr>
-<tr>
-<td><a href="#execute-shell-script-or-empire-module-on-agent"><code>empire/execute</code></a></td>
-<td>Execution of shell commands or Empire modules on active Empire agent.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="execute-attack-module-on-worker">Execute attack module on Worker<a class="headerlink" href="#execute-attack-module-on-worker" title="Permanent link">&para;</a></h3>
-<p>This functionality uses <code>step_type: worker/execute</code> and enables the execution of an attack module on a worker defined by the following parameters.</p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>module</code></td>
-<td>Defines a path (will be added to the path defined in Worker) to the chosen module that will be executed on Worker.</td>
-</tr>
-<tr>
-<td><code>module_arguments</code></td>
-<td>Python dictionary (JSON) containing arguments that will be passed to the module.</td>
-</tr>
-<tr>
-<td><code>create_named_session</code><br>(optional)</td>
-<td>How to name the session this module will create for later usage.</td>
-</tr>
-<tr>
-<td><code>use_named_session</code><br>(optional)</td>
-<td>Name of created msf session through Cryton.</td>
-</tr>
-<tr>
-<td><code>use_any_session_to_target</code><br>(optional)</td>
-<td>Ip address of target on which has been created MSF session.</td>
-</tr>
-</tbody>
-</table>
-<p><a href="#execution-variables">Execution variables</a> can be used only for the <code>module_arguments</code> parameter!</p>
-<h3 id="deploy-empire-agent-on-a-target">Deploy Empire agent on a target<a class="headerlink" href="#deploy-empire-agent-on-a-target" title="Permanent link">&para;</a></h3>
-<p>This functionality uses <code>step_type: empire/agent-deploy</code> and enables to deploy Empire agent on the given target 
-(executing Empire generated payload with given parameters on target).</p>
-<p><strong>Usable arguments for this step type are:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>listener_name</code></td>
-<td>Name of listener in Empire for identification. If listener with this name already exists in Empire, it will be used for stager generation.</td>
-</tr>
-<tr>
-<td><code>listener_port</code><br>(optional)</td>
-<td>Port on which should be listener communicating with Agents.</td>
-</tr>
-<tr>
-<td><code>listener_options</code><br>(optional)</td>
-<td>Additional adjustable parameters for creating listener. More on <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/listeners" target="_blank">here</a>.</td>
-</tr>
-<tr>
-<td><code>listener_type</code><br>(optional)</td>
-<td>Type of listener (default: http).</td>
-</tr>
-<tr>
-<td><code>stager_type</code></td>
-<td>Type of stager that should be generated in form of path (example: `multi/bash'). For stager types look <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/stagers" target="_blank">here</a>.</td>
-</tr>
-<tr>
-<td><code>stager_options</code><br>(optional)</td>
-<td>Additional adjustable parameters for generating stager. Parameters can be viewed in individual stager python files or through Empire client.</td>
-</tr>
-<tr>
-<td><code>agent_name</code></td>
-<td>Name for the deployed agent which is going to be used as a reference to this agent later.</td>
-</tr>
-<tr>
-<td><code>use_named_session</code><br>(optional)</td>
-<td>Name of created msf session through Cryton.</td>
-</tr>
-<tr>
-<td><code>use_any_session_to_target</code><br>(optional)</td>
-<td>Ip address of target on which has been created msf session</td>
-</tr>
-<tr>
-<td><code>session_id</code><br>(optional)</td>
-<td>ID of msf session to target.</td>
-</tr>
-<tr>
-<td><a href="#arguments-for-ssh_connection"><code>ssh_connection</code></a><br>(optional)</td>
-<td>Arguments for creating ssh connection to target.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="arguments-for-ssh_connection">Arguments for <code>ssh_connection</code><a class="headerlink" href="#arguments-for-ssh_connection" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>target</code></td>
-<td>Ip address for ssh connection.</td>
-</tr>
-<tr>
-<td><code>username</code><br>(optional)</td>
-<td>Username for ssh connection.</td>
-</tr>
-<tr>
-<td><code>password</code><br>(optional)</td>
-<td>Password for ssh connection if <code>ssh_key</code> is not supplied.</td>
-</tr>
-<tr>
-<td><code>ssh_key</code><br>(optional)</td>
-<td>Ssh key for ssh connection if <code>password</code> is not supplied.</td>
-</tr>
-<tr>
-<td><code>port</code><br>(optional)</td>
-<td>Port for ssh connection (default: 22).</td>
-</tr>
-</tbody>
-</table>
-<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-agent</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire/agent-deploy</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use_named_session</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_to_target_1</span><span class="w"> </span><span class="c1"># using named session created in step ssh-session</span>
-<span class="w">    </span><span class="nt">listener_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">testing</span>
-<span class="w">    </span><span class="nt">listener_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">stager_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi/bash</span>
-<span class="w">    </span><span class="nt">agent_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span><span class="w"> </span><span class="c1"># only lower/upper characters and numbers allowed in name</span>
-</code></pre></div>
-<h4 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Some Metasploit sessions may be unsuitable for deploying Empire agents</li>
-<li>Make sure the Empire host is set correctly in the scenario and is reachable from the target</li>
-<li>Currently, the <code>multi/launcher</code> option is the recommended <code>stager_type</code> for use with Windows machines</li>
-<li>For Empire stagers to work on newer versions of Windows OS, you need to disable all <strong>firewall</strong> and <strong>antivirus</strong> protection on the target</li>
-</ul>
-<h3 id="execute-shell-script-or-empire-module-on-agent">Execute shell script or Empire module on agent<a class="headerlink" href="#execute-shell-script-or-empire-module-on-agent" title="Permanent link">&para;</a></h3>
-<p>This functionality uses <code>step_type: empire/execute</code> and allows the execution of shell commands or Empire modules on active Empire agents.</p>
-<p><strong>To execute a Shell command use the following arguments:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>use_agent</code></td>
-<td>Name of an active agent that checked on Empire server.</td>
-</tr>
-<tr>
-<td><code>shell_command</code></td>
-<td>Shell command that should be executed on an active agent (example: <code>whoami</code>).</td>
-</tr>
-</tbody>
-</table>
-<p><strong>To execute an Empire module use the following arguments:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>use_agent</code></td>
-<td>Name of an active agent that checked on Empire server.</td>
-</tr>
-<tr>
-<td><code>module</code></td>
-<td>Name of Empire module in form of a path that should be executed on the active agent (example: <code>collection/sniffer</code>). Available Empire modules <a href="https://github.com/BC-SECURITY/Empire/tree/master/empire/server/modules" target="_blank">here</a>.</td>
-</tr>
-<tr>
-<td><code>module_arguments</code><br>(optional)</td>
-<td>Additional arguments for Empire module execution.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sniffer-on-agent</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use_agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collection/sniffer</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span><span class="w"> </span><span class="c1"># Optional</span>
-<span class="w">      </span><span class="nt">IpFilter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.33.12</span>
-<span class="w">      </span><span class="nt">PortFilter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">whoami-on-agent</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empire/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use_agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAgent</span>
-<span class="w">    </span><span class="nt">shell_command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">whoami</span>
-</code></pre></div>
 <h2 id="conditional-execution">Conditional execution<a class="headerlink" href="#conditional-execution" title="Permanent link">&para;</a></h2>
-<p>To be able to execute an attack scenario according to some execution tree, Steps provide a way to be executed 
-according to specified conditions. Multiple types of conditions can be used. To use them in designing a 
-Template, a list of dictionaries <strong>containing</strong> params <strong>type</strong>, <strong>value</strong>, and <strong>step</strong> must be provided.</p>
+<p>To execute an attack scenario according to some execution tree, steps provide a way to execute other steps according to the specified conditions.</p>
+<p>This can be done with the <code>next</code> parameter, which contains an array of objects with the following parameters:</p>
 <table>
 <thead>
 <tr>
 <th>parameter</th>
+<th>type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>type</strong></td>
-<td>Defines which value you want to compare, according to the output of the parent Step.</td>
+<td><code>type</code></td>
+<td>string</td>
+<td>Defines which type of output to compare.</td>
 </tr>
 <tr>
-<td><strong>value</strong></td>
-<td>Defines the desired value of the selected type. Can be defined as a string (one value) or a list of strings (multiple values).</td>
+<td><code>value</code></td>
+<td>string or array of strings</td>
+<td>Value used for comparison.</td>
 </tr>
 <tr>
-<td><strong>step</strong></td>
-<td>Defines the name(s) of the Step's successor(s). Can be a string (one successor) or a list of strings (multiple successors).</td>
+<td><code>step</code></td>
+<td>string or array of strings</td>
+<td>Name(s) of the successor(s).</td>
 </tr>
 </tbody>
 </table>
-<p>The following are types of conditions together with descriptions of possible values.</p>
+<p>The following are types of outputs together with the descriptions of their possible values:</p>
 <table>
 <thead>
 <tr>
@@ -2127,18 +1729,18 @@ Template, a list of dictionaries <strong>containing</strong> params <strong>type
 <tbody>
 <tr>
 <td><code>result</code></td>
-<td>ok, fail, error</td>
-<td>Match final <code>result</code> of the Step.</td>
+<td><code>ok</code>, <code>fail</code>, <code>error</code></td>
+<td>Match the <code>result</code> of the step.</td>
 </tr>
 <tr>
 <td><code>serialized_output</code></td>
-<td>Regular expression, for example: <code>^my_regex.*</code></td>
-<td>Match <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax" target="_blank">regex</a> in <code>serialized_output</code> of the Step.</td>
+<td>Regular expression (<code>^my_regex.*</code>)</td>
+<td>Match <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax" target="_blank">regex</a> in <code>serialized_output</code> of the step.</td>
 </tr>
 <tr>
 <td><code>output</code></td>
-<td>Regular expression, for example: <code>^my_regex.*</code></td>
-<td>Match <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax" target="_blank">regex</a> in <code>output</code> of the Step.</td>
+<td>Regular expression (<code>^my_regex.*</code>)</td>
+<td>Match <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax" target="_blank">regex</a> in <code>output</code> of the step.</td>
 </tr>
 <tr>
 <td><code>any</code></td>
@@ -2148,233 +1750,169 @@ Template, a list of dictionaries <strong>containing</strong> params <strong>type
 </tbody>
 </table>
 <h3 id="examples">Examples:<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">next</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
-<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
-<span class="w">  </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nt">next</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serialized_output</span>
-<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
-<span class="w">  </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nt">next</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
-<span class="w">  </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute-1</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute-2</span>
-</code></pre></div>
-<h2 id="session-management">Session management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
-<p>One of the unique features of Cryton is the ability to create and use <em>sessions</em> - connections to the target systems. 
-When you successfully exploit a running network service on your target machine (victim), you open a connection to it. 
-In Cryton, this connection can be given a name and then used during the Plan execution in any Step (which is executed 
-on the same Worker node and supports this functionality). Metasploit Framework session management is used for storing 
-and interacting with sessions, and therefore must be available and running on the Worker node.</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step1</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">create_named_session</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_to_target_1</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step2</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use_named_session</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_to_target_1</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-</code></pre></div>
-<p>In the example above, the step1 creates a named session <em>session_to_target_1</em> (in case it succeeds). 
-Its Metasploit ID gets stored in the database and can be used anywhere in the Plan, not only in the following Step 
-(as seen in the example). When the Plan creates multiple sessions to the same target, and the attacker does not care which 
-he is using, the <em>use_any_session_to_target</em> parameter can be used.</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step1</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use_any_session_to_target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.56.22</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Session types</p>
-<p>Metasploit Framework supports two types of sessions.</p>
-<p>The first is a shell session, you can run any shell commands you want.</p>
-<p>The second is called Meterpreter. It allows you to use it's provided commands, such as <code>ifconfig</code> or <code>sysinfo</code>. 
-To run a command in a shell, you need to use the <code>execute</code> command with the <code>-f</code>, <code>-i</code>, and <code>-a</code> options (<code>execute -f &lt;command&gt; -i -a &lt;arguments&gt;</code>).
-In some cases, the command execution can fail. Before creating a plan, make sure it works for your target system/exploit.</p>
-</div>
-<h2 id="output-sharing">Output sharing<a class="headerlink" href="#output-sharing" title="Permanent link">&para;</a></h2>
-<p>Output sharing is used for sharing gained data (<em>serialized_output</em>) between multiple steps. To go through the data we use a modified 
-version of a dot notation. </p>
-<p>For example, imagine the following dictionary (Python data structure)
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;credentials&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;securePassword&quot;</span><span class="p">}]}</span>
-</code></pre></div>
-If we wanted to access it and get <strong>password</strong> for <em>admin</em> user using our version of dot notation, we would use 
-<code>credentials[0].password</code> which would return <em>securePassword</em> string.</p>
-<p>This brings in some limitations:</p>
-<ul>
-<li>keys are separated using <code>.</code> (More on how to choose a custom separator <a href="#custom-separator">here</a>.</li>
-<li>key can't be in format <code>[integer]</code> (regex representation: <code>^\[[0-9]+]$</code>) as it represents list (array) index</li>
-<li>list (array) index can be defined multiple times in the same key for example <code>myKey[1][1]</code> (it must be defined at its end)
-(regex representation: <code>((\[[0-9]+])+$)</code>)</li>
-</ul>
-<p>There are two techniques for sharing the outputs of modules between steps:</p>
-<ul>
-<li><strong>output_prefix</strong></li>
-<li><strong>output_mapping</strong></li>
-</ul>
-<h3 id="output-prefix">Output prefix<a class="headerlink" href="#output-prefix" title="Permanent link">&para;</a></h3>
-<p>By default, the prefix string is set to the name of the step. Using its name, any other step can query its output (serialized_output 
-of its attack module execution) and use it in its arguments.</p>
-<p>Alternatively, this prefix can be set to a custom string. This way, multiple equivalent steps can return the same prefixed 
-variable value to be used by a dependent step.
-For example:
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bruteforce</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="w">  </span><span class="nt">is_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">output_prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom_prefix</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medusa</span>
-<span class="w">    </span><span class="c1"># Should return username and password in a dictionary</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<span class="w">      </span><span class="c1"># Default password list in medusa folder will be used for bruteforce</span>
-<span class="w">      </span><span class="nt">credentials</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">next</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ok</span>
-<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$custom_prefix.username</span>
-<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$custom_prefix.password</span>
+<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute</span>
 </code></pre></div>
-Also, there is a special prefix named <strong>parent</strong>, which simply takes the output from the parent step execution 
-(which executed the current step).</p>
-<p><div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepA</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">next</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepB</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepB</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_a</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$parent.var</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serialized_output</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute-1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute-2</span>
 </code></pre></div>
-Output prefix <strong>cannot be the name of other steps or the value "parent"</strong>, otherwise, it can be 
-any string <strong>that doesn't contain "$" and "." signs</strong>.</p>
-<h3 id="custom-separator">Custom separator<a class="headerlink" href="#custom-separator" title="Permanent link">&para;</a></h3>
-<p>If for some reason(for example when a key in the module's output is an IPv4 address) you don't want to use <code>.</code> as a separator in output-sharing variables, you can use the <code>settings</code> parameter in the Plan parameters with a <code>separator</code> key for defining custom separator.</p>
-<p>Example of a custom separator used on <strong>parent prefix</strong> example above:
-<div class="highlight"><pre><span></span><code><span class="nt">plan</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-plan</span>
-<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my name</span>
-<span class="w">  </span><span class="nt">settings</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;|&quot;</span>
-<span class="w">  </span><span class="nt">stages</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-stage</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepA</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">        </span><span class="nt">next</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">          </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepB</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stepB</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">        </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_a</span>
-<span class="w">          </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$parent|arg</span>
-</code></pre></div></p>
-<h3 id="output-mapping">Output mapping<a class="headerlink" href="#output-mapping" title="Permanent link">&para;</a></h3>
-<p>Sometimes you do not care from which module you receive information. Step A and Step B can both return a stolen authentication 
-token. For this reason, you can use <code>output_prefix</code>. 
-But there is an obvious problem! What if both steps return this value under a different name, e.g. <code>token</code> and <code>auth_token</code>? 
-Prefix would not help you much in this situation. 
-For this reason, there is a <code>output_mapping</code> mechanism. 
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step_a</span>
-<span class="w">  </span><span class="c1"># Returns &#39;token&#39;</span>
-<span class="w">  </span><span class="nt">output_prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steal</span>
-<span class="w">  </span><span class="nt">output_mapping</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name_from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
-<span class="w">      </span><span class="nt">name_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stolen_token</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_a</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step_b</span>
-<span class="w">  </span><span class="c1"># Returns &#39;auth_token&#39;</span>
-<span class="w">  </span><span class="nt">output_prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steal</span>
-<span class="w">  </span><span class="nt">output_mapping</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name_from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth_token</span>
-<span class="w">      </span><span class="nt">name_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stolen_token</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_b</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step_c</span>
-<span class="w">  </span><span class="nt">step_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker/execute</span>
-<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_c</span>
-<span class="w">    </span><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$steal.stolen_token</span>
-</code></pre></div></p>
-<h2 id="execution-variables">Execution variables<a class="headerlink" href="#execution-variables" title="Permanent link">&para;</a></h2>
-<p>To assign different values for each Plan execution in Run, you can use execution variables.<br />
-To define execution variables, use Jinja (<a href="#limitations">with some tweaks</a>) instead of filling the arguments with 
-real values while creating a Plan template.
-For example:
-<div class="highlight"><pre><span></span><code><span class="nt">module_arguments</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">my_jinja_variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
-</code></pre></div></p>
-<p><strong>IMPORTANT: Execution variables must be defined as a string using single quotes, otherwise they won't be matched.</strong></p>
-<p>And before you execute Run (and its Plan execution(s)), upload your variable(s). (see <a href="../../interfaces/cli/#execution-variables">CLI</a>) </p>
-<p>Example of a file with execution variables:
-<div class="highlight"><pre><span></span><code><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<span class="nt">nested</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
-<span class="nt">variable_list</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var1</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var2</span>
-</code></pre></div></p>
-<p>If a variable cannot be filled, the Step errors out.</p>
-<h3 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">next</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
+<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-to-execute</span>
+</code></pre></div>
+<h2 id="output-sharing">Output sharing<a class="headerlink" href="#output-sharing" title="Permanent link">&para;</a></h2>
+<p>Output sharing is a feature that allows sharing of the <em>serialized_output</em> between steps. The data can be also shared across stages or even from stages.</p>
+<h3 id="going-through-the-data">Going through the data<a class="headerlink" href="#going-through-the-data" title="Permanent link">&para;</a></h3>
+<p>To go through the serialized data we use a modified version of a dot notation with the following rules:</p>
 <ul>
-<li>Execution variables must be defined as a string using single quotes.
-    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
-</code></pre></div></li>
-<li>In the case of Step type <code>worker/execute</code> you can use these variables only for the <code>module_arguments</code> parameter and its sub-parameters. 
-For <code>empire/agent-deploy</code> or <code>empire/execute</code> you can use these variables for the root <code>arguments</code> parameter and its sub-parameters.</li>
-<li>Currently, there is support for simple and nested variables only. Examples:
-    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
-<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">nested.variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
-<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable[index]</span><span class="nv"> </span><span class="s">}}&#39;</span>
-<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">nested.variable[index]</span><span class="nv"> </span><span class="s">}}&#39;</span>
-</code></pre></div></li>
-<li>If you want to use more Jinja goodies, use the raw block:
-    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="err">%</span><span class="w"> </span><span class="nv">raw %</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">14</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="err">%</span><span class="w"> </span><span class="nv">endraw %</span><span class="p p-Indicator">}</span>
-</code></pre></div></li>
+<li>To access an item inside an object (dictionary) use a <a href="../plan/#separator">separator</a> - <code>.</code> by default</li>
+<li>To access an item inside an array (list) specify an index <code>[integer]</code> (regex representation: <code>^\[[0-9]+]$</code>)</li>
 </ul>
-<h2 id="output-serialization">Output serialization<a class="headerlink" href="#output-serialization" title="Permanent link">&para;</a></h2>
-<p>Automatic output serialization is an experimental feature.<br />
-It allows you to take the output and use it in other modules in the form of a <code>serialized_output</code>. For this to work, the <strong>command output must be a valid JSON</strong> (<code>"some text"</code>, <code>{"a": "b"}</code>, <code>["a", "b"]</code>).</p>
-<p>It is in an experimental state primarily due to the randomness of the MSF shells and Windows combination. If you encounter any errors, please submit an issue.</p>
+<p>For example, imagine the following object (dictionary):
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;credentials&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;securePassword&quot;</span><span class="p">}]}</span>
+</code></pre></div>
+If we wanted to access it and get the <strong>password</strong> for the <em>admin</em> user, we would use <code>credentials[0].password</code> which would return <code>securePassword</code>.</p>
+<h3 id="accessing-the-data">Accessing the data<a class="headerlink" href="#accessing-the-data" title="Permanent link">&para;</a></h3>
+<p>We use the <code>$</code> character to indicate we want to use data from another step. Then we insert the name of the desired step, and finally use the dot notation mentioned <a href="#going-through-the-data">before</a>.</p>
+<p>In the template, we would define it like so:
+<div class="highlight"><pre><span></span><code><span class="nt">get-credentials</span><span class="p">:</span><span class="w">  </span><span class="c1"># step with the wanted data</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+
+<span class="nt">use-password</span><span class="p">:</span><span class="w">  </span><span class="c1"># step that needs the data</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-other-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$get-credentials.credentials[0].password</span>
+</code></pre></div></p>
+<div class="admonition warning">
+<p>Output sharing is resolved only inside the <code>arguments</code> parameter in step.</p>
+</div>
+<h2 id="output-alias">Output alias<a class="headerlink" href="#output-alias" title="Permanent link">&para;</a></h2>
+<p>By default, you can access step's data using its name. Additionally, you can define an alias as an alternative. This can be useful since you can assign the same alias to multiple steps.</p>
+<details class="question">
+<summary>How is the data handled</summary>
+<p>The serialized output from each step is merged into a single object. In case the data exists in multiple steps, the latest data gets used.</p>
+<p>Imagine we have two steps with the same alias.</p>
+<p>The first one finished with the following output:
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;alpha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blue&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;whiskey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+</code></pre></div></p>
+<p>The second step finished a minute later with the following output:
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;whiskey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;charlie&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">}</span>
+</code></pre></div></p>
+<p>The following data would be available to the step accessing the alias:
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;alpha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blue&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;whiskey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;charlie&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">}</span>
+</code></pre></div></p>
+</details>
+<p>For example:
+<div class="highlight"><pre><span></span><code><span class="nt">get-credentials</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-super-alias</span>
+
+<span class="nt">use-password</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-other-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$my-super-alias.credentials[0].password</span>
+</code></pre></div></p>
+<h3 id="parent-alias">Parent alias<a class="headerlink" href="#parent-alias" title="Permanent link">&para;</a></h3>
+<p>Furthermore, there is a special alias named <strong>parent</strong>, which is a shortcut for the step (parent) that executed the current step.
+<div class="highlight"><pre><span></span><code><span class="nt">get-credentials</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">next</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
+<span class="w">    </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">use-password</span>
+
+<span class="nt">use-password</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-other-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$parent.credentials[0].password</span>
+</code></pre></div></p>
+<h2 id="output-mapping">Output mapping<a class="headerlink" href="#output-mapping" title="Permanent link">&para;</a></h2>
+<p>Sometimes you do not care from which step you receive information, which is why the <em>output alias</em> exists. However, what if the data is saved under a different name (<code>token</code> vs. <code>auth_token</code>)? For this reason, there is the <strong>output mapping</strong>.
+<div class="highlight"><pre><span></span><code><span class="nt">step-a</span><span class="p">:</span><span class="w"> </span><span class="c1"># Returns &#39;token&#39;</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steal</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
+<span class="w">        </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stolen_token</span>
+
+<span class="nt">step-b</span><span class="p">:</span><span class="w"> </span><span class="c1"># Returns &#39;auth_token&#39;</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-other-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">output</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steal</span>
+<span class="w">    </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth_token</span>
+<span class="w">        </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stolen_token</span>
+
+<span class="nt">step-c</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-other-other-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$steal.stolen_token</span>
+</code></pre></div></p>
 <h2 id="output-replacing">Output replacing<a class="headerlink" href="#output-replacing" title="Permanent link">&para;</a></h2>
 <p>In case you want to replace some parts of your output, you can define a dictionary of rules (regexes) and strings to replace the matches with.<br />
 Keep in mind, that the rules are applied <strong>in order</strong>.</p>
 <p>Here is an example of matching IPv4 and replacing it with <code>removed-ip</code>:
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">output</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">replace</span><span class="p">:</span>
 <span class="w">      </span><span class="s">&quot;^((25[0-5]|(2[0-4]|1</span><span class="err">\</span><span class="s">d|[1-9]|)</span><span class="err">\</span><span class="s">d)</span><span class="err">\</span><span class="s">.?\b){4}$&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">removed-ip</span>
 </code></pre></div></p>
+<h2 id="execution-variables">Execution variables<a class="headerlink" href="#execution-variables" title="Permanent link">&para;</a></h2>
+<p>To assign different values for each plan execution in a Run, you can use execution variables.</p>
+<p>To define an execution variable, use Jinja (<a href="#limitations">with some tweaks</a>) <strong>wrapped in single quotes</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">my-step</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-module</span>
+<span class="w">  </span><span class="nt">arguments</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">my_jinja_variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div></p>
+<p>Before you execute the run, upload the variable(s). See <a href="../../interfaces/cli/#execution-variables">CLI</a> documentation for more information.</p>
+<p>Example of a file with execution variables:
+<div class="highlight"><pre><span></span><code><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="nt">nested</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var2</span>
+</code></pre></div></p>
+<h3 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Execution variables must be wrapped in single quotes
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div></li>
+<li>Execution variables are resolved only for the <code>arguments</code> parameter in the step</li>
+<li>Currently, there is support for simple and nested variables only:
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">nested.variable</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable[index]</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">nested.variable[index]</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</code></pre></div></li>
+<li>If you want to use more Jinja goodies, use the raw block:
+    <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="err">%</span><span class="w"> </span><span class="nv">raw %</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">variable</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">14</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="err">%</span><span class="w"> </span><span class="nv">endraw %</span><span class="p p-Indicator">}</span>
+</code></pre></div></li>
+<li>If a variable is missing, the step errors out once it's started</li>
+</ul>
 
 
 
@@ -2392,14 +1930,14 @@ Keep in mind, that the rules are applied <strong>in order</strong>.</p>
             </div>
           
           
-  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
   Back to top
 </button>
         
@@ -2415,7 +1953,7 @@ Keep in mind, that the rules are applied <strong>in order</strong>.</p>
           <a href="../stage/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Stage">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -2429,18 +1967,18 @@ Keep in mind, that the rules are applied <strong>in order</strong>.</p>
         
         
           
-          <a href="../plan-instance/" class="md-footer__link md-footer__link--next" aria-label="Next: Plan instance">
+          <a href="../../execution-phase/" class="md-footer__link md-footer__link--next" aria-label="Next: Index">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Plan instance
+                Index
               </div>
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
             </div>
           </a>
         
@@ -2471,10 +2009,10 @@ Keep in mind, that the rules are applied <strong>in order</strong>.</p>
       <div class="md-progress" data-md-component="progress" role="progressbar"></div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
       
     
   </body>
