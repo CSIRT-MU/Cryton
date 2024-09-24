@@ -7,28 +7,32 @@ from django.db import transaction, connections
 from django.db.models.query import QuerySet
 from django.forms.models import model_to_dict
 
-from schema import Schema, Optional as SchemaOptional, SchemaError
 from multiprocessing import Process
 
-from cryton.hive.cryton_app.models import PlanModel, PlanExecutionModel, StageExecutionModel
+from cryton.hive.cryton_app.models import PlanModel, PlanExecutionModel, StageExecutionModel, PlanSettings
 
 from cryton.hive.utility import constants, exceptions, logger, scheduler_client, states as st
 from cryton.hive.config.settings import SETTINGS
 from cryton.hive.models import worker
-from cryton.hive.models.stage import StageExecution, Stage
+from cryton.hive.models.stage import StageExecution
 from django.utils import timezone
 
 
 class Plan:
-    def __init__(self, **kwargs):
-        plan_model_id = kwargs.get("plan_model_id")
-        if plan_model_id:
-            try:
-                self.model = PlanModel.objects.get(id=plan_model_id)
-            except django_exc.ObjectDoesNotExist:
-                raise exceptions.PlanObjectDoesNotExist(plan_id=plan_model_id)
-        else:
-            self.model = PlanModel.objects.create(**kwargs)
+    def __init__(self, model_id: int):
+        """
+        :param model_id: Model ID
+        """
+        self.__model = PlanModel.objects.get(id=model_id)
+
+    @staticmethod
+    def create_model(name: str, settings: dict, dynamic: bool, metadata: dict) -> PlanModel:
+        return PlanModel.objects.create(
+            name=name,
+            metadata=metadata,
+            settings=PlanSettings.objects.create(separator=settings.get("separator", ".")),
+            dynamic=dynamic,
+        )
 
     def delete(self):
         self.model.delete()
@@ -38,10 +42,6 @@ class Plan:
         self.__model.refresh_from_db()
         return self.__model
 
-    @model.setter
-    def model(self, value: PlanModel):
-        self.__model = value
-
     @property
     def name(self) -> str:
         return self.model.name
@@ -50,16 +50,6 @@ class Plan:
     def name(self, value: str):
         model = self.model
         model.name = value
-        model.save()
-
-    @property
-    def owner(self) -> str:
-        return self.model.owner
-
-    @owner.setter
-    def owner(self, value: str):
-        model = self.model
-        model.owner = value
         model.save()
 
     @property
@@ -73,141 +63,14 @@ class Plan:
         model.save()
 
     @property
-    def settings(self) -> dict:
-        return self.model.settings
+    def metadata(self) -> dict:
+        return self.model.metadata
 
-    @settings.setter
-    def settings(self, value: dict):
+    @metadata.setter
+    def metadata(self, value: dict):
         model = self.model
-        model.settings = value
+        model.metadata = value
         model.save()
-
-    @property
-    def meta(self) -> dict:
-        return self.model.meta
-
-    @meta.setter
-    def meta(self, value: dict):
-        model = self.model
-        model.meta = value
-        model.save()
-
-    @staticmethod
-    def filter(**kwargs) -> QuerySet:
-        """
-        List PlanModel objects fulfilling fields specified in kwargs.
-        If no such fields are specified all objects are returned.
-        :param kwargs: dict of field-value pairs to filter by
-        :raises WrongParameterError: invalid field is specified
-        :return: Queryset of PlanModel objects
-        """
-        if kwargs:
-            try:
-                return PlanModel.objects.filter(**kwargs)
-            except django_exc.FieldError as ex:
-                raise exceptions.WrongParameterError(message=ex)
-        return PlanModel.objects.all()
-
-    @staticmethod
-    def validate_unique_values(plan_dict) -> None:
-        """
-        Check if there are any duplicate names in Plan that should be unique
-        :param plan_dict: Plan dictionary
-        :raises
-        exceptions.DuplicateNameInPlan:
-        :return: None
-        """
-        stage_names = []
-        step_names = []
-        session_names = []
-        agent_names = []
-
-        for stage_dict in plan_dict.get("stages"):
-            # validate unique stage names in plan
-            if (stage_name := stage_dict["name"]) in stage_names:
-                raise exceptions.DuplicateNameInPlan(
-                    unique_argument="Stage", duplicate_name=stage_name, plan_name=plan_dict.get("name")
-                )
-            stage_names.append(stage_name)
-
-            if stage_dict.get(constants.TRIGGER_TYPE) == constants.MSF_LISTENER:
-                session_names.append(f"{stage_name}_session")
-
-            for step in stage_dict.get("steps"):
-                # validate unique step names in plan
-                if (step_name := step["name"]) in step_names:
-                    raise exceptions.DuplicateNameInPlan(
-                        unique_argument="Step", duplicate_name=step_name, plan_name=plan_dict.get("name")
-                    )
-                step_names.append(step_name)
-
-                # validate unique empire agent names in plan
-                if step[constants.STEP_TYPE] == constants.STEP_TYPE_DEPLOY_AGENT:
-                    if (agent_name := step[constants.ARGUMENTS][constants.AGENT_NAME]) in agent_names:
-                        raise exceptions.DuplicateNameInPlan(
-                            unique_argument="Empire Agent", duplicate_name=agent_name, plan_name=plan_dict.get("name")
-                        )
-                    agent_names.append(agent_name)
-
-                if constants.CREATE_NAMED_SESSION in step[constants.ARGUMENTS]:
-                    if (session_name := step[constants.ARGUMENTS][constants.CREATE_NAMED_SESSION]) in session_names:
-                        raise exceptions.DuplicateNameInPlan(
-                            unique_argument="Session", duplicate_name=session_name, plan_name=plan_dict.get("name")
-                        )
-                    session_names.append(session_name)
-
-    @staticmethod
-    def validate(plan_dict, dynamic: bool = False) -> None:
-        """
-        Check if plan's dictionary is valid
-        :param plan_dict: Plan information
-        :param dynamic: If the Plan is static or dynamic
-        :raises
-            exceptions.PlanValidationError:
-            exceptions.StageValidationError
-            exceptions.StepValidationError
-        :return: True if dictionary is valid
-        """
-        conf_schema = Schema(
-            {
-                "name": str,
-                SchemaOptional("owner"): str,
-                SchemaOptional("dynamic"): bool,
-                SchemaOptional("meta"): dict,
-                SchemaOptional("settings"): {SchemaOptional(constants.SEPARATOR): str},
-                "stages": list,
-            }
-        )
-
-        try:
-            logger.logger.debug("Validating plan", plan_name=plan_dict.get("name"))
-            conf_schema.validate(plan_dict)
-        except SchemaError as ex:
-            raise exceptions.PlanValidationError(ex, plan_name=plan_dict.get("name"))
-
-        # validate stages
-        stage_names = []
-        stage_dependencies = []
-        for stage_dict in plan_dict.get("stages"):
-            Stage.validate(stage_dict, dynamic)
-            stage_names.append(stage_dict["name"])
-            if "depends_on" in stage_dict.keys():
-                stage_dependencies += stage_dict["depends_on"]
-
-        # Check if there is at least one Stage when using static Plan
-        if not dynamic and len(stage_names) == 0:
-            raise exceptions.PlanValidationError(
-                "Plan has to contain at least one Stage.", plan_name=plan_dict.get("name")
-            )
-
-        # validate stage dependencies
-        for stage_dependency in set(stage_dependencies):
-            if stage_dependency not in stage_names:
-                raise exceptions.PlanValidationError(
-                    f"Stage dependency '{stage_dependency}' does not exist in the " f"plan", plan_name=plan_dict["name"]
-                )
-
-        Plan.validate_unique_values(plan_dict)
 
     def generate_plan(self) -> dict:
         """
@@ -218,7 +81,7 @@ class Plan:
         for stage_obj in self.model.stages.all():
             steps = []
             for step_obj in stage_obj.steps.all():
-                step_data = model_to_dict(step_obj, exclude=["stage_model"])
+                step_data = model_to_dict(step_obj, exclude=["stage"])
 
                 successors = []
                 for successor_obj in step_obj.successors.all():
@@ -232,7 +95,7 @@ class Plan:
                 step_data["next"] = successors
                 steps.append(step_data)
 
-            stage_data = model_to_dict(stage_obj, exclude=["plan_model"])
+            stage_data = model_to_dict(stage_obj, exclude=["plan"])
             stage_data["steps"] = steps
             stages.append(stage_data)
 
@@ -328,12 +191,12 @@ class PlanExecution:
 
     @property
     def aps_job_id(self) -> str:
-        return self.model.aps_job_id
+        return self.model.job_id
 
     @aps_job_id.setter
     def aps_job_id(self, value: str):
         model = self.model
-        model.aps_job_id = value
+        model.job_id = value
         model.save()
 
     @property
@@ -368,8 +231,8 @@ class PlanExecution:
         :return: None
         """
         stage_execution_kwargs = {"plan_execution": self.model}
-        for stage_obj in self.model.plan_model.stages.all():
-            stage_execution_kwargs.update({"stage_model": stage_obj})
+        for stage_obj in self.model.plan.stages.all():
+            stage_execution_kwargs.update({"stage": stage_obj})
             StageExecution(**stage_execution_kwargs)
 
     def schedule(self, schedule_time: datetime) -> None:
@@ -407,7 +270,7 @@ class PlanExecution:
         self.state = st.RUNNING
 
         # Prepare rabbit queues
-        worker_obj = worker.Worker(worker_model_id=self.model.worker_id)
+        worker_obj = worker.Worker(self.model.worker_id)
         worker_obj.prepare_rabbit_queues()
 
         # Start triggers
@@ -472,10 +335,7 @@ class PlanExecution:
 
         for stage_execution_model in self.model.stage_executions.all():
             stage_ex = StageExecution(stage_execution_id=stage_execution_model.id)
-            if (
-                stage_ex.model.stage_model.trigger_type == constants.DELTA
-                and stage_ex.state in st.STAGE_SCHEDULE_STATES
-            ):
+            if stage_ex.model.stage.type == constants.DELTA and stage_ex.state in st.STAGE_SCHEDULE_STATES:
                 stage_ex.trigger.start()
             else:
                 try:
@@ -539,8 +399,8 @@ class PlanExecution:
         report_dict.update(
             {
                 "id": self.model.id,
-                "plan_name": self.model.plan_model.name,
-                "meta": self.model.plan_model.meta,
+                "plan_name": self.model.plan.name,
+                "metadata": self.model.plan.metadata,
                 "state": self.state,
                 "schedule_time": self.schedule_time,
                 "start_time": self.start_time,
@@ -591,7 +451,7 @@ class PlanExecution:
         self.finish_time = timezone.now()
         self.state = st.TERMINATED
         logger.logger.info(
-            "Plan execution killed", plan_execution_id=self.model.id, plan_id=self.model.plan_model_id, status="success"
+            "Plan execution killed", plan_execution_id=self.model.id, plan_id=self.model.plan.id, status="success"
         )
 
         return None

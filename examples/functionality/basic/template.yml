@@ -1,0 +1,12 @@
+---
+name: Basic example
+metadata:
+  description: This is the smallest plan possible. It gets the current user from the machine the Worker is running on.
+stages:
+  do-stuff-on-worker:
+    steps:
+      get-current-user:
+        is_init: true
+        module: command
+        arguments:
+          command: whoami

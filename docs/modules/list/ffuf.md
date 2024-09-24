@@ -47,20 +47,20 @@ This module runs FFUF on given target and returns a file with found directories.
     
     | Name      | Type   | Required | Default value | Example value                   |
     |-----------|--------|----------|---------------|---------------------------------|
-    | `command` | string | &check;  |               | `ffuf -u http://CHANGE_ME/FUZZ` |
+    | `command` | string | &check;  |               | `ffuf -u http://127.0.0.1/FUZZ` |
 
 ## Examples
-
-[//]: # (TODO: update the examples)
 
 ### Example with serialized output
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE_ME
-  wordlist: "/usr/share/wordlists/dirb/small.txt"
-  options: -X POST
-  
+my-step:
+  module: ffuf
+  arguments:
+    target: {{ target }}
+    wordlist: "/usr/share/wordlists/dirb/small.txt"
+    options: -X POST
+
 ```
 
 Output:
@@ -71,10 +71,13 @@ Output:
 ### Example with text output
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE_ME
-  options: --max-threads 7
-  serialize_output: False
+my-step:
+  module: ffuf
+  arguments:
+    target: {{ target }}
+    options: --max-threads 7
+    serialize_output: False
+
 ```
 
 Output:

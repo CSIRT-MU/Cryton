@@ -25,7 +25,7 @@ class Event:
         """
         logger.logger.debug("Running event: validate_module", event_details=self._event_details)
         attack_module = self._event_details.get(co.MODULE)
-        module_arguments = self._event_details.get(co.MODULE_ARGUMENTS)
+        module_arguments = self._event_details.get(co.ARGUMENTS)
         return asdict(util.run_module(attack_module, module_arguments, validate_only=True))
 
     def list_modules(self) -> dict:

@@ -47,11 +47,14 @@ Timeout for the command (**in seconds**).
 ### Run Python script
 Input:
 ```yaml
-module_arguments:
-  script_path: /tmp/example.py
-  script_arguments: -t 10.10.10.5
-  executable: python3
-  timeout: 30
+my-step:
+  module: script
+  arguments:
+    script_path: /tmp/example.py
+    script_arguments: -t {{ target }}
+    executable: python3
+    timeout: 30
+
 ```
 
 Output:

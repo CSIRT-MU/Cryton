@@ -46,21 +46,8 @@ def step_list(
     """
     additional_parameters = {each[0]: each[1] for each in parameter_filters}
     if parent is not None:
-        additional_parameters["stage_model_id"] = parent
-    # TODO: update the include arguments
-    include = [
-        "id",
-        "name",
-        "attack_module",
-        "attack_module_args",
-        "is_init",
-        "is_final",
-        "executor",
-        "create_named_session",
-        "use_named_session",
-        "use_any_session_to_target",
-        "output_prefix",
-    ]
+        additional_parameters["stage_id"] = parent
+    include = ["id", "name", "metadata", "module", "arguments", "is_init"]
     ctx.obj.get_items(Step.LIST, offset, limit, additional_parameters, include, less, localize)
 
 
@@ -117,19 +104,7 @@ def step_read(ctx: helpers.Context, step_id: int, less: bool, localize: bool) ->
     :return: None
     """
     response = ctx.obj.api_get(Step.READ, step_id)
-    include = [
-        "id",
-        "name",
-        "attack_module",
-        "attack_module_args",
-        "is_init",
-        "is_final",
-        "executor",
-        "create_named_session",
-        "use_named_session",
-        "use_any_session_to_target",
-        "output_prefix",
-    ]
+    include = ["id", "name", "metadata", "module", "arguments", "is_init"]
     helpers.print_items(response, include, less, localize, ctx.obj.debug)
 
 
@@ -153,6 +128,7 @@ def step_delete(ctx: helpers.Context, step_id: int) -> None:
 @step.command("validate")
 @click.pass_context
 @click.argument("file", type=click.Path(exists=True), required=True)
+@click.argument("stage_id", type=click.INT, required=True)
 @click.option(
     "-i",
     "--inventory-file",
@@ -161,22 +137,25 @@ def step_delete(ctx: helpers.Context, step_id: int) -> None:
     multiple=True,
     help="Inventory file used to fill the template. Can be used multiple times.",
 )
-def step_validate(ctx: helpers.Context, file: str, inventory_files: list) -> None:
+def step_validate(ctx: helpers.Context, file: str, stage_id: int, inventory_files: list) -> None:
     """
-    Validate (syntax check) your FILE with Step.
+    Validate FILE containing step against a stage with STAGE_ID.
 
     FILE is path/to/your/file that you want to validate.
+    STAGE_ID is an ID of the stage you want to validate the step against.
 
     \f
     :param ctx: Click ctx object
-    :param file: File containing your Step in yaml
+    :param stage_id: ID of the Stage to use
+    :param file: File used as the Step template
     :param inventory_files: Inventory file(s) used to fill the template
     :return: None
     """
+    data = {"stage_id": stage_id}
     files = helpers.load_files(inventory_files)
     with open(file, "rb") as f:
         files["file"] = f.read()
-    response = ctx.obj.api_post(Step.VALIDATE, files=files)
+    response = ctx.obj.api_post(Step.VALIDATE, data=data, files=files)
     helpers.print_message(response, ctx.obj.debug)
 
 

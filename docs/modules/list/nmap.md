@@ -14,9 +14,9 @@ By default, it scans the most common ports and returns a list with all ports and
     ### `target`
     Scan target.
     
-    | Name     | Type   | Required | Default value | Example value    |
-    |----------|--------|----------|---------------|------------------|
-    | `target` | string | &check;  |               | `127.0.0.1:8000` |
+    | Name     | Type   | Required | Default value | Example value |
+    |----------|--------|----------|---------------|---------------|
+    | `target` | string | &check;  |               | `127.0.0.1`   |
     
     ### `ports`
     List of individual ports or ranges to scan.
@@ -92,26 +92,29 @@ All options try to find string in the nmap serialized output, and they are non-c
 ### Example with predefined inputs
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE ME
-  ports:
-    - 1-30
-    - 80
-  port_parameters:
-    - protocol: tcp
-      portid: '80'
-      state: open
-      reason: syn-ack
-      reason_ttl: '0'
-      service:
-        name: http
-        product: Apache httpd
-        version: 2.4.7
-        method: probed
-        conf: '10'
-      cpe: 
-        - apache
-  options: -T4 -sV
+my-step:
+  module: nmap
+  arguments:
+    target: {{ target }}
+    ports:
+      - 1-30
+      - "80"
+    port_parameters:
+      - protocol: tcp
+        portid: '80'
+        state: open
+        reason: syn-ack
+        reason_ttl: '0'
+        service:
+          name: http
+          product: Apache httpd
+          version: 2.4.7
+          method: probed
+          conf: '10'
+        cpe: 
+          - apache
+    options: -T4 -sV
+
 ```
 
 Output:
@@ -126,9 +129,12 @@ Output:
 ### Example with custom command
 Input:
 ```yaml
-module_arguments:
-  command: nmap -A -T4 --top-ports 100 <target>
-  timeout: 20
+my-step:
+  module: nmap
+  arguments:
+    command: nmap -A -T4 --top-ports 100 {{ target }}
+    timeout: 20
+
 ```
 
 Output:

@@ -51,9 +51,9 @@ def filter_decorator(func):
             "plan_execution_id",
             "stage_execution_id",
             "step_execution_id",
-            "plan_model_id",
-            "stage_model_id",
-            "step_model_id",
+            "plan_id",
+            "stage_id",
+            "step_id",
         ]
         filters_dict_update = {}
 

@@ -11,6 +11,7 @@ class Test:
     """
     Base class for testing.
     """
+
     def __init__(self):
         self.description = ""
         self._executable: str = config.CRYTON_CLI_EXECUTABLE
@@ -33,7 +34,7 @@ class Test:
         self.results["finish_time"] = time.time()
         self.results["test_duration"] = self.results["finish_time"] - self.results["start_time"]
 
-        click.secho("Test successfully finished!", fg='green')
+        click.secho("Test successfully finished!", fg="green")
         self._print_info("Results", self.results)
 
     def _prepare(self):

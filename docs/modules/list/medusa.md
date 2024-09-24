@@ -86,22 +86,25 @@ This module implements attacking capabilities of the [Medusa](https://github.com
     ### `command`
     Medusa command to run with syntax as in command line (with executable).
     
-    | Name      | Type   | Required | Default value | Example value                               |
-    |-----------|--------|----------|---------------|---------------------------------------------|
-    | `command` | string | &check;  |               | `medusa -u user -p pass -h <target> -M ssh` |
+    | Name      | Type   | Required | Default value | Example value                                |
+    |-----------|--------|----------|---------------|----------------------------------------------|
+    | `command` | string | &check;  |               | `medusa -u user -p pass -h 127.0.0.1 -M ssh` |
 
 ## Examples
 
 ### SSH bruteforce
 Input:
 ```yaml
-module_arguments:
-  target: CHANGE_ME
-  raw_output: true
-  credentials:
-    username: vagrant
-    password: vagrant
-  tasks: 4
+my-step:
+  module: medusa
+  arguments:
+    target: {{ target }}
+    raw_output: true
+    credentials:
+      username: vagrant
+      password: vagrant
+    tasks: 4
+
 ```
 
 Output:
@@ -116,8 +119,11 @@ Output:
 ### Custom command
 Input:
 ```yaml
-module_arguments:
-  command: medusa -t 4 -u vagrant -p vagrant -h <target> -M ssh
+my-step:
+  module: medusa
+  arguments:
+    command: medusa -t 4 -u vagrant -p vagrant -h {{ target }} -M ssh
+
 ```
 
 Output:

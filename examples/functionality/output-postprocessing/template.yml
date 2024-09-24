@@ -1,0 +1,17 @@
+---
+name: Output post-processing example
+metadata:
+  description: This is an example of output post-processing.
+stages:
+  do-stuff-on-worker:
+    steps:
+      print-failure:
+        is_init: true
+        metadata:
+          description: Showcase of output replacement feature.
+        module: command
+        arguments:
+          command: echo "it failed!"
+        output:
+          replace:
+            "failed": worked

@@ -10,7 +10,7 @@ create an empty Plan/Stage and create their agent to control the execution inste
 ## Limitations
 - Dynamic plan must have the `dynamic` variable set to *True*
 - If you don't want to pass any Stages/Steps you must provide an empty list
-- Each Stage and Step must have a unique name in the same Plan (utilize [inventory variables](../design-phase/plan-instance.md#inventory-files) to overcome this limitation)
+- Each Stage and Step must have a unique name in the same Plan (utilize [inventory variables](../design-phase/index.md#inventory-files) to overcome this limitation)
 - The Stage/Step you're trying to add must be valid
 - Run's Plan must contain the instance (Stage/Step) you are trying to execute
 - You cannot create multiple executions for an instance (you can execute an instance only once) under the same Plan execution
@@ -68,11 +68,11 @@ For this example we will assume that:
     - Worker is registered in Core and running
     - module command is accessible from the Worker
 
-Files used in this guide can be found in the [Cryton Core repository](https://gitlab.ics.muni.cz/cryton/cryton-core/-/tree/{{{ git_release }}}/examples/dynamic-execution-example){target="_blank"}.
+Files used in this guide can be found in the [Cryton repository](https://gitlab.ics.muni.cz/cryton/cryton/-/tree/{{{ git_release }}}/examples/dynamic-execution/){target="_blank"}.
 
 It's best to switch to the example directory, so we will assume that's true.
 ```shell
-cd /path/to/cryton-core/examples/dynamic-execution-example/
+cd cryton/examples/dynamic-execution/
 ```
 
 ### Building a base Plan and executing it

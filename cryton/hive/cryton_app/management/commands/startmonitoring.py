@@ -7,6 +7,7 @@ from django.db import connection
 from cryton.hive.utility import logger, scheduler_client
 from cryton.hive.models import worker
 
+
 # TODO: add this as a service to docker-compose
 # TODO: rather remove this and use the amqpstorm management api to check for new workers
 
@@ -16,7 +17,7 @@ def monitor_health():
     worker_model_list = worker.WorkerModel.objects.all()
     for worker_model_obj in worker_model_list:
         logger.logger.info("Checking worker {}".format(worker_model_obj.id))
-        t = threading.Thread(target=worker.Worker(worker_model_id=worker_model_obj.id).healthcheck)
+        t = threading.Thread(target=worker.Worker(worker_model_obj.id).healthcheck)
         t.start()
 
 

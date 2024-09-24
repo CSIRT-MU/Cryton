@@ -9,19 +9,22 @@ Cryton is a Cron-like red team framework for complex attack scenarios automation
 
 **Main features**:
 
-- [Metasploit](https://github.com/rapid7/metasploit-framework) integration
-- [Empire](https://github.com/BC-SECURITY/Empire) integration
 - Reliable remote execution
 - Reproducible scenarios
 - Set of modules (Nmap, Medusa, FFUF, ...) with machine-readable output
+- [Metasploit](https://github.com/rapid7/metasploit-framework) support
+- [Empire](https://github.com/BC-SECURITY/Empire) support
+- [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team) techniques support
 
-Cryton is tested and targeted primarily on **Debian** and **Kali Linux**. Please keep in mind that **only 
-the latest version is supported** and issues regarding different OS or distributions may **not** be resolved.
+Cryton is tested and targeted primarily on **Debian** and **Kali Linux**. Please keep in mind that **only the latest version is supported** and issues regarding different OS or distributions may **not** be resolved.
 
 For more information see the [documentation](https://cryton.gitlab-pages.ics.muni.cz/).
 
 ## Quick-start
-Please, follow the guide in the [documentation](https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/quick-start/).
+Please, follow the guide in the [documentation](https://cryton.gitlab-pages.ics.muni.cz/latest/quick-start/).
 
 ## Development
-Please, follow the guide in the [documentation](https://cryton.gitlab-pages.ics.muni.cz/cryton/latest/development/).
+Please, follow the guide in the [documentation](https://cryton.gitlab-pages.ics.muni.cz/latest/development/).
+
+## How to contribute
+Please, follow the guide in the [documentation](https://cryton.gitlab-pages.ics.muni.cz/latest/contribution-guide/).

@@ -2,11 +2,12 @@ Cryton is a Cron-like red team framework for complex attack scenarios automation
 
 **Main features**:
 
-- [Metasploit](https://github.com/rapid7/metasploit-framework) integration
-- [Empire](https://github.com/BC-SECURITY/Empire) integration
 - Reliable remote execution
 - Reproducible scenarios
 - Set of modules (Nmap, Medusa, FFUF, ...) with machine-readable output
+- [Metasploit](https://github.com/rapid7/metasploit-framework) support
+- [Empire](https://github.com/BC-SECURITY/Empire) support
+- [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team) techniques support
 
 All of its open-source components can be found [here](https://gitlab.ics.muni.cz/cryton){target="_blank"}.
 

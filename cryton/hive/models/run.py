@@ -29,12 +29,11 @@ class RunReport:
 
 
 class Run:
-
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # TODO: update
         """
         :param kwargs:
             run_id: int = None,
-            plan_model_id: int
+            plan_id: int
             workers: list
         """
         if kwargs.get("run_model_id"):
@@ -142,12 +141,12 @@ class Run:
 
     @property
     def aps_job_id(self) -> str:
-        return self.model.aps_job_id
+        return self.model.job_id
 
     @aps_job_id.setter
     def aps_job_id(self, value: str):
         model = self.model
-        model.aps_job_id = value
+        model.job_id = value
         model.save()
 
     @property
@@ -183,7 +182,7 @@ class Run:
         Prepare execution for each worker.
         :return: None
         """
-        plan_execution_kwargs = {"run": self.model, "plan_model_id": self.model.plan_model_id}
+        plan_execution_kwargs = {"run": self.model, "plan_id": self.model.plan.id}
         for worker_obj in self.workers:
             plan_execution_kwargs.update({"worker": worker_obj})
             PlanExecution(**plan_execution_kwargs)
@@ -191,8 +190,8 @@ class Run:
     def report(self) -> dict:
         report_obj = RunReport(
             id=self.model.id,
-            plan_id=self.model.plan_model.id,
-            plan_name=self.model.plan_model.name,
+            plan_id=self.model.plan.id,
+            plan_name=self.model.plan.name,
             state=self.state,
             schedule_time=self.schedule_time,
             start_time=self.start_time,
@@ -319,7 +318,7 @@ class Run:
         :return: None
         """
         for worker_model in self.workers:
-            worker = Worker(worker_model_id=worker_model.id)
+            worker = Worker(worker_model.id)
             if not worker.healthcheck():
                 raise ConnectionError(f"Unable to get response from worker {worker.name} ({worker.model.id}).")
 

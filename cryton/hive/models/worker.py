@@ -1,30 +1,37 @@
 from typing import Union, Type
 import amqpstorm
-from django.core import exceptions as django_exc
 
 from cryton.hive.config.settings import SETTINGS
-from cryton.hive.utility import exceptions, states, constants, rabbit_client
+from cryton.hive.utility import exceptions, states, constants, rabbit_client, logger
 from cryton.hive.cryton_app.models import WorkerModel
 from cryton.lib.utility.module import Result
 
 
 class Worker:
-    def __init__(self, **kwargs):
+    def __init__(self, model_id):
         """
-        :param kwargs:
-            name: str
-            description: str
-            state: str
+        :param model_id: Model ID
         """
-        worker_model_id = kwargs.get("worker_model_id")
-        if worker_model_id:
-            try:
-                self.model = WorkerModel.objects.get(id=worker_model_id)
-            except django_exc.ObjectDoesNotExist:
-                raise exceptions.WorkerObjectDoesNotExist(worker_model_id)
+        self.__model = WorkerModel.objects.get(id=model_id)
 
-        else:
-            self.model = WorkerModel.objects.create(**kwargs)
+    @staticmethod
+    def create_model(name: str, description: str, force: bool = False) -> WorkerModel:
+        """
+        Add Worker to DB.
+        :param name: Worker's name
+        :param description: Worker's description
+        :param force: If True, name won't have to be unique
+        :return: Added Worker
+        """
+        if not name:
+            raise exceptions.WrongParameterError(message="Parameter cannot be empty", param_name="name")
+
+        elif not force and WorkerModel.objects.filter(name=name).exists():
+            raise exceptions.WrongParameterError(
+                message="Inserted Worker with such parameter already exists", param_name="name"
+            )
+
+        return WorkerModel.objects.create(name=name, description=description)
 
     def delete(self):
         self.model.delete()
@@ -33,10 +40,6 @@ class Worker:
     def model(self) -> Union[Type[WorkerModel], WorkerModel]:
         self.__model.refresh_from_db()
         return self.__model
-
-    @model.setter
-    def model(self, value: WorkerModel):
-        self.__model = value
 
     @property
     def name(self) -> str:
@@ -71,10 +74,6 @@ class Worker:
     @property
     def attack_q_name(self):
         return f"cryton.worker.{self.name}.attack.request"
-
-    @property
-    def agent_q_name(self):
-        return f"cryton.worker.{self.name}.agent.request"
 
     @property
     def control_q_name(self):
@@ -113,4 +112,19 @@ class Worker:
         with amqpstorm.Connection(**connection_parameters) as connection:
             with connection.channel() as channel:
                 channel.queue.declare(self.attack_q_name)
-                channel.queue.declare(self.agent_q_name)
+
+    # TODO: may be easy to use this as a "power feature" to match a session with parameters
+    #  session_id: #session{"a": "b"}
+    def get_sessions(self, session_filter: dict[str, Union[str, int]]) -> int:
+        """
+        Get Metasploit Session IDs from Worker.
+        :param session_filter: Session parameters to match
+        :return: Session ID
+        """
+        logger.logger.debug("Getting sessions", session_filter=session_filter)
+        message = {constants.EVENT_T: constants.EVENT_LIST_SESSIONS, constants.EVENT_V: session_filter}
+
+        with rabbit_client.RpcClient() as rpc_client:
+            response = rpc_client.call(self.control_q_name, message)
+
+        return response.get(constants.EVENT_V).get("session_list")

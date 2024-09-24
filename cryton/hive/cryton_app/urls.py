@@ -16,7 +16,6 @@ from cryton.hive.cryton_app.views import (
     plan_template_views,
 )  # , dynamic_run_views
 
-
 router = routers.DefaultRouter()
 router.register(r"runs", run_views.RunViewSet)
 router.register(r"plans", plan_views.PlanViewSet)
@@ -29,7 +28,6 @@ router.register(r"workers", worker_views.WorkerViewSet)
 router.register(r"templates", plan_template_views.PlanTemplateViewSet)
 router.register(r"execution_variables", execution_variable_views.ExecutionVariableViewSet)
 router.register(r"logs", log_views.LogViewSet, "log")
-
 
 urlpatterns = [
     path("", router.get_api_root_view()),

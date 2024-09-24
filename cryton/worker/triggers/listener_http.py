@@ -42,12 +42,12 @@ class MyWSGIRefServer(bottle.ServerAdapter):
 
 
 class HTTPListener(Listener):
-    def __init__(self, main_queue: PriorityQueue, host: str, port: int):
+    def __init__(self, main_queue: PriorityQueue, port: int, host: str = "0.0.0.0"):
         """
         Class for HTTPListeners (wrapper for Bottle).
         :param main_queue: Worker's queue for internal request processing
-        :param host: Listener ip address
         :param port: Listener port
+        :param host: Listener ip address
         """
         super().__init__(main_queue)
         self._identifiers = {co.LISTENER_HOST: host, co.LISTENER_PORT: port}

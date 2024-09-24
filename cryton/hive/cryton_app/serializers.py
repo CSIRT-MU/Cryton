@@ -79,8 +79,8 @@ class StageCreateSerializer(CreateWithFilesSerializer):
     plan_id = serializers.IntegerField()
 
 
-class StageValidateSerializer(CreateWithFilesSerializer):
-    dynamic = serializers.CharField(default="false")
+class StageValidateSerializer(StageCreateSerializer):
+    pass
 
 
 class StageStartTriggerSerializer(BaseSerializer):
@@ -95,6 +95,10 @@ class StepSerializer(serializers.ModelSerializer):
 
 class StepCreateSerializer(CreateWithFilesSerializer):
     stage_id = serializers.IntegerField()
+
+
+class StepValidateSerializer(StepCreateSerializer):
+    pass
 
 
 class StepExecuteSerializer(BaseSerializer):
@@ -132,7 +136,7 @@ class PlanExecutionSerializer(serializers.ModelSerializer):
 
 class PlanExecutionListSerializer(ListSerializer):
     run_id = serializers.IntegerField(required=False, help_text="Run ID used to filter the results.")
-    plan_model_id = serializers.IntegerField(required=False, help_text="Plan ID used to filter the results.")
+    plan_id = serializers.IntegerField(required=False, help_text="Plan ID used to filter the results.")
 
 
 class StageExecutionSerializer(serializers.ModelSerializer):
@@ -149,7 +153,7 @@ class StageExecutionListSerializer(ListSerializer):
     plan_execution_id = serializers.IntegerField(
         required=False, help_text="Plan execution ID used to filter the results."
     )
-    stage_model_id = serializers.IntegerField(required=False, help_text="Stage ID used to filter the results.")
+    stage_id = serializers.IntegerField(required=False, help_text="Stage ID used to filter the results.")
 
 
 class StepExecutionSerializer(serializers.ModelSerializer):
@@ -162,7 +166,7 @@ class StepExecutionListSerializer(ListSerializer):
     stage_execution_id = serializers.IntegerField(
         required=False, help_text="Stage execution ID used to filter the results."
     )
-    step_model_id = serializers.IntegerField(required=False, help_text="Step ID used to filter the results.")
+    step_id = serializers.IntegerField(required=False, help_text="Step ID used to filter the results.")
 
 
 class WorkerSerializer(serializers.ModelSerializer):
@@ -175,12 +179,6 @@ class WorkerCreateSerializer(BaseSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
     force = serializers.BooleanField()
-
-
-class SessionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.SessionModel
-        exclude = []
 
 
 class ExecutionVariableSerializer(serializers.ModelSerializer):
@@ -226,5 +224,5 @@ class OutputMappingSerializer(serializers.ModelSerializer):
 
 class DependencySerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.DependencyModel
+        model = models.StageDependencyModel
         exclude = []

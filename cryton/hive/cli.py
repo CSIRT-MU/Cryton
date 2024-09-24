@@ -1,7 +1,9 @@
 import sys
 import click
+from json import dump
 
 from cryton.hive.manage import main
+from cryton.hive.utility.schemas import PLAN
 
 
 @click.group()
@@ -50,3 +52,17 @@ def start(ctx: click.Context, migrate_database: bool, bind: str, workers: int) -
 
     sys.argv = [argv[0], "django", "start", "--bind", bind, "--workers", str(workers)]
     ctx.invoke(django)
+
+
+@cli.command("generate-schema")
+@click.option("-f", "--file", type=click.STRING, default="cryton.schema.json", help="File to save the schema in.")
+def start(file: str) -> None:
+    """
+    Generate JSON schema file.
+
+    \f
+    :param file:
+    :return: None
+    """
+    with open(file, "w") as f:
+        dump(PLAN, f)

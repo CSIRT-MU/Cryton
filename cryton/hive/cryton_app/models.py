@@ -1,10 +1,10 @@
 from django.db import models
 
-from cryton.hive.utility import states as st
+from cryton.hive.utility import states
 from cryton.hive.config.settings import UPLOAD_DIRECTORY_RELATIVE
 
 
-class AdvancedModel(models.Model):
+class TimedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -12,15 +12,15 @@ class AdvancedModel(models.Model):
         abstract = True
 
 
-class InstanceModel(AdvancedModel):
+class InstanceModel(TimedModel):
     name = models.TextField()
 
     class Meta:
         abstract = True
 
 
-class ExecutionModel(AdvancedModel):
-    state = models.TextField(default=st.PENDING)
+class ExecutionModel(TimedModel):
+    state = models.TextField(default=states.PENDING)
     start_time = models.DateTimeField(null=True)
     pause_time = models.DateTimeField(null=True)
     finish_time = models.DateTimeField(null=True)
@@ -29,107 +29,115 @@ class ExecutionModel(AdvancedModel):
         abstract = True
 
 
-class ExtendedExecutionModel(ExecutionModel):
+class SchedulableExecutionModel(ExecutionModel):
     schedule_time = models.DateTimeField(null=True)
-    aps_job_id = models.TextField()
+    job_id = models.TextField()
 
     class Meta:
         abstract = True
 
 
 class DescriptiveModel(InstanceModel):
-    meta = models.JSONField(default=dict)
+    metadata = models.JSONField()
 
     class Meta:
         abstract = True
 
 
+class OutputModel(models.Model):
+    serialized_output = models.JSONField(default=dict)  # TODO: serialized_output -> output?
+    output = models.TextField(default="")  # TODO: output -> debug_output?
+
+    class Meta:
+        abstract = True
+
+
+class PlanSettings(models.Model):
+    separator = models.TextField()
+
+
 class PlanModel(DescriptiveModel):
-    owner = models.TextField()
-    settings = models.JSONField(default=dict)
+    settings = models.OneToOneField(PlanSettings, models.CASCADE)
     dynamic = models.BooleanField(default=False)
 
 
 class StageModel(DescriptiveModel):
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="stages")
-    trigger_type = models.TextField()
-    trigger_args = models.JSONField()
+    plan = models.ForeignKey(PlanModel, models.CASCADE, related_name="stages")
+    type = models.TextField()
+    arguments = models.JSONField()
+
+
+class StepOutputSettingsModel(models.Model):
+    alias = models.TextField()
+    replace = models.JSONField()
+
+
+class OutputMappingModel(models.Model):
+    output_settings = models.ForeignKey(StepOutputSettingsModel, models.CASCADE, related_name="mappings")
+    name_from = models.TextField()
+    name_to = models.TextField()
 
 
 class StepModel(DescriptiveModel):
-    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name="steps")
-    step_type = models.TextField()
+    stage = models.ForeignKey(StageModel, models.CASCADE, related_name="steps")
+    is_init = models.BooleanField()
+    is_final = models.BooleanField()
+    output_settings = models.OneToOneField(StepOutputSettingsModel, models.CASCADE)
+    module = models.TextField()
     arguments = models.JSONField()
-    is_init = models.BooleanField(default=False)
-    is_final = models.BooleanField(default=False)
-    output_prefix = models.TextField()
-    output = models.JSONField(default=dict)
 
 
 class WorkerModel(InstanceModel):
     description = models.TextField()
-    state = models.TextField(default=st.DOWN)
+    state = models.TextField(default=states.DOWN)
 
 
-class RunModel(ExtendedExecutionModel):
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="runs")
+class RunModel(SchedulableExecutionModel):
+    plan = models.ForeignKey(PlanModel, models.CASCADE, related_name="runs")
 
 
-class PlanExecutionModel(ExtendedExecutionModel):
-    run = models.ForeignKey(RunModel, on_delete=models.CASCADE, related_name="plan_executions")
-    plan_model = models.ForeignKey(PlanModel, on_delete=models.CASCADE, related_name="plan_executions")
-    worker = models.ForeignKey(WorkerModel, related_name="plan_executions", on_delete=models.PROTECT)
+class PlanExecutionModel(SchedulableExecutionModel):
+    run = models.ForeignKey(RunModel, models.CASCADE, related_name="plan_executions")
+    plan = models.ForeignKey(PlanModel, models.CASCADE, related_name="plan_executions")
+    worker = models.ForeignKey(WorkerModel, models.PROTECT, related_name="plan_executions")
     evidence_directory = models.TextField()
 
 
-class StageExecutionModel(ExtendedExecutionModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="stage_executions")
-    stage_model = models.ForeignKey(StageModel, on_delete=models.CASCADE, related_name="stage_executions")
+class StageExecutionModel(SchedulableExecutionModel, OutputModel):
+    plan_execution = models.ForeignKey(PlanExecutionModel, models.CASCADE, related_name="stage_executions")
+    stage = models.ForeignKey(StageModel, models.CASCADE, related_name="stage_executions")
     trigger_id = models.TextField()
 
 
-class StepExecutionModel(ExecutionModel):
-    stage_execution = models.ForeignKey(StageExecutionModel, on_delete=models.CASCADE, related_name="step_executions")
-    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name="step_executions")
+class StepExecutionModel(ExecutionModel, OutputModel):
+    stage_execution = models.ForeignKey(StageExecutionModel, models.CASCADE, related_name="step_executions")
+    step = models.ForeignKey(StepModel, models.CASCADE, related_name="step_executions")
     result = models.TextField(default="")
-    serialized_output = models.JSONField(default=dict)
-    output = models.TextField(default="")
     valid = models.BooleanField(default=False)
-    parent_id = models.IntegerField(null=True)
-
-
-class SessionModel(InstanceModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="sessions")
-    msf_id = models.TextField()
+    parent = models.ForeignKey("self", models.CASCADE, null=True)
 
 
 class ExecutionVariableModel(InstanceModel):
-    plan_execution = models.ForeignKey(PlanExecutionModel, on_delete=models.CASCADE, related_name="execution_variables")
+    plan_execution = models.ForeignKey(PlanExecutionModel, models.CASCADE, related_name="execution_variables")
     value = models.JSONField()
 
 
 class SuccessorModel(models.Model):
     type = models.TextField()
     value = models.TextField()
-    parent = models.ForeignKey(StepModel, related_name="successors", on_delete=models.CASCADE)
-    successor = models.ForeignKey(StepModel, related_name="parents", on_delete=models.CASCADE)
+    parent = models.ForeignKey(StepModel, models.CASCADE, related_name="successors")
+    successor = models.ForeignKey(StepModel, models.CASCADE, related_name="parents")
 
 
 class CorrelationEventModel(models.Model):
     correlation_id = models.TextField()
-    step_execution = models.ForeignKey(StepExecutionModel, on_delete=models.CASCADE, related_name="correlation_events")
+    step_execution = models.ForeignKey(StepExecutionModel, models.CASCADE, related_name="correlation_events")
 
 
 class PlanTemplateModel(models.Model):
     file = models.FileField(upload_to=UPLOAD_DIRECTORY_RELATIVE)
 
 
-class OutputMappingModel(models.Model):
-    step_model = models.ForeignKey(StepModel, on_delete=models.CASCADE, related_name="output_mappings")
-    name_from = models.TextField()
-    name_to = models.TextField()
-
-
-class DependencyModel(models.Model):
-    stage_model = models.ForeignKey(StageModel, related_name="dependencies", on_delete=models.CASCADE)
-    dependency = models.ForeignKey(StageModel, related_name="subjects_to", on_delete=models.CASCADE)
+class StageDependencyModel(models.Model):
+    stage = models.ForeignKey(StageModel, models.CASCADE, related_name="dependencies")
+    dependency = models.ForeignKey(StageModel, models.CASCADE, related_name="subjects_to")

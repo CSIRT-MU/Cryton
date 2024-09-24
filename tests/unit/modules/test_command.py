@@ -29,18 +29,13 @@ class TestModuleCommand:
                 "session_id": 1,
                 "force_shell": True,
             },
-        ]
+        ],
     )
     def test_schema(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
     @pytest.mark.parametrize(
-        "p_arguments",
-        [
-            {},
-            {"non_existent": "placeholder"},
-            {"command": "placeholder", "non_existent": "placeholder"}
-        ]
+        "p_arguments", [{}, {"non_existent": "placeholder"}, {"command": "placeholder", "non_existent": "placeholder"}]
     )
     def test_schema_error(self, p_arguments: dict):
         with pytest.raises(Exception):
@@ -52,7 +47,7 @@ class TestModuleCommand:
             "timeout": 1,
             "serialize_output": True,
             "session_id": 1,
-            "force_shell": False
+            "force_shell": False,
         }
         module = Module(arguments)
 
@@ -150,7 +145,7 @@ class TestModuleCommand:
         f_metasploit.return_value.sessions.get.return_value = mock_session
 
         result = module.execute()
-    
+
         assert result.result == Result.OK
         assert result.output == "output"
         assert result.serialized_output == {}
@@ -186,4 +181,4 @@ class TestModuleCommand:
         module = Module({"command": "placeholder"})
 
         with pytest.raises(TypeError):
-            module._serialize_output('output')
+            module._serialize_output("output")

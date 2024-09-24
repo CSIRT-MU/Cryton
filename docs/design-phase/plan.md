@@ -1,28 +1,37 @@
-Plan is the basic unit of an attack scenario. It contains the name and owner of the Plan and a list of [Stages](stage.md).
+Plan is the basic unit of an attack scenario. It holds settings, basic information about the scenario, and its [stages](stage.md).
 
 ![](../images/design-plan.png)
 
-Example of defining a Plan using YAML:
+Example of defining a plan using YAML:
 ```yaml
-plan:
-  name: my-plan
-  owner: my name
-  meta:
-    description: This is an example description
-    ...
-  settings:
-    separator: |
-  dynamic: false
-  stages:
-    ...
+name: my-plan
+metadata:
+  description: This is an example description
+settings:
+  separator: |
+dynamic: false
+stages: {}
 
 ```
 
 To better understand what each argument means and defines, here is a short description:
 
-- **name** - Sets the name of the Plan.
-- **meta** - An undefined dictionary containing metadata. The `description` parameter is just an example, you can define your own.
-- **owner** - Name of the person who created the Plan.
-- **stages** - List of [Stages](stage.md) that will be executed during the Plan's execution.
-- **settings** - Parameters for customization of specific functionalities (only `separator` for now, more about `separator` [here](step.md#custom-separator))
-- **dynamic** - Whether the Plan will be static or the user can temper with it afterward. More information can be found [here](../execution-phase/dynamic-execution.md).
+- **name** - Sets the name of the plan.
+- **metadata** - An undefined dictionary containing metadata. The `description` parameter is just an example, you can define your own.
+- **settings** - Settings used for the entire plan. See the [settings](#settings) section for more details.
+- **dynamic** - Whether the plan will be static or the user can temper with it afterward. More information can be found [here](../execution-phase/dynamic-execution.md).
+- **stages** - [stages](stage.md) to be executed during the plan's execution.
+
+## Settings
+
+### Separator
+If you don't want to use `.` as a separator in [output sharing](step.md#output-sharing), you can use the `separator` parameter.
+
+Example of defining a custom separator:
+```yaml
+name: my-plan
+settings:
+  separator: "|"
+states: {}
+
+```

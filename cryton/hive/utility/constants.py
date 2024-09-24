@@ -10,44 +10,17 @@ REGEX_TYPES = [OUTPUT, SERIALIZED_OUTPUT]
 
 # Step main args
 ARGUMENTS = "arguments"
-STEP_TYPE = "step_type"
-NEXT = "next"
-
-# Arguments for step type worker/execute and empire/execute module
 MODULE = "module"
-MODULE_ARGUMENTS = "module_arguments"
-
-# Arguments for step type deploy-agent
-LISTENER_NAME = "listener_name"
-LISTENER_PORT = "listener_port"
-LISTENER_OPTIONS = "listener_options"
-LISTENER_TYPE = "listener_type"
-STAGER_TYPE = "stager_type"
-STAGER_OPTIONS = "stager_options"
-AGENT_NAME = "agent_name"
-
-# Arguments for step type empire/execute
-USE_AGENT = "use_agent"
-SHELL_COMMAND = "shell_command"
+NEXT = "next"
 
 # Session system keywords
 SESSION_ID = "session_id"
-CREATE_NAMED_SESSION = "create_named_session"
-USE_NAMED_SESSION = "use_named_session"
-USE_ANY_SESSION_TO_TARGET = "use_any_session_to_target"
-SSH_CONNECTION = "ssh_connection"
-
-# Step types
-STEP_TYPE_WORKER_EXECUTE = "worker/execute"
-STEP_TYPE_DEPLOY_AGENT = "empire/agent-deploy"
-STEP_TYPE_EMPIRE_EXECUTE = "empire/execute"
-STEP_TYPES_LIST = [STEP_TYPE_WORKER_EXECUTE, STEP_TYPE_DEPLOY_AGENT, STEP_TYPE_EMPIRE_EXECUTE]
 
 # Stage trigger types
 DELTA = "delta"
-DATETIME = "datetime"
-HTTP_LISTENER = "HTTPListener"
-MSF_LISTENER = "MSFListener"
+TIME = "time"
+HTTP = "http"
+METASPLOIT = "metasploit"
 
 # Successor related
 VALID_SUCCESSOR_TYPES = [RESULT, ANY, SERIALIZED_OUTPUT, OUTPUT]
@@ -64,7 +37,7 @@ EVENT_ACTION = "action"
 TRIGGER_TYPE = "trigger_type"
 TRIGGER_ID = "trigger_id"
 
-# Plan settings constatnts
+# Plan settings constants
 SEPARATOR = "separator"
 SEPARATOR_DEFAULT_VALUE = "."
 

@@ -1,0 +1,17 @@
+---
+name: Time trigger example
+metadata:
+  description: This example shows how to use the time trigger.
+stages:
+  do-stuff-on-worker:
+    type: time
+    arguments:
+      hour: 16
+    metadata:
+      description: This stage will start on the same day at 16:00 UTC as the plan starts!
+    steps:
+      print-success:
+        is_init: true
+        module: command
+        arguments:
+          command: echo "it works!"

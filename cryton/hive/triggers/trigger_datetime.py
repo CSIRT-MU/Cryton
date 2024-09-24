@@ -1,5 +1,4 @@
 from datetime import datetime
-from schema import Schema, Optional, Or
 import pytz
 from threading import Thread
 
@@ -8,14 +7,6 @@ from cryton.hive.triggers.trigger_base import TriggerTime
 
 
 class TriggerDateTime(TriggerTime):
-    arg_schema = Schema(
-        {
-            Or("year", "month", "day", "hour", "minute", "second", only_one=False): int,
-            # validates that the supplied timezone is in pytz timezones
-            Optional("timezone"): Or(lambda x: x in pytz.all_timezones, None, error="Invalid timezone"),
-        }
-    )
-
     def __init__(self, stage_execution):
         """
         :param stage_execution: StageExecution's object
@@ -37,7 +28,7 @@ class TriggerDateTime(TriggerTime):
         Create Stage's start time.
         :return: Stage's start time
         """
-        trigger_args = self.stage_execution.model.stage_model.trigger_args
+        trigger_args = self.stage_execution.model.stage.arguments
         timezone = trigger_args.get("timezone", "UTC")
 
         today = datetime.now(pytz.timezone(timezone))

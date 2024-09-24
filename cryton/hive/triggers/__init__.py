@@ -5,6 +5,7 @@ from cryton.hive.triggers.trigger_delta import TriggerDelta
 from cryton.hive.triggers.trigger_http import TriggerHTTP
 from cryton.hive.triggers.trigger_msf import TriggerMSF
 from cryton.hive.triggers.trigger_datetime import TriggerDateTime
+from cryton.hive.triggers.trigger_immediate import TriggerImmediate
 
 
 class TriggerTypeMeta(EnumMeta):
@@ -21,6 +22,7 @@ class TriggerTypeMeta(EnumMeta):
 
 class TriggerType(Enum, metaclass=TriggerTypeMeta):
     delta = TriggerDelta
-    HTTPListener = TriggerHTTP
-    MSFListener = TriggerMSF
-    datetime = TriggerDateTime
+    http = TriggerHTTP
+    metasploit = TriggerMSF
+    time = TriggerDateTime
+    immediate = TriggerImmediate

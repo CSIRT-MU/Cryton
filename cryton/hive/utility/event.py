@@ -1,5 +1,5 @@
 from cryton.hive.utility import constants, logger, states
-from cryton.hive.models import stage, session, step, plan, run
+from cryton.hive.models import stage, step, plan, run
 
 
 class Event:
@@ -24,11 +24,7 @@ class Event:
 
         # Validate if the Stage can be triggered
         states.StageStateMachine(stage_ex_id).validate_state(stage_ex.state, [states.AWAITING])
-
-        # Custom actions for each trigger type
-        if stage_ex.model.stage_model.trigger_type == constants.MSF_LISTENER:
-            session_name = f"{stage_ex.model.stage_model.name}_session"
-            session.create_session(stage_ex.model.plan_execution_id, self.event_details.get("parameters"), session_name)
+        stage_ex.serialized_output = self.event_details.get("parameters", {})
 
         # Stop the trigger and start the Stage execution
         stage_ex.trigger.stop()
@@ -43,7 +39,7 @@ class Event:
         logger.logger.debug("Handling finished Step", step_execution_id=step_ex_obj.model.id)
 
         stage_ex_obj = stage.StageExecution(stage_execution_id=step_ex_obj.model.stage_execution_id)
-        is_plan_dynamic = stage_ex_obj.model.stage_model.plan_model.dynamic
+        is_plan_dynamic = stage_ex_obj.model.stage.plan.dynamic
         if stage_ex_obj.all_steps_finished and not (is_plan_dynamic and stage_ex_obj.state == states.FINISHED):
             stage_ex_obj.finish()
 

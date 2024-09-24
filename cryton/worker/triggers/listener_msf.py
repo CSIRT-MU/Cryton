@@ -9,14 +9,13 @@ from cryton.modules.metasploit.module import Module
 
 
 class MSFListener(Listener):
-    def __init__(self, main_queue: PriorityQueue, identifiers: dict):
+    def __init__(self, main_queue: PriorityQueue):
         """
         Class for MSFListeners.
         :param main_queue: Worker's queue for internal request processing
-        :param identifiers: Trigger(session) identifiers
         """
         super().__init__(main_queue)
-        self._identifiers = identifiers
+        self._identifiers: dict = {}
         self._stopped = True
         self._trigger_id = None
         self._module: Optional[Module] = None
@@ -91,7 +90,7 @@ class MSFListener(Listener):
             co.EVENT_T: co.EVENT_TRIGGER_STAGE,
             co.EVENT_V: {
                 co.TRIGGER_ID: self._trigger_id,
-                co.TRIGGER_PARAMETERS: result.serialized_output["session_id"],
+                co.TRIGGER_PARAMETERS: result.serialized_output,
             },
         }
         self._notify(self._triggers[0].get(co.REPLY_TO), message_body)
@@ -102,8 +101,6 @@ class MSFListener(Listener):
         :param identifiers: Trigger identifiers
         :return: True if supplied session identifiers match with those on Listener
         """
-        if identifiers.get(co.IDENTIFIERS) == self._identifiers:
-            return True
         return False
 
     def start(self) -> None:

@@ -91,11 +91,14 @@ Powershell related options.
 
 Input:
 ```yaml
-module_arguments:
-  session_id: 1
-  technique: T1222.002
-  powershell:
-    install: true
+my-step:
+  module: atomic_red_team
+  arguments:
+    session_id: 1
+    technique: T1222.002
+    powershell:
+      install: true
+
 ```
 
 Output:
@@ -112,14 +115,17 @@ Output:
 
 Input:
 ```yaml
-module_arguments:
-  session_id: 1
-  technique: T1222.002
-  test_guids: 
-    - 34ca1464-de9d-40c6-8c77-690adf36a135
-  parameters:
-    numeric_mode: 700
-    file_or_folder: /tmp/file
+my-step:
+  module: atomic_red_team
+  arguments:
+    session_id: 1
+    technique: T1222.002
+    test_guids: 
+      - 34ca1464-de9d-40c6-8c77-690adf36a135
+    parameters:
+      numeric_mode: 700
+      file_or_folder: /tmp/file
+
 ```
 
 Output:
@@ -136,9 +142,12 @@ Output:
 
 Input:
 ```yaml
-module_arguments:
-  session_id: 1
-  command: T1222.001
+my-step:
+  module: atomic_red_team
+  arguments:
+    session_id: 1
+    command: Invoke-AtomicTest T1222.001
+
 ```
 
 Output:

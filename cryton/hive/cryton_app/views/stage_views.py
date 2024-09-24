@@ -10,6 +10,7 @@ from cryton.hive.cryton_app.models import StageModel
 from cryton.hive.utility import exceptions as core_exceptions, creator, states
 from cryton.hive.models.stage import Stage, StageExecution
 from cryton.hive.models.plan import Plan, PlanExecution
+from cryton.hive.utility.validator import Validator
 
 
 @extend_schema_view(
@@ -32,13 +33,13 @@ class StageViewSet(util.InstanceFullViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        Stage(stage_model_id=model_id).delete()
+        Stage(model_id).delete()
 
     @extend_schema(
         description="Create Stage under Plan. There is no limit or naming convention for inventory files.",
         request=serializers.StageCreateSerializer,
         responses={
-            200: serializers.CreateDetailSerializer,
+            200: serializers.CreateMultipleDetailSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
         },
@@ -46,7 +47,7 @@ class StageViewSet(util.InstanceFullViewSet):
     def create(self, request: Request, *args, **kwargs):
         try:  # Get Plan ID and check if the Plan exists
             plan_id: int = request.data["plan_id"]
-            plan_obj = Plan(plan_model_id=plan_id)
+            plan_obj = Plan(plan_id)
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(ex)
         except core_exceptions.PlanObjectDoesNotExist:
@@ -56,22 +57,22 @@ class StageViewSet(util.InstanceFullViewSet):
         if not plan_obj.dynamic:
             raise exceptions.ValidationError("Creating objects under non dynamic Plan is not supported.")
 
-        stage_data = util.parse_object_from_files(request.FILES)
+        stages = util.parse_object_from_files(request.FILES)
 
-        # Check if the name is unique
-        stage_name = stage_data.get("name")
-        if plan_obj.model.stages.filter(name=stage_name).exists():
-            raise exceptions.ValidationError(f"Stage with the name `{stage_name}` already exists.")
-
-        # Validate Stage
+        # Validate Stages
+        new_plan = plan_obj.generate_plan()
+        for stage_name, stage_data in stages:
+            if new_plan["stages"][stage_name]:
+                exceptions.ValidationError(f"Stage {stage_name} is already present in the plan.")
+            new_plan["stages"][stage_name] = stage_data
         try:
-            Stage.validate(stage_data, True)
+            Validator(new_plan).validate()
         except core_exceptions.ValidationError as ex:
             raise exceptions.ValidationError(ex)
 
-        stage_id = creator.create_stage(stage_data, plan_id)
+        stage_ids = creator.create_stages(plan_obj.model, stages)
 
-        msg = {"id": stage_id, "detail": "Stage successfully created."}
+        msg = {"ids": stage_ids, "detail": "Stage successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -81,18 +82,26 @@ class StageViewSet(util.InstanceFullViewSet):
     )
     @action(methods=["post"], detail=False)
     def validate(self, request: Request):
+        try:  # Get Plan ID and check if the Plan exists
+            plan_id: int = request.data["plan_id"]
+            plan_obj = Plan(plan_id)
+        except (KeyError, ValueError, TypeError) as ex:
+            raise exceptions.ValidationError(ex)
+        except core_exceptions.PlanObjectDoesNotExist:
+            raise exceptions.NotFound()
+
         stage_data = util.parse_object_from_files(request.FILES)
 
-        # Get dynamic parameter from request
-        try:
-            dynamic = request.data.get("dynamic", "").lower() == "true"
-        except AttributeError:
-            raise exceptions.ValidationError(f"The dynamic parameter must be string and can contain `true`/`false`.")
+        new_plan = plan_obj.generate_plan()
+        for stage, stage_dict in stage_data.items():
+            if new_plan["stages"].get(stage):
+                raise exceptions.ValidationError(f"Stage {stage} is already present in the plan.")
+            new_plan["stages"][stage] = stage_dict
 
         try:
-            Stage.validate(stage_data, dynamic)
+            Validator(new_plan).validate()
         except core_exceptions.ValidationError as ex:
-            raise exceptions.ValidationError(f"Stage is not valid. Original error: {ex}")
+            raise exceptions.ValidationError(f"Adding the stage(s) would make the plan invalid.\n{ex}")
 
         msg = {"detail": "Stage is valid."}
         return Response(msg, status=status.HTTP_200_OK)
@@ -111,12 +120,12 @@ class StageViewSet(util.InstanceFullViewSet):
         stage_id = kwargs.get("pk")
 
         try:  # Check if the Stage exists
-            stage_obj = Stage(stage_model_id=stage_id)
+            stage_obj = Stage(stage_id)
         except core_exceptions.StageObjectDoesNotExist:
             raise exceptions.NotFound()
 
         # Check if the Plan is dynamic
-        if not stage_obj.model.plan_model.dynamic:
+        if not stage_obj.model.plan.dynamic:
             raise exceptions.ValidationError("Manually executing objects under non dynamic Plan is not supported.")
 
         try:  # Check if the Plan execution exists
@@ -127,13 +136,13 @@ class StageViewSet(util.InstanceFullViewSet):
         except core_exceptions.PlanExecutionDoesNotExist:
             raise exceptions.NotFound()
 
-        if stage_obj.model.plan_model.id != plan_ex.model.plan_model.id:
+        if stage_obj.model.plan.id != plan_ex.model.plan.id:
             raise exceptions.ValidationError(
-                f"Incorrect Plan execution. Stage's Plan ID ({stage_obj.model.plan_model.id}) and Plan execution's "
-                f"Plan ID ({plan_ex.model.plan_model.id}) must match."
+                f"Incorrect Plan execution. Stage's Plan ID ({stage_obj.model.plan.id}) and Plan execution's "
+                f"Plan ID ({plan_ex.model.plan.id}) must match."
             )
 
-        if plan_ex.model.stage_executions.filter(stage_model=stage_obj.model).exists():
+        if plan_ex.model.stage_executions.filter(stage=stage_obj.model).exists():
             raise exceptions.ValidationError(
                 "Multiple instances of the same Stage can't run under the same Plan " "execution."
             )
@@ -144,7 +153,7 @@ class StageViewSet(util.InstanceFullViewSet):
             )
 
         # Create and start Stage trigger
-        stage_ex_obj = StageExecution(stage_model_id=stage_id, plan_execution_id=plan_ex_id)
+        stage_ex_obj = StageExecution(stage_id=stage_id, plan_execution_id=plan_ex_id)
         stage_ex_obj.trigger.start()
 
         msg = {"detail": "Started Stage trigger.", "execution_id": stage_ex_obj.model.id}

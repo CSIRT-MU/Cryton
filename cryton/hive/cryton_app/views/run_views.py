@@ -61,7 +61,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         if not PlanModel.objects.filter(id=plan_id).exists():
             raise exceptions.NotFound(f"Nonexistent Plan with ID {plan_id} specified.")
 
-        run_obj = Run(plan_model_id=plan_id, workers=workers)
+        run_obj = Run(plan_id=plan_id, workers=workers)
         plan_execution_ids = run_obj.model.plan_executions.values_list("id", flat=True)
 
         msg = {"id": run_obj.model.id, "detail": "Run successfully created.", "plan_execution_ids": plan_execution_ids}
@@ -405,7 +405,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         except RunModel.DoesNotExist:
             raise exceptions.NotFound(f"Run with ID {run_id} does not exist.")
 
-        plan_obj = Plan(plan_model_id=run_obj.plan_model_id)
+        plan_obj = Plan(run_obj.plan_id)
 
         msg = {"detail": plan_obj.generate_plan()}
         return Response(msg, status=status.HTTP_200_OK)

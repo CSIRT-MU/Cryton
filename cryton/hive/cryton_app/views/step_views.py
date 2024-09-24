@@ -8,8 +8,10 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from cryton.hive.cryton_app import util, serializers, exceptions
 from cryton.hive.cryton_app.models import StepModel
 from cryton.hive.utility import exceptions as core_exceptions, creator, states
-from cryton.hive.models.step import Step, StepExecution, StepExecutionType
+from cryton.hive.models.step import Step, StepExecution
 from cryton.hive.models.stage import Stage, StageExecution
+from cryton.hive.models import Plan
+from cryton.hive.utility.validator import Validator
 
 
 @extend_schema_view(
@@ -32,13 +34,13 @@ class StepViewSet(util.InstanceFullViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        Step(step_model_id=model_id).delete()
+        Step(model_id).delete()
 
     @extend_schema(
         description="Create Step under Stage. There is no limit or naming convention for inventory files.",
         request=serializers.StepCreateSerializer,
         responses={
-            200: serializers.CreateDetailSerializer,
+            200: serializers.CreateMultipleDetailSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
         },
@@ -46,56 +48,78 @@ class StepViewSet(util.InstanceFullViewSet):
     def create(self, request: Request, *args, **kwargs):
         try:  # Get Stage ID and check if the Stage exists
             stage_id: int = request.data["stage_id"]
-            stage_obj = Stage(stage_model_id=stage_id)
+            stage_obj = Stage(stage_id)
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(ex)
         except core_exceptions.StageObjectDoesNotExist:
             raise exceptions.NotFound()
 
         # Check if the Plan is dynamic
-        plan_model_obj = stage_obj.model.plan_model
-        if not plan_model_obj.dynamic:
+        plan_obj = stage_obj.model.plan
+        if not plan_obj.dynamic:
             raise exceptions.ValidationError("Creating objects under non dynamic Plan is not supported.")
 
         step_data = util.parse_object_from_files(request.FILES)
 
-        # Check if the name is unique
-        step_name = step_data.get("name")
-        if StepModel.objects.filter(stage_model__plan_model_id=plan_model_obj.id, name=step_name).exists():
-            raise exceptions.ValidationError(f"Step with the name `{step_name}` already exists.")
+        plan_obj = Plan(stage_obj.model.plan.id)
 
-        # Validate Step
+        new_plan = plan_obj.generate_plan()
+        for step_name, step_dict in step_data.items():
+            if new_plan["stages"][stage_obj.name].get(step_name):
+                raise exceptions.ValidationError(f"Step {step_name} is already present in the plan.")
+            new_plan["stages"][stage_obj.name][step_name] = step_dict
+
         try:
-            Step.validate(step_data)
+            Validator(new_plan).validate()
         except core_exceptions.ValidationError as ex:
-            raise exceptions.ValidationError(ex)
+            raise exceptions.ValidationError(f"Adding the steps(s) would make the plan invalid.\n{ex}")
 
         # Create a Step
-        parent_step_model = stage_obj.model.steps.last()
-        step_id = creator.create_step(step_data, stage_id)
-        step_obj = Step(step_model_id=step_id)
+        # for step_name, step_dict in step_data.items():
+        step_ids = creator.create_steps(stage_obj.model, step_data)
 
-        # Mark the new Step as a successor
-        if not step_obj.is_init and parent_step_model is not None:
-            parent_step = Step(step_model_id=parent_step_model.id)
-            creator.create_successor(parent_step, stage_id, step_name, "any", "")
+        # parent_step_model = stage_obj.model.steps.last()
+        # step_id = creator.create_step(stage_id, step_data)
+        # step_obj = Step(step_id=step_id)
+        #
+        # # Mark the new Step as a successor
+        # # TODO: take this from the input and if it's missing, add it automatically?
+        # if not step_obj.is_init and parent_step_model is not None:
+        #     parent_step = Step(step_id=parent_step_model.id)
+        #     creator.create_successors(parent_step, stage_id, step_name, "any", "")
 
-        msg = {"id": step_id, "detail": "Step successfully created."}
+        msg = {"ids": step_ids, "detail": "Step successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         description="Validate Step YAML. There is no limit or naming convention for inventory files.",
-        request=serializers.CreateWithFilesSerializer,
+        request=serializers.StepValidateSerializer,
         responses={200: serializers.DetailStringSerializer, 400: serializers.DetailStringSerializer},
     )
     @action(methods=["post"], detail=False)
     def validate(self, request: Request):
+        try:  # Get Stage ID and check if the Stage exists
+            stage_id: int = request.data["stage_id"]
+            stage_obj = Stage(stage_id)
+        except (KeyError, ValueError, TypeError) as ex:
+            raise exceptions.ValidationError(ex)
+        except core_exceptions.StageObjectDoesNotExist:
+            raise exceptions.NotFound()
+
+        plan_obj = Plan(stage_obj.model.plan.id)
+
         step_data = util.parse_object_from_files(request.FILES)
 
+        new_plan = plan_obj.generate_plan()
+        for step_name, step_dict in step_data.items():
+            if new_plan["stages"][stage_obj.name].get(step_name):
+                raise exceptions.ValidationError(f"Step {step_name} is already present in the plan.")
+            new_plan["stages"][stage_obj.name][step_name] = step_dict
+
         try:
-            Step.validate(step_data)
-        except (core_exceptions.ValidationError, core_exceptions.StepTypeDoesNotExist) as ex:
-            raise exceptions.ValidationError(f"Step is not valid. Original error: {ex}")
+            Validator(new_plan).validate()
+        except core_exceptions.ValidationError as ex:
+            raise exceptions.ValidationError(f"Adding the steps(s) would make the plan invalid.\n{ex}")
 
         msg = {"detail": "Step is valid."}
         return Response(msg, status=status.HTTP_200_OK)
@@ -114,12 +138,12 @@ class StepViewSet(util.InstanceFullViewSet):
         step_id = kwargs.get("pk")
 
         try:  # Check if the Step exists
-            step_obj = Step(step_model_id=step_id)
+            step_obj = Step(step_id)
         except core_exceptions.StepObjectDoesNotExist:
             raise exceptions.NotFound()
 
         # Check if the Plan is dynamic
-        if not step_obj.model.stage_model.plan_model.dynamic:
+        if not step_obj.model.stage.plan.dynamic:
             raise exceptions.ValidationError("Manually executing objects under non dynamic Plan is not supported.")
 
         try:  # Check if the Stage execution exists
@@ -130,13 +154,13 @@ class StepViewSet(util.InstanceFullViewSet):
         except core_exceptions.StageExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
 
-        if step_obj.model.stage_model.id != stage_ex.model.stage_model.id:
+        if step_obj.model.stage.id != stage_ex.model.stage.id:
             raise exceptions.ValidationError(
-                f"Incorrect Stage execution. Step's Stage ID ({step_obj.model.stage_model.id}) and Stage execution's "
-                f"Stage ID ({stage_ex.model.stage_model.id}) must match."
+                f"Incorrect Stage execution. Step's Stage ID ({step_obj.model.stage.id}) and Stage execution's "
+                f"Stage ID ({stage_ex.model.stage.id}) must match."
             )
 
-        if stage_ex.model.step_executions.filter(step_model=step_obj.model).exists():
+        if stage_ex.model.step_executions.filter(step=step_obj.model).exists():
             raise exceptions.ValidationError(
                 "Multiple instances of the same Step can't run under the same Stage " "execution."
             )
@@ -147,11 +171,8 @@ class StepViewSet(util.InstanceFullViewSet):
             )
 
         # Create and start Step execution
-        step_ex_obj = StepExecution(step_model_id=step_id, stage_execution_id=stage_ex_id)
-        step_ex_obj_typed = StepExecutionType[step_ex_obj.model.step_model.step_type].value(
-            step_execution_id=step_ex_obj.model.id
-        )
-        step_ex_obj_typed.execute()
+        step_ex_obj = StepExecution(step_id=step_id, stage_execution_id=stage_ex_id)
+        step_ex_obj.execute()
 
         msg = {"detail": "Started Step execution.", "execution_id": step_ex_obj.model.id}
         return Response(msg, status=status.HTTP_200_OK)

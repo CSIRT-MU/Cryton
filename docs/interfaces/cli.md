@@ -1,23 +1,22 @@
 CLI implements capabilities of the Cryton's REST API and can be automated by using custom scripts.
 
-[//]: # (TODO: update the following, once the app is updated)
-
 ```
 Usage: cryton-cli [OPTIONS] COMMAND [ARGS]...
 
-  A CLI wrapper for Cryton API.
+  Wrapper for Hive's REST API.
 
 Options:
-  -H, --host TEXT     Set Cryton's address (default is localhost).
-  -p, --port INTEGER  Set Cryton's address (default is 8000).
-  --secure            Set if HTTPS will be used.
-  --debug             Show non formatted output.
   --version           Show the version and exit.
+  -H, --host TEXT     Cryton's API address.
+  -p, --port INTEGER  Cryton's API address.
+  --secure            Use HTTPS instead of HTTP.
+  --debug             Do not format output.
   --help              Show this message and exit.
 
 Commands:
   execution-variables  Manage Execution variables from here.
-  logs                 Manage Workers from here.
+  generate-docs        Generate Markdown documentation for CLI.
+  logs                 Manage logs from here.
   plan-executions      Manage Plan's executions from here.
   plan-templates       Manage Plan templates from here.
   plans                Manage Plans from here.
@@ -62,16 +61,16 @@ EXECUTION\_VARIABLE\_ID is ID of the Execution\_variable you want to delete.
 - help (`--help`) - Show this message and exit.  
 
 ### list
-List existing Execution variables in Cryton.
+List existing execution variables.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Execution variables using Plan execution ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### show
@@ -107,15 +106,15 @@ Manage logs from here.
 - help (`--help`) - Show this message and exit.  
 
 ### list
-List existing Logs in Cryton.
+List existing Logs.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using substrings (for example `warning`, `2023-08-11T13:26`, etc.).  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - help (`--help`) - Show this message and exit.  
 
 ## plan-executions
@@ -126,7 +125,7 @@ Manage Plan's executions from here.
 - help (`--help`) - Show this message and exit.  
 
 ### delete
-Delete Plan's execution with EXECUTION\_ID saved in Cryton.
+Delete Plan's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Plan's execution you want to delete.
 
@@ -152,12 +151,12 @@ List existing Plan's executions in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Plan executions using Run ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### pause
@@ -197,7 +196,7 @@ EXECUTION\_ID is ID of the Plan's execution you want to resume.
 - help (`--help`) - Show this message and exit.  
 
 ### show
-Show Plan's execution with EXECUTION\_ID saved in Cryton.
+Show Plan's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Plan's execution you want to see.
 
@@ -258,7 +257,7 @@ TEMPLATE\_ID is ID of the Template you want to get.
 - TEMPLATE\_ID  
 
 **Options:**  
-- file (`-f`, `--file`) - File to save the template to (default is /tmp).  
+- file (`-f`, `--file`) - File to save the report to (default is /tmp).  
 - less (`--less`) - Show less like output.  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
 - help (`--help`) - Show this message and exit.  
@@ -268,11 +267,11 @@ List existing Plan templates in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - help (`--help`) - Show this message and exit.  
 
 ### show
@@ -344,21 +343,21 @@ PLAN\_ID is ID of the Plan you want to get.
 - PLAN\_ID  
 
 **Options:**  
-- file (`-f`, `--file`) - File to save the plan to (default is /tmp).  
+- file (`-f`, `--file`) - File to save the report to (default is /tmp).  
 - less (`--less`) - Show less like output.  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
 - help (`--help`) - Show this message and exit.  
 
 ### list
-List existing Plans in Cryton.
+List existing Plans.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - help (`--help`) - Show this message and exit.  
 
 ### show
@@ -428,7 +427,7 @@ RUN\_ID is ID of the Run you want to execute.
 
 **Options:**  
 - skip\_checks (`-S`, `--skip-checks`) - Skip health-checks and modules validation.  
-- help (`--help`) - Show this message and exit.
+- help (`--help`) - Show this message and exit.  
 
 ### get-plan
 Get plan from Run with RUN\_ID saved in Cryton.
@@ -471,11 +470,11 @@ List existing Runs in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show 'less' like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - help (`--help`) - Show this message and exit.  
 
 ### pause
@@ -607,7 +606,7 @@ Manage Stage's executions from here.
 - help (`--help`) - Show this message and exit.  
 
 ### delete
-Delete Stage's execution with EXECUTION\_ID saved in Cryton.
+Delete Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to delete.
 
@@ -618,7 +617,7 @@ EXECUTION\_ID is ID of the Stage's execution you want to delete.
 - help (`--help`) - Show this message and exit.  
 
 ### kill
-Kill Stage's execution with EXECUTION\_ID saved in Cryton.
+Kill Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to kill.
 
@@ -633,16 +632,16 @@ List existing Stage's executions in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Stage executions using Plan execution ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### re-execute
-Re-execute Stage's execution with EXECUTION\_ID saved in Cryton.
+Re-execute Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to kill.
 
@@ -654,7 +653,7 @@ EXECUTION\_ID is ID of the Stage's execution you want to kill.
 - help (`--help`) - Show this message and exit.  
 
 ### report
-Create report for Stage's execution with EXECUTION\_ID saved in Cryton.
+Create report for Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to create report for.
 
@@ -668,7 +667,7 @@ EXECUTION\_ID is ID of the Stage's execution you want to create report for.
 - help (`--help`) - Show this message and exit.  
 
 ### show
-Show Stage's execution with EXECUTION\_ID saved in Cryton.
+Show Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to see.
 
@@ -703,7 +702,7 @@ FILE is a path to the file containing the Stage template.
 - help (`--help`) - Show this message and exit.  
 
 ### delete
-Delete Stage with STAGE\_ID saved in Cryton.
+Delete Stage with STAGE\_ID.
 
 STAGE\_ID is ID of the Stage you want to delete.
 
@@ -718,16 +717,16 @@ List existing Stages in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Stages using Plan ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### show
-Show Stage with STAGE\_ID saved in Cryton.
+Show Stage with STAGE\_ID.
 
 STAGE\_ID is ID of the Stage you want to see.
 
@@ -754,16 +753,18 @@ PLAN\_EXECUTION\_ID is an ID of the Plan execution you want to set as a parent o
 - help (`--help`) - Show this message and exit.  
 
 ### validate
-Validate (syntax check) your FILE with Stage.
+Validate FILE containing stage against a plan with PLAN\_ID.
 
 FILE is path/to/your/file that you want to validate.
 
+PLAN\_ID is an ID of the plan you want to validate the stage against.
+
 **Arguments:**  
 - FILE  
+- PLAN\_ID  
 
 **Options:**  
 - inventory\_files (`-i`, `--inventory-file`) - Inventory file used to fill the template. Can be used multiple times.  
-- dynamic (`-D`, `--dynamic`) - If Stage will be used with a dynamic Plan.  
 - help (`--help`) - Show this message and exit.  
 
 ## step-executions
@@ -800,12 +801,12 @@ List existing Step's executions in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Step executions using Stage execution ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### re-execute
@@ -898,12 +899,12 @@ List existing Steps in Cryton.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - parent (`-p`, `--parent`) - Filter Steps using Stage ID.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
 - help (`--help`) - Show this message and exit.  
 
 ### show
@@ -920,12 +921,15 @@ STEP\_ID is ID of the Step you want to see.
 - help (`--help`) - Show this message and exit.  
 
 ### validate
-Validate (syntax check) your FILE with Step.
+Validate FILE containing step against a stage with STAGE\_ID.
 
 FILE is path/to/your/file that you want to validate.
 
+STAGE\_ID is an ID of the stage you want to validate the step against.
+
 **Arguments:**  
 - FILE  
+- STAGE\_ID  
 
 **Options:**  
 - inventory\_files (`-i`, `--inventory-file`) - Inventory file used to fill the template. Can be used multiple times.  
@@ -939,7 +943,7 @@ Manage Workers from here.
 - help (`--help`) - Show this message and exit.  
 
 ### create
-Create new Worker with NAME and save it into Cryton.
+Create new Worker with NAME.
 
 NAME of your Worker (will be used to match your Worker). For example: "MyCustomName".
 
@@ -963,7 +967,7 @@ WORKER\_ID is ID of the Worker you want to delete.
 - help (`--help`) - Show this message and exit.  
 
 ### health-check
-Check if Worker with WORKER\_ID saved in Cryton is online.
+Check if Worker with WORKER\_ID is online.
 
 WORKER\_ID is ID of the Worker you want to check.
 
@@ -974,19 +978,19 @@ WORKER\_ID is ID of the Worker you want to check.
 - help (`--help`) - Show this message and exit.  
 
 ### list
-List existing Workers in Cryton.
+List existing Workers.
 
 
 **Options:**  
-- less (`--less`) - Show less like output.  
-- offset (`-o`, `--offset`) - The initial index from which to return the results.  
-- limit (`-l`, `--limit`) - Number of results to return per page.  
+- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id 1`, `name value`).  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
-- parameter\_filters (`-f`, `--filter`) - Filter results using returned parameters (for example `id=1`, `name=test`, etc.).  
+- limit (`-l`, `--limit`) - Number of results to return per page.  
+- offset (`-o`, `--offset`) - The initial index from which to return the results.  
+- less (`--less`) - Show less like output.  
 - help (`--help`) - Show this message and exit.  
 
 ### show
-Show Worker with WORKER\_ID saved in Cryton.
+Show Worker with WORKER\_ID.
 
 WORKER\_ID is ID of the Worker you want to see.
 
