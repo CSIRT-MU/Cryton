@@ -230,7 +230,7 @@ async def deploy_agent(arguments: dict) -> dict:
     if session_id:
         metasploit_obj = MetasploitClientUpdated()
         try:
-            session_to_use = metasploit_obj.sessions.get(session_id)
+            session_to_use = metasploit_obj.sessions.get(int(session_id))
         except MSFError as ex:
             logger.logger.error("MSF session not found.", session_id=session_id)
             return {co.OUTPUT: f"MSF Session with id {session_id} not found. {ex}", co.RESULT: co.CODE_ERROR}
@@ -240,7 +240,7 @@ async def deploy_agent(arguments: dict) -> dict:
         logger.logger.debug(
             "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
         )
-        session_to_use.execute_in_shell(payload)
+        session_to_use.execute_in_shell(executable=''.join(payload.split()[:1]).strip(), arguments=payload.split()[1:])
 
     elif ssh_connection:
         # Check if 'target' is in ssh_connection arguments

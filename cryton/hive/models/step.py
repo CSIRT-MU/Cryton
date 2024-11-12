@@ -1268,6 +1268,7 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
         try:
             step_arguments = self.update_step_arguments(self.step_instance.arguments, plan_execution_id)
             session_id = self.get_msf_session_id(self.step_instance, plan_execution_id)
+            #session_id = str(session_id)
         except (exceptions.SessionIsNotOpen, exceptions.MissingValueError) as ex:
             self.state = states.ERROR
             self.output = str(ex)
@@ -1278,7 +1279,7 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
             step_arguments[constants.SESSION_ID] = session_id
 
         if (session_id := step_arguments.get(constants.SESSION_ID)) is not None:
-            step_arguments[constants.SESSION_ID] = int(session_id)
+            step_arguments[constants.SESSION_ID] = str(int(session_id))
 
         message_body = {constants.STEP_TYPE: self.step_instance.step_type, constants.ARGUMENTS: step_arguments}
 
