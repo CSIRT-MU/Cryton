@@ -1268,7 +1268,6 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
         try:
             step_arguments = self.update_step_arguments(self.step_instance.arguments, plan_execution_id)
             session_id = self.get_msf_session_id(self.step_instance, plan_execution_id)
-            #session_id = str(session_id)
         except (exceptions.SessionIsNotOpen, exceptions.MissingValueError) as ex:
             self.state = states.ERROR
             self.output = str(ex)
