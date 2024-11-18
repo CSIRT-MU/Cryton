@@ -263,7 +263,7 @@ class AgentTask(Task):
                 co.ACK_QUEUE: str,
                 co.STEP_TYPE: co.STEP_TYPE_DEPLOY_AGENT,
                 co.ARGUMENTS: {
-                    SchemaOptional(co.SESSION_ID): str,
+                    SchemaOptional(co.SESSION_ID): int,
                     SchemaOptional(co.USE_NAMED_SESSION): str,
                     SchemaOptional(co.USE_ANY_SESSION_TO_TARGET): str,
                     SchemaOptional(co.SSH_CONNECTION): dict,

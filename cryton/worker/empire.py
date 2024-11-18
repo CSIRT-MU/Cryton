@@ -240,7 +240,9 @@ async def deploy_agent(arguments: dict) -> dict:
         logger.logger.debug(
             "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
         )
-        session_to_use.execute_in_shell(payload)
+
+        payload_tmp = payload.split()
+        session_to_use.execute_in_shell(executable=payload_tmp[0], arguments=payload_tmp[1:])
 
     elif ssh_connection:
         # Check if 'target' is in ssh_connection arguments
