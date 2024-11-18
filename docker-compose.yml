@@ -45,7 +45,7 @@ x-settings: &settings
 services:
   cryton_cli:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/cli
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/cli:2
     container_name: cryton-cli
     environment:
       <<: *settings
@@ -54,7 +54,7 @@ services:
 
   cryton_worker:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/worker
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:2
     container_name: cryton-worker
     environment:
       <<: *settings
@@ -62,7 +62,7 @@ services:
 
   cryton_hive:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/hive
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/hive:2
     container_name: cryton-hive
     environment:
       <<: *settings
@@ -76,14 +76,14 @@ services:
 
   cryton_frontend:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend:2
     container_name: cryton-frontend
     ports:
       - "127.0.0.1:8080:80"
 
   cryton_api_proxy:
     restart: always
-    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/api-proxy
+    image: registry.gitlab.ics.muni.cz:443/cryton/cryton/api-proxy:2
     container_name: cryton-api-proxy
     environment:
       <<: *settings
