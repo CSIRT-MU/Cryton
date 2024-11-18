@@ -184,7 +184,8 @@ class EmpireClient(utinni.EmpireApiClient):
         logger.logger.debug(
             "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
         )
-        session_to_use.execute_in_shell(payload)
+        payload_tmp = payload.split()
+        session_to_use.execute_in_shell(payload_tmp[0], payload_tmp[1:])
 
         # Rename agent to given name
         logger.logger.debug("Renaming agent", target_ip=target_ip)
