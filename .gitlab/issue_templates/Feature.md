@@ -1,10 +1,10 @@
 Please read this!
 
 Before opening a new issue, make sure to search for keywords in the issues
-filtered by the "feature" or "enhancement" label:
+filtered by the "new feature" or "enhancement" label:
 
 * https://gitlab.ics.muni.cz/groups/cryton/-/issues?or%5Blabel_name%5D%5B%5D=new%20feature&or%5Blabel_name%5D%5B%5D=enhancement (internal tracker)
-* https://gitlab.com/groups/cryton-toolset/-/issues?or%5Blabel_name%5D%5B%5D=new%20feature&or%5Blabel_name%5D%5B%5D=enhancement (public tracker)
+* https://github.com/CSIRT-MU/Cryton/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement (public tracker)
 
 and verify the issue you're about to submit isn't a duplicate.
 
