@@ -66,11 +66,11 @@ Example below:
 This checklist encourages us to confirm any changes have been analyzed to reduce risks in quality, performance, reliability, security, and maintainability.
 
 * [ ] I have tested the changes work.
+* [ ] I have run [End-to-End tests](https://cryton.gitlab-pages.ics.muni.cz/latest/development/#e2e).
 * [ ] I have cleaned up my code.
-* [ ] I have added/updated the [application tests](https://cryton.gitlab-pages.ics.muni.cz/cryton-documentation/latest/contribution-guide/#writing-tests).
-* [ ] I have updated the documentation (opened an MR in the documentation project).
-* [ ] If the changes affect other projects, I have created additional MR in the affected projects.
-* [ ] I have run End-to-End tests.
+* [ ] I have updated the [tests](https://cryton.gitlab-pages.ics.muni.cz/latest/development/#writing-tests).
+* [ ] I have updated the documentation.
+* [ ] The changes affect other projects (frontend, ansible roles, etc.).
 
 Please, assign a reviewer, labels, and possibly a milestone.
 
