@@ -1278,7 +1278,7 @@ class StepExecutionEmpireAgentDeploy(StepExecution):
             step_arguments[constants.SESSION_ID] = session_id
 
         if (session_id := step_arguments.get(constants.SESSION_ID)) is not None:
-            step_arguments[constants.SESSION_ID] = str(int(session_id))
+            step_arguments[constants.SESSION_ID] = int(session_id)
 
         message_body = {constants.STEP_TYPE: self.step_instance.step_type, constants.ARGUMENTS: step_arguments}
 
