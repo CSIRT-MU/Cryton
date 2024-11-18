@@ -4,7 +4,7 @@ Before opening a new issue, make sure to search for keywords in the issues
 filtered by the "bug" label:
 
 * https://gitlab.ics.muni.cz/groups/cryton/-/issues?label_name%5B%5D=bug (internal tracker)
-* https://gitlab.com/groups/cryton-toolset/-/issues?label_name%5B%5D=bug (public tracker)
+* https://github.com/CSIRT-MU/Cryton/issues?q=is%3Aopen+is%3Aissue+label%3Abug (public tracker)
 
 and verify the issue you're about to submit isn't a duplicate.
 
@@ -28,7 +28,7 @@ Describe what you should see instead.
 
 Paste any **relevant** logs - please use code blocks (```) to format console output, logs, and code as it's tough to read otherwise.
 
-More information about logs can be found at https://cryton.gitlab-pages.ics.muni.cz/cryton-documentation/latest/logging/.  
+More information about logs can be found at https://cryton.gitlab-pages.ics.muni.cz/latest/logging/.  
 Logs in Docker are also saved in the application directory (`/app/log/`).
 
 <details>
