@@ -2,7 +2,6 @@ from datetime import datetime
 import yaml
 import string
 import random
-from typing import List, Union, Dict  # TODO: replace Dict/List with dict/list
 import pytz
 import click
 import requests
@@ -51,7 +50,7 @@ class CLIContext:
         endpoint: str,
         offset: int,
         limit: int,
-        additional_parameters: dict[str, Union[str, int]],
+        additional_parameters: dict[str, str | int],
         include_fields: list[str],
         less: bool,
         localize: bool,
@@ -103,7 +102,7 @@ def save_yaml_to_file(content: dict, file_path: str, file_prefix: str = "file") 
     return file_path
 
 
-def load_files(file_paths: List[str]) -> Dict[str, bytes]:
+def load_files(file_paths: list[str]) -> dict[str, bytes]:
     """
     Load files from paths.
     :param file_paths: File paths to load
@@ -136,7 +135,7 @@ def convert_from_utc(utc_str: str) -> datetime:
     return new_datetime.replace(tzinfo=None)
 
 
-def parse_response(response: requests.Response) -> Union[str, dict]:
+def parse_response(response: requests.Response) -> str | dict:
     """
     Parse the response to the desired format.
     :param response: Response containing data from REST API
@@ -161,7 +160,7 @@ def parse_response(response: requests.Response) -> Union[str, dict]:
     return detailed_msg
 
 
-def print_message(response: Union[str, requests.Response], debug: bool = False) -> bool:
+def print_message(response: str | requests.Response, debug: bool = False) -> bool:
     """
     Echo message containing information about success or failure of user's request.
     :param response: Response containing data from REST API
@@ -185,7 +184,7 @@ def print_message(response: Union[str, requests.Response], debug: bool = False) 
         return True
 
 
-def format_result_line(line: dict, to_print: List[str], localize: bool) -> str:
+def format_result_line(line: dict, to_print: list[str], localize: bool) -> str:
     """
     Filter dictionary values, optionally update timezone, and create user readable line.
     :param line: dictionary that should be parsed
@@ -212,7 +211,7 @@ def format_result_line(line: dict, to_print: List[str], localize: bool) -> str:
     return line_to_print
 
 
-def format_list_results(results: list, to_print: List[str], localize: bool) -> list:
+def format_list_results(results: list, to_print: list[str], localize: bool) -> list:
     """
     Format list response to be user readable.
     :param results: Results from API
@@ -233,8 +232,8 @@ def format_list_results(results: list, to_print: List[str], localize: bool) -> l
 
 
 def print_items(
-    response: Union[str, requests.Response],
-    to_print: List[str],
+    response: str | requests.Response,
+    to_print: list[str],
     less: bool = False,
     localize: bool = False,
     debug: bool = False,
@@ -319,7 +318,7 @@ def format_report(run: dict, localize: bool):
 
 
 def save_yaml(
-    response: Union[str, requests.Response],
+    response: str | requests.Response,
     file_path: str,
     file_name: str,
     echo_only: bool = False,

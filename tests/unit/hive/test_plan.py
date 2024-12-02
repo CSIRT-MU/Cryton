@@ -552,8 +552,8 @@
 #         mock_stage_pause.assert_not_called()
 #
 #     @patch('cryton.hive.models.plan.datetime')
-#     @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.unpause")
-#     def test_unpause_stage(self, mock_stage_unpause, mock_utcnow):
+#     @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.resume")
+#     def test_resume_stage(self, mock_stage_resume, mock_utcnow):
 #         mock_utcnow.now.return_value = datetime(3000, 12, 12, 10, 0, 0, tzinfo=timezone.utc)
 #         stage_execution_model = baker.make(StageExecutionModel, state="PAUSED",
 #                                            stage_model=baker.make(StageModel, trigger_type="delta",
@@ -562,10 +562,10 @@
 #         plan_execution = plan.PlanExecution(plan_execution_id=stage_execution_model.plan_execution.id)
 #         plan_execution.state = "PAUSED"
 #
-#         plan_execution.unpause()
+#         plan_execution.resume()
 #
 #         self.assertEqual(plan_execution.state, "RUNNING")
-#         mock_stage_unpause.assert_called()
+#         mock_stage_resume.assert_called()
 #
 #     @patch("cryton.hive.triggers.trigger_delta.TriggerDelta.unschedule")
 #     def test_pause_suspending_stage(self, mock_stage_unschedule):
@@ -686,12 +686,12 @@
 #         plan_execution.validate_modules()
 #
 #     @patch('cryton.hive.models.plan.connections.close_all', Mock())
-#     @patch('cryton.hive.models.stage.StageExecution.kill', Mock())
-#     def test_kill(self):
+#     @patch('cryton.hive.models.stage.StageExecution.stop', Mock())
+#     def test_stop(self):
 #         plan_execution_model = baker.make(PlanExecutionModel, **{'state': 'RUNNING'})
 #         baker.make(StageExecutionModel, **{'state': 'RUNNING', 'plan_execution': plan_execution_model})
 #         plan_execution = plan.PlanExecution(plan_execution_id=plan_execution_model.id)
 #
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             plan_execution.kill()
-#         self.assertEqual(plan_execution.state, 'TERMINATED')
+#             plan_execution.stop()
+#         self.assertEqual(plan_execution.state, 'STOPPED')

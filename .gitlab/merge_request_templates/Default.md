@@ -1,37 +1,30 @@
+<!--
 Please use a concise and self-explanatory title. Examples:
 
-* Steps that can't find the required session are ignored
-* Added real-world pivoting examples
+* Ignore Steps that can't find the required session
+* Added real-world pivoting example
 * Fix pyyaml not supporting pep 517 builds
+-->
 
 ### What does this MR do and why?
 
-Describe in detail what your merge request does and why.
+<!--
+Describe in detail what your merge request does and why. Make sure to link the related issues and merge requests.
 
-Please keep this description updated with any discussion that takes place so
-that reviewers can understand your intent. Keeping the description updated is
-especially important if they haven't participated in the discussion.
-
-%{first_multiline_commit}
-
-Make sure to link the related issues and merge requests.
+Please keep this description updated with any discussion.
+-->
 
 ### Changes
 
+<!--
 A list of changes. Please use an ordered list.
 
 In case of UI changes, please provide screenshots.
-
-If the changes affect **other components**, use the `changes-incompatible` label (**remove otherwise**):
-
-/label changes-incompatible
-
-If the changes break **backward compatibility** (API for example), use the `changes-breaking` label (**remove otherwise**):
-
-/label changes-breaking
+-->
 
 ### How to set up and validate locally
 
+<!--
 Please, provide numbered steps on how to set up and validate the changes. It can be similar to the way you've tested the changes. 
 
 In case the changes affect other applications, include them in the example.
@@ -60,8 +53,9 @@ Example below:
     Modules are valid.
     Run successfully executed!
     ```
+-->
 
-### MR acceptance checklist
+### Acceptance checklist
 
 This checklist encourages us to confirm any changes have been analyzed to reduce risks in quality, performance, reliability, security, and maintainability.
 
@@ -71,7 +65,8 @@ This checklist encourages us to confirm any changes have been analyzed to reduce
 * [ ] I have updated the [tests](https://cryton.gitlab-pages.ics.muni.cz/latest/development/#writing-tests).
 * [ ] I have updated the documentation.
 * [ ] The changes affect other projects (frontend, ansible roles, etc.).
+* [ ] The change is not backwards compatible
 
-Please, assign a reviewer, labels, and possibly a milestone.
+<!-- Please, assign a reviewer, labels, and possibly a milestone. -->
 
 /assign me

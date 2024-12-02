@@ -1,5 +1,4 @@
 import click
-from typing import Optional
 
 from cryton.cli.utility import helpers
 from cryton.cli.config import SETTINGS
@@ -13,7 +12,7 @@ from cryton.cli.commands import plan_template, run, plan, step, worker, executio
 @click.option("-p", "--port", type=click.INT, help="Cryton's API address.")
 @click.option("--secure", is_flag=True, help="Use HTTPS instead of HTTP.")
 @click.option("--debug", is_flag=True, help="Do not format output.")
-def cli(ctx: click.Context, host: Optional[str], port: Optional[int], secure: bool, debug: bool) -> None:
+def cli(ctx: click.Context, host: str | None, port: int | None, secure: bool, debug: bool) -> None:
     """
     Wrapper for Hive's REST API.
 

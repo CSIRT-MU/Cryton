@@ -2,7 +2,6 @@ import amqpstorm
 import uuid
 import time
 import json
-from typing import Union
 
 from cryton.hive.config.settings import SETTINGS
 from cryton.hive.utility import constants, exceptions, logger
@@ -14,14 +13,14 @@ class RpcClient:
         Rabbit RPC client.
         :param channel: Existing RabbitMQ channel to use for communication
         """
-        self.connection: Union[amqpstorm.Connection, None] = None
+        self.connection: amqpstorm.Connection | None = None
         self.channel = channel
 
         self.callback_queue = str(uuid.uuid1())
         self.timeout = SETTINGS.message_timeout
 
-        self.response: Union[dict, None] = None
-        self.correlation_id: Union[str, None] = None
+        self.response: dict | None = None
+        self.correlation_id: str | None = None
 
         self.open()
 
@@ -164,7 +163,7 @@ class Client:
         Rabbit RPC client.
         :param channel: Existing RabbitMQ channel to use for communication
         """
-        self.connection: Union[amqpstorm.Connection, None] = None
+        self.connection: amqpstorm.Connection | None = None
         self.channel = channel
 
         self.open()

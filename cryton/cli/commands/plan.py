@@ -1,5 +1,4 @@
 import click
-from typing import Union
 
 from cryton.cli.utility import helpers
 from cryton.cli.utility.decorators import *
@@ -27,7 +26,7 @@ def plan_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
 ) -> None:
     """
     List existing Plans.
@@ -219,7 +218,7 @@ def plan_execution_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
     parent: int,
 ) -> None:
     """
@@ -327,7 +326,7 @@ def plan_execution_report(ctx: helpers.Context, execution_id: int, file: str, le
 @plan_execution.command("resume")
 @click.pass_context
 @click.argument("execution_id", type=click.INT, required=True)
-def plan_execution_unpause(ctx: helpers.Context, execution_id: int) -> None:
+def plan_execution_resume(ctx: helpers.Context, execution_id: int) -> None:
     """
     Resume Plan's execution with EXECUTION_ID saved in Cryton.
 
@@ -338,7 +337,7 @@ def plan_execution_unpause(ctx: helpers.Context, execution_id: int) -> None:
     :param execution_id: ID of the desired Plan's execution
     :return: None
     """
-    response = ctx.obj.api_post(PlanExecution.UNPAUSE, execution_id)
+    response = ctx.obj.api_post(PlanExecution.RESUME, execution_id)
     helpers.print_message(response, ctx.obj.debug)
 
 
@@ -360,19 +359,19 @@ def plan_execution_validate_modules(ctx: helpers.Context, execution_id: int) -> 
     helpers.print_message(response, ctx.obj.debug)
 
 
-@plan_execution.command("kill")
+@plan_execution.command("stop")
 @click.pass_context
 @click.argument("execution_id", type=click.INT, required=True)
-def plan_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
+def plan_execution_stop(ctx: helpers.Context, execution_id: int) -> None:
     """
-    Kill Plan's execution with EXECUTION_ID saved in Cryton.
+    Stop Plan's execution with EXECUTION_ID saved in Cryton.
 
-    EXECUTION_ID is ID of the Plan's execution you want to kill.
+    EXECUTION_ID is ID of the Plan's execution you want to stop.
 
     \f
     :param ctx: Click ctx object
     :param execution_id: ID of the desired Plan's execution
     :return: None
     """
-    response = ctx.obj.api_post(PlanExecution.KILL, execution_id)
+    response = ctx.obj.api_post(PlanExecution.STOP, execution_id)
     helpers.print_message(response, ctx.obj.debug)

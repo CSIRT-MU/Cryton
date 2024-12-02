@@ -10,8 +10,6 @@ def import_module_schema(name: str):
         return {"type": "object"}
 
 
-# TODO: if the step is initial (is_init) there can't be parent prefix, add check to validation
-# TODO: lot of the fields will have to be of type 'integer_or_$step.parameter' since we want to support output sharing
 NAME_PATTERN = "^[a-zA-Z0-9_-]+$"
 
 PLAN = {
@@ -67,7 +65,7 @@ PLAN = {
                         "properties": {
                             "type": {
                                 "type": "string",
-                                "enum": ["result", "serialized_output", "output", "any"],
+                                "enum": ["state", "serialized_output", "output", "any"],
                                 "description": "Which type of output to compare.",
                             },
                             "step": {
@@ -78,13 +76,13 @@ PLAN = {
                         "required": ["type", "step"],
                         "allOf": [
                             {
-                                "if": {"properties": {"type": {"const": "result"}}, "required": ["type"]},
+                                "if": {"properties": {"type": {"const": "state"}}, "required": ["type"]},
                                 "then": {
                                     "properties": {
                                         "value": {
                                             "description": "Value that will trigger the the successor(s).",
                                             "type": "string",
-                                            "enum": ["ok", "fail", "error"],
+                                            "enum": ["finished", "failed", "error"],
                                         },
                                     },
                                     "required": ["value"],
@@ -122,7 +120,7 @@ PLAN = {
                     },
                 },
             },
-            "allOf": [  # TODO: add a for loop?
+            "allOf": [
                 {
                     "if": {"properties": {"module": {"const": "atomic_red_team"}}, "required": ["module"]},
                     "then": {"properties": {"arguments": import_module_schema("atomic_red_team")}},

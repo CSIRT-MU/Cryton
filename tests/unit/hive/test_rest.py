@@ -212,22 +212,22 @@
 #
 #         assert response.status_code == 400
 #
-#     def test_unpause(self, f_plan_execution):
-#         response = self.client.post(f"/api/plan_executions/{1}/unpause/")
+#     def test_resume(self, f_plan_execution):
+#         response = self.client.post(f"/api/plan_executions/{1}/resume/")
 #
 #         assert response.status_code == 200
 #
-#     def test_unpause_not_found(self, f_plan_execution):
+#     def test_resume_not_found(self, f_plan_execution):
 #         f_plan_execution.side_effect = core_exceptions.PlanExecutionDoesNotExist
 #
-#         response = self.client.post(f"/api/plan_executions/{1}/unpause/")
+#         response = self.client.post(f"/api/plan_executions/{1}/resume/")
 #
 #         assert response.status_code == 404
 #
-#     def test_unpause_invalid_state(self, f_plan_execution):
-#         f_plan_execution.return_value.unpause.side_effect = core_exceptions.InvalidStateError("", 1, "", [])
+#     def test_resume_invalid_state(self, f_plan_execution):
+#         f_plan_execution.return_value.resume.side_effect = core_exceptions.InvalidStateError("", 1, "", [])
 #
-#         response = self.client.post(f"/api/plan_executions/{1}/unpause/")
+#         response = self.client.post(f"/api/plan_executions/{1}/resume/")
 #
 #         assert response.status_code == 400
 #
@@ -264,22 +264,22 @@
 #
 #         assert response.status_code == 500
 #
-#     def test_kill(self, f_plan_execution):
-#         response = self.client.post(f"/api/plan_executions/{1}/kill/")
+#     def test_stop(self, f_plan_execution):
+#         response = self.client.post(f"/api/plan_executions/{1}/stop/")
 #
 #         assert response.status_code == 200
 #
-#     def test_kill_not_found(self, f_plan_execution):
+#     def test_stop_not_found(self, f_plan_execution):
 #         f_plan_execution.side_effect = core_exceptions.PlanExecutionDoesNotExist
 #
-#         response = self.client.post(f"/api/plan_executions/{1}/kill/")
+#         response = self.client.post(f"/api/plan_executions/{1}/stop/")
 #
 #         assert response.status_code == 404
 #
-#     def test_kill_invalid_state(self, f_plan_execution):
-#         f_plan_execution.return_value.kill.side_effect = core_exceptions.InvalidStateError("", 1, "", [])
+#     def test_stop_invalid_state(self, f_plan_execution):
+#         f_plan_execution.return_value.stop.side_effect = core_exceptions.InvalidStateError("", 1, "", [])
 #
-#         response = self.client.post(f"/api/plan_executions/{1}/kill/")
+#         response = self.client.post(f"/api/plan_executions/{1}/stop/")
 #
 #         assert response.status_code == 400
 #
@@ -664,10 +664,10 @@
 #             (core_exceptions.RunObjectDoesNotExist, 404)
 #         ]
 #     )
-#     def test_unpause(self, f_run, p_run_effect, p_response_code):
+#     def test_resume(self, f_run, p_run_effect, p_response_code):
 #         f_run.side_effect = p_run_effect
 #
-#         response = self.client.post(f"/api/runs/{1}/unpause/")
+#         response = self.client.post(f"/api/runs/{1}/resume/")
 #
 #         assert response.status_code == p_response_code
 #
@@ -805,10 +805,10 @@
 #             (core_exceptions.RunObjectDoesNotExist, 404)
 #         ]
 #     )
-#     def test_kill(self, f_run, p_run_effect, p_response_code):
+#     def test_stop(self, f_run, p_run_effect, p_response_code):
 #         f_run.side_effect = p_run_effect
 #
-#         response = self.client.post(f"/api/runs/{1}/kill/")
+#         response = self.client.post(f"/api/runs/{1}/stop/")
 #
 #         assert response.status_code == p_response_code
 #
@@ -934,10 +934,10 @@
 #             (core_exceptions.StageExecutionObjectDoesNotExist(""), 404)
 #         ]
 #     )
-#     def test_kill(self, f_stage_execution, p_stage_execution_effect, p_response_code):
+#     def test_stop(self, f_stage_execution, p_stage_execution_effect, p_response_code):
 #         f_stage_execution.side_effect = p_stage_execution_effect
 #
-#         response = self.client.post(f"/api/stage_executions/{1}/kill/")
+#         response = self.client.post(f"/api/stage_executions/{1}/stop/")
 #
 #         assert response.status_code == p_response_code
 #
@@ -1237,10 +1237,10 @@
 #             (core_exceptions.StepExecutionObjectDoesNotExist(""), 404)
 #         ]
 #     )
-#     def test_kill(self, f_step_execution, p_stage_execution_effect, p_response_code):
+#     def test_stop(self, f_step_execution, p_stage_execution_effect, p_response_code):
 #         f_step_execution.side_effect = p_stage_execution_effect
 #
-#         response = self.client.post(f"/api/step_executions/{1}/kill/")
+#         response = self.client.post(f"/api/step_executions/{1}/stop/")
 #
 #         assert response.status_code == p_response_code
 #

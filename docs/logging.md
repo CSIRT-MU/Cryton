@@ -1,46 +1,26 @@
+Logs are created only for Hive and Worker and stored in **[APP_DIRECTORY](settings.md)/logs**. In case you are running in a Docker, they are displayed in the stdout.
+
 The logs adhere to the following format:
 ```
-{"queue": "cryton_core.control.request", "event": "Queue declared and consuming", "logger": "cryton-debug", "level": "info", "timestamp": "2021-05-18T11:19:20.012152Z"}
-{"plan_name": "Example scenario", "plan_id": 129, "status": "success", "event": "plan created", "logger": "cryton", "level": "info", "timestamp": "2021-05-18T06:17:39.753017Z"}
+{"queue": "cryton_core.control.request", "event": "Queue declared and consuming", "logger": "cryton", "level": "info", "timestamp": "2021-05-18T11:19:20.012152Z"}
+{"plan_name": "Example scenario", "plan_id": 129, "event": "plan created", "logger": "cryton", "level": "info", "timestamp": "2021-05-18T06:17:39.753017Z"}
 ```
 
-Logs are stored in the *application directory*, which can be found at `~/.local/cryton/` by default (`/app/` inside Docker).
+## loggers
 
-## Core
-Every change of state is logged for later analysis. Every Step the result is also logged, although 
-the output is not. It can be found in the database.
+### Production
+Informational logs and higher are logged into a log file. In case you are running in a Docker, the logs are displayed to the console as well.
 
-You can switch between the debug and the production loggers by changing the [settings](settings.md#debug). 
-To run tests, we use a testing logger to avoid saving unwanted logs.
+Step's output is not included in the logs, it can be found in the database/CLI/Frontend.
 
-**Production** (`cryton-hive`)
+This is the default logger.
 
-- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-hive.log)
+### Debug
+All logs are logged into a log file and console. It also logs the Step's output.
 
-**Debug** (`cryton-hive-debug`)
+To enable the debug logger, update the [Hive](settings.md#debug) or [Worker](settings.md#debug_1) settings.
 
-- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-hive.log)
-- Console (std_out)
+### Testing
+All logs are logged into a console. It also logs the Step's output.
 
-**Testing** (`cryton-hive-test`)
-
-- Console (std_out)
-
-## Worker
-Each request and its processing are logged for later analysis.
-
-You can switch between the debug and the production loggers by changing the [settings](settings.md#debug_1). 
-To run tests, we use a testing logger to avoid saving unwanted logs.
-
-**Production** (`cryton-worker`)
-
-- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-worker.log)
-
-**Debug** (`cryton-worker-debug`)
-
-- RotatingFileHandler (*APP_DIRECTORY*/log/cryton-worker.log)
-- Console (std_out)
-
-**Testing** (`cryton-worker-test`)
-
-- Console (std_out)
+The logger is enabled only for testing.

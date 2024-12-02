@@ -38,7 +38,7 @@ Try to parse the output of the command into `serialized_output`.
 | `serialize_output` | boolean | &cross;  | `false`       | `true`        |
 
 ### `force_shell`
-Run the command in shell even in a Meterpreter session. To run the command in the Meterpreter shell, set this to `false`.
+Run the command in shell even in a Meterpreter session. To run the command in the Meterpreter shell (if available), set this to `false`.
 
 | Name          | Type    | Required | Default value | Example value |
 |---------------|---------|----------|---------------|---------------|
@@ -69,6 +69,9 @@ Output:
 
 ## Troubleshooting
 So far so good.
+
+## Meterpreter vs shell session
+By default, if you specified a session, this module will try to execute the provided command in a shell. For more details about different sessions, see [here](metasploit.md#session-types).
 
 ## Output serialization
 Automatic output serialization is an experimental feature.  

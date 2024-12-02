@@ -1,5 +1,4 @@
 import re
-from typing import Optional, Union
 import requests
 from snek_sploit import Error as MSFError, RPCError as MSFRPCError, SessionShell, SessionMeterpreter, SessionRing
 
@@ -70,7 +69,7 @@ class Module(ModuleBase):
 
         # session
         self._session_id: int = self._arguments.get("session_id")
-        self._session: Union[SessionShell, SessionMeterpreter, SessionRing, None] = None
+        self._session: SessionShell | SessionMeterpreter | SessionRing | None = None
 
         # atomic
         self._atomic_technique: str = self._arguments.get("technique", "")
@@ -85,8 +84,8 @@ class Module(ModuleBase):
         self._powershell_install: bool = self._powershell_arguments.get("install", False)
 
         # target
-        self._target_os: Optional[OS] = None
-        self._target_arch: Optional[Architecture] = None
+        self._target_os: OS | None = None
+        self._target_arch: Architecture | None = None
 
         # Other
         self._debug_output: str = ""
@@ -224,7 +223,7 @@ class Module(ModuleBase):
         x86_architectures: list[str],
         arm64_architectures: list[str],
         arm32_architectures: list[str],
-    ) -> Optional[Architecture]:
+    ) -> Architecture | None:
         if any(arch in arch_string for arch in x64_architectures):
             return Architecture.X64
         elif any(arch in arch_string for arch in x86_architectures):

@@ -1,7 +1,6 @@
 from click import echo
 from threading import Thread
 from queue import PriorityQueue
-from typing import Optional
 
 from cryton.worker.utility import logger, constants as co, exceptions
 from cryton.worker.triggers import Listener
@@ -18,7 +17,7 @@ class MSFListener(Listener):
         self._identifiers: dict = {}
         self._stopped = True
         self._trigger_id = None
-        self._module: Optional[Module] = None
+        self._module: Module | None = None
 
     def add_trigger(self, details: dict) -> str:
         """

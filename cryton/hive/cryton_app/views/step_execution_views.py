@@ -30,7 +30,7 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        StepExecution(step_execution_id=model_id).delete()
+        StepExecution(model_id).delete()
 
     @extend_schema(
         description="Generate Step execution report.",
@@ -44,7 +44,7 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         step_execution_id = kwargs.get("pk")
 
         try:
-            step_ex_obj = StepExecution(step_execution_id=step_execution_id)
+            step_ex_obj = StepExecution(step_execution_id)
         except core_exceptions.StepExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
         report = step_ex_obj.report()
@@ -52,7 +52,7 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         return Response(report, status=status.HTTP_200_OK)
 
     @extend_schema(
-        description="Kill Step execution.",
+        description="Stop Step execution.",
         request=None,
         responses={
             200: serializers.DetailStringSerializer,
@@ -61,18 +61,18 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def kill(self, _, **kwargs):
+    def stop(self, _, **kwargs):
         step_execution_id = kwargs.get("pk")
 
         try:
-            step_ex_obj = StepExecution(step_execution_id=step_execution_id)
-            step_ex_obj.kill()
+            step_ex_obj = StepExecution(step_execution_id)
+            step_ex_obj.stop()
         except core_exceptions.StepExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {"detail": "{}".format("Step execution {} is terminated.".format(step_execution_id))}
+        msg = {"detail": "{}".format("Step execution {} is stopped.".format(step_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -89,7 +89,7 @@ class StepExecutionViewSet(util.ExecutionViewSet):
         step_execution_id = kwargs.get("pk")
 
         try:
-            step_ex_obj = StepExecution(step_execution_id=step_execution_id)
+            step_ex_obj = StepExecution(step_execution_id)
             step_ex_obj.re_execute()
         except core_exceptions.StepExecutionObjectDoesNotExist:
             raise exceptions.NotFound()

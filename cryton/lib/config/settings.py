@@ -1,7 +1,6 @@
 from yaml import safe_load
 from os import getenv, path, mkdir
 from dotenv import load_dotenv
-from typing import Union
 
 
 def load_config(app_directory: str) -> dict:
@@ -26,7 +25,7 @@ def getenv_int(key: str, default: int, min_value: int = 1, fallback: int = 1):
     return fallback if value < min_value else value
 
 
-def getenv_list(key: str, default: Union[list, str]):
+def getenv_list(key: str, default: list | str):
     env = getenv(key)
     value = default if not env else env
 
@@ -34,11 +33,11 @@ def getenv_list(key: str, default: Union[list, str]):
 
 
 APP_DIRECTORY = getenv("CRYTON_APP_DIRECTORY", path.expanduser("~/.local/cryton/"))
-LOG_DIRECTORY = path.join(APP_DIRECTORY, "log")
+LOGS_DIRECTORY = path.join(APP_DIRECTORY, "logs")
 MODULES_DIRECTORY = path.join(APP_DIRECTORY, "modules")
 EVIDENCE_DIRECTORY = path.join(APP_DIRECTORY, "evidence")
 
-for file_path in [APP_DIRECTORY, LOG_DIRECTORY, MODULES_DIRECTORY, EVIDENCE_DIRECTORY]:
+for file_path in [APP_DIRECTORY, LOGS_DIRECTORY, MODULES_DIRECTORY, EVIDENCE_DIRECTORY]:
     if not path.exists(file_path):
         mkdir(file_path)
 

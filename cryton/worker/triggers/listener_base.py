@@ -2,7 +2,6 @@ from click import echo
 import uuid
 from threading import Lock
 from queue import PriorityQueue
-from typing import List, Optional
 
 from cryton.worker.utility import logger, constants as co, util
 
@@ -14,7 +13,7 @@ class Listener:
         :param main_queue: Worker's queue for internal request processing
         """
         self._main_queue = main_queue
-        self._triggers: List[dict] = []
+        self._triggers: list[dict] = []
         self._identifiers: dict = {}
         self._triggers_lock = Lock()  # Lock to prevent modifying, while performing time-consuming actions.
 
@@ -26,7 +25,7 @@ class Listener:
         """
         pass
 
-    def find_trigger(self, trigger_id: str) -> Optional[dict]:
+    def find_trigger(self, trigger_id: str) -> dict | None:
         """
         Match and return trigger using its ID.
         :param trigger_id: Trigger's ID
@@ -68,7 +67,7 @@ class Listener:
         """
         pass
 
-    def get_triggers(self) -> List[dict]:
+    def get_triggers(self) -> list[dict]:
         """
         Get list of all triggers.
         :return: Listener's triggers

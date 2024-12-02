@@ -1,13 +1,4 @@
 services:
-  cryton_cli:
-    image: cryton-cli
-    build:
-      dockerfile: Dockerfile-cli
-      target: e2e-tests
-    environment:
-      CRYTON_E2E_WORKER_ADDRESS: 192.168.90.11
-      CRYTON_CLI_DEBUG: true
-
   vulnerable_user_machine:
     networks:
       cryton:

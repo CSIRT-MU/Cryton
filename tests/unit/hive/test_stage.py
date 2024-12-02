@@ -433,37 +433,37 @@
 #         self.assertIn("Stage execution unscheduled", cm.output[0])
 #         self.assertEqual(self.stage_ex_obj.aps_job_id, "")
 #
-#     @patch('cryton.hive.models.step.StepExecution.kill', Mock())
+#     @patch('cryton.hive.models.step.StepExecution.stop', Mock())
 #     @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
-#     def test_kill(self):
+#     def test_stop(self):
 #         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'RUNNING'})
 #         baker.make(StepExecutionModel, **{'state': 'RUNNING', 'stage_execution': stage_ex_model})
 #         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)
 #
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             stage_ex.kill()
-#         self.assertEqual(stage_ex.state, 'TERMINATED')
+#             stage_ex.stop()
+#         self.assertEqual(stage_ex.state, 'STOPPED')
 #
 #     @patch('cryton.hive.triggers.trigger_delta.TriggerDelta.unschedule', Mock())
 #     @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
-#     def test_kill_scheduled(self):
+#     def test_stop_scheduled(self):
 #         stage_ex_model = baker.make(
 #             StageExecutionModel, **{'state': 'PENDING', 'schedule_time': timezone.now(), 'stage_model':
 #                 baker.make(StageModel, **{'trigger_type': 'delta', 'trigger_args': {}})})
 #         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)
 #
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             stage_ex.kill()
-#         self.assertEqual(stage_ex.state, 'TERMINATED')
+#             stage_ex.stop()
+#         self.assertEqual(stage_ex.state, 'STOPPED')
 #
 #     @patch('cryton.hive.models.stage.StageExecution.trigger', Mock())
-#     def test_kill_waiting(self):
+#     def test_stop_waiting(self):
 #         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'WAITING'})
 #         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)
 #
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             stage_ex.kill()
-#         self.assertEqual(stage_ex.state, 'TERMINATED')
+#             stage_ex.stop()
+#         self.assertEqual(stage_ex.state, 'STOPPED')
 #
 #     # @patch('cryton.hive.models.step.StepExecution.validate_attack_module_args')
 #     # def test_validate_modules(self, validate_args):
@@ -511,7 +511,7 @@
 #
 #     @patch("cryton.hive.models.stage.StepExecution.reset_execution_data", Mock())
 #     def test_reset_execution_data(self):
-#         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'TERMINATED'})
+#         stage_ex_model = baker.make(StageExecutionModel, **{'state': 'STOPPED'})
 #         stage_ex = stage.StageExecution(stage_execution_id=stage_ex_model.id)
 #
 #         stage_ex.reset_execution_data()

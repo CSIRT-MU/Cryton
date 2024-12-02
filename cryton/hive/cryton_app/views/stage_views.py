@@ -130,7 +130,7 @@ class StageViewSet(util.InstanceFullViewSet):
 
         try:  # Check if the Plan execution exists
             plan_ex_id: int = request.data["plan_execution_id"]
-            plan_ex = PlanExecution(plan_execution_id=plan_ex_id)
+            plan_ex = PlanExecution(plan_ex_id)
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(ex)
         except core_exceptions.PlanExecutionDoesNotExist:
@@ -153,7 +153,7 @@ class StageViewSet(util.InstanceFullViewSet):
             )
 
         # Create and start Stage trigger
-        stage_ex_obj = StageExecution(stage_id=stage_id, plan_execution_id=plan_ex_id)
+        stage_ex_obj = StageExecution.prepare(stage_id, plan_ex_id)
         stage_ex_obj.trigger.start()
 
         msg = {"detail": "Started Stage trigger.", "execution_id": stage_ex_obj.model.id}

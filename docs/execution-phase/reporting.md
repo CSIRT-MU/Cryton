@@ -1,4 +1,4 @@
-After the Run has successfully ended (or not) you can **generate a report** with every Step's output and result. 
+After the Run has successfully ended (or not) you can **generate a report** with every Step's output. 
 When you have multiple Plan executions in a single Run (when utilizing multiple Workers), you can compare each 
 execution and use this insight to e.g. score each team in a *cybersecurity exercise.*
 
@@ -92,7 +92,6 @@ plan_executions:
             vendor: Oracle VirtualBox virtual NIC
             addrtype: mac
       evidence_file: 'No evidence '
-      result: ok
       valid: false
     - id: 12
       step_name: bruteforce
@@ -107,7 +106,6 @@ plan_executions:
         - password: victim
           username: victim
       evidence_file: 'No evidence '
-      result: ok
       valid: false
 
 ```

@@ -1,6 +1,5 @@
 from gunicorn.app.base import BaseApplication
 from multiprocessing import Process
-from typing import Optional
 
 
 class GunicornApplication(BaseApplication):
@@ -8,7 +7,7 @@ class GunicornApplication(BaseApplication):
     def __init__(self, app, options=None):
         self.options = options or {}
         self.application = app
-        self._process: Optional[Process] = None
+        self._process: Process | None = None
         super().__init__()
 
     def init(self, parser, opts, args):

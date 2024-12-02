@@ -87,7 +87,7 @@
 #         for exec_obj in run_obj.model.plan_executions.all():
 #             plan.PlanExecution(plan_execution_id=exec_obj.id).state = states.PAUSED
 #
-#         run_obj.unpause()
+#         run_obj.resume()
 #         for exec_obj in run_obj.model.plan_executions.filter(worker_id__in=self.workers_id_list):
 #             self.assertEqual(exec_obj.state, states.RUNNING)
 #

@@ -90,15 +90,15 @@ my-step:
 ## Troubleshooting
 So far so good.
 
-!!! warning "Session types"
+### Session types
 
-    Metasploit Framework supports two types of sessions.
-    
-    The first is a shell session, you can run any shell commands you want.
-    
-    The second is called Meterpreter. It allows you to use it's provided commands, such as `ifconfig` or `sysinfo`. 
-    To run a command in a shell, you need to use the `execute` command with the `-f`, `-i`, and `-a` options (`execute -f <command> -i -a <arguments>`).
-    In some cases, the command execution can fail. Before creating a plan, make sure it works for your target system/exploit.
+Metasploit Framework currently supports two types of sessions.
+
+The first is a shell session, in which you can run shell commands without limitations.
+
+The second is called Meterpreter session. It allows you to use it's provided commands, such as `ifconfig` or `sysinfo`.
+To run a command in a shell, you need to use the `execute` command with the `-f`, `-i`, and `-a` options (`execute -f <command> -i -a <arguments>`).  
+In some cases, the command execution may fail. Before creating a plan, make sure it works for your target system/exploit and a correct payload is used.
 
 ## Output serialization
 Only the session ID is serialized.

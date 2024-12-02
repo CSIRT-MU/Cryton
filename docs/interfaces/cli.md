@@ -135,10 +135,10 @@ EXECUTION\_ID is ID of the Plan's execution you want to delete.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### kill
-Kill Plan's execution with EXECUTION\_ID saved in Cryton.
+### stop
+Stop Plan's execution with EXECUTION\_ID saved in Cryton.
 
-EXECUTION\_ID is ID of the Plan's execution you want to kill.
+EXECUTION\_ID is ID of the Plan's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -454,10 +454,10 @@ RUN\_ID is ID of the Run you want to check Workers for.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### kill
-Kill Run saved in Cryton with RUN\_ID.
+### stop
+Stop Run saved in Cryton with RUN\_ID.
 
-RUN\_ID is ID of the Run you want to kill.
+RUN\_ID is ID of the Run you want to stop.
 
 **Arguments:**  
 - RUN\_ID  
@@ -486,21 +486,7 @@ RUN\_ID is ID of the Run you want to pause.
 - RUN\_ID  
 
 **Options:**  
-- help (`--help`) - Show this message and exit.  
-
-### postpone
-Postpone Run saved in Cryton with RUN\_ID by TIME (hh:mm:ss).
-
-RUN\_ID is ID of the Run you want to postpone.
-
-TIME is time that will be added to the Run's start time (hh:mm:ss).
-
-**Arguments:**  
-- RUN\_ID  
-- TO\_POSTPONE  
-
-**Options:**  
-- help (`--help`) - Show this message and exit.  
+- help (`--help`) - Show this message and exit.
 
 ### report
 Create report for Run with RUN\_ID saved in Cryton.
@@ -616,10 +602,10 @@ EXECUTION\_ID is ID of the Stage's execution you want to delete.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### kill
-Kill Stage's execution with EXECUTION\_ID.
+### stop
+Stop Stage's execution with EXECUTION\_ID.
 
-EXECUTION\_ID is ID of the Stage's execution you want to kill.
+EXECUTION\_ID is ID of the Stage's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -643,7 +629,7 @@ List existing Stage's executions in Cryton.
 ### re-execute
 Re-execute Stage's execution with EXECUTION\_ID.
 
-EXECUTION\_ID is ID of the Stage's execution you want to kill.
+EXECUTION\_ID is ID of the Stage's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -785,10 +771,10 @@ EXECUTION\_ID is ID of the Step's execution you want to delete.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### kill
-Kill Step's execution with EXECUTION\_ID saved in Cryton.
+### stop
+Stop Step's execution with EXECUTION\_ID saved in Cryton.
 
-EXECUTION\_ID is ID of the Step's execution you want to kill.
+EXECUTION\_ID is ID of the Step's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -812,7 +798,7 @@ List existing Step's executions in Cryton.
 ### re-execute
 Re-execute Step's execution with EXECUTION\_ID saved in Cryton.
 
-EXECUTION\_ID is ID of the Step's execution you want to kill.
+EXECUTION\_ID is ID of the Step's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  

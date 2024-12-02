@@ -1,5 +1,4 @@
 from click import echo
-from typing import List
 from threading import Thread, Lock, Event
 from queue import PriorityQueue
 import time
@@ -42,7 +41,7 @@ class Worker:
         """
         self._name = worker_name
         self._require_metasploit = require_metasploit
-        self._listeners: List[Listener] = []
+        self._listeners: list[Listener] = []
         self._triggers_lock = Lock()  # Lock to prevent modifying, while performing time-consuming actions.
         self._stopped = Event()
         self._main_queue = PriorityQueue()
@@ -198,13 +197,13 @@ class Worker:
 
         logger.logger.debug("Threaded processor stopped.", thread_id=thread_id)
 
-    def _kill_task(self, request: dict) -> None:
+    def _stop_task(self, request: dict) -> None:
         """
-        Process; Kill running Task using correlation_id.
+        Process; Stop running Task using correlation_id.
         :param request: Data needed for process (Must contain: co.RESULT_PIPE, co.CORRELATION_ID)
         :return: None
         """
-        logger.logger.debug("Calling process _kill_task", request=request)
+        logger.logger.debug("Calling process _stop_task", request=request)
         result_pipe = request.pop(co.RESULT_PIPE)
         correlation_id = request.pop(co.CORRELATION_ID)
 
@@ -216,15 +215,15 @@ class Worker:
 
         else:  # Task found.
             try:
-                kill_action = task_obj.kill()
-                result = {co.RESULT: co.CODE_OK if kill_action else co.CODE_ERROR}
+                stop_action = task_obj.stop()
+                result = {co.RESULT: co.CODE_OK if stop_action else co.CODE_ERROR}
 
             except Exception as ex:
-                logger.logger.debug("Couldn't kill the Task.", task_correlation_id=correlation_id, error=str(ex))
+                logger.logger.debug("Couldn't stop the Task.", task_correlation_id=correlation_id, error=str(ex))
                 result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
 
         result_pipe.send(result)
-        logger.logger.debug("Finished process _kill_task", result=result)
+        logger.logger.debug("Finished process _stop_task", result=result)
 
     def _finish_task(self, request: dict) -> None:
         """
@@ -320,21 +319,3 @@ class Worker:
 
         result_pipe.send(result)
         logger.logger.debug("Finished process _remove_trigger", result=result)
-
-    def _list_triggers(self, request: dict) -> None:
-        """
-        Process; List Triggers (triggers).
-        :param request: Data needed for process (Must contain: co.RESULT_PIPE)
-        :return: None
-        """
-        logger.logger.debug("Calling process _list_triggers", request=request)
-        result_pipe = request.pop(co.RESULT_PIPE)
-
-        with self._triggers_lock:
-            all_triggers = []
-            for listener_obj in self._listeners:
-                all_triggers.extend(listener_obj.get_triggers())
-
-        result = {co.RESULT: co.CODE_OK, co.TRIGGER_LIST: all_triggers}
-        result_pipe.send(result)
-        logger.logger.debug("Finished process _list_triggers", result=result)

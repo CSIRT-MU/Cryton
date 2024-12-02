@@ -6,12 +6,13 @@ import amqpstorm
 import json
 import traceback
 from jsonschema import validate, ValidationError
-from typing import Optional, Callable, List
+from typing import Callable
 from dataclasses import asdict
 from importlib import import_module
 
 from cryton.worker import event
 from cryton.worker.utility import util, constants as co, logger
+from cryton.lib.utility.module import ModuleOutput, Result
 
 
 class Task:
@@ -24,9 +25,9 @@ class Task:
         self.message = message
         self.correlation_id = message.correlation_id
         self._main_queue = main_queue
-        self._process: Optional[Process] = None
+        self._process: Process | None = None
         self._connection = connection
-        self.undelivered_messages: List[util.UndeliveredMessage] = []
+        self.undelivered_messages: list[util.UndeliveredMessage] = []
 
     def start(self):
         """
@@ -87,7 +88,7 @@ class Task:
         """
         pass
 
-    def _run_in_process(self, to_run: Callable, *args):
+    def _run_in_process(self, to_run: Callable, *args) -> ModuleOutput:
         """
         Run a method/callable in a new process.
         :param to_run: Callable to run
@@ -104,9 +105,9 @@ class Task:
         if self._process.exitcode == 0:
             result = response_pipe.recv()
         elif self._process.exitcode < 0:
-            result = {co.RESULT: co.CODE_KILL}
+            result = ModuleOutput(result=Result.STOPPED)
         else:
-            result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: "An unknown error occurred."}
+            result = ModuleOutput(Result.ERROR, "An unknown error occurred.")
 
         return result
 
@@ -120,12 +121,12 @@ class Task:
         """
         request_pipe.send(to_run(*args))
 
-    def kill(self) -> bool:
+    def stop(self) -> bool:
         """
         Wrapper method for Process.kill() and send reply.
         :return: None
         """
-        logger.logger.debug("Killing Task (its process).", correlation_id=self.correlation_id)
+        logger.logger.debug("Stopping Task (its process).", correlation_id=self.correlation_id)
         if self._process is not None and self._process.pid is not None and self._process.exitcode is None:
             self._process.kill()
             return True
@@ -250,43 +251,7 @@ class ControlTask(Task):
                     },
                 },
                 {
-                    "if": {"properties": {"event_t": {"const": "LIST_MODULES"}}, "required": ["event_t"]},
-                    "then": {
-                        "properties": {"event_v": {"type": "object"}},
-                        "required": ["event_v"],
-                    },
-                },
-                {
-                    "if": {"properties": {"event_t": {"const": "LIST_SESSIONS"}}, "required": ["event_t"]},
-                    "then": {
-                        "properties": {
-                            "event_v": {
-                                "type": "object",
-                                "properties": {
-                                    "type": {"type": "string"},
-                                    "tunnel_local": {"type": "string"},
-                                    "tunnel_peer": {"type": "string"},
-                                    "via_exploit": {"type": "string"},
-                                    "via_payload": {"type": "string"},
-                                    "desc": {"type": "string"},
-                                    "info": {"type": "string"},
-                                    "workspace": {"type": "string"},
-                                    "session_host": {"type": "string"},
-                                    "session_port": {"type": "integer"},
-                                    "target_host": {"type": "string"},
-                                    "username": {"type": "string"},
-                                    "uuid": {"type": "string"},
-                                    "exploit_uuid": {"type": "string"},
-                                    "routes": {"type": "string"},
-                                    "arch": {"type": "string"},
-                                },
-                            }
-                        },
-                        "required": ["event_v"],
-                    },
-                },
-                {
-                    "if": {"properties": {"event_t": {"const": "KILL_STEP_EXECUTION"}}, "required": ["event_t"]},
+                    "if": {"properties": {"event_t": {"const": "STOP_STEP_EXECUTION"}}, "required": ["event_t"]},
                     "then": {
                         "properties": {
                             "event_v": {"type": "object", "properties": {"correlation_id": {"type": "string"}}}
@@ -376,13 +341,6 @@ class ControlTask(Task):
                     "if": {"properties": {"event_t": {"const": "REMOVE_TRIGGER"}}, "required": ["event_t"]},
                     "then": {
                         "properties": {"event_v": {"type": "object", "properties": {"trigger_id": {"type": "string"}}}},
-                        "required": ["event_v"],
-                    },
-                },
-                {
-                    "if": {"properties": {"event_t": {"const": "LIST_TRIGGERS"}}, "required": ["event_t"]},
-                    "then": {
-                        "properties": {"event_v": {"type": "object"}},
                         "required": ["event_v"],
                     },
                 },

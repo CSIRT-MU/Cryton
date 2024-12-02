@@ -1,28 +1,12 @@
-from enum import Enum, EnumMeta
+from enum import StrEnum, auto
 
 
-class EnumMetaSearchable(EnumMeta):
-    def __contains__(cls, item):
-        try:
-            cls(item)
-        except ValueError:
-            return False
-        return True
-
-
-class StrEnum(str, Enum, metaclass=EnumMetaSearchable):
-    @classmethod
-    def values(cls) -> list:
-        return [x.value for x in cls]
-
-
-class Result(StrEnum):  # StrEnum + auto() introduced in Py3.11
+class Result(StrEnum):
     """
     Module result options.
     """
 
-    OK = "ok"
-    FAIL = "fail"
-    ERROR = "error"
-    TERMINATED = "terminated"
-    UNKNOWN = "unknown"
+    OK = auto()
+    FAIL = auto()
+    ERROR = auto()
+    STOPPED = auto()

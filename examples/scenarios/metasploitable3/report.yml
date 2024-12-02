@@ -256,7 +256,6 @@ plan_executions:
             addr: 08:00:27:C7:AE:F2
             vendor: Oracle VirtualBox virtual NIC
             addrtype: mac
-      result: ok
       valid: true
   - id: 58
     name: exploit-ubuntu
@@ -290,8 +289,7 @@ plan_executions:
         \ -> 192.168.56.120:36239) at 2023-09-19 12:42:51 +0000\n[*] Session 1 created\
         \ in the background.\n\n"
       serialized_output:
-        session_id: '1'
-      result: ok
+        session_id: 1
       valid: true
     - id: 107
       name: exploit-dockerd-privesc
@@ -331,8 +329,7 @@ plan_executions:
         \ (192.168.56.1:4446 -> 192.168.56.120:47757) at 2023-09-19 12:43:04 +0000\n\
         [*] Waiting 2s for payload\n[*] Session 3 created in the background.\n\n"
       serialized_output:
-        session_id: '2'
-      result: ok
+        session_id: 2
       valid: true
   - id: 59
     name: gather-data-from-ubuntu
@@ -363,7 +360,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
     - id: 109
       name: ubuntu-get-etc-shadow
@@ -461,7 +457,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
     - id: 110
       name: ubuntu-get-process-list
@@ -889,7 +884,6 @@ plan_executions:
         \       l\n                e\n                t\n                e\n     \
         \           d\n                )\n\n"
       serialized_output: {}
-      result: ok
       valid: true
   - id: 60
     name: network-pivoting
@@ -1035,7 +1029,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
     - id: 112
       name: update-msf-routing-table
@@ -1080,7 +1073,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
   - id: 61
     name: network-two-information-gathering
@@ -1153,7 +1145,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
   - id: 62
     name: exploit-windows
@@ -1254,8 +1245,7 @@ plan_executions:
         \ 192.168.56.1\n[*] Command Stager progress - 100.00% done (99626/99626 bytes)\n\
         [*] Session 4 created in the background.\n\n"
       serialized_output:
-        session_id: '4'
-      result: ok
+        session_id: 4
       valid: true
     - id: 115
       name: exploit-ms16-reflection-juicy
@@ -1290,8 +1280,7 @@ plan_executions:
         \ -> 192.168.56.1:49276) at 2023-09-19 12:44:33 +0000\n[*] Session 6 created\
         \ in the background.\n\n"
       serialized_output:
-        session_id: '6'
-      result: ok
+        session_id: 6
       valid: true
   - id: 63
     name: gather-data-from-windows
@@ -1412,7 +1401,6 @@ plan_executions:
         \             Change the time zone                      Enabled\r\nSeCreateSymbolicLinkPrivilege\
         \   Create symbolic links                     Enabled\r\n"
       serialized_output: {}
-      result: ok
       valid: true
     - id: 117
       name: get-tasklist
@@ -1507,5 +1495,4 @@ plan_executions:
         \                   0      2,980 K\r\nWmiPrvSE.exe                  4752 Services\
         \                   0      6,632 K\r\n"
       serialized_output: {}
-      result: ok
       valid: true

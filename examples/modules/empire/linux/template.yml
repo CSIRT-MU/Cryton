@@ -15,8 +15,8 @@ stages:
             USERNAME: {{ target.username }}
             PASSWORD: {{ target.password }}
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: deploy-agent
 
       deploy-agent:
@@ -33,8 +33,8 @@ stages:
           stager:
             type: multi/bash
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: whoami-on-agent
 
       whoami-on-agent:

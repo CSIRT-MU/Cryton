@@ -112,7 +112,6 @@ class StageExecutionModel(SchedulableExecutionModel, OutputModel):
 class StepExecutionModel(ExecutionModel, OutputModel):
     stage_execution = models.ForeignKey(StageExecutionModel, models.CASCADE, related_name="step_executions")
     step = models.ForeignKey(StepModel, models.CASCADE, related_name="step_executions")
-    result = models.TextField(default="")
     valid = models.BooleanField(default=False)
     parent = models.ForeignKey("self", models.CASCADE, null=True)
 

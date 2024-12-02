@@ -1,11 +1,11 @@
 import json
 import time
-from typing import List, Optional
 from threading import Thread, Event
 from multiprocessing import Process, Queue, Manager
 from multiprocessing.managers import SyncManager
 from queue import Empty
 import amqpstorm
+from traceback import format_exc
 
 from cryton.hive.utility import constants, logger, states, event, rabbit_client
 from cryton.hive.models import stage, plan, step, run
@@ -37,7 +37,9 @@ class ChannelConsumer:
                 break
 
             except Exception as ex:  # If any uncaught exception occurs, channel consumer will still work
-                logger.logger.warning("Channel consumer encountered an error.", id=self._id, error=str(ex))
+                logger.logger.warning(
+                    "Channel consumer encountered an error.", id=self._id, error=str(ex), tb=format_exc()
+                )
 
         logger.logger.debug("Channel consumer stopped.", id=self._id)
 
@@ -63,8 +65,8 @@ class Consumer:
         self._password = SETTINGS.rabbit.password
 
         self._stopped = Event()
-        self._connection: Optional[amqpstorm.Connection] = None
-        self._process: Optional[Process] = None
+        self._connection: amqpstorm.Connection | None = None
+        self._process: Process | None = None
 
     def start(self) -> None:
         """
@@ -166,7 +168,7 @@ class Listener:
         """
         Listener.
         """
-        self._consumers: List[Consumer] = []
+        self._consumers: list[Consumer] = []
         self.consumers_count = SETTINGS.cpu_cores
 
         self._stopped = Event()
@@ -245,7 +247,7 @@ class Listener:
             return
 
         # Create execution object and delete the correlation event
-        step_ex_obj = step.StepExecution(step_execution_id=correlation_event_obj.step_execution_id)
+        step_ex_obj = step.StepExecution(correlation_event_obj.step_execution_id)
         correlation_event_obj.delete()
 
         # Process finished execution
@@ -257,15 +259,14 @@ class Listener:
         event.Event({"step_execution_id": step_ex_obj.model.id}).handle_finished_step()  # Handle FINISHED states
 
         # Check if execution is being paused, otherwise execute successors if StepExecution is in FINISHED state
-        if (
-            plan.PlanExecution(plan_execution_id=step_ex_obj.model.stage_execution.plan_execution_id).state
-            == states.PAUSING
-        ):
+        plan_state = plan.PlanExecution(step_ex_obj.model.stage_execution.plan_execution_id).state
+        if plan_state == states.PAUSING:
             self._handle_pausing(step_ex_obj)
-        elif (
-            step_ex_obj.state == states.FINISHED
-        ):  # State of successors is set to IGNORE in ignore_successors if parent step state is not FINISHED
-            step_ex_obj.execute_successors()
+        # Do not execute successors if the plan is stopping
+        elif plan_state in [states.STOPPING, states.STOPPED]:
+            pass
+        elif step_ex_obj.state in [states.FINISHED, states.FAILED, states.ERROR]:
+            step_ex_obj.start_successors()
 
     @staticmethod
     def event_callback(message: amqpstorm.Message) -> None:
@@ -347,9 +348,9 @@ class Listener:
         logger.logger.info("Handling pause", step_execution_id=step_ex_obj.model.id)
 
         # Pause Stage execution and successors only if it's in the PAUSING state
-        stage_ex_obj = stage.StageExecution(stage_execution_id=step_ex_obj.model.stage_execution_id)
+        stage_ex_obj = stage.StageExecution(step_ex_obj.model.stage_execution_id)
         if stage_ex_obj.state == states.PAUSING:
-            step_ex_obj.pause_successors()  # Pause all successors so they can be executed after UNPAUSE
+            step_ex_obj.pause_successors()  # Pause all successors so they can be executed after RESUME
 
             # If any Steps are still running/starting, no execution can be paused
             if stage_ex_obj.model.step_executions.filter(state__in=[states.STARTING, states.RUNNING]).exists():
@@ -360,7 +361,7 @@ class Listener:
             logger.logger.info("Stage execution paused", stage_execution_id=stage_ex_obj.model.id)
 
         # Check if Plan execution should be paused since the Stage execution could have finished
-        plan_ex_obj = plan.PlanExecution(plan_execution_id=stage_ex_obj.model.plan_execution_id)
+        plan_ex_obj = plan.PlanExecution(stage_ex_obj.model.plan_execution_id)
         if (
             plan_ex_obj.state == states.PAUSING
             and not plan_ex_obj.model.stage_executions.all().exclude(state__in=states.PLAN_STAGE_PAUSE_STATES).exists()
@@ -369,11 +370,11 @@ class Listener:
             plan_ex_obj.pause_time = timezone.now()
             logger.logger.info("Plan execution paused", stage_execution_id=stage_ex_obj.model.id)
 
-            run_obj = run.Run(run_model_id=plan_ex_obj.model.run_id)
+            run_obj = run.Run(plan_ex_obj.model.run_id)
             if (
                 run_obj.state == states.PAUSING
                 and not run_obj.model.plan_executions.all()
-                .exclude(state__in=states.PLAN_FINAL_STATES + states.PLAN_UNPAUSE_STATES)
+                .exclude(state__in=states.PLAN_FINAL_STATES + states.PLAN_RESUME_STATES)
                 .exists()
             ):
                 run_obj.state = states.PAUSED

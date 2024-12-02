@@ -44,9 +44,9 @@
 #         result = self.event_obj.list_sessions()
 #         self.assertEqual({co.SESSION_LIST: [], co.OUTPUT: str(Exception)}, result)
 #
-#     def test_kill_step_execution(self):
+#     def test_stop_step_execution(self):
 #         self.mock__response_pipe.recv.return_value = {co.RETURN_CODE: co.CODE_OK}
-#         result = self.event_obj.kill_step_execution()
+#         result = self.event_obj.stop_step_execution()
 #         self.assertEqual({co.RETURN_CODE: co.CODE_OK}, result)
 #
 #     def test_health_check(self):

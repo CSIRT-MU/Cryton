@@ -47,26 +47,26 @@
 #     def test__execute(self):
 #         self.task_obj._execute({})
 #
-#     def test_kill(self):
+#     def test_stop(self):
 #         mock_process = Mock()
 #         mock_process.pid = "pid"
 #         mock_process.exitcode = None
 #         self.task_obj._process = mock_process
-#         result = self.task_obj.kill()
+#         result = self.task_obj.stop()
 #
 #         assert result
 #
-#     def test_kill_not_started(self):
-#         result = self.task_obj.kill()
+#     def test_stop_not_started(self):
+#         result = self.task_obj.stop()
 #
 #         assert not result
 #
-#     def test_kill_finished(self):
+#     def test_stop_finished(self):
 #         mock_process = Mock()
 #         mock_process.pid = "pid"
 #         mock_process.exitcode = 0
 #         self.task_obj._process = mock_process
-#         result = self.task_obj.kill()
+#         result = self.task_obj.stop()
 #
 #         assert not result
 #

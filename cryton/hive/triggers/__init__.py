@@ -3,8 +3,8 @@ from enum import Enum, EnumMeta
 from cryton.hive.utility.exceptions import TriggerTypeDoesNotExist
 from cryton.hive.triggers.trigger_delta import TriggerDelta
 from cryton.hive.triggers.trigger_http import TriggerHTTP
-from cryton.hive.triggers.trigger_msf import TriggerMSF
-from cryton.hive.triggers.trigger_datetime import TriggerDateTime
+from cryton.hive.triggers.trigger_metasploit import TriggerMetasploit
+from cryton.hive.triggers.trigger_time import TriggerTime
 from cryton.hive.triggers.trigger_immediate import TriggerImmediate
 
 
@@ -23,6 +23,6 @@ class TriggerTypeMeta(EnumMeta):
 class TriggerType(Enum, metaclass=TriggerTypeMeta):
     delta = TriggerDelta
     http = TriggerHTTP
-    metasploit = TriggerMSF
-    time = TriggerDateTime
+    metasploit = TriggerMetasploit
+    time = TriggerTime
     immediate = TriggerImmediate

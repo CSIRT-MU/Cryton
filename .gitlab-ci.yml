@@ -2,7 +2,6 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
 
-# TODO: build ci-python and production-base in a manual job
 default:
   image: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
   interruptible: true
@@ -78,8 +77,6 @@ build_documentation:
 .publish:
   stage: publish
   rules:
-    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
-      when: never
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
 
 .build_docker_image:
@@ -164,8 +161,6 @@ pages:
     - git fetch --depth=1 origin $PAGES_BRANCH || echo "Branch doesn't exist yet."
     - poetry install --with docs
   rules:
-    - if: $CI_SERVER_HOST != "gitlab.ics.muni.cz"
-      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
   script:
@@ -193,3 +188,47 @@ pages:
     expire_in: 30 days
     paths:
       - public/
+
+build_docker_image_ci_python:
+  stage: build
+  rules:
+    - when: manual
+  image:
+    name: gcr.io/kaniko-project/executor:latest
+    entrypoint: [ "" ]
+  before_script:
+    # Set variables
+    - export PYTHON_VERSIONS=$(cat $CI_PROJECT_DIR/docker/ci-python/Dockerfile | grep "pyenv install" | cut -b 19-)
+    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE/ci-python
+    # Check variables
+    - echo "PYTHON_VERSIONS $PYTHON_VERSIONS"
+    - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR/docker/ci-python
+      --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
+      --destination $IMAGE_DESTINATION:latest
+      --label python="$PYTHON_VERSIONS"
+
+build_docker_image_production_base:
+  stage: build
+  rules:
+    - when: manual
+  image:
+    name: gcr.io/kaniko-project/executor:latest
+    entrypoint: [ "" ]
+  before_script:
+    # Set variables
+    - export PYTHON_VERSION=$(head $CI_PROJECT_DIR/docker/production-base/Dockerfile -n 1 | cut -b 13-16)
+    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE/production-base
+    # Check variables
+    - echo "PYTHON_VERSION $PYTHON_VERSION"
+    - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR/docker/ci-python
+      --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
+      --destination $IMAGE_DESTINATION:latest
+      --label python="$PYTHON_VERSION"

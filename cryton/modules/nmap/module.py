@@ -1,4 +1,3 @@
-from typing import Optional
 import re
 from xml.etree import ElementTree
 import nmap3
@@ -126,7 +125,7 @@ class Module(ModuleBase):
 
 
 def execute_scan(
-    target: str, options: Optional[str], ports: Optional[list], nmap_client: nmap3.Nmap, timeout: int
+    target: str, options: str | None, ports: list | None, nmap_client: nmap3.Nmap, timeout: int
 ) -> ElementTree.Element:
     """
     Executes Nmap scan from predefined parameters.

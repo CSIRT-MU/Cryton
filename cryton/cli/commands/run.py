@@ -1,5 +1,4 @@
 import click
-from typing import Union
 
 from cryton.cli.utility import helpers
 from cryton.cli.utility.decorators import *
@@ -27,7 +26,7 @@ def run_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
 ) -> None:
     """
     List existing Runs in Cryton.
@@ -157,29 +156,6 @@ def run_pause(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command("postpone")
-@click.pass_context
-@click.argument("run_id", type=click.INT, required=True)
-@click.argument("to_postpone", type=click.STRING, required=True)
-def run_postpone(ctx: helpers.Context, run_id: int, to_postpone: str) -> None:
-    """
-    Postpone Run saved in Cryton with RUN_ID by TIME (hh:mm:ss).
-
-    RUN_ID is ID of the Run you want to postpone.
-
-    TIME is time that will be added to the Run's start time (hh:mm:ss).
-
-    \f
-    :param ctx: Click ctx object
-    :param run_id: ID of the desired Run
-    :param to_postpone: Time to add to the Run's start time
-    :return: None
-    """
-    arguments = {"delta": to_postpone}
-    response = ctx.obj.api_post(Run.POSTPONE, run_id, json=arguments)
-    helpers.print_message(response, ctx.obj.debug)
-
-
 @run.command("report")
 @click.pass_context
 @click.argument("run_id", type=click.INT, required=True)
@@ -265,7 +241,7 @@ def run_schedule(ctx: helpers.Context, run_id: int, to_date: str, to_time: str, 
 @run.command("resume")
 @click.pass_context
 @click.argument("run_id", type=click.INT, required=True)
-def run_unpause(ctx: helpers.Context, run_id: int) -> None:
+def run_resume(ctx: helpers.Context, run_id: int) -> None:
     """
     Resume Run saved in Cryton with RUN_ID.
 
@@ -276,7 +252,7 @@ def run_unpause(ctx: helpers.Context, run_id: int) -> None:
     :param run_id: ID of the desired Run
     :return: None
     """
-    response = ctx.obj.api_post(Run.UNPAUSE, run_id)  # TODO: rename to resume
+    response = ctx.obj.api_post(Run.RESUME, run_id)  # TODO: rename to resume
     helpers.print_message(response, ctx.obj.debug)
 
 
@@ -298,21 +274,21 @@ def run_unschedule(ctx: helpers.Context, run_id: int) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@run.command("kill")
+@run.command("stop")
 @click.pass_context
 @click.argument("run_id", type=click.INT, required=True)
-def run_kill(ctx: helpers.Context, run_id: int) -> None:
+def run_stop(ctx: helpers.Context, run_id: int) -> None:
     """
-    Kill Run saved in Cryton with RUN_ID.
+    Stop Run saved in Cryton with RUN_ID.
 
-    RUN_ID is ID of the Run you want to kill.
+    RUN_ID is ID of the Run you want to stop.
 
     \f
     :param ctx: Click ctx object
     :param run_id: ID of the desired Run
     :return: None
     """
-    response = ctx.obj.api_post(Run.KILL, run_id)
+    response = ctx.obj.api_post(Run.STOP, run_id)
     helpers.print_message(response, ctx.obj.debug)
 
 

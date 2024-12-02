@@ -148,7 +148,7 @@ class StepViewSet(util.InstanceFullViewSet):
 
         try:  # Check if the Stage execution exists
             stage_ex_id: int = request.data["stage_execution_id"]
-            stage_ex = StageExecution(stage_execution_id=stage_ex_id)
+            stage_ex = StageExecution(stage_ex_id)
         except (KeyError, ValueError, TypeError) as ex:
             raise exceptions.ValidationError(ex)
         except core_exceptions.StageExecutionObjectDoesNotExist:
@@ -171,8 +171,8 @@ class StepViewSet(util.InstanceFullViewSet):
             )
 
         # Create and start Step execution
-        step_ex_obj = StepExecution(step_id=step_id, stage_execution_id=stage_ex_id)
-        step_ex_obj.execute()
+        step_ex_obj = StepExecution.prepare(step_id, stage_ex_id)
+        step_ex_obj.start()
 
         msg = {"detail": "Started Step execution.", "execution_id": step_ex_obj.model.id}
         return Response(msg, status=status.HTTP_200_OK)

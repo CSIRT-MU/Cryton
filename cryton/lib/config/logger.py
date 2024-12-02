@@ -5,7 +5,7 @@ import logging.config
 import logging.handlers
 from multiprocessing import Process, Queue
 
-from cryton.lib.config.settings import LOG_DIRECTORY
+from cryton.lib.config.settings import LOGS_DIRECTORY
 
 
 # TODO: test and make sure it works with each app (hive/worker, possibly others)
@@ -77,7 +77,7 @@ class LoggerWrapper:
                         "class": "logging.handlers.RotatingFileHandler",
                         "level": "DEBUG",
                         "formatter": "simple",
-                        "filename": path.join(LOG_DIRECTORY, self.file_name),
+                        "filename": path.join(LOGS_DIRECTORY, self.file_name),
                         "maxBytes": 10485760,
                         "backupCount": 20,
                         "encoding": "utf8",

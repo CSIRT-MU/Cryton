@@ -109,7 +109,7 @@
 #         self.consumer_obj._tasks.append(mock_task)
 #
 #         self.consumer_obj.stop()
-#         mock_task.kill.assert_called_once()
+#         mock_task.stop.assert_called_once()
 #         mock_connection.close.assert_called_once()
 #         mock_channel.close.assert_called_once()
 #

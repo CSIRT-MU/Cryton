@@ -1,6 +1,5 @@
 import asyncio
 import time
-from typing import Optional
 import utinni
 from httpx import TransportError
 
@@ -21,7 +20,7 @@ class EmpireClient(utinni.EmpireApiClient):
         super().__init__(host, port)
         self.stagers = EmpireStagers(self)
 
-    async def login(self, username: str = SETTINGS.empire.username, password: str = SETTINGS.empire.password):
+    async def default_login(self, username: str = SETTINGS.empire.username, password: str = SETTINGS.empire.password):
         """
         Login to Empire server
         :param username: Username used for login to Empire
@@ -29,7 +28,7 @@ class EmpireClient(utinni.EmpireApiClient):
         """
         await try_empire_request(self.login, username, password)
 
-    async def agent_poller(self, target_ip) -> Optional[utinni.EmpireAgent]:
+    async def agent_poller(self, target_ip) -> utinni.EmpireAgent | None:
         """
         Check for new agents in 1 sec interval until the right one is found.
         :param target_ip: IP address of target that agent should've been deployed to
@@ -101,8 +100,6 @@ class EmpireClient(utinni.EmpireApiClient):
         :param command: Command
         :return: Output
         """
-        await self.login()
-
         # There is timeout in execute/shell function but for some reason it's not triggered when inactive agent is used,
         # and it freezes waiting for answer
         try:
@@ -129,8 +126,6 @@ class EmpireClient(utinni.EmpireApiClient):
         :param module_arguments: Module arguments
         :return: Output
         """
-        await self.login()
-
         # There is timeout in execute/shell function but for some reason it's not triggered when inactive agent is used,
         # and it freezes waiting for answer
         try:
@@ -166,8 +161,6 @@ class EmpireClient(utinni.EmpireApiClient):
         :param session_id: Metasploit session ID
         :return: output
         """
-        await self.login()
-
         metasploit_obj = MetasploitClientUpdated()
         try:
             session_to_use = metasploit_obj.sessions.get(session_id)
@@ -184,7 +177,7 @@ class EmpireClient(utinni.EmpireApiClient):
         logger.logger.debug(
             "Deploying agent via MSF session.", session_id=session_id, payload=payload, target_ip=target_ip
         )
-        payload_tmp = payload.split()
+        payload_tmp = payload.split(" ")
         session_to_use.execute_in_shell(payload_tmp[0], payload_tmp[1:])
 
         # Rename agent to given name
@@ -239,7 +232,7 @@ async def try_empire_request(fn_to_run, *fn_args, **fn_kwargs):
 class Module(ModuleBase):
     SCHEMA = {
         "type": "object",
-        "description": "Arguments for the `hello_world` module.",
+        "description": "Arguments for the `empire` module.",
         "properties": {
             "action": {"type": "string", "enum": ["execute-command", "execute-module", "deploy"]},
             "agent_name": {"type": "string", "pattern": "^[a-zA-Z0-9]+$"},
@@ -310,10 +303,28 @@ class Module(ModuleBase):
         self._module_arguments = self._arguments.get("module", {}).get("arguments")
 
     def check_requirements(self) -> None:
-        asyncio.run(EmpireClient().login())
+        asyncio.run(EmpireClient().default_login())
+
+        if self._action != "deploy":
+            return
+
+        msf_client = MetasploitClientUpdated(log_in=False)
+        try:
+            msf_client.health.rpc.check()
+        except MSFError as ex:
+            raise ConnectionError(
+                f"Unable to establish connection with MSF RPC. "
+                f"Check if the service is running and connection parameters. Original error: {ex}"
+            )
+        try:
+            msf_client.login()
+        except MSFError as ex:
+            raise RuntimeError(f"Unable to authenticate with the MSF RPC server. Original error: {ex}")
 
     async def execute_async(self) -> str:
         empire = EmpireClient()
+        await empire.default_login()
+
         if self._action == "execute-command":
             output = await empire.execute_command_on_agent(self._agent_name, self._command)
         elif self._action == "execute-module":
@@ -324,12 +335,8 @@ class Module(ModuleBase):
         return output
 
     def execute(self) -> ModuleOutput:
-        try:
-            output = asyncio.run(self.execute_async())
-        except Exception as ex:
-            self._data.output = str(ex)
-            return self._data
-
+        output = asyncio.run(self.execute_async())
         self._data.result = Result.OK
         self._data.output = output
+
         return self._data

@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExam
 
 from cryton.hive.cryton_app import util, serializers, exceptions
 from cryton.hive.cryton_app.models import RunModel, WorkerModel, PlanModel
-from cryton.hive.utility import util as core_util, exceptions as core_exceptions, states
+from cryton.hive.utility import exceptions as core_exceptions, states
 from cryton.hive.models.run import Run
 from cryton.hive.models.plan import Plan
 
@@ -32,7 +32,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        Run(run_model_id=model_id).delete()
+        Run(model_id).delete()
 
     @extend_schema(
         description="Create new Run.",
@@ -61,7 +61,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         if not PlanModel.objects.filter(id=plan_id).exists():
             raise exceptions.NotFound(f"Nonexistent Plan with ID {plan_id} specified.")
 
-        run_obj = Run(plan_id=plan_id, workers=workers)
+        run_obj = Run.prepare(plan_id, worker_ids)
         plan_execution_ids = run_obj.model.plan_executions.values_list("id", flat=True)
 
         msg = {"id": run_obj.model.id, "detail": "Run successfully created.", "plan_execution_ids": plan_execution_ids}
@@ -78,7 +78,7 @@ class RunViewSet(util.ExecutionFullViewSet):
     def report(self, _, **kwargs):
         run_id = kwargs.get("pk")
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
             report = run_obj.report()
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
@@ -99,7 +99,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         run_id = kwargs.get("pk")
 
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
             run_obj.pause()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
@@ -119,12 +119,12 @@ class RunViewSet(util.ExecutionFullViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def unpause(self, _, **kwargs):
+    def resume(self, _, **kwargs):
         run_id = kwargs.get("pk")
 
         try:
-            run_obj = Run(run_model_id=run_id)
-            run_obj.unpause()
+            run_obj = Run(run_id)
+            run_obj.resume()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
         except core_exceptions.RunObjectDoesNotExist:
@@ -166,7 +166,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         start_time = util.get_start_time(request.data)
 
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
             run_obj.schedule(start_time)
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
@@ -189,7 +189,7 @@ class RunViewSet(util.ExecutionFullViewSet):
     def execute(self, _, **kwargs):
         run_id = kwargs.get("pk")
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 
@@ -199,7 +199,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             )
 
         try:
-            run_obj.execute()
+            run_obj.start()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
         except core_exceptions.RpcTimeoutError as ex:
@@ -241,7 +241,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         start_time = util.get_start_time(request.data)
 
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
             run_obj.reschedule(start_time)
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
@@ -249,51 +249,6 @@ class RunViewSet(util.ExecutionFullViewSet):
             raise exceptions.ApiWrongObjectState(ex)
 
         msg = {"detail": f"Run {run_id} is rescheduled for {start_time}."}
-        return Response(msg, status=status.HTTP_200_OK)
-
-    @extend_schema(
-        description="Postpone Run.",
-        request=serializers.RunPostponeSerializer(),
-        examples=[
-            OpenApiExample(
-                "Postpone Run",
-                description="Postpone Run for 1 hour, 2 minutes, 3 seconds.",
-                value={
-                    "delta": "1:2:3",
-                },
-                request_only=True,
-            )
-        ],
-        responses={
-            200: serializers.DetailStringSerializer,
-            400: serializers.DetailStringSerializer,
-            404: serializers.DetailStringSerializer,
-        },
-    )
-    @action(methods=["post"], detail=True)
-    def postpone(self, request: Request, **kwargs):
-        run_id = kwargs.get("pk")
-        try:
-            run_obj = Run(run_model_id=run_id)
-        except core_exceptions.RunObjectDoesNotExist:
-            raise exceptions.NotFound()
-
-        try:
-            delta = request.data["delta"]
-        except KeyError as ex:
-            raise exceptions.ValidationError(ex)
-
-        try:
-            delta = core_util.parse_delta_to_datetime(delta)
-        except core_exceptions.UserInputError as ex:
-            raise exceptions.ValidationError(ex)
-
-        try:
-            run_obj.postpone(delta)
-        except core_exceptions.InvalidStateError as ex:
-            raise exceptions.ApiWrongObjectState(ex)
-
-        msg = {"detail": f"Run {run_id} is postponed by {delta}."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -309,7 +264,7 @@ class RunViewSet(util.ExecutionFullViewSet):
     def unschedule(self, _, **kwargs):
         run_id = kwargs.get("pk")
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
             run_obj.unschedule()
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
@@ -320,7 +275,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
-        description="Kill Run.",
+        description="Stop Run.",
         request=None,
         responses={
             200: serializers.DetailStringSerializer,
@@ -329,18 +284,18 @@ class RunViewSet(util.ExecutionFullViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def kill(self, _, **kwargs):
+    def stop(self, _, **kwargs):
         run_id = kwargs.get("pk")
 
         try:
-            run_obj = Run(run_model_id=run_id)
-            run_obj.kill()
+            run_obj = Run(run_id)
+            run_obj.stop()
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {"detail": f"Run {run_id} is terminated."}
+        msg = {"detail": f"Run {run_id} is stopped."}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -356,7 +311,7 @@ class RunViewSet(util.ExecutionFullViewSet):
     def healthcheck_workers(self, _, **kwargs):
         run_id = kwargs.get("pk")
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 
@@ -381,7 +336,7 @@ class RunViewSet(util.ExecutionFullViewSet):
     def validate_modules(self, _, **kwargs):
         run_id = kwargs.get("pk")
         try:
-            run_obj = Run(run_model_id=run_id)
+            run_obj = Run(run_id)
         except core_exceptions.RunObjectDoesNotExist:
             raise exceptions.NotFound()
 

@@ -31,7 +31,7 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        StageExecution(stage_execution_id=model_id).delete()
+        StageExecution(model_id).delete()
 
     @extend_schema(
         description="Generate Stage execution report.",
@@ -44,7 +44,7 @@ class StageExecutionViewSet(util.ExecutionViewSet):
     def report(self, _, **kwargs):
         stage_execution_id = kwargs.get("pk")
         try:
-            stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
+            stage_ex_obj = StageExecution(stage_execution_id)
         except core_exceptions.StageExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
         report = stage_ex_obj.report()
@@ -52,7 +52,7 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         return Response(report, status=status.HTTP_200_OK)
 
     @extend_schema(
-        description="Kill Stage execution.",
+        description="Stop Stage execution.",
         request=None,
         responses={
             200: serializers.DetailStringSerializer,
@@ -61,18 +61,18 @@ class StageExecutionViewSet(util.ExecutionViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def kill(self, _, **kwargs):
+    def stop(self, _, **kwargs):
         stage_execution_id = kwargs.get("pk")
 
         try:
-            stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
-            stage_ex_obj.kill()
+            stage_ex_obj = StageExecution(stage_execution_id)
+            stage_ex_obj.stop()
         except core_exceptions.StageExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {"detail": "{}".format("Stage execution {} is terminated.".format(stage_execution_id))}
+        msg = {"detail": "{}".format("Stage execution {} is stopped.".format(stage_execution_id))}
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -88,7 +88,7 @@ class StageExecutionViewSet(util.ExecutionViewSet):
     def re_execute(self, request: Request, **kwargs):
         stage_execution_id = kwargs.get("pk")
         try:
-            stage_ex_obj = StageExecution(stage_execution_id=stage_execution_id)
+            stage_ex_obj = StageExecution(stage_execution_id)
         except core_exceptions.StageExecutionObjectDoesNotExist:
             raise exceptions.NotFound()
 
