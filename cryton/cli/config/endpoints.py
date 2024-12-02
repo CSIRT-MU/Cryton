@@ -5,13 +5,12 @@ class Run:
     DELETE = "runs/{}/"
     EXECUTE = "runs/{}/execute/"
     PAUSE = "runs/{}/pause/"
-    POSTPONE = "runs/{}/postpone/"
     REPORT = "runs/{}/report/"
     RESCHEDULE = "runs/{}/reschedule/"
     SCHEDULE = "runs/{}/schedule/"
-    UNPAUSE = "runs/{}/unpause/"
+    RESUME = "runs/{}/resume/"
     UNSCHEDULE = "runs/{}/unschedule/"
-    KILL = "runs/{}/kill/"
+    STOP = "runs/{}/stop/"
     HEALTH_CHECK_WORKERS = "runs/{}/healthcheck_workers/"
     VALIDATE_MODULES = "runs/{}/validate_modules/"
     GET_PLAN = "runs/{}/get_plan/"
@@ -33,9 +32,9 @@ class PlanExecution:
     DELETE = "plan_executions/{}/"
     PAUSE = "plan_executions/{}/pause/"
     REPORT = "plan_executions/{}/report/"
-    UNPAUSE = "plan_executions/{}/unpause/"
+    RESUME = "plan_executions/{}/resume/"
     VALIDATE_MODULES = "plan_executions/{}/validate_modules/"
-    KILL = "plan_executions/{}/kill/"
+    STOP = "plan_executions/{}/stop/"
 
 
 class Stage:
@@ -52,7 +51,7 @@ class StageExecution:
     READ = "stage_executions/{}/"
     DELETE = "stage_executions/{}/"
     REPORT = "stage_executions/{}/report/"
-    KILL = "stage_executions/{}/kill/"
+    STOP = "stage_executions/{}/stop/"
     RE_EXECUTE = "stage_executions/{}/re_execute/"
 
 
@@ -70,7 +69,7 @@ class StepExecution:
     READ = "step_executions/{}/"
     DELETE = "step_executions/{}/"
     REPORT = "step_executions/{}/report/"
-    KILL = "step_executions/{}/kill/"
+    STOP = "step_executions/{}/stop/"
     RE_EXECUTE = "step_executions/{}/re_execute/"
 
 

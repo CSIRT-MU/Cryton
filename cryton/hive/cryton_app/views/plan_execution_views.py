@@ -30,7 +30,7 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
         :param model_id: ID of the desired object
         :return: None
         """
-        PlanExecution(plan_execution_id=model_id).delete()
+        PlanExecution(model_id).delete()
 
     @extend_schema(
         description="Generate Plan execution report.",
@@ -43,7 +43,7 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
     def report(self, _, **kwargs):
         plan_ex_id = kwargs.get("pk")
         try:
-            plan_ex_obj = PlanExecution(plan_execution_id=plan_ex_id)
+            plan_ex_obj = PlanExecution(plan_ex_id)
         except core_exceptions.PlanExecutionDoesNotExist:
             raise exceptions.NotFound()
         report = plan_ex_obj.report()
@@ -64,7 +64,7 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
     def pause(self, _, **kwargs):
         plan_ex_id = kwargs.get("pk")
         try:
-            plan_ex_obj = PlanExecution(plan_execution_id=plan_ex_id)
+            plan_ex_obj = PlanExecution(plan_ex_id)
             plan_ex_obj.pause()
         except core_exceptions.PlanExecutionDoesNotExist:
             raise exceptions.NotFound()
@@ -84,11 +84,11 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def unpause(self, _, **kwargs):
+    def resume(self, _, **kwargs):
         plan_ex_id = kwargs.get("pk")
         try:
-            plan_ex_obj = PlanExecution(plan_execution_id=plan_ex_id)
-            plan_ex_obj.unpause()
+            plan_ex_obj = PlanExecution(plan_ex_id)
+            plan_ex_obj.resume()
         except core_exceptions.PlanExecutionDoesNotExist as ex:
             raise exceptions.NotFound(ex)
         except core_exceptions.InvalidStateError as ex:
@@ -110,7 +110,7 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
     def validate_modules(self, _, **kwargs):
         plan_ex_id = kwargs.get("pk")
         try:
-            plan_ex_obj = PlanExecution(plan_execution_id=plan_ex_id)
+            plan_ex_obj = PlanExecution(plan_ex_id)
         except core_exceptions.PlanExecutionDoesNotExist:
             raise exceptions.NotFound()
 
@@ -123,7 +123,7 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
         return Response(msg, status=status.HTTP_200_OK)
 
     @extend_schema(
-        description="Kill Plan execution.",
+        description="Stop Plan execution.",
         request=None,
         responses={
             200: serializers.DetailStringSerializer,
@@ -132,15 +132,15 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
         },
     )
     @action(methods=["post"], detail=True)
-    def kill(self, _, **kwargs):
+    def stop(self, _, **kwargs):
         plan_ex_id = kwargs.get("pk")
         try:
-            plan_ex_obj = PlanExecution(plan_execution_id=plan_ex_id)
-            plan_ex_obj.kill()
+            plan_ex_obj = PlanExecution(plan_ex_id)
+            plan_ex_obj.stop()
         except core_exceptions.PlanExecutionDoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
 
-        msg = {"detail": f"Plan execution {plan_ex_id} is terminated."}
+        msg = {"detail": f"Plan execution {plan_ex_id} is stopped."}
         return Response(msg, status=status.HTTP_200_OK)

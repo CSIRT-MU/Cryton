@@ -101,31 +101,20 @@ Use the provided [`ci-python` image](#ci-python) to get an isolated environment.
 ### E2E
 E2E tests will test Hive, Worker, and CLI together.
 
-Build playground with E2E tests ready:
+Build playground with modifications for E2E tests:
 ```shell
 docker compose -f docker-compose.yml -f docker-compose.playground.yml -f docker-compose.dev.yml -f docker-compose.e2e.yml up -d --build
 ```
 
-Enter the CLI container:
+Export variables for E2E tests:
 ```shell
-docker exec -it cryton-cli bash
+export CRYTON_E2E_WORKER_ADDRESS="192.168.90.11"
 ```
 
 Run the tests:
 ```shell
-/app/.venv/bin/python /app/tests_e2e/cli.py run-tests
+pytest tests/e2e/
 ```
-
-??? note "Possible tests"
-
-    - `basic`
-    - `advanced`
-    - `control`
-    - `empire`
-    - `http_trigger`
-    - `msf_trigger`
-    - `datetime_trigger`
-    - `all`
 
 ## Django related
 
@@ -213,7 +202,7 @@ testing if all the functionality works across the whole Cryton toolset.
 - Settings for Pytest can be found in a *pyproject.toml* file
 - Tests (that test the same code part/class) are grouped using classes
 - Each class that works with the Django DB has to be marked with `@pytest.mark.django_db`
-- Each class should be patched to use the test logger if possible ([Core](../logging.md#core); [worker](../logging.md#worker))
+- Each class should be patched to use the test logger if possible ([testing logger](../logging.md#testing))
 - Unit tests shouldn't interact with the DB. 
 - Use the `model_bakery` library instead of mocking the DB interactions for the integration tests
 - For easier mocking, each test class should have a `path` class variable. If we are testing a class 

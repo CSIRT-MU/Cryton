@@ -1,4 +1,7 @@
-from cryton.hive.utility import exceptions
+from abc import ABC
+
+from cryton.hive.utility import exceptions, logger
+
 
 # States
 PENDING = "PENDING"
@@ -10,10 +13,11 @@ PAUSED = "PAUSED"
 FINISHED = "FINISHED"
 IGNORED = "IGNORED"
 ERROR = "ERROR"
+FAILED = "FAILED"
 WAITING = "WAITING"
-TERMINATED = "TERMINATED"
-TERMINATING = "TERMINATING"
 AWAITING = "AWAITING"
+STOPPED = "STOPPED"
+STOPPING = "STOPPING"
 
 UP = "UP"
 DOWN = "DOWN"
@@ -24,7 +28,7 @@ WORKER_STATES = [UP, DOWN]
 WORKER_TRANSITIONS = [(UP, DOWN), (DOWN, UP)]
 
 # Run related
-RUN_STATES = [PENDING, SCHEDULED, RUNNING, FINISHED, PAUSED, PAUSING, TERMINATING, TERMINATED]
+RUN_STATES = [PENDING, SCHEDULED, RUNNING, FINISHED, PAUSED, PAUSING, STOPPING, STOPPED]
 
 RUN_TRANSITIONS = [
     (PENDING, SCHEDULED),
@@ -33,27 +37,27 @@ RUN_TRANSITIONS = [
     (SCHEDULED, RUNNING),
     (RUNNING, PAUSING),
     (RUNNING, FINISHED),
-    (RUNNING, TERMINATING),
+    (RUNNING, STOPPING),
     (PAUSING, PAUSED),
     (PAUSING, FINISHED),
-    (PAUSING, TERMINATING),
+    (PAUSING, STOPPING),
     (PAUSED, RUNNING),
-    (PAUSED, TERMINATING),
-    (TERMINATING, TERMINATED),
+    (PAUSED, STOPPING),
+    (STOPPING, STOPPED),
 ]
 
 RUN_PREPARE_STATES = [PENDING]
 RUN_SCHEDULE_STATES = [PENDING]
 RUN_UNSCHEDULE_STATES = [SCHEDULED]
 RUN_RESCHEDULE_STATES = [SCHEDULED]
-RUN_POSTPONE_STATES = [SCHEDULED]
 RUN_EXECUTE_STATES = [PENDING, SCHEDULED]
 RUN_EXECUTE_NOW_STATES = [PENDING]
 RUN_PAUSE_STATES = [RUNNING]
-RUN_UNPAUSE_STATES = [PAUSED]
-RUN_KILL_STATES = [RUNNING, PAUSING, PAUSED]
+RUN_RESUME_STATES = [PAUSED]
+RUN_STOP_STATES = [RUNNING, PAUSING, PAUSED]
+RUN_FINAL_STATES = [FINISHED, STOPPED]
 
-RUN_PLAN_PAUSE_STATES = [PENDING, PAUSED, FINISHED, TERMINATED]
+RUN_PLAN_PAUSE_STATES = [PENDING, PAUSED, FINISHED, STOPPED]
 
 # PlanExecution related
 PLAN_STATES = RUN_STATES
@@ -64,13 +68,12 @@ PLAN_SCHEDULE_STATES = [PENDING]
 PLAN_EXECUTE_STATES = [PENDING]
 PLAN_UNSCHEDULE_STATES = [SCHEDULED]
 PLAN_RESCHEDULE_STATES = [SCHEDULED]
-PLAN_POSTPONE_STATES = [SCHEDULED]
 PLAN_PAUSE_STATES = [RUNNING]
-PLAN_UNPAUSE_STATES = [PAUSED]
-PLAN_KILL_STATES = [RUNNING, PAUSING, PAUSED]
-PLAN_FINAL_STATES = [FINISHED, TERMINATED]
+PLAN_RESUME_STATES = [PAUSED]
+PLAN_STOP_STATES = [RUNNING, PAUSING, PAUSED]
+PLAN_FINAL_STATES = [FINISHED, STOPPED]
 
-PLAN_STAGE_PAUSE_STATES = [PENDING, PAUSED, FINISHED, TERMINATED, WAITING, AWAITING]
+PLAN_STAGE_PAUSE_STATES = [PENDING, PAUSED, FINISHED, STOPPED, WAITING, AWAITING]
 PLAN_RUN_EXECUTE_STATES = [RUNNING, FINISHED]
 
 # StageExecution related
@@ -84,51 +87,44 @@ STAGE_STATES = [
     PAUSED,
     WAITING,
     AWAITING,
-    TERMINATING,
-    TERMINATED,
+    STOPPING,
+    STOPPED,
     ERROR,
 ]
 
 STAGE_TRANSITIONS = [
-    (PENDING, SCHEDULED),
-    (PENDING, WAITING),
     (PENDING, STARTING),
-    (PENDING, RUNNING),
     (STARTING, AWAITING),
     (STARTING, ERROR),
-    (SCHEDULED, PENDING),
-    (SCHEDULED, WAITING),
-    (SCHEDULED, RUNNING),
-    (RUNNING, FINISHED),
-    (RUNNING, PAUSING),
-    (RUNNING, TERMINATING),
-    (PAUSING, FINISHED),
-    (PAUSING, PAUSED),
-    (PAUSING, TERMINATING),
-    (PAUSED, RUNNING),
-    (PAUSED, TERMINATING),
-    (WAITING, RUNNING),
-    (WAITING, PAUSED),
-    (WAITING, TERMINATING),
+    (AWAITING, PENDING),
     (AWAITING, WAITING),
     (AWAITING, RUNNING),
     (AWAITING, PAUSED),
-    (AWAITING, TERMINATING),
-    (TERMINATING, TERMINATED),
+    (AWAITING, STOPPING),
+    (RUNNING, FINISHED),
+    (RUNNING, PAUSING),
+    (RUNNING, STOPPING),
+    (PAUSING, FINISHED),
+    (PAUSING, PAUSED),
+    (PAUSING, STOPPING),
+    (PAUSED, RUNNING),
+    (PAUSED, STOPPING),
+    (WAITING, RUNNING),
+    (WAITING, PAUSED),
+    (WAITING, STOPPING),
+    (STOPPING, STOPPED),
 ]
 
-STAGE_EXECUTE_STATES = [PENDING, SCHEDULED, PAUSED, WAITING, AWAITING]
-STAGE_SCHEDULE_STATES = [PENDING]
-STAGE_UNSCHEDULE_STATES = [SCHEDULED]
-STAGE_PAUSE_STATES = [RUNNING]
-STAGE_UNPAUSE_STATES = [PAUSED]
-STAGE_KILL_STATES = [RUNNING, PAUSING, PAUSED, WAITING, AWAITING]
-STAGE_FINAL_STATES = [FINISHED, TERMINATED, ERROR]
+STAGE_EXECUTE_STATES = [PENDING, PAUSED, WAITING, AWAITING]
+STAGE_PAUSE_STATES = [RUNNING, AWAITING, WAITING]
+STAGE_RESUME_STATES = [PAUSED]
+STAGE_STOP_STATES = [RUNNING, PAUSING, PAUSED, WAITING, AWAITING]
+STAGE_FINAL_STATES = [FINISHED, STOPPED, ERROR]
 
 STAGE_PLAN_EXECUTE_STATES = [RUNNING, FINISHED]
 
 # StepExecution related
-STEP_STATES = [PENDING, STARTING, RUNNING, FINISHED, IGNORED, PAUSED, ERROR, TERMINATING, TERMINATED]
+STEP_STATES = [PENDING, STARTING, RUNNING, FINISHED, IGNORED, PAUSED, ERROR, STOPPING, STOPPED, FAILED]
 
 STEP_TRANSITIONS = [
     (PENDING, STARTING),
@@ -137,264 +133,77 @@ STEP_TRANSITIONS = [
     (STARTING, RUNNING),
     (STARTING, ERROR),
     (RUNNING, FINISHED),
+    (RUNNING, FAILED),
     (RUNNING, ERROR),
-    (RUNNING, TERMINATING),
+    (RUNNING, STOPPING),
     (PAUSED, STARTING),
-    (PAUSED, TERMINATING),
-    (TERMINATING, TERMINATED),
+    (PAUSED, STOPPING),
+    (STOPPING, STOPPED),
 ]
 
 STEP_EXECUTE_STATES = [PENDING, PAUSED]
-STEP_KILL_STATES = [RUNNING, PAUSED]
-STEP_FINAL_STATES = [FINISHED, IGNORED, TERMINATED, ERROR]
+STEP_STOP_STATES = [RUNNING, PAUSED]
+STEP_FINAL_STATES = [FINISHED, IGNORED, STOPPED, ERROR, FAILED]
 
 STEP_STAGE_EXECUTE_STATES = [RUNNING, FINISHED]
 
 
-class StateMachine:
-    """Base state machine"""
+class StateMachine(ABC):
+    VALID_STATES: list[str]
+    VALID_TRANSITIONS: list[tuple[str, str]]
 
-    def __init__(self, execution_id: int, valid_states: list, valid_transitions: list):
+    @classmethod
+    def validate_transition(cls, state_from: str, state_to: str) -> bool:
         """
-        :param valid_states: list of valid states that can be used for transitions
-        :param valid_transitions: list of valid transitions that can be made
-        """
-        self.execution_id = execution_id
-        self.valid_states: list = valid_states
-        self.valid_transitions: list = valid_transitions
-
-    def _check_transition_validity(self, state_from: str, state_to: str) -> bool:
-        """
-        Check if the transition is valid
-        :param state_from: from what state will be the transition made
-        :param state_to: to what state will be the transition made
+        Check if the transition is valid.
+        :param state_from: From what state will be the transition made
+        :param state_to: To what state will be the transition made
         :raises:
             InvalidStateError
             StateTransitionError
-        :return: True if transition is valid, False if transition is duplicate
+        :return: True if the transition is valid
         """
-        if state_from not in self.valid_states:
-            raise exceptions.InvalidStateError(
-                "Invalid state {}!".format(state_from), self.execution_id, state_from, self.valid_states
-            )
-        if state_to not in self.valid_states:
-            raise exceptions.InvalidStateError(
-                "Invalid state {}!".format(state_to), self.execution_id, state_to, self.valid_states
-            )
-        if state_from == state_to:
-            return False
-
-        if (state_from, state_to) not in self.valid_transitions:
+        logger.logger.debug("Checking state transition validity", state_from=state_from, state_to=state_to)
+        if state_from not in cls.VALID_STATES:
+            raise exceptions.InvalidStateError(f"Invalid state {state_from}! Valid states: {cls.VALID_STATES}")
+        if state_to not in cls.VALID_STATES:
+            raise exceptions.InvalidStateError(f"Invalid state {state_to}! Valid states: {cls.VALID_STATES}")
+        if (state_from, state_to) not in cls.VALID_TRANSITIONS:
             raise exceptions.StateTransitionError(
-                "Invalid state transition from {} to {}!".format(state_from, state_to),
-                self.execution_id,
-                state_from,
-                state_to,
-                self.valid_transitions,
+                f"Invalid state transition from {state_from} to {state_to}! Valid transitions: {cls.VALID_TRANSITIONS}"
             )
 
         return True
 
-    def _check_valid_state(self, state, valid_states):
+    @staticmethod
+    def validate_state(state: str, valid_states: list[str]) -> None:
         """
-        Check if the state is in valid states, if valid_states are empty don't check
-        :param state: state to check
-        :param valid_states: list of valid states
+        Check if the state is in valid states.
+        :param state: State
+        :param valid_states: Valid states
         :raises:
             InvalidStateError
-        :return: None
+        :return: True if the state is in valid states
         """
-        if valid_states and state not in valid_states:
-            raise exceptions.InvalidStateError(
-                "Desired action cannot be performed due to incorrect state.", self.execution_id, state, valid_states
-            )
-
-        return None
+        if state not in valid_states:
+            raise exceptions.InvalidStateError(f"State {state} is not in {valid_states}.")
 
 
 class RunStateMachine(StateMachine):
-    """Run state machine"""
-
-    def __init__(self, execution_id: int):
-        super().__init__(execution_id, RUN_STATES, RUN_TRANSITIONS)
-
-    def validate_transition(self, state_from: str, state_to: str) -> bool:
-        """
-        Check if the transition is valid
-        :param state_from: from what state will be the transition made
-        :param state_to: to what state will be the transition made
-        :raises:
-            RunStateTransitionError
-            RunInvalidStateError
-        :return: True if transition is valid, False if transition is duplicate
-        """
-        try:
-            return self._check_transition_validity(state_from, state_to)
-        except exceptions.StateTransitionError as e:
-            raise exceptions.RunStateTransitionError(
-                e.message.get("message"), self.execution_id, state_from, state_to, RUN_TRANSITIONS
-            )
-        except exceptions.InvalidStateError as e:
-            raise exceptions.RunInvalidStateError(
-                e.message.get("message"), self.execution_id, e.message.get("state"), RUN_STATES
-            )
-
-    def validate_state(self, state: str, valid_states: list) -> None:
-        """
-        Check if the state is in valid states, if valid_states are empty don't check
-        :param state: state to check
-        :param valid_states: list of valid states
-        :raises:
-            RunInvalidStateError
-        :return: None
-        """
-        try:
-            return self._check_valid_state(state, valid_states)
-        except exceptions.InvalidStateError:
-            raise exceptions.RunInvalidStateError(
-                "Desired action cannot be performed due to Run's incorrect state.",
-                self.execution_id,
-                state,
-                valid_states,
-            )
+    VALID_STATES = RUN_STATES
+    VALID_TRANSITIONS = RUN_TRANSITIONS
 
 
 class PlanStateMachine(StateMachine):
-    """Plan state machine"""
-
-    def __init__(self, execution_id: int):
-        super().__init__(execution_id, PLAN_STATES, PLAN_TRANSITIONS)
-
-    def validate_transition(self, state_from: str, state_to: str) -> bool:
-        """
-        Check if the transition is valid
-        :param state_from: from what state will be the transition made
-        :param state_to: to what state will be the transition made
-        :raises:
-            PlanStateTransitionError
-            PlanInvalidStateError
-        :return: True if transition is valid, False if transition is duplicate
-        """
-        try:
-            return self._check_transition_validity(state_from, state_to)
-        except exceptions.StateTransitionError as e:
-            raise exceptions.PlanStateTransitionError(
-                e.message.get("message"), self.execution_id, state_from, state_to, PLAN_TRANSITIONS
-            )
-        except exceptions.InvalidStateError as e:
-            raise exceptions.PlanInvalidStateError(
-                e.message.get("message"), self.execution_id, e.message.get("state"), PLAN_STATES
-            )
-
-    def validate_state(self, state: str, valid_states: list) -> None:
-        """
-        Check if the state is in valid states, if valid_states are empty don't check
-        :param state: state to check
-        :param valid_states: list of valid states
-        :raises:
-            PlanInvalidStateError
-        :return: None
-        """
-        try:
-            return self._check_valid_state(state, valid_states)
-        except exceptions.InvalidStateError:
-            raise exceptions.PlanInvalidStateError(
-                "Desired action cannot be performed due to PlanExecution's incorrect state.",
-                self.execution_id,
-                state,
-                valid_states,
-            )
+    VALID_STATES = PLAN_STATES
+    VALID_TRANSITIONS = PLAN_TRANSITIONS
 
 
 class StageStateMachine(StateMachine):
-    """Stage state machine"""
-
-    def __init__(self, execution_id: int):
-        super().__init__(execution_id, STAGE_STATES, STAGE_TRANSITIONS)
-
-    def validate_transition(self, state_from: str, state_to: str) -> bool:
-        """
-        Check if the transition is valid
-        :param state_from: from what state will be the transition made
-        :param state_to: to what state will be the transition made
-        :raises:
-            StageStateTransitionError
-            StageInvalidStateError
-        :return: True if transition is valid, False if transition is duplicate
-        """
-        try:
-            return self._check_transition_validity(state_from, state_to)
-        except exceptions.StateTransitionError as e:
-            raise exceptions.StageStateTransitionError(
-                e.message.get("message"), self.execution_id, state_from, state_to, STAGE_TRANSITIONS
-            )
-        except exceptions.InvalidStateError as e:
-            raise exceptions.StageInvalidStateError(
-                e.message.get("message"), self.execution_id, e.message.get("state"), STAGE_STATES
-            )
-
-    def validate_state(self, state: str, valid_states: list) -> None:
-        """
-        Check if the state is in valid states, if valid_states are empty don't check
-        :param state: state to check
-        :param valid_states: list of valid states
-        :raises:
-            StageInvalidStateError
-        :return: None
-        """
-        try:
-            return self._check_valid_state(state, valid_states)
-        except exceptions.InvalidStateError:
-            raise exceptions.StageInvalidStateError(
-                "Desired action cannot be performed due to StageExecution's incorrect state.",
-                self.execution_id,
-                state,
-                valid_states,
-            )
+    VALID_STATES = STAGE_STATES
+    VALID_TRANSITIONS = STAGE_TRANSITIONS
 
 
 class StepStateMachine(StateMachine):
-    """Step state machine"""
-
-    def __init__(self, execution_id: int):
-        super().__init__(execution_id, STEP_STATES, STEP_TRANSITIONS)
-
-    def validate_transition(self, state_from: str, state_to: str) -> bool:
-        """
-        Check if the transition is valid
-        :param state_from: from what state will be the transition made
-        :param state_to: to what state will be the transition made
-        :raises:
-            StepStateTransitionError
-            StepInvalidStateError
-        :return: True if transition is valid, False if transition is duplicate
-        """
-        try:
-            return self._check_transition_validity(state_from, state_to)
-        except exceptions.StateTransitionError as e:
-            raise exceptions.StepStateTransitionError(
-                e.message.get("message"), self.execution_id, state_from, state_to, STEP_TRANSITIONS
-            )
-        except exceptions.InvalidStateError as e:
-            raise exceptions.StepInvalidStateError(
-                e.message.get("message"), self.execution_id, e.message.get("state"), STEP_STATES
-            )
-
-    def validate_state(self, state: str, valid_states: list) -> None:
-        """
-        Check if the state is in valid states, if valid_states are empty don't check
-        :param state: state to check
-        :param valid_states: list of valid states
-        :raises:
-            StepInvalidStateError
-        :return: None
-        """
-        try:
-            return self._check_valid_state(state, valid_states)
-        except exceptions.InvalidStateError:
-            raise exceptions.StepInvalidStateError(
-                "Desired action cannot be performed due to StepExecution's incorrect state.",
-                self.execution_id,
-                state,
-                valid_states,
-            )
+    VALID_STATES = STEP_STATES
+    VALID_TRANSITIONS = STEP_TRANSITIONS

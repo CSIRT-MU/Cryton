@@ -720,14 +720,14 @@
 #     #
 #     #     assert updated_arguments == expected_msg_body
 #
-#     def test_kill(self, mocker, step_execution):
+#     def test_stop(self, mocker, step_execution):
 #         rpc_mock = mocker.patch("cryton.hive.models.step.rabbit_client.RpcClient")
 #         rpc_mock.return_value.__enter__.return_value.call.return_value = {'event_v': {'return_code': 0}}
 #         mock_logger: Mock = mocker.patch("cryton.hive.utility.logger.logger")
 #         step_execution.state = 'RUNNING'
 #         baker.make(CorrelationEventModel, step_execution_id=step_execution.model.id)
 #
-#         step_execution.kill()
+#         step_execution.stop()
 #         mock_logger.info.assert_called_once()
 #
 #     def test_re_execute(self, mocker, step_execution):

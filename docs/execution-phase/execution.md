@@ -8,7 +8,7 @@ These are not objects that need to be created by you - instead, they are created
 This way the history and results of each execution can be stored.
 
 Every Execution object stores a start and finish time, so it is easy to count the running times of each unit. With Steps 
-the Execution is also a place where the output and results from attack modules are stored.
+the Execution is also a place where the results from attack modules are stored.
 
 ## Plan execution
 For every execution of the Plan (on a given Worker) a new Plan execution is created.
@@ -46,9 +46,9 @@ Here is a map of allowed states, transitions, and their description.
 
 **PAUSED** - Once all the sub-executions are paused or in a final state, the execution is marked as *PAUSED*.
 
-**TERMINATING** - If the user decides to kill the execution, it will change its state to *TERMINATING* and wait until the conditions are met.
+**STOPPING** - If the user decides to stop the execution, it will change its state to *STOPPING* and wait until the conditions are met.
 
-**TERMINATED** - Once all the sub-executions are stopped, the execution is marked as *TERMINATED*.
+**STOPPED** - Once all the sub-executions are stopped, the execution is marked as *STOPPED*.
 
 **FINISHED** - In this state the execution, and its sub-executions have reached final states.
 
@@ -92,9 +92,9 @@ Here is a map of allowed states, transitions, and their description.
 
 **PAUSED** - Once all the sub-executions are paused or in a final state, the execution is marked as *PAUSED*.
 
-**TERMINATING** - If the user decides to kill the execution, it will change its state to *TERMINATING* and wait until the conditions are met.
+**STOPPING** - If the user decides to stop the execution, it will change its state to *STOPPING* and wait until the conditions are met.
 
-**TERMINATED** - Once all the sub-executions are stopped, the execution is marked as *TERMINATED*.
+**STOPPED** - Once all the sub-executions are stopped, the execution is marked as *STOPPED*.
 
 **FINISHED** - In this state the execution, and its sub-executions have reached final states.
 
@@ -110,7 +110,6 @@ The following table contains a list of output parameters.
 | start_time        | When the execution started.                                   | datetime   | 2022-07-21T20:37:28.343619Z |
 | pause_time        | Time of the last pause.                                       | datetime   | 2022-07-21T20:37:28.343619Z |
 | finish_time       | When the execution finished.                                  | datetime   | 2022-07-21T20:37:28.343619Z |
-| result            | Result of the module execution.                               | string     | ok                          |
 | output            | Received output from the module execution.                    | string     | created session with id 1.  |
 | serialized_output | Serializable output from the module execution.                | dictionary | {"session_id": 1}           |
 | valid             | Whether the parameters passed to the module are valid or not. | boolean    | true                        |
@@ -129,9 +128,9 @@ Here is a map of allowed states, transitions, and their description.
 
 **PAUSED** - Execution is marked as *PAUSED* if its Stage execution is pausing and only if its about to be executed next.
 
-**TERMINATING** - If the user decides to kill the execution, it will change its state to *TERMINATING* and wait until the conditions are met.
+**STOPPING** - If the user decides to stop the execution, it will change its state to *STOPPING* and wait until the conditions are met.
 
-**TERMINATED** - Once the module execution is stopped, the execution is marked as *TERMINATED*.
+**STOPPED** - Once the module execution is stopped, the execution is marked as *STOPPED*.
 
 **FINISHED** - In this state the execution has successfully *FINISHED*.
 

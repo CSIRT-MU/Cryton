@@ -126,15 +126,15 @@
 #         run_obj.state = states.RUNNING
 #         run_obj.pause()
 #
-#     @patch('cryton.hive.models.plan.PlanExecution.unpause', Mock())
-#     def test_unpause(self):
+#     @patch('cryton.hive.models.plan.PlanExecution.resume', Mock())
+#     def test_resume(self):
 #         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
 #
 #         # Correct state
 #         run_obj.state = states.PAUSED
 #
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             run_obj.unpause()
+#             run_obj.resume()
 #         self.assertEqual(run_obj.state, states.RUNNING)
 #
 #     @patch('cryton.hive.utility.scheduler_client.schedule_function', Mock(return_value=1))
@@ -167,15 +167,15 @@
 #         self.assertIn("Run postponed", cm.output[2])
 #         self.assertEqual(run_obj.schedule_time, schedule_time_dt + dt)
 #
-#     @patch('cryton.hive.models.plan.PlanExecution.kill', Mock())
-#     def test_kill(self):
+#     @patch('cryton.hive.models.plan.PlanExecution.stop', Mock())
+#     def test_stop(self):
 #         run_obj = run.Run(plan_model_id=self.plan_model.id, workers=self.workers)
 #         for plan_ex_model in run_obj.model.plan_executions.all():
 #             plan.PlanExecution(plan_execution_id=plan_ex_model.id).state = states.RUNNING
 #         run_obj.state = states.RUNNING
 #         with self.assertLogs('cryton-core-debug', level='INFO'):
-#             run_obj.kill()
-#         self.assertEqual(run_obj.state, states.TERMINATED)
+#             run_obj.stop()
+#         self.assertEqual(run_obj.state, states.STOPPED)
 #
 #     @patch('cryton.hive.models.run.Worker.healthcheck')
 #     def test_healthcheck_workers(self, mock_worker_healthcheck: Mock):

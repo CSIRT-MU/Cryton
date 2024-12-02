@@ -11,8 +11,8 @@ stages:
         arguments:
           command: echo "It works!"
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: second-success
 
       second-success:

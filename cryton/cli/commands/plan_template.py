@@ -1,5 +1,4 @@
 import click
-from typing import Union
 
 from cryton.cli.utility import helpers
 from cryton.cli.utility.decorators import *
@@ -27,7 +26,7 @@ def template_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
 ) -> None:
     """
     List existing Plan templates in Cryton.

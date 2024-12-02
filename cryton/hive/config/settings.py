@@ -6,7 +6,7 @@ from cryton.lib.config.settings import (
     getenv_bool,
     getenv_int,
     getenv_list,
-    LOG_DIRECTORY,
+    LOGS_DIRECTORY,
     EVIDENCE_DIRECTORY,
 )
 
@@ -112,7 +112,7 @@ class Settings:
         self.database = SettingsDatabase(raw_settings.get("database", {}))
         self.api = SettingsAPI(raw_settings.get("api", {}))
         self.scheduler = SettingsScheduler(self.message_timeout)
-        self.log_file = path.join(LOG_DIRECTORY, "hive.log")
+        self.log_file = path.join(LOGS_DIRECTORY, "hive.log")
         self.evidence_directory = EVIDENCE_DIRECTORY
 
 

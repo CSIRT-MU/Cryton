@@ -30,8 +30,8 @@ stages:
             - from: different-command
               to: command
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step:
               - run-parent-command
               - run-command-from-step
@@ -40,7 +40,6 @@ stages:
       run-parent-command:
         module: command
         arguments:
-          session_id: $parent.command
           command: $parent.command
 
       run-command-from-step:

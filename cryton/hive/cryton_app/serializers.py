@@ -124,10 +124,6 @@ class RunScheduleSerializer(BaseSerializer):
     start_time = serializers.CharField()
 
 
-class RunPostponeSerializer(BaseSerializer):
-    delta = serializers.CharField()
-
-
 class PlanExecutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PlanExecutionModel

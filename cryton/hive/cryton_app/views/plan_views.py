@@ -139,7 +139,7 @@ class PlanViewSet(util.InstanceFullViewSet):
         if not RunModel.objects.filter(id=run_id).exists():
             raise exceptions.ValidationError(f"Run with id {run_id} doesn't exist.")
 
-        run_obj = Run(run_model_id=run_id)
+        run_obj = Run(run_id)
         if plan_id != run_obj.model.plan.id:
             raise exceptions.ValidationError(
                 f"Incorrect Run. Plan ID ({plan_id}) and Run's Plan ID ({run_obj.model.plan.id}) must match."
@@ -150,8 +150,8 @@ class PlanViewSet(util.InstanceFullViewSet):
                 f"Run's state must be " f"{', or'.join(states.PLAN_RUN_EXECUTE_STATES)}."
             )
 
-        plan_exec = PlanExecution(plan_id=plan_id, worker_id=worker_id, run_id=run_id)
-        plan_exec.execute()
+        plan_exec = PlanExecution.prepare(plan_id, worker_id, run_id)
+        plan_exec.start()
 
         msg = {"detail": f"PlanExecution with ID {plan_exec.model.id} successfully created and executed."}
         return Response(msg, status=status.HTTP_200_OK)

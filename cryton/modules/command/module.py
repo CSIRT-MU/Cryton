@@ -1,7 +1,6 @@
 import re
 import json
 import subprocess
-from typing import Union, Optional
 from snek_sploit import Error as MSFError, RPCError as MSFRPCError, SessionType
 
 from cryton.lib.metasploit import MetasploitClientUpdated
@@ -34,10 +33,10 @@ class Module(ModuleBase):
         self._msf_client = MetasploitClientUpdated(log_in=False)
 
         self._command: str = self._arguments["command"]
-        self._timeout: Optional[int] = self._arguments.get("timeout", None)
+        self._timeout: int | None = self._arguments.get("timeout", None)
         self._serialize_output_flag: bool = self._arguments.get("serialize_output", False)
-        self._session_id: Optional[int] = self._arguments.get("session_id", None)
-        self._force_shell: Optional[int] = self._arguments.get("force_shell", True)
+        self._session_id: int | None = self._arguments.get("session_id", None)
+        self._force_shell: int | None = self._arguments.get("force_shell", True)
 
     def check_requirements(self) -> None:
         """
@@ -69,7 +68,7 @@ class Module(ModuleBase):
                 session = self._msf_client.sessions.get(self._session_id)
                 if session.info.type == SessionType.METERPRETER:
                     if self._force_shell:
-                        command = self._command.split()
+                        command = self._command.split(" ")
                         process_output = session.execute_in_shell(command[0], command[1:], self._timeout)
                     else:
                         process_output = session.execute(self._command, self._timeout)
@@ -129,7 +128,7 @@ class Module(ModuleBase):
 
         return output
 
-    def _serialize_output(self, output: str) -> Union[list, dict]:
+    def _serialize_output(self, output: str) -> list | dict:
         """
         Try to serialize the output.
         :param output: String containing a valid JSON

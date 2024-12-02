@@ -1,5 +1,4 @@
 import re
-from typing import Union, Optional
 from snek_sploit import Error as MSFError, RPCError as MSFRPCError
 
 from cryton.lib.metasploit import MetasploitClientUpdated
@@ -40,12 +39,12 @@ class Module(ModuleBase):
         self._msf_client = MetasploitClientUpdated(log_in=False)
 
         self._commands: list[str] = self._arguments.get("commands", [])
-        self._module_name: Optional[str] = self._arguments.get("module_name", None)
-        self._datastore: dict[str, Union[str, int]] = {
+        self._module_name: str | None = self._arguments.get("module_name", None)
+        self._datastore: dict[str, str | int] = {
             key.upper(): value for key, value in self._arguments.get("datastore", {}).items()
         }
-        self._payload_name: Optional[str] = self._datastore.pop("PAYLOAD", None)
-        self._timeout: Optional[int] = self._arguments.get("timeout", None)
+        self._payload_name: str | None = self._datastore.pop("PAYLOAD", None)
+        self._timeout: int | None = self._arguments.get("timeout", None)
 
     def check_requirements(self) -> None:
         """

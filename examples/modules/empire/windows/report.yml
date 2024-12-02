@@ -34,7 +34,6 @@ plan_executions:
       output: ''
       serialized_output: Session 2 opened
       evidence_file: 'No evidence '
-      result: ok
       valid: false
     - id: 11
       step_name: deploy-agent
@@ -44,7 +43,6 @@ plan_executions:
       output: Agent 'MyAgent' deployed on target 192.168.56.3.
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: ok
       valid: false
     - id: 12
       step_name: whoami-on-agent
@@ -55,5 +53,4 @@ plan_executions:
         ''taskID'': 1, ''user_id'': 1, ''username'': ''empireadmin''}'
       serialized_output: {}
       evidence_file: 'No evidence '
-      result: ok
       valid: false

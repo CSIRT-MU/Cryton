@@ -1,5 +1,4 @@
 import click
-from typing import Union
 
 from cryton.cli.utility import helpers
 from cryton.cli.utility.decorators import *
@@ -28,7 +27,7 @@ def stage_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
     parent: int,
 ) -> None:
     """
@@ -203,7 +202,7 @@ def stage_execution_list(
     offset: int,
     limit: int,
     localize: bool,
-    parameter_filters: tuple[tuple[str, Union[str, int]]],
+    parameter_filters: tuple[tuple[str, str | int]],
     parent: int,
 ) -> None:
     """
@@ -290,21 +289,21 @@ def stage_execution_report(ctx: helpers.Context, execution_id: int, file: str, l
     helpers.save_yaml(response, file, f"stage-execution-{execution_id}.yml", less, less, localize, ctx.obj.debug)
 
 
-@stage_execution.command("kill")
+@stage_execution.command("stop")
 @click.pass_context
 @click.argument("execution_id", type=click.INT, required=True)
-def stage_execution_kill(ctx: helpers.Context, execution_id: int) -> None:
+def stage_execution_stop(ctx: helpers.Context, execution_id: int) -> None:
     """
-    Kill Stage's execution with EXECUTION_ID.
+    Stop Stage's execution with EXECUTION_ID.
 
-    EXECUTION_ID is ID of the Stage's execution you want to kill.
+    EXECUTION_ID is ID of the Stage's execution you want to stop.
 
     \f
     :param ctx: Click ctx object
     :param execution_id: ID of the desired Stage's execution
     :return: None
     """
-    response = ctx.obj.api_post(StageExecution.KILL, execution_id)
+    response = ctx.obj.api_post(StageExecution.STOP, execution_id)
     helpers.print_message(response, ctx.obj.debug)
 
 
@@ -316,7 +315,7 @@ def stage_execution_re_execute(ctx: helpers.Context, execution_id: int, immediat
     """
     Re-execute Stage's execution with EXECUTION_ID.
 
-    EXECUTION_ID is ID of the Stage's execution you want to kill.
+    EXECUTION_ID is ID of the Stage's execution you want to stop.
 
     \f
     :param ctx: Click ctx object

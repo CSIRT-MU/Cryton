@@ -2,7 +2,7 @@ release_version: 2
 git_release: stable/2
 
 python:
-  min: 3.9
+  min: 3.11
   max: 3.13
 
 ansible:

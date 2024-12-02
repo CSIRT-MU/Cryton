@@ -29,10 +29,9 @@ The basic action you can do is **Execute** the Run. This will start it instantly
 
     More information can be found [here](../interfaces/cli.md#runs).
 
-### Schedule, Reschedule, Unschedule, Postpone
+### Schedule, Reschedule, Unschedule
 Schedule action does just that - it **schedules** an *Execute* action at a given time. If you want to change the time 
 of your execution, you can still **reschedule** it or simply **unschedule** it and leave it in a pending state.
-You can also **postpone** your scheduled execution.
 
 ??? example
 
@@ -53,13 +52,13 @@ Anytime during Run execution, you can **pause** it. To continue the Run, simply 
 
     More information can be found [here](../interfaces/cli.md#runs).
 
-### Kill
-Terminate (forcefully) Run's execution and its sub-executions.
+### Stop
+Forcefully stop run and its sub-executions.
 
 ??? example
 
     ```shell
-    cryton-cli runs kill <run-id>
+    cryton-cli runs stop <run-id>
     ```
 
     More information can be found [here](../interfaces/cli.md#runs).
@@ -103,8 +102,8 @@ Here is a map of allowed states, transitions, and their description.
 
 **PAUSED** - Once all the sub-executions are paused or in a final state, the execution is marked as *PAUSED*.
 
-**TERMINATING** - If the user decides to kill the execution, it will change its state to *TERMINATING* and wait until the conditions are met.
+**STOPPING** - If the user decides to stop the execution, it will change its state to *STOPPING* and wait until the conditions are met.
 
-**TERMINATED** - Once all the sub-executions are stopped, the execution is marked as *TERMINATED*.
+**STOPPED** - Once all the sub-executions are stopped, the execution is marked as *STOPPED*.
 
 **FINISHED** - In this state the execution, and its sub-executions have reached final states.

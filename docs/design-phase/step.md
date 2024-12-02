@@ -16,8 +16,8 @@ my-step:
       - from: auth_token
         to: token
   next:
-    - type: result
-      value: ok
+    - type: state
+      value: finished
       step: other-steps-name
 
 ```
@@ -48,7 +48,7 @@ The following are types of outputs together with the descriptions of their possi
 
 | Type                | Value                              | Description                                                                                                                             |
 |---------------------|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `result`            | `ok`, `fail`, `error`              | Match the `result` of the step.                                                                                                         |
+| `state`             | `finished`, `failed`, `error`      | Match the `state` of the step.                                                                                                          |
 | `serialized_output` | Regular expression (`^my_regex.*`) | Match [regex](https://docs.python.org/3/library/re.html#regular-expression-syntax){target="_blank"} in `serialized_output` of the step. |
 | `output`            | Regular expression (`^my_regex.*`) | Match [regex](https://docs.python.org/3/library/re.html#regular-expression-syntax){target="_blank"} in `output` of the step.            |
 | `any`               | Value must be omitted              | Run successor(s) in any case.                                                                                                           |
@@ -57,8 +57,8 @@ The following are types of outputs together with the descriptions of their possi
 ```yaml
 my-step:
   next:
-  - type: result
-    value: ok
+  - type: state
+    value: finished
     step: step-to-execute
 
 ```

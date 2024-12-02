@@ -55,6 +55,7 @@ class Validator:
             used_names.append(stage_name)
             stages[stage_name] = stage
 
+            # TODO: if the step is initial (is_init) there can't be parent prefix, add check to validation
             for step_name, step in stage["steps"].items():
                 step_name: str
                 step: dict

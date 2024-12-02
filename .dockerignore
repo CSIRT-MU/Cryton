@@ -1,20 +1,19 @@
-# Git
-.git
-.gitlab
-.gitignore
-.gitlab-ci.yml
-
 # Tests
 tests
-.coveragerc-integration
-.coveragerc-unit
+.coveragerc*
 tox.ini
+
+# Documentation
+docs
+mkdocs.yml
 
 # Docker
 .dockerignore
-Dockerfile-*
+Dockerfile*
 docker-compose.*
 
 # Development
+.git*
 .idea
 dist
+uploads

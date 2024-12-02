@@ -22,27 +22,24 @@ def create_plan(template: dict) -> int:
 
 
 def create_stages(plan: PlanModel, stages: dict) -> list[int]:
-    stage_dependencies: dict = {}
+    stage_dependencies: dict[StageModel, str] = {}
     for stage_name, stage_data in stages.items():
         stage_obj = create_stage(plan.id, stage_name, stage_data)
-        stage_dependencies[stage_obj.id] = stage_data.get("depends_on", [])
+        stage_dependencies[stage_obj] = stage_data.get("depends_on", [])
 
         create_steps(stage_obj, stage_data.get("steps", {}))
 
     create_dependencies(plan, stage_dependencies)
 
-    return list(stage_dependencies.keys())
+    return list(stage.id for stage in stage_dependencies.keys())
 
 
-def create_dependencies(plan: PlanModel, stage_dependencies: dict):
+def create_dependencies(plan: PlanModel, stage_dependencies: dict[StageModel, str]):
     plan_stages = StageModel.objects.filter(plan=plan)
-    for stage_id, dependencies in stage_dependencies.items():
-        if not dependencies:
-            continue
-        for dependency in dependencies:
-            StageDependencyModel.objects.create(
-                stage_id=stage_id, dependency=plan_stages.get(plan=plan, name=dependency)
-            )
+    for stage, dependency_names in stage_dependencies.items():
+        for dependency_name in dependency_names:
+            dependency = plan_stages.get(name=dependency_name)
+            StageDependencyModel.objects.create(stage=stage, dependency=dependency)
 
 
 def create_stage(plan_id: int, name: str, data: dict):

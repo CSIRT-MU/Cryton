@@ -43,7 +43,7 @@ cryton-hive start --bind <address>:<port>
     nohup cryton-hive start > /tmp/hive_std_out 2>&1 &
     ```
 
-    To **stop** it, find its processes and kill them:
+    To **stop** it, find its processes and stop them:
     ```shell
     ps -aux | grep cryton-hive
     kill <PID> <PID>

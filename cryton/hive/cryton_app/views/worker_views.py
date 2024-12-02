@@ -43,11 +43,19 @@ class WorkerViewSet(util.InstanceFullViewSet):
     )
     def create(self, request: Request):
         try:
-            params = {key: request.data.get(key, "") for key in ["name", "description"]}
+            name = request.data.get("name", "")
+            description = request.data.get("description", "")
             force = request.data.get("force", False)
-            worker_obj_id = Worker.create_model(**params, force=force).id
         except core_exceptions.WrongParameterError as ex:
             raise exceptions.ParseError(ex)
+
+        if not name:
+            raise exceptions.ValidationError("Parameter `name` must be defined")
+
+        if not force and WorkerModel.objects.filter(name=name).exists():
+            raise exceptions.ValidationError(f"Worker `{name}` already exists")
+
+        worker_obj_id = Worker.create_model(name, description).id
 
         msg = {"id": worker_obj_id, "detail": "Worker created."}
         return Response(msg, status=status.HTTP_201_CREATED)

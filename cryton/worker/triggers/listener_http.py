@@ -3,7 +3,6 @@ import bottle
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 from threading import Thread
 from queue import PriorityQueue
-from typing import Optional
 
 from cryton.worker.utility import logger, constants as co
 from cryton.worker.triggers import Listener
@@ -53,7 +52,7 @@ class HTTPListener(Listener):
         self._identifiers = {co.LISTENER_HOST: host, co.LISTENER_PORT: port}
         self._app = bottle.Bottle()
         self._stopped = True
-        self.server: Optional[MyWSGIRefServer] = None
+        self.server: MyWSGIRefServer | None = None
 
     def add_trigger(self, details: dict) -> str:
         """
@@ -142,7 +141,7 @@ class HTTPListener(Listener):
                             self._notify(trigger.get(co.REPLY_TO), message_body)
 
     @staticmethod
-    def _check_parameters(parameters: list) -> Optional[dict]:
+    def _check_parameters(parameters: list) -> dict | None:
         """
         Check if requested parameters are correct.
         :param parameters: Parameters to check

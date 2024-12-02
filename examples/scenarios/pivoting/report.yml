@@ -72,8 +72,7 @@ plan_executions:
         \ require manual cleanup of '../hzzOPZyudx' on the target\n[*] Session 1 created\
         \ in the background.\n\n"
       serialized_output:
-        session_id: '1'
-      result: ok
+        session_id: 1
       valid: true
     - id: 26
       name: create-route-to-network-1
@@ -114,7 +113,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
   - id: 14
     name: 2-ftp-exploitation
@@ -271,8 +269,7 @@ plan_executions:
 
         '
       serialized_output:
-        session_id: '2'
-      result: ok
+        session_id: 2
       valid: true
     - id: 28
       name: create-route-to-network-2
@@ -313,7 +310,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
   - id: 15
     name: 3-msf-exchange-server-exploitation
@@ -374,8 +370,7 @@ plan_executions:
         
         "
       serialized_output:
-        session_id: '3'
-      result: ok
+        session_id: 3
       valid: true
     - id: 30
       name: create-route-to-network-3
@@ -416,7 +411,6 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true
   - id: 16
     name: 4-ssh-exploitation
@@ -511,8 +505,7 @@ plan_executions:
 
         '
       serialized_output:
-        session_id: '4'
-      result: ok
+        session_id: 4
       valid: true
     - id: 32
       name: get-passwd-file
@@ -578,5 +571,4 @@ plan_executions:
 
         '
       serialized_output: {}
-      result: ok
       valid: true

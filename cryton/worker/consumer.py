@@ -2,7 +2,6 @@ from click import echo
 import amqpstorm
 import json
 import time
-from typing import List, Optional, Union
 from threading import Thread, Lock, Event
 from queue import PriorityQueue
 
@@ -65,12 +64,10 @@ class Consumer:
         """
         # TODO: rename also the queues in the hive?
         attack_q = f"cryton.worker.{worker_name}.attack.request"  # TODO: rename to cryton.attack.request.{}?
-        agent_q = f"cryton.worker.{worker_name}.agent.request"  # TODO: rename to cryton.agent.request.{}?
         control_q = f"cryton.worker.{worker_name}.control.request"  # TODO: rename to cryton.control.request.{}?
         self._queues = {
             attack_q: self._callback_attack,
             control_q: self._callback_control,
-            agent_q: self._callback_agent,
         }
 
         self._hostname = rabbit_host
@@ -82,10 +79,10 @@ class Consumer:
         self._main_queue = main_queue
         self._channel_consumer_count = consumer_count if consumer_count > 0 else 1
         self._stopped = Event()
-        self._connection: Optional[amqpstorm.Connection] = None
-        self._tasks: List[task.Task] = []
+        self._connection: amqpstorm.Connection | None = None
+        self._tasks: list[task.Task] = []
         self._tasks_lock = Lock()  # Lock to prevent modifying, while performing time-consuming actions.
-        self._undelivered_messages: List[util.UndeliveredMessage] = []
+        self._undelivered_messages: list[util.UndeliveredMessage] = []
 
     def __str__(self) -> str:
         return f"{self._username}@{self._hostname}:{self._port}"
@@ -130,7 +127,7 @@ class Consumer:
 
     def stop(self) -> None:
         """
-        Stop Consumer (self). Wait for running Tasks (optionally kill them), close connection and its channels.
+        Stop Consumer (self). Wait for running Tasks (optionally stop them), close connection and its channels.
         :return: None
         """
         logger.logger.debug("Stopping Consumer.", hostname=self._hostname, port=self._port, username=self._username)
@@ -139,16 +136,16 @@ class Consumer:
         # Wait for Tasks to finish. Kill them on KeyboardInterrupt error.
         try:
             logger.logger.debug("Waiting for unfinished Tasks.")
-            echo("Waiting for running modules to finish.. press CTRL + C to kill them.")
+            echo("Waiting for running modules to finish.. press CTRL + C to stop them.")
             while len(self._tasks) > 0:
                 time.sleep(1)
 
         except KeyboardInterrupt:
-            logger.logger.debug("Killing unfinished Tasks.")
-            echo("Forcefully killing running modules..")
+            logger.logger.debug("Stopping unfinished Tasks.")
+            echo("Forcefully stopping running modules..")
             with self._tasks_lock:
                 for task_obj in self._tasks:
-                    task_obj.kill()
+                    task_obj.stop()
 
         # Close connection and its channels.
         if self._connection is not None and self._connection.is_open:
@@ -208,19 +205,6 @@ class Consumer:
         with self._tasks_lock:
             self._tasks.append(task_obj)
 
-    def _callback_agent(self, message: amqpstorm.Message) -> None:
-        """
-        Create new AgentTask and save it.
-        :param message: Received RabbitMQ Message
-        :return: None
-        """
-        logger.logger.debug("Agent callback.", correlation_id=message.correlation_id, message_body=message.body)
-        message.ack()
-        task_obj = task.AgentTask(message, self._main_queue, self._connection)
-        task_obj.start()
-        with self._tasks_lock:
-            self._tasks.append(task_obj)
-
     def _callback_control(self, message: amqpstorm.Message) -> None:
         """
         Create new ControlTask and save it.
@@ -261,7 +245,7 @@ class Consumer:
         logger.logger.error("Max number of retries reached.")
         raise amqpstorm.AMQPConnectionError("Max number of retries reached.")
 
-    def send_message(self, queue: str, message_body: Union[dict, str], message_properties: dict) -> None:
+    def send_message(self, queue: str, message_body: dict | str, message_properties: dict) -> None:
         """
         Open a new channel and send a custom message.
         :param queue: Target queue (message receiver)
@@ -312,7 +296,7 @@ class Consumer:
                     self._undelivered_messages.extend(messages)
                     self._tasks.remove(task_obj)
 
-    def pop_task(self, correlation_id) -> Optional[task.Task]:
+    def pop_task(self, correlation_id) -> task.Task | None:
         """
         Find a Task using correlation_id and remove it from tasks.
         :param correlation_id: Task's correlation_id

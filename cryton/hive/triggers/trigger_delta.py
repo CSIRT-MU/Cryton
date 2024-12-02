@@ -1,46 +1,35 @@
-from threading import Thread
 from datetime import datetime, timedelta
 from django.utils import timezone
 
-from cryton.hive.triggers.trigger_base import TriggerTime
+from cryton.hive.triggers.abstract import Trigger
+from cryton.hive.utility import scheduler_client
 
 
-class TriggerDelta(TriggerTime):
-    def __init__(self, stage_execution):
-        """
-        :param stage_execution: StageExecution's object
-        """
-        super().__init__(stage_execution)
-
-    def start(self):
-        """
-        Start the trigger.
-        :return: None
-        """
-        if self._get_delta().total_seconds() < 1:
-            Thread(target=self.stage_execution.execute).start()
-        else:
-            self.schedule()
-
-    def _get_delta(self) -> timedelta:
-        """
-        Calculate the delta used for postponing.
-        :return: Time delta
-        """
-        trigger_args = self.stage_execution.model.stage.arguments
-        delta = timedelta(
-            hours=trigger_args.get("hours", 0),
-            minutes=trigger_args.get("minutes", 0),
-            seconds=trigger_args.get("seconds", 0),
+class TriggerDelta(Trigger):
+    @classmethod
+    def start(cls, **kwargs) -> tuple[str, datetime | None]:
+        schedule_time = cls._create_schedule_time(kwargs["arguments"], kwargs.get("new_start_time"))
+        trigger_id = scheduler_client.schedule_function(
+            "cryton.hive.models.stage:execution", [kwargs["stage_execution_id"]], schedule_time
         )
 
-        if self.stage_execution.pause_time:
-            return self.stage_execution.model.plan_execution.start_time + delta - self.stage_execution.pause_time
-        return delta
+        return trigger_id, schedule_time
 
-    def _create_schedule_time(self) -> datetime:
+    @classmethod
+    def stop(cls, **kwargs) -> None:
+        scheduler_client.remove_job(kwargs["trigger_id"])
+
+    @staticmethod
+    def _create_schedule_time(arguments: dict, new_start_time: datetime | None) -> datetime:
         """
         Create Stage's supposed start time.
         :return: Stage's supposed start time
         """
-        return timezone.now() + self._get_delta()
+        delta = timedelta(
+            hours=arguments.get("hours", 0), minutes=arguments.get("minutes", 0), seconds=arguments.get("seconds", 0)
+        )
+
+        if new_start_time:
+            return new_start_time + delta
+
+        return timezone.now() + delta

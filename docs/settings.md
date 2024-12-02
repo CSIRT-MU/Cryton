@@ -1,4 +1,4 @@
-By default, settings, logs, and other important files are stored in the application directory (`APP_DIRECTORY`) located at `~/.local/cryton/` (`/app/` in case you are in a Docker image).
+By default, settings, logs, and other important files are stored in the **application directory** (`APP_DIRECTORY`) located at `~/.local/cryton/` (`/app/` in case you are in a Docker image).
 
 There are multiple ways to update the settings (the higher the number the higher the priority):
 

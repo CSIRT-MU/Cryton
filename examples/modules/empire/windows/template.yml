@@ -9,14 +9,14 @@ stages:
         is_init: true
         module: metasploit
         arguments:
-          module_name: scanner/ssh/ssh_login
+          module_name: scanner/winrm/winrm_login
           datastore:
             RHOSTS: {{ target.address }}
             USERNAME: {{ target.username }}
             PASSWORD: {{ target.password }}
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: deploy-agent
 
       deploy-agent:
@@ -33,8 +33,8 @@ stages:
           stager:
             type: multi/launcher
         next:
-          - type: result
-            value: ok
+          - type: state
+            value: finished
             step: whoami-on-agent
 
       whoami-on-agent:

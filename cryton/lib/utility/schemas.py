@@ -20,7 +20,7 @@ def inject_schema(schema: dict, ignore_sub_schema_keywords: bool = False, wrap: 
         if (sub_schema := schema.get("anyOf")) is not None and isinstance(sub_schema, list):
             schema["anyOf"] = inject([inject_schema(s, wrap=False) for s in sub_schema])
         if (sub_schema := schema.get("allOf")) is not None and isinstance(sub_schema, list):
-            schema["allOf"] = inject([inject_schema(s, wrap=False) for s in sub_schema])
+            schema["allOf"] = [inject_schema(s, wrap=False) for s in sub_schema]
         if (sub_schema := schema.get("oneOf")) is not None and isinstance(sub_schema, list):
             schema["oneOf"] = inject([inject_schema(s, wrap=False) for s in sub_schema])
         if sub_schema := schema.get("then"):

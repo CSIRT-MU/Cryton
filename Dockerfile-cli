@@ -33,13 +33,3 @@ RUN _CRYTON_CLI_COMPLETE=bash_source cryton-cli > /etc/profile.d/cryton-cli-comp
 RUN echo ". /etc/profile.d/cryton-cli-complete.sh" >> ~/.bashrc
 
 CMD [ "bash" ]
-
-FROM production AS e2e-tests
-
-ENV TZ=UTC
-
-RUN apk add --no-cache \
-    curl
-
-# Install dependencies
-RUN /app/.venv/bin/pip install PyYAML

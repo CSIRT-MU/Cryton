@@ -1,6 +1,5 @@
 from threading import Thread
 from functools import reduce
-from typing import List, Union, Dict
 from datetime import datetime, timedelta
 import pytz
 import amqpstorm
@@ -56,7 +55,7 @@ def parse_delta_to_datetime(delta: str) -> timedelta:
         raise exceptions.UserInputError("Invalid delta provided. Correct format is [hours]:[minutes]:[seconds].", delta)
 
 
-def split_into_lists(input_list: List, target_number_of_lists: int) -> List[List]:
+def split_into_lists(input_list: list, target_number_of_lists: int) -> list[list]:
     """
     Evenly splits list into n lists.
     E.g. split_into_lists([1,2,3,4], 4) returns [[1], [2], [3], [4]].
@@ -71,7 +70,7 @@ def split_into_lists(input_list: List, target_number_of_lists: int) -> List[List
     ]
 
 
-def run_executions_in_threads(step_executions: List) -> None:
+def run_executions_in_threads(step_executions: list) -> None:
     """
     Creates new Rabbit connection, distributes step executions into threads and runs the threads.
     To set desired number of threads/process, see "CRYTON_HIVE_EXECUTION_THREADS_PER_PROCESS" variable in config.
@@ -100,7 +99,7 @@ def run_executions_in_threads(step_executions: List) -> None:
             thread.join()
 
 
-def run_step_executions(rabbit_connection: amqpstorm.Connection, step_execution_list: List) -> None:
+def run_step_executions(rabbit_connection: amqpstorm.Connection, step_execution_list: list) -> None:
     """
     Creates new Rabbit channel and runs step executions.
 
@@ -110,10 +109,10 @@ def run_step_executions(rabbit_connection: amqpstorm.Connection, step_execution_
     with rabbit_connection.channel() as channel:
         for step_execution in step_execution_list:
             logger.logger.debug("Running Step Execution in thread", step_execution_id=step_execution.model.id)
-            step_execution.execute(channel)
+            step_execution.start(channel)
 
 
-def getitem(obj: Union[List, Dict], key: str):
+def getitem(obj: list | dict, key: str):
     """
     Get item from object using key.
     :param obj: Iterable accessible using key
@@ -137,7 +136,7 @@ def getitem(obj: Union[List, Dict], key: str):
     return result
 
 
-def parse_dot_argument(dot_argument: str) -> List[str]:
+def parse_dot_argument(dot_argument: str) -> list[str]:
     """
     Takes a single argument (Dict key) from dot notation and checks if it also contains list indexes.
     :param dot_argument: Dict key from dot notation possibly containing list indexes
@@ -321,7 +320,7 @@ def rename_key(in_dict, rename_from, rename_to):
     add_key(in_dict, rename_to, new_val)
 
 
-def get_logs(offset: int, limit: int, filter_params: dict[str, str]) -> List[Dict[str, str]]:
+def get_logs(offset: int, limit: int, filter_params: dict[str, str]) -> list[dict[str, str]]:
     """
     Get and parse logs from log file.
     :param offset: On what line to start reading logs

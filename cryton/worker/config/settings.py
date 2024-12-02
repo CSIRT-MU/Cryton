@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from os import getenv, path
 
-from cryton.lib.config.settings import SETTINGS_WORKER, getenv_bool, getenv_int, LOG_DIRECTORY, MODULES_DIRECTORY
+from cryton.lib.config.settings import SETTINGS_WORKER, getenv_bool, getenv_int, LOGS_DIRECTORY, MODULES_DIRECTORY
 
 
 @dataclass
@@ -81,7 +81,7 @@ class Settings:
         self.debug = getenv_bool("CRYTON_WORKER_DEBUG", raw_settings.get("debug", False))
         self.consumer_count = getenv_int("CRYTON_WORKER_CONSUMER_COUNT", raw_settings.get("consumer_count", 7))
         self.max_retries = getenv_int("CRYTON_WORKER_MAX_RETRIES", raw_settings.get("max_retries", 3))
-        self.log_file = path.join(LOG_DIRECTORY, "worker.log")
+        self.log_file = path.join(LOGS_DIRECTORY, "worker.log")
         self.modules = SettingsModules(raw_settings.get("modules", {}))
         self.rabbit = SettingsRabbit(raw_settings.get("rabbit", {}))
         self.empire = SettingsEmpire(raw_settings.get("empire", {}))

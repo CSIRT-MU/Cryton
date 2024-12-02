@@ -34,7 +34,6 @@ plan_executions:
       output: "victim\n \n "
       serialized_output: {}
       evidence_file: ''
-      result: ok
       valid: false
     - id: 19
       step_name: reusable step 1
@@ -44,5 +43,4 @@ plan_executions:
       output: "victim\n \n "
       serialized_output: {}
       evidence_file: ''
-      result: ok
       valid: false
