@@ -9,6 +9,17 @@ In this section we will go through our installation options. In case you just wa
     - Installing the front-end is unnecessary if you wish to control Cryton using only the CLI
     - CLI and front-end can be deployed on a different host and installed on demand
 
+??? danger "Installation using Ansible is deprecated!"
+
+    TLDR: Use Docker Compose instead. Modify the existing `docker-compose.*` files in the [Cryton repository](https://gitlab.ics.muni.cz/cryton/cryton).
+
+    The Ansible roles were created to simplify the installation process since the project had multiple repositories, and installation was a bit cumbersome.
+    
+    Currently, the project can be installed using a single Docker Compose file. This results in a more robust and understandable installation experience.
+    
+    If you want Ansible roles back or need help creating yours, feel free to [open an issue](contribution-guide.md).
+
+
 ## Prerequisites
 The following is a list of applications used and required by Cryton (its components).
 
