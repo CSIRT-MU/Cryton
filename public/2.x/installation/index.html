@@ -1361,26 +1361,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../ansible/ansible/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Ansible
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../acknowledgements/" class="md-nav__link">
         
   
@@ -1510,6 +1490,13 @@
 <li>CLI and front-end can be deployed on a different host and installed on demand</li>
 </ul>
 </div>
+<details class="danger">
+<summary>Installation using Ansible is deprecated!</summary>
+<p>TLDR: Use Docker Compose instead. Modify the existing <code>docker-compose.*</code> files in the <a href="https://gitlab.ics.muni.cz/cryton/cryton">Cryton repository</a>.</p>
+<p>The Ansible roles were created to simplify the installation process since the project had multiple repositories, and installation was a bit cumbersome.</p>
+<p>Currently, the project can be installed using a single Docker Compose file. This results in a more robust and understandable installation experience.</p>
+<p>If you want Ansible roles back or need help creating yours, feel free to <a href="../contribution-guide/">open an issue</a>.</p>
+</details>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>The following is a list of applications used and required by Cryton (its components).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Hive</label><label for="__tabbed_1_2">Worker</label></div>
