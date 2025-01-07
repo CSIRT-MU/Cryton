@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Template
 
 
-@click.group("plan-templates")  # TODO: change to templates
+@click.group("plan-templates", helpers.AliasedGroup)
 @click.pass_context
 def template(_) -> None:
     """
@@ -65,7 +65,7 @@ def template_create(ctx: helpers.Context, file: str) -> None:
     helpers.print_message(response, ctx.obj.debug)
 
 
-@template.command("show")  # TODO: rename `show` to something else?
+@template.command("show")
 @click.pass_context
 @click.argument("template_id", type=click.INT, required=True)
 @d_less

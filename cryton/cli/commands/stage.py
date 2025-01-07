@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Stage, StageExecution
 
 
-@click.group("stages")
+@click.group("stages", helpers.AliasedGroup)
 @click.pass_context
 def stage(_) -> None:
     """
@@ -180,7 +180,7 @@ def stage_start_trigger(ctx: helpers.Context, stage_id: int, plan_execution_id: 
     helpers.print_message(response, ctx.obj.debug)
 
 
-@click.group("stage-executions")
+@click.group("stage-executions", helpers.AliasedGroup)
 @click.pass_context
 def stage_execution(_) -> None:
     """

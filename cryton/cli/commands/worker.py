@@ -6,7 +6,7 @@ from cryton.cli.config import Worker
 
 
 # Worker
-@click.group("workers")
+@click.group("workers", helpers.AliasedGroup)
 @click.pass_context
 def worker(_) -> None:
     """

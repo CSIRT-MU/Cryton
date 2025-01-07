@@ -1,5 +1,11 @@
 CLI implements capabilities of the Cryton's REST API and can be automated by using custom scripts.
 
+!!! tip "Command aliases support"
+
+    Instead of typing the whole command, use only the unique first letters.
+    
+    `cryton-cli workers list` -> `cryton-cli w l`
+
 ```
 Usage: cryton-cli [OPTIONS] COMMAND [ARGS]...
 
@@ -135,17 +141,6 @@ EXECUTION\_ID is ID of the Plan's execution you want to delete.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### stop
-Stop Plan's execution with EXECUTION\_ID saved in Cryton.
-
-EXECUTION\_ID is ID of the Plan's execution you want to stop.
-
-**Arguments:**  
-- EXECUTION\_ID  
-
-**Options:**  
-- help (`--help`) - Show this message and exit.  
-
 ### list
 List existing Plan's executions in Cryton.
 
@@ -206,6 +201,17 @@ EXECUTION\_ID is ID of the Plan's execution you want to see.
 **Options:**  
 - less (`--less`) - Show less like output.  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- help (`--help`) - Show this message and exit.  
+
+### stop
+Stop Plan's execution with EXECUTION\_ID saved in Cryton.
+
+EXECUTION\_ID is ID of the Plan's execution you want to stop.
+
+**Arguments:**  
+- EXECUTION\_ID  
+
+**Options:**  
 - help (`--help`) - Show this message and exit.  
 
 ### validate-modules
@@ -454,17 +460,6 @@ RUN\_ID is ID of the Run you want to check Workers for.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### stop
-Stop Run saved in Cryton with RUN\_ID.
-
-RUN\_ID is ID of the Run you want to stop.
-
-**Arguments:**  
-- RUN\_ID  
-
-**Options:**  
-- help (`--help`) - Show this message and exit.  
-
 ### list
 List existing Runs in Cryton.
 
@@ -486,7 +481,7 @@ RUN\_ID is ID of the Run you want to pause.
 - RUN\_ID  
 
 **Options:**  
-- help (`--help`) - Show this message and exit.
+- help (`--help`) - Show this message and exit.  
 
 ### report
 Create report for Run with RUN\_ID saved in Cryton.
@@ -562,6 +557,17 @@ RUN\_ID is ID of the Run you want to see.
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
 - help (`--help`) - Show this message and exit.  
 
+### stop
+Stop Run saved in Cryton with RUN\_ID.
+
+RUN\_ID is ID of the Run you want to stop.
+
+**Arguments:**  
+- RUN\_ID  
+
+**Options:**  
+- help (`--help`) - Show this message and exit.  
+
 ### unschedule
 Unschedule Run saved in Cryton with RUN\_ID.
 
@@ -595,17 +601,6 @@ Manage Stage's executions from here.
 Delete Stage's execution with EXECUTION\_ID.
 
 EXECUTION\_ID is ID of the Stage's execution you want to delete.
-
-**Arguments:**  
-- EXECUTION\_ID  
-
-**Options:**  
-- help (`--help`) - Show this message and exit.  
-
-### stop
-Stop Stage's execution with EXECUTION\_ID.
-
-EXECUTION\_ID is ID of the Stage's execution you want to stop.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -663,6 +658,17 @@ EXECUTION\_ID is ID of the Stage's execution you want to see.
 **Options:**  
 - less (`--less`) - Show less like output.  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- help (`--help`) - Show this message and exit.  
+
+### stop
+Stop Stage's execution with EXECUTION\_ID.
+
+EXECUTION\_ID is ID of the Stage's execution you want to stop.
+
+**Arguments:**  
+- EXECUTION\_ID  
+
+**Options:**  
 - help (`--help`) - Show this message and exit.  
 
 ## stages
@@ -771,17 +777,6 @@ EXECUTION\_ID is ID of the Step's execution you want to delete.
 **Options:**  
 - help (`--help`) - Show this message and exit.  
 
-### stop
-Stop Step's execution with EXECUTION\_ID saved in Cryton.
-
-EXECUTION\_ID is ID of the Step's execution you want to stop.
-
-**Arguments:**  
-- EXECUTION\_ID  
-
-**Options:**  
-- help (`--help`) - Show this message and exit.  
-
 ### list
 List existing Step's executions in Cryton.
 
@@ -798,7 +793,7 @@ List existing Step's executions in Cryton.
 ### re-execute
 Re-execute Step's execution with EXECUTION\_ID saved in Cryton.
 
-EXECUTION\_ID is ID of the Step's execution you want to stop.
+EXECUTION\_ID is ID of the Step's execution you want to re-execute.
 
 **Arguments:**  
 - EXECUTION\_ID  
@@ -831,6 +826,17 @@ EXECUTION\_ID is ID of the Step's execution you want to see.
 **Options:**  
 - less (`--less`) - Show less like output.  
 - localize (`--localize`) - Convert UTC datetime to local timezone.  
+- help (`--help`) - Show this message and exit.  
+
+### stop
+Stop Step's execution with EXECUTION\_ID saved in Cryton.
+
+EXECUTION\_ID is ID of the Step's execution you want to stop.
+
+**Arguments:**  
+- EXECUTION\_ID  
+
+**Options:**  
 - help (`--help`) - Show this message and exit.  
 
 ## steps

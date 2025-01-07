@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import ExecutionVariable
 
 
-@click.group("execution-variables")
+@click.group("execution-variables", helpers.AliasedGroup)
 @click.pass_context
 def execution_variable(_) -> None:
     """
