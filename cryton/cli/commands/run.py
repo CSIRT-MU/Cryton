@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Run, SETTINGS
 
 
-@click.group("runs")
+@click.group("runs", helpers.AliasedGroup)
 @click.pass_context
 def run(_) -> None:
     """

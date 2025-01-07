@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Plan, PlanExecution
 
 
-@click.group("plans")
+@click.group("plans", helpers.AliasedGroup)
 @click.pass_context
 def plan(_) -> None:
     """
@@ -196,7 +196,7 @@ def plan_get_plan(ctx: helpers.Context, plan_id: int, file: str, less: bool, loc
     helpers.save_yaml(response, file, f"plan-{plan_id}.yml", less, less, localize, ctx.obj.debug)
 
 
-@click.group("plan-executions")
+@click.group("plan-executions", helpers.AliasedGroup)
 @click.pass_context
 def plan_execution(_) -> None:
     """

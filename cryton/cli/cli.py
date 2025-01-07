@@ -5,7 +5,7 @@ from cryton.cli.config import SETTINGS
 from cryton.cli.commands import plan_template, run, plan, step, worker, execution_variable, stage, log
 
 
-@click.group()
+@click.group(cls=helpers.AliasedGroup)
 @click.pass_context
 @click.version_option(message=f"%(version)s")
 @click.option("-H", "--host", type=click.STRING, help="Cryton's API address.")

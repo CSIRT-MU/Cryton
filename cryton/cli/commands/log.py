@@ -5,7 +5,7 @@ from cryton.cli.utility.decorators import *
 from cryton.cli.config import Log
 
 
-@click.group("logs")
+@click.group("logs", helpers.AliasedGroup)
 @click.pass_context
 def log(_) -> None:
     """
