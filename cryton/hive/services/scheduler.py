@@ -56,29 +56,34 @@ class SchedulerService:
             except Empty:
                 continue
 
-            action = job_details.get(constants.EVENT_ACTION)
-            arguments = job_details.get("args")
+            action, request_pipe = job_details[0].get(constants.EVENT_ACTION), job_details[1]
+            arguments = job_details[0].get("args")
             try:
                 if action == constants.ADD_JOB:
-                    self.exposed_add_job(**arguments)
+                    result = self.exposed_add_job(**arguments)
                 elif action == constants.ADD_REPEATING_JOB:
-                    self.exposed_add_repeating_job(**arguments)
+                    result = self.exposed_add_repeating_job(**arguments)
                 elif action == constants.RESCHEDULE_JOB:
-                    self.exposed_reschedule_job(**arguments)
+                    result = self.exposed_reschedule_job(**arguments)
                 elif action == constants.PAUSE_JOB:
-                    self.exposed_pause_job(**arguments)
+                    result = self.exposed_pause_job(**arguments)
                 elif action == constants.RESUME_JOB:
-                    self.exposed_resume_job(**arguments)
+                    result = self.exposed_resume_job(**arguments)
                 elif action == constants.REMOVE_JOB:
-                    self.exposed_remove_job(**arguments)
+                    result = self.exposed_remove_job(**arguments)
                 elif action == constants.GET_JOBS:
-                    self.exposed_get_jobs()
+                    result = self.exposed_get_jobs()
                 elif action == constants.PAUSE_SCHEDULER:
-                    self.exposed_pause_scheduler()
+                    result = self.exposed_pause_scheduler()
                 elif action == constants.RESUME_SCHEDULER:
-                    self.exposed_resume_scheduler()
+                    result = self.exposed_resume_scheduler()
+                else:
+                    raise RuntimeError("Unknown action")
             except Exception as ex:
                 logger.logger.error("Scheduler could not process the request", error=str(ex))
+                request_pipe.send("")
+            else:
+                request_pipe.send(result)
 
     def __del__(self):
         logger.logger.debug("scheduler deleted")

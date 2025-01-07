@@ -103,16 +103,6 @@ class StageExecution(Execution):
                 model.save()
 
     @property
-    def aps_job_id(self) -> str:
-        return self.model.job_id
-
-    @aps_job_id.setter
-    def aps_job_id(self, value: str):
-        model = self.model
-        model.job_id = value
-        model.save()
-
-    @property
     def start_time(self) -> datetime | None:
         return self.model.start_time
 
@@ -258,6 +248,7 @@ class StageExecution(Execution):
 
         if state_before == st.AWAITING:
             self.trigger.stop(trigger_id=self.trigger_id, queue=self.control_queue)
+            self.trigger_id, self.schedule_time = "", None
         elif state_before == st.WAITING:
             pass
         else:
@@ -320,6 +311,7 @@ class StageExecution(Execution):
         if self.state in [st.AWAITING]:
             try:
                 self.trigger.stop(trigger_id=self.trigger_id, queue=self.control_queue)
+                self.trigger_id, self.schedule_time = "", None
             except Exception as ex:
                 logger.logger.warning("stage execution cannot be paused", exception=str(ex))
                 return
@@ -412,7 +404,6 @@ class StageExecution(Execution):
             StageExecutionModel.objects.select_for_update().get(id=model.id)
 
             model.state = st.PENDING
-            model.job_id = ""
             model.trigger_id = ""
             model.start_time = None
             model.schedule_time = None

@@ -31,7 +31,7 @@ class ExecutionModel(TimedModel):
 
 class SchedulableExecutionModel(ExecutionModel):
     schedule_time = models.DateTimeField(null=True)
-    job_id = models.TextField()
+    trigger_id = models.TextField()
 
     class Meta:
         abstract = True
@@ -46,7 +46,7 @@ class DescriptiveModel(InstanceModel):
 
 class OutputModel(models.Model):
     serialized_output = models.JSONField(default=dict)  # TODO: serialized_output -> output?
-    output = models.TextField(default="")  # TODO: output -> debug_output?
+    output = models.TextField(default="")  # TODO: output -> raw/debug_output?
 
     class Meta:
         abstract = True

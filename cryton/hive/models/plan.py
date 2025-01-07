@@ -192,13 +192,13 @@ class PlanExecution(SchedulableExecution):
         model.save()
 
     @property
-    def aps_job_id(self) -> str:
-        return self.model.job_id
+    def trigger_id(self) -> str:
+        return self.model.trigger_id
 
-    @aps_job_id.setter
-    def aps_job_id(self, value: str):
+    @trigger_id.setter
+    def trigger_id(self, value: str):
         model = self.model
-        model.job_id = value
+        model.trigger_id = value
         model.save()
 
     @property
@@ -226,11 +226,11 @@ class PlanExecution(SchedulableExecution):
         logger.logger.debug("Scheduling Plan execution", plan_execution_id=self.model.id)
         st.PlanStateMachine.validate_state(self.state, st.PLAN_SCHEDULE_STATES)
 
-        self.aps_job_id = scheduler_client.schedule_function(
+        self.trigger_id = scheduler_client.schedule_function(
             "cryton.hive.models.plan:execution", [self.model.id], schedule_time
         )
 
-        if isinstance(self.aps_job_id, str):
+        if isinstance(self.trigger_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)
             self.state = st.SCHEDULED
             logger.logger.info("Plan execution scheduled", plan_execution_id=self.model.id, status="success")
@@ -267,8 +267,8 @@ class PlanExecution(SchedulableExecution):
         logger.logger.debug("Unscheduling Plan execution", plan_execution_id=self.model.id)
         st.PlanStateMachine.validate_state(self.state, st.PLAN_UNSCHEDULE_STATES)
 
-        scheduler_client.remove_job(self.aps_job_id)
-        self.aps_job_id, self.schedule_time = "", None
+        scheduler_client.remove_job(self.trigger_id)
+        self.trigger_id, self.schedule_time = "", None
         self.state = st.PENDING
         logger.logger.info("Plan execution unscheduled", plan_execution_id=self.model.id, status="success")
 
