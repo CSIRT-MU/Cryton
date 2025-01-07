@@ -25,9 +25,7 @@ class TriggerDelta(Trigger):
         Create Stage's supposed start time.
         :return: Stage's supposed start time
         """
-        delta = timedelta(
-            hours=arguments.get("hours", 0), minutes=arguments.get("minutes", 0), seconds=arguments.get("seconds", 0)
-        )
+        delta = timedelta(**arguments)
 
         if new_start_time:
             return new_start_time + delta

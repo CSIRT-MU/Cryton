@@ -59,6 +59,7 @@ my-stage:
 
 | Argument | Default | Description         |
 |----------|---------|---------------------|
+| days     | 0       | Wait for n days.    |
 | hours    | 0       | Wait for n hours.   |
 | minutes  | 0       | Wait for n minutes. |
 | seconds  | 0       | Wait for n seconds. |
