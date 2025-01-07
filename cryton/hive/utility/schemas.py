@@ -193,9 +193,10 @@ PLAN = {
                             "arguments": {
                                 "type": "object",
                                 "properties": {
-                                    "hours": {"type": "integer", "description": "Hours to execution."},
-                                    "minutes": {"type": "integer", "description": "Minutes to execution."},
-                                    "seconds": {"type": "integer", "description": "Seconds to execution."},
+                                    "days": {"type": "integer", "description": "Wait for n days."},
+                                    "hours": {"type": "integer", "description": "Wait for n hours."},
+                                    "minutes": {"type": "integer", "description": "Wait for n minutes."},
+                                    "seconds": {"type": "integer", "description": "Wait for n seconds."},
                                 },
                                 "minProperties": 1,
                                 "additionalProperties": False,
