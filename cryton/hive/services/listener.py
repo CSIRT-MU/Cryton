@@ -1,7 +1,7 @@
 import json
 import time
 from threading import Thread, Event
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Queue, Manager, Pipe
 from multiprocessing.managers import SyncManager
 from queue import Empty
 import amqpstorm
@@ -309,11 +309,11 @@ class Listener:
             event_v = message_body[constants.EVENT_V]
         except (TypeError, KeyError):
             logger.logger.warn("Control request must contain event_t and event_v!")
-
         else:
             if event_t == constants.EVENT_UPDATE_SCHEDULER:
-                self._scheduler_job_queue.put(event_v)
-                result = 0  # TODO: due to the current APScheduler limitations, the response will be always 0
+                response_pipe, request_pipe = Pipe()
+                self._scheduler_job_queue.put((event_v, request_pipe))
+                result = response_pipe.recv()
             else:
                 logger.logger.warn("Nonexistent event received", event_t=event_t)
 
