@@ -252,7 +252,7 @@ def run_resume(ctx: helpers.Context, run_id: int) -> None:
     :param run_id: ID of the desired Run
     :return: None
     """
-    response = ctx.obj.api_post(Run.RESUME, run_id)  # TODO: rename to resume
+    response = ctx.obj.api_post(Run.RESUME, run_id)
     helpers.print_message(response, ctx.obj.debug)
 
 
