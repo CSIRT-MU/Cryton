@@ -125,34 +125,3 @@ If you're having problems with the services (they keep restarting for example):
     ```shell
     docker compose -f docker-compose.yml -f docker-compose.playground.yml up -d --build
     ```
-
-[//]: # (TODO: the proxy settings don't work since the domain names are different)
-[//]: # (### Proxy settings)
-
-[//]: # (If you're using a proxy, paste the following settings into `~/.docker/config.json` on your host:)
-
-[//]: # (```)
-
-[//]: # ({)
-
-[//]: # ( "proxies":)
-
-[//]: # ( {)
-
-[//]: # (   "default":)
-
-[//]: # (   {)
-
-[//]: # (     "httpProxy": "<proxy-address>",)
-
-[//]: # (     "httpsProxy": "<proxy-address>",)
-
-[//]: # (     "noProxy": "localhost,.cryton")
-
-[//]: # (   })
-
-[//]: # ( })
-
-[//]: # (})
-
-[//]: # (```)
