@@ -33,6 +33,7 @@ class Step(Instance):
         :param model_id: Model ID
         """
         self.__model = StepModel.objects.get(id=model_id)
+        self._logger = logger.logger.bind(step_id=model_id, name=self.model.name)
 
     @staticmethod
     def create_model(
@@ -96,9 +97,10 @@ class StepExecution(Execution):
         :param model_id: Model ID
         """
         self.__model = StepExecutionModel.objects.get(id=model_id)
+        self._logger = logger.logger.bind(step_execution_id=model_id, name=self.model.step.name)
 
     @staticmethod
-    def create_model(step_id: int, stage_execution_id: int):
+    def create_model(step_id: int, stage_execution_id: int) -> StepExecutionModel | Type[StepExecutionModel]:
         return StepExecutionModel.objects.create(step_id=step_id, stage_execution_id=stage_execution_id)
 
     @classmethod
@@ -124,9 +126,7 @@ class StepExecution(Execution):
         with transaction.atomic():
             StepExecutionModel.objects.select_for_update().get(id=self.model.id)
             if states.StepStateMachine.validate_transition(self.state, value):
-                logger.logger.debug(
-                    "state updated", step_execution_id=self.model.id, state_from=self.state, state_to=value
-                )
+                self._logger.debug("step execution state updated", state_from=self.state, state_to=value)
                 model = self.model
                 model.state = value
                 model.save()
@@ -197,7 +197,7 @@ class StepExecution(Execution):
         :param rabbit_channel: Rabbit channel to use
         :return: None
         """
-        logger.logger.debug("starting step execution", step_execution_id=self.model.id)
+        self._logger.debug("step execution starting")
         states.StepStateMachine.validate_state(self.state, states.STEP_EXECUTE_STATES)
 
         self.start_time = timezone.now()
@@ -215,14 +215,14 @@ class StepExecution(Execution):
         target_queue = worker.Worker(self.model.stage_execution.plan_execution.worker.id).attack_queue
         reply_queue = SETTINGS.rabbit.queues.attack_response
         self._execute_on_worker(rabbit_channel, message_body, reply_queue, target_queue)
-        logger.logger.info("step execution started", step_execution_id=self.model.id)
+        self._logger.info("step execution started")
 
     def stop(self) -> None:
         """
         Stop step execution.
         :return: None
         """
-        logger.logger.debug("stopping step", step_execution_id=self.model.id)
+        self._logger.debug("step execution stopping")
         states.StepStateMachine.validate_state(self.state, states.STEP_STOP_STATES)
 
         state_before = self.state
@@ -243,19 +243,15 @@ class StepExecution(Execution):
                 try:
                     response = rpc_client.call(worker_obj.control_queue, message)
                 except exceptions.RpcTimeoutError as ex:
-                    logger.logger.error("cannot stop step execution", step_execution_id=self.model.id, error=str(ex))
+                    self._logger.error("cannot stop step execution", error=str(ex))
                     return
                 else:  # The state is set in the `post_process` method
                     response_value = response.get(constants.EVENT_V)
                     if response_value.get(constants.RESULT) != Result.OK:
-                        logger.logger.warning(
-                            "cannot stop step execution",
-                            step_execution_id=self.model.id,
-                            error=response_value.get("output"),
-                        )
+                        self._logger.warning("cannot stop step execution", error=response_value.get("output"))
                         return
 
-        logger.logger.info("step execution stopped", step_execution_id=self.model.id)
+        self._logger.info("step execution stopped")
 
     def finish(self):
         self._process_results()
@@ -291,7 +287,7 @@ class StepExecution(Execution):
         Validate module arguments.
         :return:
         """
-        logger.logger.debug("validate module", step_execution_id=self.model.id)
+        self._logger.debug("step execution validating module")
         target_queue = worker.Worker(self.model.stage_execution.plan_execution.worker.id).control_queue
         message = {
             constants.EVENT_T: constants.EVENT_VALIDATE_MODULE,
@@ -307,6 +303,7 @@ class StepExecution(Execution):
         if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
             self.valid = True
 
+        self._logger.info("step execution module validated")
         return self.valid
 
     def _update_dynamic_variables(self, arguments: dict) -> dict:
@@ -315,7 +312,7 @@ class StepExecution(Execution):
         :param arguments: arguments that should be updated
         :return: Arguments updated for dynamic variables
         """
-        logger.logger.debug("Updating step arguments with dynamic variables", step_execution_id=self.model.id)
+        self._logger.debug("step execution updating arguments with dynamic variables")
         dynamic_variable_separator = self.model.step.stage.plan.settings.separator
 
         variable_definitions = util.get_dynamic_variables(arguments)
@@ -343,14 +340,14 @@ class StepExecution(Execution):
 
         return util.fill_dynamic_variables(copy.deepcopy(arguments), variables, dynamic_variable_separator)
 
-    @staticmethod
-    def _update_execution_variables(arguments: dict, execution_variables: list) -> dict:
+    def _update_execution_variables(self, arguments: dict, execution_variables: list) -> dict:
         """
         Fill Jinja variables in the arguments with execution variables.
         :param arguments: Arguments to fill
         :param execution_variables: Execution variables to fill the template (arguments) with
         :return: Filled arguments
         """
+        self._logger.debug("step execution updating arguments with execution variables")
         parsed_execution_variables = {variable.get("name"): variable.get("value") for variable in execution_variables}
 
         env = nativetypes.NativeEnvironment(
@@ -378,21 +375,18 @@ class StepExecution(Execution):
         execution_vars = list(self.model.stage_execution.plan_execution.execution_variables.all().values())
 
         if execution_vars:
-            logger.logger.debug("Updating step arguments with execution variables", step_execution_id=self.model.id)
             try:
                 arguments.update(self._update_execution_variables(arguments, execution_vars))
             except exceptions.StepValidationError as ex:
-                logger.logger.error(str(ex))
                 raise exceptions.MissingValueError(ex)
 
         # Update dynamic variables
         try:
             arguments.update(self._update_dynamic_variables(arguments))
         except Exception as ex:
-            logger.logger.error(str(ex))
             raise exceptions.MissingValueError(f"Failed to update the dynamic variables. Original error: {ex}")
 
-        logger.logger.debug("Step arguments updated", step_execution_id=self.model.id, arguments=arguments)
+        self._logger.debug("step execution step arguments updated", arguments=arguments)
         return arguments
 
     def _execute_on_worker(
@@ -406,19 +400,19 @@ class StepExecution(Execution):
         :param target_queue: Queue on which should data be sent to worker(for example)
         :return: None
         """
-        logger.logger.debug("execute step on worker", step_execution_id=self.model.id, message_body=message_body)
+        self._logger.debug("step execution executing on worker", message_body=message_body)
         with rabbit_client.RpcClient(rabbit_channel) as rpc_client:
             try:
                 response = rpc_client.call(target_queue, message_body, custom_reply_queue=reply_queue)
             except exceptions.RpcTimeoutError as ex:
                 self.state = states.ERROR
                 self.process_error_state()
-                logger.logger.error("step execution failed", step_execution_id=self.model.id, error=str(ex))
+                self._logger.error("step execution module execution failed", error=str(ex))
                 return
 
             self.state = states.RUNNING
             CorrelationEventModel.objects.create(correlation_id=rpc_client.correlation_id, step_execution=self.model)
-            logger.logger.debug("step executed on worker", step_execution_id=self.model.id, response=response)
+            self._logger.debug("step execution module executed on worker", response=response)
 
     def _is_successor_executable(self, successor: SuccessorModel) -> bool:
         """
@@ -446,7 +440,7 @@ class StepExecution(Execution):
         Get Successors that will be executed by the current execution.
         :return: Successors
         """
-        logger.logger.debug("get executable successors", step_execution_id=self.model.id)
+        self._logger.debug("step execution get executable successors")
         successors: set[StepExecution] = set()
         for successor_model in self.model.step.successors.all():
             if not self._is_successor_executable(successor_model):
@@ -465,7 +459,7 @@ class StepExecution(Execution):
 
         :return: None
         """
-        logger.logger.debug("Ignoring Step execution", step_execution_id=self.model.id)
+        self._logger.debug("step execution ignoring")
         if self.state == states.IGNORED:
             return
 
@@ -481,7 +475,7 @@ class StepExecution(Execution):
             return
 
         self.state = states.IGNORED
-        logger.logger.debug("Step execution ignored", step_execution_id=self.model.id)
+        self._logger.debug("step execution ignored")
         # Try to ignore successors
         for successor_step in self.model.step.successors.all():
             step_ex_id = self.model.stage_execution.step_executions.get(step=successor_step).id
@@ -496,7 +490,7 @@ class StepExecution(Execution):
         :param ret_vals: output from Step Execution
         :return: None
         """
-        logger.logger.debug("Postprocessing Step execution", step_execution_id=self.model.id)
+        self._logger.debug("step execution postprocessing")
         self.finish_time = timezone.now()
 
         serialized_output = ret_vals[constants.SERIALIZED_OUTPUT]
@@ -522,7 +516,7 @@ class StepExecution(Execution):
         for successor in self._get_executable_successors():
             successor.parent = self.model
 
-        logger.logger.debug("Step execution postprocess finished", step_execution_id=self.model.id)
+        self._logger.debug("step execution postprocess finished")
 
     def _apply_output_mappings(self, serialized_output: dict):
         for mapping in self.model.step.output_settings.mappings.all():
@@ -544,7 +538,7 @@ class StepExecution(Execution):
         Ignor/skip all successor Steps of current Step Execution.
         :return: None
         """
-        logger.logger.debug("Ignoring Step successors", step_execution_id=self.model.id)
+        self._logger.debug("step execution ignoring step successors")
         all_successors = self.model.stage_execution.step_executions.filter(
             step__in=self.model.step.successors.values("successor"), state=states.PENDING
         )
@@ -563,7 +557,7 @@ class StepExecution(Execution):
         Execute eligible successors.
         :return: None
         """
-        logger.logger.debug("starting successors", step_execution_id=self.model.id)
+        self._logger.debug("step execution starting successors")
         for successor in self._get_executable_successors():
             successor.start()
 
@@ -572,10 +566,10 @@ class StepExecution(Execution):
         Set all successors' state to PAUSED, so they can be executed once resumed.
         :return: None
         """
-        logger.logger.debug("pausing successors", step_execution_id=self.model.id)
+        self._logger.debug("step execution pausing successors")
         for successor in self._get_executable_successors():
             successor.state = states.PAUSED
-            logger.logger.info("successor paused", step_execution_id=self.model.id, successor_id=successor.model.id)
+            self._logger.debug("step execution successor paused", successor_id=successor.model.id)
 
     def re_execute(self) -> None:
         """
@@ -591,7 +585,7 @@ class StepExecution(Execution):
         Reset changeable data to defaults.
         :return: None
         """
-        logger.logger.debug("Resetting Step execution data", step_execution_id=self.model.id)
+        self._logger.debug("step execution resetting data")
         states.StepStateMachine.validate_state(self.state, states.STEP_FINAL_STATES)
 
         with transaction.atomic():

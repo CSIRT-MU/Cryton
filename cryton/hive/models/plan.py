@@ -23,6 +23,7 @@ class Plan(Instance):
         :param model_id: Model ID
         """
         self.__model = PlanModel.objects.get(id=model_id)
+        self._logger = logger.logger.bind(plan_id=model_id, name=self.name)
 
     @staticmethod
     def create_model(name: str, settings: dict, dynamic: bool, metadata: dict) -> PlanModel:
@@ -110,6 +111,7 @@ class PlanExecution(SchedulableExecution):
         :param model_id: Model ID
         """
         self.__model = PlanExecutionModel.objects.get(id=model_id)
+        self._logger = logger.logger.bind(plan_execution_id=model_id, name=self.model.plan.name)
 
     @staticmethod
     def create_model(plan_id: int, worker_id: int, run_id: int) -> PlanExecutionModel | Type[PlanExecutionModel]:
@@ -141,12 +143,7 @@ class PlanExecution(SchedulableExecution):
         with transaction.atomic():
             PlanExecutionModel.objects.select_for_update().get(id=self.model.id)
             if st.PlanStateMachine.validate_transition(self.state, value):
-                logger.logger.debug(
-                    "Plan execution changed state",
-                    state_from=self.state,
-                    state_to=value,
-                    plan_execution_id=self.model.id,
-                )
+                self._logger.debug("plan execution state changed", state_from=self.state, state_to=value)
                 model = self.model
                 model.state = value
                 model.save()
@@ -223,7 +220,7 @@ class PlanExecution(SchedulableExecution):
         :raises
             :exception RuntimeError
         """
-        logger.logger.debug("Scheduling Plan execution", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution scheduling")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_SCHEDULE_STATES)
 
         self.trigger_id = scheduler_client.schedule_function(
@@ -233,7 +230,7 @@ class PlanExecution(SchedulableExecution):
         if isinstance(self.trigger_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)
             self.state = st.SCHEDULED
-            logger.logger.info("Plan execution scheduled", plan_execution_id=self.model.id, status="success")
+            self._logger.info("plan execution scheduled")
         else:
             raise RuntimeError("Could not schedule Plan execution")
 
@@ -242,7 +239,7 @@ class PlanExecution(SchedulableExecution):
         Execute Plan. This method starts triggers.
         :return: None
         """
-        logger.logger.debug("Executing Plan", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution starting")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_EXECUTE_STATES)
 
         # Create evidence directory
@@ -257,20 +254,20 @@ class PlanExecution(SchedulableExecution):
 
         for stage_execution_model in self.model.stage_executions.all():
             StageExecution(stage_execution_model.id).start()
-        logger.logger.info("Plan execution executed", plan_execution_id=self.model.id, status="success")
+        self._logger.info("plan execution started")
 
     def unschedule(self) -> None:
         """
         Unschedule plan execution.
         :return: None
         """
-        logger.logger.debug("Unscheduling Plan execution", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution unscheduling")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_UNSCHEDULE_STATES)
 
         scheduler_client.remove_job(self.trigger_id)
         self.trigger_id, self.schedule_time = "", None
         self.state = st.PENDING
-        logger.logger.info("Plan execution unscheduled", plan_execution_id=self.model.id, status="success")
+        self._logger.info("plan execution unscheduled")
 
     def reschedule(self, new_time: datetime) -> None:
         """
@@ -279,7 +276,7 @@ class PlanExecution(SchedulableExecution):
         :raises UserInputError: when provided time < present
         :return: None
         """
-        logger.logger.debug("Rescheduling Plan", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution rescheduling")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_RESCHEDULE_STATES)
 
         if new_time < timezone.now():
@@ -287,18 +284,17 @@ class PlanExecution(SchedulableExecution):
 
         self.unschedule()
         self.schedule(new_time)
-        logger.logger.info("Plan execution rescheduled", plan_execution_id=self.model.id, status="success")
+        self._logger.info("plan execution rescheduled")
 
     def pause(self) -> None:
         """
         Pause plan execution.
         :return: None
         """
-        logger.logger.debug("Pausing Plan", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution pausing")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_PAUSE_STATES)
 
         self.state = st.PAUSING
-        logger.logger.info("Plan execution pausing", plan_execution_id=self.model.id, status="success")
 
         for stage_ex in self.model.stage_executions.all():  # Pause StageExecutions.
             StageExecution(stage_ex.id).pause()
@@ -306,10 +302,10 @@ class PlanExecution(SchedulableExecution):
         if not self.model.stage_executions.exclude(state__in=st.PLAN_STAGE_PAUSE_STATES).exists():
             self.state = st.PAUSED
             self.pause_time = timezone.now()
-            logger.logger.info("Plan execution paused", plan_execution_id=self.model.id, status="success")
+            self._logger.info("plan execution paused")
 
     def resume(self) -> None:
-        logger.logger.debug("Unpausing Plan execution", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution resuming")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_RESUME_STATES)
 
         self.pause_time = None
@@ -325,25 +321,25 @@ class PlanExecution(SchedulableExecution):
                 except exceptions.InvalidStateError:
                     pass
 
-        logger.logger.info("Plan execution resumed", plan_execution_id=self.model.id)
+        self._logger.info("plan execution resumed")
 
     def validate_modules(self):
         """
         For each stage validate if worker is up, all modules are present and module args are correct.
         """
-        logger.logger.debug("Validating Plan execution modules", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution validating modules")
 
         for stage_execution_id in self.model.stage_executions.values_list("id", flat=True):
             stage_execution = StageExecution(stage_execution_id)
             stage_execution.validate_modules()
-        logger.logger.info("Plan execution modules validated", plan_execution_id=self.model.id)
+        self._logger.info("plan execution modules validated")
 
     def report(self) -> dict:
         """
         Generate a report from Plan execution.
         :return: report from Plan execution
         """
-        logger.logger.debug("Generating report", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution generating report")
         report_dict = dict(
             id=self.model.id,
             plan_name=self.model.plan.name,
@@ -370,7 +366,7 @@ class PlanExecution(SchedulableExecution):
         Stop current PlanExecution and its StageExecutions
         :return: None
         """
-        logger.logger.debug("Stoping Plan", plan_execution_id=self.model.id)
+        self._logger.debug("plan execution stopping plan")
         st.PlanStateMachine.validate_state(self.state, st.PLAN_STOP_STATES)
         self.state = st.STOPPING
 
@@ -397,7 +393,7 @@ class PlanExecution(SchedulableExecution):
 
         self.finish_time = timezone.now()
         self.state = st.STOPPED
-        logger.logger.info("Plan execution stoped", plan_execution_id=self.model.id, plan_id=self.model.plan.id)
+        self._logger.info("plan execution stopped")
 
     def finish(self) -> None:
         """
@@ -405,7 +401,7 @@ class PlanExecution(SchedulableExecution):
         :return: None
         """
         st.PlanStateMachine.validate_state(self.state, [st.PAUSING, st.RUNNING])
-        logger.logger.info("Plan execution finished", plan_execution_id=self.model.id)
+        self._logger.info("plan execution finished")
 
         self.state = st.FINISHED
         self.finish_time = timezone.now()

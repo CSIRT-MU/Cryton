@@ -14,6 +14,7 @@ from cryton.hive.config.settings import SETTINGS
 class SchedulerService:
 
     def __init__(self, job_queue):
+        self._logger = logger.logger.bind()
         self._job_queue = job_queue
         db_url = (
             f"postgresql://{SETTINGS.database.username}:{SETTINGS.database.password}@{SETTINGS.database.host}:"
@@ -80,13 +81,13 @@ class SchedulerService:
                 else:
                     raise RuntimeError("Unknown action")
             except Exception as ex:
-                logger.logger.error("Scheduler could not process the request", error=str(ex))
+                self._logger.error("scheduler could not process the request", error=str(ex))
                 request_pipe.send("")
             else:
                 request_pipe.send(result)
 
     def __del__(self):
-        logger.logger.debug("scheduler deleted")
+        self._logger.debug("scheduler deleted")
 
     def exposed_add_job(self, execute_function: str, function_args: list, start_time: datetime) -> str:
         """
@@ -96,7 +97,7 @@ class SchedulerService:
         :param start_time: Function start time
         :return: Scheduled job ID
         """
-        logger.logger.debug("Scheduling job in scheduler service", execute_function=execute_function)
+        self._logger.debug("scheduling job in scheduler service", execute_function=execute_function)
         job_scheduled = self._scheduler.add_job(execute_function, "date", run_date=str(start_time), args=function_args)
 
         return job_scheduled.id
@@ -108,38 +109,38 @@ class SchedulerService:
         :param seconds: Function interval in seconds
         :return: Scheduled job ID
         """
-        logger.logger.debug("Scheduling repeating job in scheduler service", execute_function=execute_function)
+        self._logger.debug("scheduling repeating job in scheduler service", execute_function=execute_function)
         job_scheduled = self._scheduler.add_job(execute_function, "interval", seconds=seconds)
         return job_scheduled.id
 
     def exposed_reschedule_job(self, job_id: str):
-        logger.logger.debug("Rescheduling job in scheduler service", job_id=job_id)
+        self._logger.debug("rescheduling job in scheduler service", job_id=job_id)
         return self._scheduler.reschedule_job(job_id)
 
     def exposed_pause_job(self, job_id: str):
-        logger.logger.debug("Pausing job in scheduler service", job_id=job_id)
+        self._logger.debug("pausing job in scheduler service", job_id=job_id)
         return self._scheduler.pause_job(job_id)
 
     def exposed_resume_job(self, job_id: str):
-        logger.logger.debug("Resuming job in scheduler service", job_id=job_id)
+        self._logger.debug("resuming job in scheduler service", job_id=job_id)
         return self._scheduler.resume_job(job_id)
 
     def exposed_remove_job(self, job_id: str):
-        logger.logger.debug("Removing job in scheduler service", job_id=job_id)
+        self._logger.debug("removing job in scheduler service", job_id=job_id)
         return self._scheduler.remove_job(job_id)
 
     def exposed_get_job(self, job_id: str):
-        logger.logger.debug("Getting job in scheduler service", job_id=job_id)
+        self._logger.debug("getting job in scheduler service", job_id=job_id)
         return self._scheduler.get_job(job_id)
 
     def exposed_get_jobs(self):
-        logger.logger.debug("Getting multiple jobs in scheduler service")
+        self._logger.debug("Getting multiple jobs in scheduler service")
         return self._scheduler.get_jobs()
 
     def exposed_pause_scheduler(self):
-        logger.logger.debug("Pausing scheduler service")
+        self._logger.debug("Pausing scheduler service")
         return self._scheduler.pause()
 
     def exposed_resume_scheduler(self):
-        logger.logger.debug("Resuming scheduler service")
+        self._logger.debug("Resuming scheduler service")
         return self._scheduler.resume()

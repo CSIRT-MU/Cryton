@@ -9,6 +9,7 @@ from jsonschema import validate, ValidationError
 from typing import Callable
 from dataclasses import asdict
 from importlib import import_module
+from uuid import uuid1
 
 from cryton.worker import event
 from cryton.worker.utility import util, constants as co, logger
@@ -28,6 +29,7 @@ class Task:
         self._process: Process | None = None
         self._connection = connection
         self.undelivered_messages: list[util.UndeliveredMessage] = []
+        self._logger = logger.logger.bind(correlation_id=self.correlation_id)
 
     def start(self):
         """
@@ -41,7 +43,7 @@ class Task:
         Load message, execute callback and send reply.
         :return: None
         """
-        logger.logger.debug("Processing Task.", correlation_id=self.correlation_id)
+        self._logger.debug("processing task")
         echo(f"Processing Task. correlation_id: {self.correlation_id}")
 
         message_body = json.loads(self.message.body)
@@ -70,7 +72,7 @@ class Task:
             self._main_queue.put(item)
 
         echo(f"Finished Task processing. correlation_id: {self.correlation_id}")
-        logger.logger.debug("Finished Task processing.", correlation_id=self.correlation_id)
+        self._logger.debug("finished task processing")
 
     def _execute(self, message_body: dict) -> dict:
         """
@@ -126,7 +128,7 @@ class Task:
         Wrapper method for Process.kill() and send reply.
         :return: None
         """
-        logger.logger.debug("Stopping Task (its process).", correlation_id=self.correlation_id)
+        self._logger.debug("stopping task (its process)")
         if self._process is not None and self._process.pid is not None and self._process.exitcode is None:
             self._process.kill()
             return True
@@ -158,10 +160,10 @@ class Task:
         try:
             channel = self._connection.channel()
         except amqpstorm.AMQPError:
+            local_logger = self._logger.bind(uuid=str(uuid1()))
             self.undelivered_messages.append(util.UndeliveredMessage(recipient, message_body, properties))
-            logger.logger.error(
-                "Unable to send the message.", recipient=recipient, message=message_body, properties=properties
-            )
+            local_logger.error("unable to send the message", recipient=recipient)
+            local_logger.debug("unable to send the message", message_body=message_body)
             return False
 
         channel.queue.declare(recipient)
@@ -171,7 +173,7 @@ class Task:
 
         channel.close()
 
-        logger.logger.debug("Reply sent.", correlation_id=self.correlation_id, queue=recipient, body=message_body)
+        self._logger.debug("reply sent", queue=recipient, body=message_body)
         return True
 
 
@@ -208,11 +210,11 @@ class AttackTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: Execution's result
         """
-        logger.logger.info("Running AttackTask._execute().", correlation_id=self.correlation_id)
+        self._logger.debug("running attacktask._execute()")
         module = message_body.pop(co.MODULE)
         arguments = message_body.pop(co.ARGUMENTS)
         result = asdict(self._run_in_process(util.run_module, *(module, arguments)))
-        logger.logger.info("Finished AttackTask._execute().", correlation_id=self.correlation_id)
+        self._logger.debug("finished attacktask._execute()")
 
         return result
 
@@ -355,7 +357,7 @@ class ControlTask(Task):
         :param message_body: Received RabbitMQ Message's
         :return: Execution's result
         """
-        logger.logger.info("Running ControlTask._execute().", correlation_id=self.correlation_id)
+        self._logger.debug("running controltask._execute()")
         event_t = message_body.pop(co.EVENT_T)
         event_obj = event.Event(message_body.pop(co.EVENT_V), self._main_queue)
 
@@ -365,7 +367,7 @@ class ControlTask(Task):
         except AttributeError:
             ex = f"Unknown event type: {event_t}."
             event_v = {co.RESULT: co.CODE_ERROR, co.OUTPUT: ex}
-            logger.logger.debug(ex, correlation_id=self.correlation_id)
+            self._logger.debug(ex)
         else:
             try:
                 event_v = event_obj_method()
@@ -378,5 +380,5 @@ class ControlTask(Task):
                     }
                 }
 
-        logger.logger.info("Finished ControlTask._execute().", correlation_id=self.correlation_id)
+        self._logger.debug("finished controltask._execute()")
         return {co.EVENT_T: event_t, co.EVENT_V: event_v}
