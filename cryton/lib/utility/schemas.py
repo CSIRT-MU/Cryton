@@ -4,8 +4,12 @@ def inject(original: dict | list) -> dict | list:
     :param original: The original schema property
     :return: Original property that also allows to define output sharing variables
     """
-    pattern = {"type": "string", "pattern": "^\$.+$"}
-    return {"anyOf": [original, pattern]} if isinstance(original, dict) else original + [pattern]
+    pattern_output_sharing = {"type": "string", "pattern": r"^\$.+$"}
+    pattern_execution_variables = {"type": "string", "pattern": r"^\{\{.*\}\}$"}
+
+    if isinstance(original, dict):
+        return {"anyOf": [original, pattern_output_sharing, pattern_execution_variables]}
+    return original + [pattern_output_sharing, pattern_execution_variables]
 
 
 def inject_schema(schema: dict, ignore_sub_schema_keywords: bool = False, wrap: bool = True):

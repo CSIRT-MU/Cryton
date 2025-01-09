@@ -341,9 +341,13 @@ class RunViewSet(util.ExecutionFullViewSet):
             raise exceptions.NotFound()
 
         try:
-            run_obj.validate_modules()
+            all_valid = run_obj.validate_modules()
         except core_exceptions.RpcTimeoutError:
             raise exceptions.RpcTimeout("Module's validation failed due to RPC timeout.")
+
+        if not all_valid:
+            msg = {"detail": "Run's modules are not valid."}
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         msg = {"detail": "Run's modules were validated."}
         return Response(msg, status=status.HTTP_200_OK)

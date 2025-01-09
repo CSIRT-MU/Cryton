@@ -115,9 +115,13 @@ class PlanExecutionViewSet(util.ExecutionViewSet):
             raise exceptions.NotFound()
 
         try:
-            plan_ex_obj.validate_modules()
+            all_valid = plan_ex_obj.validate_modules()
         except core_exceptions.RpcTimeoutError:
             raise exceptions.RpcTimeout("Module's validation failed due to RPC timeout.")
+
+        if not all_valid:
+            msg = {"detail": "Plan execution's modules are not valid."}
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         msg = {"detail": "Plan execution's modules were validated."}
         return Response(msg, status=status.HTTP_200_OK)

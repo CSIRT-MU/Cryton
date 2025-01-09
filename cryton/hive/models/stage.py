@@ -330,14 +330,17 @@ class StageExecution(Execution):
             StepExecution(step_exec.id).start()
         self._logger.info("stage execution resumed")
 
-    def validate_modules(self) -> None:
+    def validate_modules(self) -> bool:
         """
         Check if module is present and module args are correct for each Step
         """
         self._logger.debug("stage execution validating modules")
+        all_valid = True
         for step_ex_id in self.model.step_executions.values_list("id", flat=True):
-            StepExecution(step_ex_id).validate()
+            if not StepExecution(step_ex_id).validate():
+                all_valid = False
         self._logger.info("stage execution modules validated")
+        return all_valid
 
     def report(self) -> dict:
         self._logger.debug("stage execution generating report")

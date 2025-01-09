@@ -288,16 +288,17 @@ class Run(SchedulableExecution):
         self.state = st.STOPPED
         self._logger.info("run stopped")
 
-    def validate_modules(self):
+    def validate_modules(self) -> bool:
         """
         For each Plan validate if worker is up, all modules are present and module args are correct.
         """
         self._logger.debug("run validating modules")
-
+        all_valid = True
         for plan_execution_id in self.model.plan_executions.values_list("id", flat=True):
-            plan_execution = PlanExecution(plan_execution_id)
-            plan_execution.validate_modules()
+            if not PlanExecution(plan_execution_id).validate_modules():
+                all_valid = False
         self._logger.debug("run modules validated")
+        return all_valid
 
     def finish(self) -> None:
         """

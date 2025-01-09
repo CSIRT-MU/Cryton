@@ -23,7 +23,7 @@ def run_module(name: str, arguments: dict, validate_only: bool = False) -> Modul
         return ModuleOutput(Result.ERROR, output=f"Module {name} doesn't exist.")
 
     try:
-        module_type.validate_arguments(arguments)
+        module_type.validate_arguments(arguments, validate_only)
     except Exception as ex:
         return ModuleOutput(Result.FAIL, output=str(ex))
 
