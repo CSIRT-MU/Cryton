@@ -4,6 +4,7 @@ from copy import deepcopy
 from jsonschema import validate
 
 from cryton.lib.utility.enums import Result
+from cryton.lib.utility.schemas import inject_schema
 
 
 @dataclass
@@ -29,14 +30,16 @@ class ModuleBase(ABC):
         self._arguments = deepcopy(arguments)
 
     @classmethod
-    def validate_arguments(cls, arguments: dict) -> None:
+    def validate_arguments(cls, arguments: dict, allow_unresolved_variables: bool = False) -> None:
         """
         Validate input arguments using jsonschema.
         :param arguments: Module arguments
+        :param allow_unresolved_variables: Allow unresolved execution and output sharing variables
         :return: None
         :exception Exception: In case of error
         """
-        validate(arguments, cls.SCHEMA)
+        schema = inject_schema(cls.SCHEMA) if allow_unresolved_variables else cls.SCHEMA
+        validate(arguments, schema)
 
     @abstractmethod
     def check_requirements(self) -> None:

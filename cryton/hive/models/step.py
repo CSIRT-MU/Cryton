@@ -293,15 +293,18 @@ class StepExecution(Execution):
             constants.EVENT_T: constants.EVENT_VALIDATE_MODULE,
             constants.EVENT_V: {
                 constants.MODULE: self.model.step.module,
-                constants.ARGUMENTS: self.model.step.arguments,  # TODO: won't be valid in case we use execution_variables, this is a bug!
+                constants.ARGUMENTS: self.model.step.arguments,
             },
         }
 
         with rabbit_client.RpcClient() as rpc_client:
-            response = rpc_client.call(target_queue, message)
+            response = rpc_client.call(target_queue, message).get(constants.EVENT_V)
 
-        if response.get(constants.EVENT_V).get(constants.RESULT) == Result.OK:
+        if response.get(constants.RESULT) == Result.OK:
             self.valid = True
+        else:
+            self.valid = False
+            self._logger.error("step execution arguments are not valid", error=response.get(constants.OUTPUT))
 
         self._logger.info("step execution module validated")
         return self.valid

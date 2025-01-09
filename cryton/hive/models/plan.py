@@ -323,16 +323,17 @@ class PlanExecution(SchedulableExecution):
 
         self._logger.info("plan execution resumed")
 
-    def validate_modules(self):
+    def validate_modules(self) -> bool:
         """
         For each stage validate if worker is up, all modules are present and module args are correct.
         """
         self._logger.debug("plan execution validating modules")
-
+        all_valid = True
         for stage_execution_id in self.model.stage_executions.values_list("id", flat=True):
-            stage_execution = StageExecution(stage_execution_id)
-            stage_execution.validate_modules()
+            if not StageExecution(stage_execution_id).validate_modules():
+                all_valid = False
         self._logger.info("plan execution modules validated")
+        return all_valid
 
     def report(self) -> dict:
         """
