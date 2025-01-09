@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -1605,9 +1605,9 @@ create an empty Plan/Stage and create their agent to control the execution inste
 </code></pre></div></p>
 <details class="abstract">
 <summary>Show the example</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="n">WORKER_ID</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1617,7 +1617,7 @@ create an empty Plan/Stage and create their agent to control the execution inste
 <span class="n">STEP_REUSABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;reusable-step-{{ id }}&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ command }}&quot;</span><span class="p">}}}</span>
 
 
-<span class="k">def</span> <span class="nf">get_api_root</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_api_root</span><span class="p">():</span>
     <span class="n">api_address</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
     <span class="n">api_port</span> <span class="o">=</span> <span class="mi">8000</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;http://</span><span class="si">{</span><span class="n">api_address</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">api_port</span><span class="si">}</span><span class="s2">/api/&quot;</span>
@@ -1853,7 +1853,7 @@ create an empty Plan/Stage and create their agent to control the execution inste
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>
