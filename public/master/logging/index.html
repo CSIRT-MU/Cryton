@@ -1329,15 +1329,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1443,15 +1434,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1476,20 +1458,17 @@
 
 <p>Logs are created only for Hive and Worker and stored in <strong><a href="../settings/">APP_DIRECTORY</a>/logs</strong>. In case you are running in a Docker, they are displayed in the stdout.</p>
 <p>The logs adhere to the following format:
-<div class="highlight"><pre><span></span><code>{&quot;queue&quot;: &quot;cryton_core.control.request&quot;, &quot;event&quot;: &quot;Queue declared and consuming&quot;, &quot;logger&quot;: &quot;cryton&quot;, &quot;level&quot;: &quot;info&quot;, &quot;timestamp&quot;: &quot;2021-05-18T11:19:20.012152Z&quot;}
-{&quot;plan_name&quot;: &quot;Example scenario&quot;, &quot;plan_id&quot;: 129, &quot;event&quot;: &quot;plan created&quot;, &quot;logger&quot;: &quot;cryton&quot;, &quot;level&quot;: &quot;info&quot;, &quot;timestamp&quot;: &quot;2021-05-18T06:17:39.753017Z&quot;}
+<div class="highlight"><pre><span></span><code>{&quot;channel_consumer_count&quot;: 7, &quot;event&quot;: &quot;Starting channel consumers&quot;, &quot;logger&quot;: &quot;cryton-worker&quot;, &quot;level&quot;: &quot;debug&quot;, &quot;timestamp&quot;: &quot;2025-01-07T11:18:53.922221Z&quot;}
+{&quot;event&quot;: &quot;Opening a new Channel&quot;, &quot;level&quot;: &quot;debug&quot;, &quot;logger&quot;: &quot;amqpstorm.connection&quot;, &quot;timestamp&quot;: &quot;2025-01-07 11:18:53&quot;}
 </code></pre></div></p>
 <h2 id="loggers">loggers<a class="headerlink" href="#loggers" title="Permanent link">&para;</a></h2>
 <h3 id="production">Production<a class="headerlink" href="#production" title="Permanent link">&para;</a></h3>
-<p>Informational logs and higher are logged into a log file. In case you are running in a Docker, the logs are displayed to the console as well.</p>
+<p>Informational Cryton logs and higher are logged into a log file. In case you are running in a Docker, the logs are displayed to the console as well.</p>
 <p>Step's output is not included in the logs, it can be found in the database/CLI/Frontend.</p>
 <p>This is the default logger.</p>
 <h3 id="debug">Debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h3>
-<p>All logs are logged into a log file and console. It also logs the Step's output.</p>
+<p>All logs (even from other loggers) are logged into a log file and console. It also logs the Step's output.</p>
 <p>To enable the debug logger, update the <a href="../settings/#debug">Hive</a> or <a href="../settings/#debug_1">Worker</a> settings.</p>
-<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
-<p>All logs are logged into a console. It also logs the Step's output.</p>
-<p>The logger is enabled only for testing.</p>
 
 
 
