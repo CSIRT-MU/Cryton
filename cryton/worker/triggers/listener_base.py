@@ -1,5 +1,4 @@
 from click import echo
-import uuid
 from threading import Lock
 from queue import PriorityQueue
 
@@ -16,6 +15,7 @@ class Listener:
         self._triggers: list[dict] = []
         self._identifiers: dict = {}
         self._triggers_lock = Lock()  # Lock to prevent modifying, while performing time-consuming actions.
+        self._logger = logger.logger.bind()
 
     def compare_identifiers(self, identifiers: dict) -> bool:
         """
@@ -82,10 +82,6 @@ class Listener:
         """
         return False if len(self._triggers) == 0 else True
 
-    @staticmethod
-    def _generate_id() -> uuid.UUID:
-        return uuid.uuid1()
-
     def _notify(self, queue_name: str, message_body: dict) -> None:
         """
         Send message to reply_to about successful trigger call.
@@ -97,9 +93,7 @@ class Listener:
             f"Notifying about successful trigger call. trigger_type: {self.__class__}, "
             f"identifiers: {self._identifiers}"
         )
-        logger.logger.debug(
-            "Notifying about successful trigger call.", trigger_type=self.__class__, identifiers=self._identifiers
-        )
+        self._logger.debug("notifying about successful trigger call", trigger_type=self.__class__)
         item = util.PrioritizedItem(
             co.HIGH_PRIORITY,
             {co.ACTION: co.ACTION_SEND_MESSAGE, co.QUEUE_NAME: queue_name, co.DATA: message_body, co.PROPERTIES: {}},

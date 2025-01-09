@@ -39,7 +39,7 @@ class StageValidationError(ValidationError):
 
     def __init__(self, message: Exception | str, stage_name: str = None):
         self.message = {"message": message, "stage_name": stage_name}
-        logger.logger.error(message, stage_name=stage_name, state="fail")
+        logger.logger.error(message, stage_name=stage_name)
         super().__init__(self.message)
 
 
@@ -312,7 +312,7 @@ class SuccessorCreationFailedError(CreationFailedError):
 
     def __init__(self, message: Exception | str, successor_name: str = None):
         self.message = {"message": message, "successor_name": successor_name}
-        logger.logger.error("Successor creation failed", successor_name=successor_name)
+        logger.logger.error("successor creation failed", successor_name=successor_name)
         super().__init__(self.message)
 
 
@@ -321,7 +321,7 @@ class PlanExecutionCreationFailedError(CreationFailedError):
 
     def __init__(self, message: Exception | str = "Bad argument", param_name: str = None, param_type: str = None):
         self.message = {"message": message, "param_type": param_type, "param_name": param_name}
-        logger.logger.error("PlanExecution creation failed", param_name=param_name, param_type=param_type)
+        logger.logger.error("plan execution creation failed", param_name=param_name, param_type=param_type)
         super().__init__(self.message)
 
 

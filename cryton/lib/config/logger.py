@@ -1,49 +1,35 @@
 from os import path
+from uuid import uuid1
 import structlog
 import logging
 import logging.config
 import logging.handlers
-from multiprocessing import Process, Queue
 
 from cryton.lib.config.settings import LOGS_DIRECTORY
+from cryton.lib.utility.helpers import is_in_docker
 
 
-# TODO: test and make sure it works with each app (hive/worker, possibly others)
 class LoggerWrapper:
-    name = "cryton"
+    def __init__(self, name: str, is_debug: bool):
+        self._name = name
+        self._is_debug = is_debug
+        self._log_file_name = f"{self._name}-{uuid1()}.log"
+        self._level = logging.DEBUG if self._is_debug else logging.INFO
 
-    def __init__(self, is_production: bool = False):
-        self.logger_amqpstorm = logging.getLogger("amqpstorm")
-        self.logger_apscheduler = logging.getLogger("apscheduler")
-        self.set_config()
-        self.configure()
+        self._configure_logging()
+        self._configure_structlog()
 
-        self.logger_amqpstorm.propagate = True
-        self.logger_apscheduler.propagate = True
-        self.logger = structlog.get_logger(self.name)
-        self.logger.setLevel(logging.DEBUG if not is_production else logging.INFO)
-
-        self.log_queue = Queue()
+        self._logger: structlog.stdlib.BoundLogger = structlog.get_logger(self._name)
 
     @property
-    def file_name(self):
-        return f"{self.name}.log"
+    def logger(self) -> structlog.stdlib.BoundLogger:
+        return self._logger
 
-    def log_handler(self):
-        """
-        Simple function that takes logs from Processes and handles them instead.
-        :return: None
-        """
-        while True:
-            record: logging.LogRecord = self.log_queue.get()
-            if record is None:
-                break
+    @property
+    def log_file(self) -> str:
+        return path.join(LOGS_DIRECTORY, self._log_file_name)
 
-            self.logger.handle(record)
-
-    @staticmethod
-    def configure():
-        # TODO: configure to run the logger as non json when running in docker or console in general?
+    def _configure_structlog(self) -> None:
         structlog.configure(
             processors=[
                 structlog.stdlib.filter_by_level,
@@ -54,59 +40,62 @@ class LoggerWrapper:
                 structlog.processors.StackInfoRenderer(),
                 structlog.processors.format_exc_info,
                 structlog.processors.UnicodeDecoder(),
-                structlog.processors.JSONRenderer(),
+                structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
             ],
+            wrapper_class=structlog.make_filtering_bound_logger(self._level),
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,
         )
 
-    def set_config(self):
+    def _configure_logging(self) -> None:
+        handlers = ["file"]
+        if self._is_debug or is_in_docker():
+            handlers.append("console")
+
+        # https://www.structlog.org/en/stable/standard-library.html
+        pre_chain = [
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.add_logger_name,
+            structlog.stdlib.ExtraAdder(),
+            structlog.processors.TimeStamper(fmt="iso"),
+        ]
+
         logging.config.dictConfig(
             {
                 "version": 1,
                 "disable_existing_loggers": False,
-                "formatters": {"simple": {"format": "%(message)s"}},
+                "formatters": {
+                    "simple": {
+                        "()": structlog.stdlib.ProcessorFormatter,
+                        "processors": [
+                            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                            structlog.processors.JSONRenderer(),
+                        ],
+                        "foreign_pre_chain": pre_chain,
+                    }
+                },
                 "handlers": {
                     "console": {
                         "class": "logging.StreamHandler",
                         "level": "DEBUG",
-                        "formatter": "simple",
                         "stream": "ext://sys.stdout",
+                        "formatter": "simple",
                     },
                     "file": {
                         "class": "logging.handlers.RotatingFileHandler",
                         "level": "DEBUG",
-                        "formatter": "simple",
-                        "filename": path.join(LOGS_DIRECTORY, self.file_name),
+                        "filename": self.log_file,
                         "maxBytes": 10485760,
                         "backupCount": 20,
                         "encoding": "utf8",
+                        "formatter": "simple",
                     },
                 },
-                "root": {"level": "NOTSET", "handlers": [], "propagate": True},
+                "root": {"level": "NOTSET", "handlers": handlers, "propagate": True},
                 "loggers": {
-                    f"{self.name}": {"level": "INFO", "handlers": ["prod_logger"], "propagate": True},
-                    f"{self.name}-debug": {
-                        "level": "DEBUG",
-                        "handlers": ["debug_logger", "console"],
-                        "propagate": True,
-                    },
-                    "cryton-hive-test": {"level": "DEBUG", "handlers": ["console"], "propagate": False},
+                    f"{self._name}": {"level": "DEBUG", "handlers": [], "propagate": True},
+                    "amqpstorm": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "apscheduler": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
                 },
             }
         )
-
-
-class LoggedProcess(Process):
-    def __init__(self, logg_queue, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.logg_queue = logg_queue
-
-        queue_handler = logging.handlers.QueueHandler(self.logg_queue)
-        root = structlog.getLogger()
-        root.setLevel(logging.DEBUG)
-        if not root.hasHandlers():
-            root.addHandler(queue_handler)
-
-
-logger = LoggerWrapper().logger

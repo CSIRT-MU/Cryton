@@ -68,7 +68,7 @@ class EmpireClient(utinni.EmpireApiClient):
         logger.logger.debug(f"Using existing listener '{listener_name}'")
         if "error" in listener_get_response:
             # create listener
-            logger.logger.debug("Creating listener.", listener_name=listener_name)
+            logger.logger.debug("creating listener.", listener_name=listener_name)
             try:
                 await try_empire_request(
                     self.listeners.create,
@@ -83,7 +83,7 @@ class EmpireClient(utinni.EmpireApiClient):
 
         # check if stager is in Empire database
         stager = await try_empire_request(self.stagers.get, stager_type)
-        logger.logger.debug("Generating stager output.", stager_type=stager_type, listener_name=listener_name)
+        logger.logger.debug("generating stager output.", stager_type=stager_type, listener_name=listener_name)
         try:
             payload = await try_empire_request(stager.generate, stager_type, listener_name, stager_options)
         except KeyError:
@@ -113,7 +113,7 @@ class EmpireClient(utinni.EmpireApiClient):
             logger.logger.error(f"Command execution timed out, check if agent '{agent_name}' is alive.")
             raise TimeoutError(f"Command execution timed out, check if agent '{agent_name}' is alive.")
         except Exception as ex:
-            logger.logger.error("Error while executing shell command on agent", error=str(ex))
+            logger.logger.error("error while executing shell command on agent", error=str(ex))
             raise ex
 
         return output
@@ -145,7 +145,7 @@ class EmpireClient(utinni.EmpireApiClient):
             logger.logger.error(f"Module execution timed out, check if agent '{agent_name}' is alive.")
             raise TimeoutError(f"Module execution timed out, check if agent '{agent_name}' is alive.")
         except Exception as ex:
-            logger.logger.error("Error while executing empire module", error=str(ex))
+            logger.logger.error("error while executing empire module", error=str(ex))
             raise ex
 
         return output
@@ -165,7 +165,7 @@ class EmpireClient(utinni.EmpireApiClient):
         try:
             session_to_use = metasploit_obj.sessions.get(session_id)
         except MSFError as ex:
-            logger.logger.error("MSF session not found.", session_id=session_id)
+            logger.logger.error("msf session not found.", session_id=session_id)
             raise KeyError(f"MSF Session with id {session_id} not found. {ex}")
 
         try:
@@ -181,7 +181,7 @@ class EmpireClient(utinni.EmpireApiClient):
         session_to_use.execute_in_shell(payload_tmp[0], payload_tmp[1:])
 
         # Rename agent to given name
-        logger.logger.debug("Renaming agent", target_ip=target_ip)
+        logger.logger.debug("renaming agent", target_ip=target_ip)
         agent = await self.agent_poller(target_ip)
 
         if agent is None:

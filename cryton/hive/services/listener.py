@@ -6,6 +6,7 @@ from multiprocessing.managers import SyncManager
 from queue import Empty
 import amqpstorm
 from traceback import format_exc
+from structlog.stdlib import BoundLogger
 
 from cryton.hive.utility import constants, logger, states, event, rabbit_client
 from cryton.hive.models import stage, plan, step, run
@@ -17,7 +18,8 @@ from django.utils import timezone
 
 
 class ChannelConsumer:
-    def __init__(self, identifier: int, connection: amqpstorm.Connection, queues: dict):
+    def __init__(self, identifier: int, connection: amqpstorm.Connection, queues: dict, consumer_logger: BoundLogger):
+        self._logger = consumer_logger.bind(channel_consumer_id=identifier)
         self._id = identifier
         self._channel = connection.channel()
 
@@ -27,21 +29,20 @@ class ChannelConsumer:
             self._channel.basic.consume(callback, queue)
 
     def start(self):
-        logger.logger.debug("Channel consumer started.", id=self._id)
+        self._logger.debug("channel consumer started")
         while not self._channel.is_closed:
             try:
                 self._channel.start_consuming()
 
             except amqpstorm.AMQPConnectionError as ex:
-                logger.logger.debug("Channel consumer encountered a connection error.", id=self._id, error=str(ex))
+                self._logger.debug("channel consumer encountered a connection error", error=str(ex))
                 break
 
             except Exception as ex:  # If any uncaught exception occurs, channel consumer will still work
-                logger.logger.warning(
-                    "Channel consumer encountered an error.", id=self._id, error=str(ex), tb=format_exc()
-                )
+                self._logger.warning("channel consumer encountered an error", error=str(ex))
+                self._logger.debug("channel consumer encountered an error", traceback=format_exc())
 
-        logger.logger.debug("Channel consumer stopped.", id=self._id)
+        self._logger.debug("channel consumer stopped")
 
 
 class Consumer:
@@ -54,6 +55,7 @@ class Consumer:
         :param channel_consumer_count: How many consumers to use for queues
             (higher == faster == heavier processor usage)
         """
+        self._logger = logger.logger.bind(consumer_id=identifier)
         self._id = identifier
         self._queue = queue
         self._queues = queues
@@ -88,7 +90,7 @@ class Consumer:
         Establish connection, start channel consumers in thread and keep self alive.
         :return: None
         """
-        logger.logger.debug("Consumer started.", id=self._id, channel_consumer_count=self._channel_consumer_count)
+        self._logger.debug("consumer started", channel_consumer_count=self._channel_consumer_count)
         self._stopped.clear()
 
         while not self._stopped.is_set():  # Keep self and connection alive and check for stop.
@@ -113,19 +115,19 @@ class Consumer:
         Stop Consumer (self). Close connection and its channels.
         :return: None
         """
-        logger.logger.debug("Stopping Consumer.", id=self._id)
+        self._logger.debug("stopping consumer")
         self._stopped.set()
 
         if self._connection is not None and self._connection.is_open:  # Close connection and its channels.
-            logger.logger.debug("Closing channels.")
+            self._logger.debug("closing channels")
 
             for channel in list(self._connection.channels.values()):
                 channel.close()
 
-            logger.logger.debug("Closing connection.")
+            self._logger.debug("closing connection")
             self._connection.close()
 
-        logger.logger.debug("Consumer stopped.", id=self._id)
+        self._logger.debug("consumer stopped")
 
     def _update_connection(self) -> bool:
         """
@@ -145,9 +147,9 @@ class Consumer:
             return False
 
         except amqpstorm.AMQPError as ex:  # Try to establish connection on error
-            logger.logger.warning("No connection to RabbitMQ server", error=str(ex))
+            self._logger.warning("no connection to rabbitmq server", error=str(ex))
             self._connection = amqpstorm.Connection(self._hostname, self._username, self._password, self._port)
-            logger.logger.info("Connection to RabbitMQ server established")
+            self._logger.info("connection to RabbitMQ server established")
 
         return True
 
@@ -156,9 +158,9 @@ class Consumer:
         Start channel consumers in threads.
         :return: None
         """
-        logger.logger.debug("Starting channel consumers", channel_consumer_count=self._channel_consumer_count)
+        self._logger.debug("starting channel consumers", channel_consumer_count=self._channel_consumer_count)
         for i in range(self._channel_consumer_count):
-            channel_consumer = ChannelConsumer(i + 1, self._connection, self._queues)
+            channel_consumer = ChannelConsumer(i + 1, self._connection, self._queues, self._logger)
             thread = Thread(target=channel_consumer.start, name=f"Thread-{i}-consumer")
             thread.start()
 
@@ -168,6 +170,7 @@ class Listener:
         """
         Listener.
         """
+        self._logger = logger.logger.bind()
         self._consumers: list[Consumer] = []
         self.consumers_count = SETTINGS.cpu_cores
 
@@ -215,7 +218,7 @@ class Listener:
 
         self._scheduler.stop()
         self._stopped.set()
-        logger.logger.info("Stopped RabbitMQ listener")
+        self._logger.info("stopped RabbitMQ listener")
 
     def _start_consumers(self) -> None:
         """
@@ -227,7 +230,7 @@ class Listener:
             consumer.start()
             self._consumers.append(consumer)
 
-        logger.logger.info("Started RabbitMQ listener")
+        self._logger.info("started RabbitMQ listener")
 
     def step_response_callback(self, message: amqpstorm.Message) -> None:
         """
@@ -235,15 +238,16 @@ class Listener:
         :param message: Received RabbitMQ message
         :return: None
         """
-        logger.logger.debug("Received Step response callback", correlation_id=message.correlation_id)
+        correlation_id = message.correlation_id
+        local_logger = self._logger.bind(correlation_id=correlation_id)
+        local_logger.debug("received step response callback")
         message.ack()
 
         # Get correlation event object from DB
-        correlation_id = message.correlation_id
         try:
             correlation_event_obj = self._get_correlation_event(correlation_id)
         except CorrelationEventModel.DoesNotExist:
-            logger.logger.warning("Received nonexistent correlation_id", correlation_id=correlation_id)
+            local_logger.warning("received nonexistent correlation_id")
             return
 
         # Create execution object and delete the correlation event
@@ -252,8 +256,7 @@ class Listener:
 
         # Process finished execution
         message_body = json.loads(message.body)
-        logger.logger.info("Step execution finished", step_execution_id=step_ex_obj.model.id, message_body=message_body)
-
+        local_logger.debug("processing finished execution", message_body=message_body)
         step_ex_obj.postprocess(message_body)  # Save result, output, sessions, etc.
         step_ex_obj.ignore_successors()  # Ignore successors depending on the result
         event.Event({"step_execution_id": step_ex_obj.model.id}).handle_finished_step()  # Handle FINISHED states
@@ -268,22 +271,23 @@ class Listener:
         elif step_ex_obj.state in [states.FINISHED, states.FAILED, states.ERROR]:
             step_ex_obj.start_successors()
 
-    @staticmethod
-    def event_callback(message: amqpstorm.Message) -> None:
+    def event_callback(self, message: amqpstorm.Message) -> None:
         """
         Callback for processing events.
         :param message: Received RabbitMQ message
         :return: None
         """
-        logger.logger.debug("Received event callback", correlation_id=message.correlation_id)
+        local_logger = self._logger.bind(correlation_id=message.correlation_id)
+        local_logger.debug("received event callback")
         message.ack()
 
         message_body = json.loads(message.body)
+        local_logger.debug("processing event callback", message_body=message_body)
         try:
             event_t = message_body[constants.EVENT_T]
             event_v = message_body[constants.EVENT_V]
         except (TypeError, KeyError):
-            logger.logger.warn("Event must contain event_t and event_v!")
+            local_logger.warning("Event must contain event_t and event_v!")
             return
 
         if event_t == constants.EVENT_TRIGGER_STAGE:
@@ -291,7 +295,7 @@ class Listener:
         elif event_t == constants.EVENT_STEP_EXECUTION_ERROR:
             event.Event(event_v).handle_finished_step()
         else:
-            logger.logger.warn("Nonexistent event received", event_t=event_t)
+            local_logger.warning("nonexistent event received", event_t=event_t)
 
     def control_request_callback(self, message: amqpstorm.Message) -> None:
         """
@@ -299,23 +303,25 @@ class Listener:
         :param message: Received RabbitMQ message
         :return: None
         """
-        logger.logger.debug("Received control request callback", correlation_id=message.correlation_id)
+        local_logger = self._logger.bind(correlation_id=message.correlation_id)
+        local_logger.debug("received control request callback")
         message.ack()
 
         message_body = json.loads(message.body)
+        local_logger.debug("processing control request callback", message_body=message_body)
         result = -1
         try:
             event_t = message_body[constants.EVENT_T]
             event_v = message_body[constants.EVENT_V]
         except (TypeError, KeyError):
-            logger.logger.warn("Control request must contain event_t and event_v!")
+            local_logger.warning("control request must contain event_t and event_v!")
         else:
             if event_t == constants.EVENT_UPDATE_SCHEDULER:
                 response_pipe, request_pipe = Pipe()
                 self._scheduler_job_queue.put((event_v, request_pipe))
                 result = response_pipe.recv()
             else:
-                logger.logger.warn("Nonexistent event received", event_t=event_t)
+                local_logger.warning("nonexistent event received", event_t=event_t)
 
         response = {constants.RETURN_VALUE: result}
         self._send_response(message, response)
@@ -338,14 +344,13 @@ class Listener:
 
         raise CorrelationEventModel.DoesNotExist()
 
-    @staticmethod
-    def _handle_pausing(step_ex_obj: step.StepExecution) -> None:
+    def _handle_pausing(self, step_ex_obj: step.StepExecution) -> None:
         """
         Check for PAUSED states.
         :param step_ex_obj: StepExecution object to check
         :return: None
         """
-        logger.logger.info("Handling pause", step_execution_id=step_ex_obj.model.id)
+        self._logger.debug("handling pause", step_execution_id=step_ex_obj.model.id)
 
         # Pause Stage execution and successors only if it's in the PAUSING state
         stage_ex_obj = stage.StageExecution(step_ex_obj.model.stage_execution_id)
@@ -358,7 +363,7 @@ class Listener:
 
             stage_ex_obj.state = states.PAUSED
             stage_ex_obj.pause_time = timezone.now()
-            logger.logger.info("Stage execution paused", stage_execution_id=stage_ex_obj.model.id)
+            self._logger.info("stage execution paused", stage_execution_id=stage_ex_obj.model.id)
 
         # Check if Plan execution should be paused since the Stage execution could have finished
         plan_ex_obj = plan.PlanExecution(stage_ex_obj.model.plan_execution_id)
@@ -368,7 +373,7 @@ class Listener:
         ):
             plan_ex_obj.state = states.PAUSED
             plan_ex_obj.pause_time = timezone.now()
-            logger.logger.info("Plan execution paused", stage_execution_id=stage_ex_obj.model.id)
+            self._logger.info("plan execution paused", plan_execution_id=plan_ex_obj.model.id)
 
             run_obj = run.Run(plan_ex_obj.model.run_id)
             if (
@@ -379,7 +384,7 @@ class Listener:
             ):
                 run_obj.state = states.PAUSED
                 run_obj.pause_time = timezone.now()
-                logger.logger.info("Run paused", stage_execution_id=stage_ex_obj.model.id)
+                self._logger.info("run paused", run_id=run_obj.model.id)
 
     @staticmethod
     def _send_response(original_message: amqpstorm.Message, message_body: dict) -> None:

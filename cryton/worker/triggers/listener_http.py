@@ -3,8 +3,9 @@ import bottle
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 from threading import Thread
 from queue import PriorityQueue
+from uuid import uuid1
 
-from cryton.worker.utility import logger, constants as co
+from cryton.worker.utility import constants as co
 from cryton.worker.triggers import Listener
 
 
@@ -53,6 +54,7 @@ class HTTPListener(Listener):
         self._app = bottle.Bottle()
         self._stopped = True
         self.server: MyWSGIRefServer | None = None
+        self._logger = self._logger.bind(identifiers=self._identifiers)
 
     def add_trigger(self, details: dict) -> str:
         """
@@ -75,8 +77,8 @@ class HTTPListener(Listener):
             }
         :return: ID of the new trigger
         """
-        logger.logger.debug("Adding trigger to HTTPListener.", identifiers=self._identifiers, details=details)
-        trigger_id = str(self._generate_id())
+        self._logger.debug("adding trigger to http listener", details=details)
+        trigger_id = str(uuid1())
         details.update({co.TRIGGER_ID: trigger_id})
 
         with self._triggers_lock:
@@ -90,9 +92,7 @@ class HTTPListener(Listener):
         :param trigger: Desired trigger
         :return: None
         """
-        logger.logger.debug(
-            "Removing trigger from HTTPListener.", identifiers=self._identifiers, trigger_id=trigger.get(co.TRIGGER_ID)
-        )
+        self._logger.debug("removing trigger from HTTP listener", trigger_id=trigger.get(co.TRIGGER_ID))
         with self._triggers_lock:
             self._triggers.remove(trigger)
             self._restart()
@@ -102,7 +102,7 @@ class HTTPListener(Listener):
         Stop the App, reload triggers and start the App again.
         :return: None
         """
-        logger.logger.debug("Restarting HTTPListener.", identifiers=self._identifiers)
+        self._logger.debug("restarting http listener")
         if self.any_trigger_exists():  # If there are no active triggers, only call stop.
             if not self._stopped:
                 self.stop()
@@ -123,7 +123,7 @@ class HTTPListener(Listener):
         :return: None
         """
         path = bottle.request.path
-        logger.logger.debug("Handling HTTPListener request", identifiers=self._identifiers, path=path)
+        self._logger.debug("handling http listener request", path=path)
 
         with self._triggers_lock:
             for trigger in self._triggers:
@@ -140,14 +140,13 @@ class HTTPListener(Listener):
                             }
                             self._notify(trigger.get(co.REPLY_TO), message_body)
 
-    @staticmethod
-    def _check_parameters(parameters: list) -> dict | None:
+    def _check_parameters(self, parameters: list) -> dict | None:
         """
         Check if requested parameters are correct.
         :param parameters: Parameters to check
         :return: Request's parameters if they match given parameters
         """
-        logger.logger.debug("Checking parameters.", parameters=parameters)
+        self._logger.debug("checking parameters", parameters=parameters)
         if bottle.request.method == "GET":
             request_parameters = bottle.request.query
             for param in parameters:
@@ -186,8 +185,8 @@ class HTTPListener(Listener):
         :return: None
         """
         if self._stopped:
-            echo(f"Starting HTTPListener. identifiers: {self._identifiers}")
-            logger.logger.debug("Starting HTTPListener.", identifiers=self._identifiers)
+            echo(f"Starting HTTP listener. Identifiers: {self._identifiers}")
+            self._logger.debug("starting http listener")
             Thread(target=self._run).start()
             self._stopped = False
 
@@ -214,8 +213,8 @@ class HTTPListener(Listener):
         :return: None
         """
         if not self._stopped:
-            echo(f"Stopping HTTPListener. identifiers: {self._identifiers}")
-            logger.logger.debug("Stopping HTTPListener.", identifiers=self._identifiers)
+            echo(f"Stopping HTTP listener. Identifiers: {self._identifiers}")
+            self._logger.debug("stopping http listener")
             self._app.close()
             self._stopped = True
             self.server.stop()

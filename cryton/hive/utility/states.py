@@ -163,7 +163,7 @@ class StateMachine(ABC):
             StateTransitionError
         :return: True if the transition is valid
         """
-        logger.logger.debug("Checking state transition validity", state_from=state_from, state_to=state_to)
+        logger.logger.debug("checking state transition validity", state_from=state_from, state_to=state_to)
         if state_from not in cls.VALID_STATES:
             raise exceptions.InvalidStateError(f"Invalid state {state_from}! Valid states: {cls.VALID_STATES}")
         if state_to not in cls.VALID_STATES:

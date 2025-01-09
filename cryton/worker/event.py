@@ -12,6 +12,7 @@ class Event:
         :param event_details: Received event details
         :param main_queue: Worker's queue for internal request processing
         """
+        self._logger = logger.logger.bind(event_details=event_details)
         self._event_details = event_details
         self._main_queue = main_queue
         self._response_pipe, self._request_pipe = Pipe(False)
@@ -21,7 +22,7 @@ class Event:
         Validate requested module.
         :return: Details about the event result
         """
-        logger.logger.debug("Running event: validate_module", event_details=self._event_details)
+        self._logger.debug("running event: validate_module")
         attack_module = self._event_details.get(co.MODULE)
         module_arguments = self._event_details.get(co.ARGUMENTS)
         return asdict(util.run_module(attack_module, module_arguments, validate_only=True))
@@ -31,7 +32,7 @@ class Event:
         Stop Step's Execution (AttackTask) using correlation ID.
         :return: Details about the event result
         """
-        logger.logger.debug("Running event: stop_step_execution", event_details=self._event_details)
+        self._logger.debug("running event: stop_step_execution")
         correlation_id = self._event_details.get(co.CORRELATION_ID)
         item = util.PrioritizedItem(
             co.MEDIUM_PRIORITY,
@@ -45,7 +46,7 @@ class Event:
         Check if Worker is UP and running.
         :return: Details about the event result
         """
-        logger.logger.debug("Running event: health_check", event_details=self._event_details)
+        self._logger.debug("running event: health_check")
         result = co.CODE_OK
         return {co.RESULT: result}
 
@@ -54,7 +55,7 @@ class Event:
         Add Trigger.
         :return: Details about the event result
         """
-        logger.logger.debug("Running event: add_trigger", event_details=self._event_details)
+        self._logger.debug("running event: add_trigger")
         item = util.PrioritizedItem(
             co.MEDIUM_PRIORITY,
             {co.ACTION: co.ACTION_ADD_TRIGGER, co.RESULT_PIPE: self._request_pipe, co.DATA: self._event_details},
@@ -67,7 +68,7 @@ class Event:
         Remove trigger.
         :return: Details about the event result
         """
-        logger.logger.debug("Running event: remove_trigger", event_details=self._event_details)
+        self._logger.debug("running event: remove_trigger")
         item = util.PrioritizedItem(
             co.MEDIUM_PRIORITY,
             {co.ACTION: co.ACTION_REMOVE_TRIGGER, co.RESULT_PIPE: self._request_pipe, co.DATA: self._event_details},

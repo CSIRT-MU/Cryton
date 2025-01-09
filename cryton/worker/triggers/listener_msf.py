@@ -1,8 +1,9 @@
 from click import echo
 from threading import Thread
 from queue import PriorityQueue
+from uuid import uuid1
 
-from cryton.worker.utility import logger, constants as co, exceptions
+from cryton.worker.utility import constants as co, exceptions
 from cryton.worker.triggers import Listener
 from cryton.modules.metasploit.module import Module
 
@@ -16,8 +17,9 @@ class MSFListener(Listener):
         super().__init__(main_queue)
         self._identifiers: dict = {}
         self._stopped = True
-        self._trigger_id = None
+        self._trigger_id = str(uuid1())
         self._module: Module | None = None
+        self._logger = self._logger.bind(identifiers=self._identifiers)
 
     def add_trigger(self, details: dict) -> str:
         """
@@ -47,11 +49,10 @@ class MSFListener(Listener):
             }
         :return: ID of the new trigger
         """
-        logger.logger.debug("Adding trigger to MSFListener.", session_identifiers=self._identifiers)
+        self._logger.debug("adding trigger to msf listener", details=details)
         if self.any_trigger_exists():
             raise exceptions.TooManyTriggers(str(self))
 
-        self._trigger_id = str(self._generate_id())
         details.update({co.TRIGGER_ID: self._trigger_id})
         with self._triggers_lock:
             self._triggers.append(details)
@@ -71,9 +72,7 @@ class MSFListener(Listener):
         :param trigger: Desired trigger
         :return: None
         """
-        logger.logger.debug(
-            "Removing trigger from MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers
-        )
+        self._logger.debug("removing trigger from metasploit listener")
         with self._triggers_lock:
             self._triggers.remove(trigger)
             if not self.any_trigger_exists():
@@ -111,8 +110,8 @@ class MSFListener(Listener):
             return
 
         self._module.check_requirements()
-        echo(f"Starting MSFListener. trigger_id: {self._trigger_id}, session_identifiers: {self._identifiers}")
-        logger.logger.debug("Starting MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers)
+        echo(f"Starting Metasploit listener. ID: {self._trigger_id}")
+        self._logger.debug("starting metasploit listener.")
         self._stopped = False
         Thread(target=self._start).start()
 
@@ -124,6 +123,6 @@ class MSFListener(Listener):
         if self._stopped:
             return
 
-        echo(f"Stopping MSFListener. trigger_id: {self._trigger_id}")
-        logger.logger.debug("Stopping MSFListener.", trigger_id=self._trigger_id, session_identifiers=self._identifiers)
+        echo(f"Stopping Metasploit listener. ID: {self._trigger_id}")
+        self._logger.debug("stopping metasploit listener")
         self._stopped = True

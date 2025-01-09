@@ -57,13 +57,14 @@ class Worker:
             max_retries,
             persistent,
         )
+        self._logger = logger.logger.bind()
 
     def start(self) -> None:
         """
         Start Consumer and processors in thread and keep self alive.
         :return: None
         """
-        logger.logger.debug("Worker started.", processor_count=self._processor_count, consumer=str(self._consumer))
+        self._logger.debug("worker started", processor_count=self._processor_count)
         echo(f"Starting Worker {self._name}..")
         echo("To exit press CTRL+C")
         try:
@@ -101,7 +102,7 @@ class Worker:
             msf_client.login()
         except Exception as ex:
             echo("FAIL")
-            logger.logger.warning(f"Unable to login to the MSF RPC server - wrong credentials? Original error: {ex}")
+            self._logger.warning(f"unable to login to the MSF RPC server - wrong credentials? Original error: {ex}")
             if self._require_metasploit:
                 raise RuntimeError(f"Unable to login to the MSF RPC server - wrong credentials? Original error: {ex}")
         else:
@@ -112,7 +113,7 @@ class Worker:
         Stop Worker (self). Stop Consumer, processors and triggers.
         :return: None
         """
-        logger.logger.info("Stopping Worker", processor_count=self._processor_count, consumer=str(self._consumer))
+        self._logger.debug("stopping worker")
         echo("Exiting..")
         self._consumer.stop()
         self._stopped.set()
@@ -124,7 +125,7 @@ class Worker:
         Start processors in thread.
         :return: None
         """
-        logger.logger.debug("Starting threaded processors.", processor_count=self._processor_count)
+        self._logger.debug("starting threaded processors", processor_count=self._processor_count)
         for i in range(self._processor_count):
             thread = Thread(target=self._threaded_processor, kwargs={"thread_id": i + 1}, name=f"Thread-{i}-processor")
             thread.start()
@@ -134,7 +135,7 @@ class Worker:
         Stop processors by sending shutdown request.
         :return: None
         """
-        logger.logger.debug("Stopping threaded processors.", processor_count=self._processor_count)
+        self._logger.debug("stopping threaded processors")
         for _ in range(self._processor_count):
             item = util.PrioritizedItem(co.LOW_PRIORITY, {co.ACTION: co.ACTION_SHUTDOWN_THREADED_PROCESSOR})
             self._main_queue.put(item)
@@ -144,7 +145,7 @@ class Worker:
         Start Consumer in thread.
         :return: None
         """
-        logger.logger.debug("Starting self._consumer in Thread.", consumer=str(self._consumer))
+        self._logger.debug("starting self._consumer in thread")
         thread = Thread(target=self._consumer.start)
         thread.start()
 
@@ -153,7 +154,7 @@ class Worker:
         Stop all Listeners in self._listeners.
         :return: None
         """
-        logger.logger.debug("Stopping all Listeners.")
+        self._logger.debug("stopping all listeners")
         with self._triggers_lock:
             while len(self._listeners) > 0:
                 listener_obj = self._listeners.pop(-1)
@@ -165,37 +166,39 @@ class Worker:
         :param thread_id: Fictional thread (processor) ID
         :return: None
         """
-        logger.logger.debug("Threaded processor started.", thread_id=thread_id)
+        local_logger = self._logger.bind(thread_id=thread_id)
+        local_logger.debug("threaded processor started")
         while not self._stopped.is_set():
             request: util.PrioritizedItem = self._main_queue.get()
+            local_logger.debug("processing request", request=request)
             try:
                 request_action = request.item.pop(co.ACTION)
             except KeyError as ex:
-                logger.logger.warning("Request doesn't contain action.", request=request, error=str(ex))
+                local_logger.error("request doesn't contain action", error=str(ex))
                 continue
 
             try:  # Try to get method reference.
                 action_callable = getattr(self, request_action)
             except AttributeError:
                 if request_action == co.ACTION_SHUTDOWN_THREADED_PROCESSOR:
-                    logger.logger.debug("Shutting down threaded processor.", thread_id=thread_id)
+                    local_logger.debug("shutting down threaded processor")
                     break
-                logger.logger.warning("Request contains unknown action.", request=request)
+                local_logger.warning("request contains unknown action", action=request_action)
                 continue
 
             try:  # Try to call method and process the request.
                 action_callable(request.item)
             except Exception as ex:
-                logger.logger.warning("Request threw an exception in the process.", request=request, error=str(ex))
-                logger.logger.debug(
-                    "Request threw an exception in the process.",
+                local_logger.error("request threw an exception in the process", error=str(ex))
+                local_logger.debug(
+                    "request threw an exception in the process",
                     request=request,
                     error=str(ex),
                     traceback=traceback.format_exc(),
                 )
                 continue
 
-        logger.logger.debug("Threaded processor stopped.", thread_id=thread_id)
+        local_logger.debug("threaded processor stopped")
 
     def _stop_task(self, request: dict) -> None:
         """
@@ -203,14 +206,14 @@ class Worker:
         :param request: Data needed for process (Must contain: co.RESULT_PIPE, co.CORRELATION_ID)
         :return: None
         """
-        logger.logger.debug("Calling process _stop_task", request=request)
+        self._logger.debug("calling process _stop_task", request=request)
         result_pipe = request.pop(co.RESULT_PIPE)
         correlation_id = request.pop(co.CORRELATION_ID)
 
         task_obj = self._consumer.pop_task(correlation_id)
         if task_obj is None:  # Task doesn't exist.
             err = "Couldn't find the Task."
-            logger.logger.debug(err, correlation_id=correlation_id)
+            self._logger.debug(err, correlation_id=correlation_id)
             result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: err}
 
         else:  # Task found.
@@ -219,11 +222,11 @@ class Worker:
                 result = {co.RESULT: co.CODE_OK if stop_action else co.CODE_ERROR}
 
             except Exception as ex:
-                logger.logger.debug("Couldn't stop the Task.", task_correlation_id=correlation_id, error=str(ex))
+                self._logger.debug("couldn't stop the task", task_correlation_id=correlation_id, error=str(ex))
                 result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: str(ex)}
 
         result_pipe.send(result)
-        logger.logger.debug("Finished process _stop_task", result=result)
+        self._logger.debug("finished process _stop_task", result=result)
 
     def _finish_task(self, request: dict) -> None:
         """
@@ -231,10 +234,10 @@ class Worker:
         :param request: Data needed for process (Must contain: co.CORRELATION_ID)
         :return: None
         """
-        logger.logger.debug("Calling process _finish_task", request=request)
+        self._logger.debug("calling process _finish_task", request=request)
         correlation_id = request.pop(co.CORRELATION_ID)
         self._consumer.pop_task(correlation_id)
-        logger.logger.debug("Finished process _finish_task")
+        self._logger.debug("Finished process _finish_task")
 
     def _send_message(self, request: dict) -> None:
         """
@@ -242,14 +245,14 @@ class Worker:
         :param request: Data needed for process (Must contain: co.QUEUE_NAME, co.DATA, co.PROPERTIES)
         :return: None
         """
-        logger.logger.debug("Calling process _send_message", request=request)
+        self._logger.debug("calling process _send_message", request=request)
         queue_name = request.pop(co.QUEUE_NAME)
         msg_body = request.pop(co.DATA)
         msg_properties = request.pop(co.PROPERTIES)
 
         msg_properties.update(co.DEFAULT_MSG_PROPERTIES)
         self._consumer.send_message(queue_name, msg_body, msg_properties)
-        logger.logger.debug("Finished process _send_message")
+        self._logger.debug("finished process _send_message")
 
     def _add_trigger(self, request: dict) -> None:
         """
@@ -257,7 +260,7 @@ class Worker:
         :param request: Data needed for process (Must contain: co.RESULT_PIPE, co.DATA)
         :return: None
         """
-        logger.logger.debug("Calling process _add_trigger", request=request)
+        self._logger.debug("calling process _add_trigger", request=request)
         result_pipe = request.pop(co.RESULT_PIPE)
         trigger_data = request.pop(co.DATA)
 
@@ -265,12 +268,12 @@ class Worker:
         with self._triggers_lock:  # Try to find specified Listener.
             for listener_obj in self._listeners:
                 if listener_obj.compare_identifiers(trigger_data):
-                    logger.logger.debug(
-                        "Found existing Listener", type=listener_type, listener_triggers=listener_obj.get_triggers()
+                    self._logger.debug(
+                        "found existing Listener", type=listener_type, listener_triggers=listener_obj.get_triggers()
                     )
                     break
             else:  # If Listener doesn't exist, create new one.
-                logger.logger.debug("Creating new Listener", type=listener_type)
+                self._logger.debug("creating new listener", type=listener_type)
                 # Decides which listener identifiers to parse from trigger_data based on Listener type
                 listener_identifiers = {
                     key: value
@@ -289,7 +292,7 @@ class Worker:
             result = {co.RESULT: co.CODE_OK, co.TRIGGER_ID: trigger_id}
 
         result_pipe.send(result)
-        logger.logger.debug("Finished process _add_trigger", result=result)
+        self._logger.debug("finished process _add_trigger", result=result)
 
     def _remove_trigger(self, request: dict) -> None:
         """
@@ -297,7 +300,7 @@ class Worker:
         :param request: Data needed for process (Must contain: co.RESULT_PIPE, co.DATA)
         :return: None
         """
-        logger.logger.debug("Calling process _remove_trigger", request=request)
+        self._logger.debug("calling process _remove_trigger", request=request)
         result_pipe = request.pop(co.RESULT_PIPE)
         data = request.pop(co.DATA)
 
@@ -306,7 +309,7 @@ class Worker:
             for listener_obj in self._listeners:
                 trigger = listener_obj.find_trigger(trigger_id)
                 if trigger is not None:  # Remove trigger from Listener. Optionally remove listener completely.
-                    logger.logger.debug("Found existing trigger", id=trigger_id)
+                    self._logger.debug("found existing trigger", id=trigger_id)
                     listener_obj.remove_trigger(trigger)
                     if not listener_obj.any_trigger_exists():
                         self._listeners.remove(listener_obj)
@@ -314,8 +317,8 @@ class Worker:
                     break
 
             else:  # If Listener doesn't exist, replace it with None.
-                logger.logger.debug("Existing trigger not found", id=trigger_id)
+                self._logger.debug("existing trigger not found", id=trigger_id)
                 result = {co.RESULT: co.CODE_ERROR, co.OUTPUT: "Existing trigger not found."}
 
         result_pipe.send(result)
-        logger.logger.debug("Finished process _remove_trigger", result=result)
+        self._logger.debug("finished process _remove_trigger", result=result)

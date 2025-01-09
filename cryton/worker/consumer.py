@@ -4,6 +4,7 @@ import json
 import time
 from threading import Thread, Lock, Event
 from queue import PriorityQueue
+from uuid import uuid1
 
 from cryton.worker import task
 from cryton.worker.utility import logger, util
@@ -11,6 +12,7 @@ from cryton.worker.utility import logger, util
 
 class ChannelConsumer:
     def __init__(self, identifier: int, connection: amqpstorm.Connection, queues: dict):
+        self._logger = logger.logger.bind(channel_consumer_id=identifier)
         self._id = identifier
         self._channel = connection.channel()
 
@@ -20,19 +22,19 @@ class ChannelConsumer:
             self._channel.basic.consume(callback, queue)
 
     def start(self):
-        logger.logger.debug("Channel consumer started.", id=self._id)
+        self._logger.debug("channel consumer started")
         while not self._channel.is_closed:
             try:
                 self._channel.start_consuming()
 
             except amqpstorm.AMQPConnectionError as ex:
-                logger.logger.debug("Channel consumer encountered a connection error.", id=self._id, error=str(ex))
+                self._logger.debug("channel consumer encountered a connection error", error=str(ex))
                 break
 
             except Exception as ex:  # If any uncaught exception occurs, channel consumer will still work
-                logger.logger.warning("Channel consumer encountered an error.", id=self._id, error=str(ex))
+                self._logger.warning("channel consumer encountered an error", error=str(ex))
 
-        logger.logger.debug("Channel consumer stopped.", id=self._id)
+        self._logger.debug("channel consumer stopped")
 
 
 class Consumer:
@@ -62,6 +64,7 @@ class Consumer:
         :param max_retries: How many times to try to connect
         :param persistent: Keep Worker alive and keep on trying forever (if True)
         """
+        self._logger = logger.logger.bind()
         # TODO: rename also the queues in the hive?
         attack_q = f"cryton.worker.{worker_name}.attack.request"  # TODO: rename to cryton.attack.request.{}?
         control_q = f"cryton.worker.{worker_name}.control.request"  # TODO: rename to cryton.control.request.{}?
@@ -97,8 +100,8 @@ class Consumer:
         Establish connection, start channel consumers in thread and keep self alive.
         :return: None
         """
-        logger.logger.debug(
-            "Consumer started.",
+        self._logger.debug(
+            "consumer started",
             hostname=self._hostname,
             port=self._port,
             username=self._username,
@@ -119,7 +122,7 @@ class Consumer:
 
             except amqpstorm.AMQPConnectionError as ex:
                 if self._persistent:
-                    logger.logger.debug("Ignoring connection error due to persistent mode.", error=str(ex))
+                    self._logger.debug("ignoring connection error due to persistent mode", error=str(ex))
                     echo("Due to persistent mode, Worker will try to reconnect util manual shutdown.")
                     continue
                 self._stopped.set()
@@ -130,18 +133,18 @@ class Consumer:
         Stop Consumer (self). Wait for running Tasks (optionally stop them), close connection and its channels.
         :return: None
         """
-        logger.logger.debug("Stopping Consumer.", hostname=self._hostname, port=self._port, username=self._username)
+        self._logger.debug("stopping consumer")
         self._stopped.set()
 
         # Wait for Tasks to finish. Kill them on KeyboardInterrupt error.
         try:
-            logger.logger.debug("Waiting for unfinished Tasks.")
+            self._logger.debug("waiting for unfinished Tasks")
             echo("Waiting for running modules to finish.. press CTRL + C to stop them.")
             while len(self._tasks) > 0:
                 time.sleep(1)
 
         except KeyboardInterrupt:
-            logger.logger.debug("Stopping unfinished Tasks.")
+            self._logger.debug("stopping unfinished Tasks")
             echo("Forcefully stopping running modules..")
             with self._tasks_lock:
                 for task_obj in self._tasks:
@@ -149,14 +152,14 @@ class Consumer:
 
         # Close connection and its channels.
         if self._connection is not None and self._connection.is_open:
-            logger.logger.debug("Closing channels.")
+            self._logger.debug("closing channels")
             echo("Closing connection and it's channels..")
             for channel in list(self._connection.channels.values()):
                 channel.close()
-            logger.logger.debug("Closing connection.")
+            self._logger.debug("Closing connection.")
             self._connection.close()
 
-        logger.logger.debug("Consumer stopped.", hostname=self._hostname, port=self._port, username=self._username)
+        self._logger.debug("consumer stopped")
 
     def _update_connection(self) -> bool:
         """
@@ -176,7 +179,7 @@ class Consumer:
 
         except amqpstorm.AMQPError as ex:  # Try to establish connection or error.
             echo(f"{str(ex)} Retrying..")
-            logger.logger.warning("Connection lost.", error=str(ex))
+            self._logger.warning("connection lost.", error=str(ex))
             self._create_connection()
 
         return True
@@ -186,7 +189,7 @@ class Consumer:
         Start consumers in thread.
         :return: None
         """
-        logger.logger.debug("Starting channel consumers", channel_consumer_count=self._channel_consumer_count)
+        self._logger.debug("starting channel consumers", channel_consumer_count=self._channel_consumer_count)
         for i in range(self._channel_consumer_count):
             channel_consumer = ChannelConsumer(i + 1, self._connection, self._queues)
             thread = Thread(target=channel_consumer.start, name=f"Thread-{i}-consumer")
@@ -198,7 +201,7 @@ class Consumer:
         :param message: Received RabbitMQ Message
         :return: None
         """
-        logger.logger.debug("Attack callback.", correlation_id=message.correlation_id, message_body=message.body)
+        self._logger.debug("attack callback", correlation_id=message.correlation_id, message_body=message.body)
         message.ack()
         task_obj = task.AttackTask(message, self._main_queue, self._connection)
         task_obj.start()
@@ -211,7 +214,7 @@ class Consumer:
         :param message: Received RabbitMQ Message
         :return: None
         """
-        logger.logger.debug("Control callback.", correlation_id=message.correlation_id, message_body=message.body)
+        self._logger.debug("control callback", correlation_id=message.correlation_id, message_body=message.body)
         message.ack()
         task_obj = task.ControlTask(message, self._main_queue, self._connection)
         task_obj.start()
@@ -224,25 +227,25 @@ class Consumer:
         :raises: amqpstorm.AMQPConnectionError if connection can't be established
         :return: None
         """
-        logger.logger.debug("Establishing connection.")
+        self._logger.debug("establishing connection")
         for attempt in range(self._max_retries):
             if not self.is_running():
                 return
 
             try:  # Create connection.
                 self._connection = amqpstorm.Connection(self._hostname, self._username, self._password, self._port)
-                logger.logger.debug("Connection established.")
+                self._logger.debug("connection established")
                 echo("Connection to RabbitMQ server established.")
                 echo("[*] Waiting for messages.")
                 return
 
             except amqpstorm.AMQPError as ex:
-                logger.logger.warning("Connection couldn't be established.", error=str(ex))
+                self._logger.warning("connection couldn't be established", error=str(ex))
                 echo(f"Connection couldn't be established. (attempt {attempt + 1}/{self._max_retries})")
                 if attempt + 1 < self._max_retries:
                     time.sleep(min(attempt + 1 * 2, 30))
 
-        logger.logger.error("Max number of retries reached.")
+        self._logger.error("max number of retries reached")
         raise amqpstorm.AMQPConnectionError("Max number of retries reached.")
 
     def send_message(self, queue: str, message_body: dict | str, message_properties: dict) -> None:
@@ -253,17 +256,17 @@ class Consumer:
         :param message_properties: Message properties (options)
         :return: None
         """
-        logger.logger.debug("Sending message.", queue=queue, message=message_body, properties=message_properties)
+        self._logger.debug("sending message", queue=queue, message=message_body, properties=message_properties)
         if isinstance(message_body, dict):
             message_body = json.dumps(message_body)
 
         try:
             channel = self._connection.channel()
         except amqpstorm.AMQPError:
+            local_logger = self._logger.bind(uuid=str(uuid1()))
             self._undelivered_messages.append(util.UndeliveredMessage(queue, message_body, message_properties))
-            logger.logger.error(
-                "Unable to send the message.", queue=queue, message=message_body, properties=message_properties
-            )
+            local_logger.error("unable to send the message", queue=queue)
+            local_logger.debug("unable to send the message", message=message_body, properties=message_properties)
             return
 
         channel.queue.declare(queue)
@@ -272,14 +275,14 @@ class Consumer:
         #  to a timeout (base rabbit message ack timeout)
         message.publish(queue)
         channel.close()
-        logger.logger.debug("Message sent.", queue=queue, message=message_body, properties=message_properties)
+        self._logger.debug("message sent", queue=queue, message=message_body, properties=message_properties)
 
     def _redelivered_messages(self) -> None:
         """
         Send all undelivered messages.
         :return: None
         """
-        logger.logger.debug("Redelivering messages.")
+        self._logger.debug("redelivering messages")
         while self._undelivered_messages:
             message = self._undelivered_messages.pop(0)
             self.send_message(message.recipient, message.body, message.properties)
@@ -289,7 +292,7 @@ class Consumer:
         Get all undelivered Task messages and add them to the list.
         :return: None
         """
-        logger.logger.debug("Getting undelivered tasks' messages.")
+        self._logger.debug("getting undelivered tasks' messages")
         with self._tasks_lock:
             for task_obj in self._tasks:
                 if messages := task_obj.undelivered_messages:
@@ -302,11 +305,11 @@ class Consumer:
         :param correlation_id: Task's correlation_id
         :return: Task matching correlation_id, or None if none matched
         """
-        logger.logger.debug("Popping (searching) Task using correlation_id.", correlation_id=correlation_id)
+        self._logger.debug("popping (searching) task using correlation_id", correlation_id=correlation_id)
         with self._tasks_lock:
             for i in range(len(self._tasks)):
                 if self._tasks[i].correlation_id == correlation_id:
-                    logger.logger.debug("Task popping (search) succeeded.", correlation_id=correlation_id)
+                    self._logger.debug("task popping (search) succeeded", correlation_id=correlation_id)
                     return self._tasks.pop(i)
 
-        logger.logger.debug("Task popping (search) failed.", correlation_id=correlation_id)
+        self._logger.debug("task popping (search) failed", correlation_id=correlation_id)

@@ -1,14 +1,7 @@
 from dataclasses import dataclass
-from os import getenv, sched_getaffinity, path
+from os import getenv, sched_getaffinity
 
-from cryton.lib.config.settings import (
-    SETTINGS_HIVE,
-    getenv_bool,
-    getenv_int,
-    getenv_list,
-    LOGS_DIRECTORY,
-    EVIDENCE_DIRECTORY,
-)
+from cryton.lib.config.settings import SETTINGS_HIVE, getenv_bool, getenv_int, getenv_list, EVIDENCE_DIRECTORY
 
 
 @dataclass
@@ -94,7 +87,6 @@ class Settings:
     database: SettingsDatabase
     api: SettingsAPI
     scheduler: SettingsScheduler
-    log_file: str
     timezone = "UTC"
     threads_per_process: int
     cpu_cores: int
@@ -112,7 +104,6 @@ class Settings:
         self.database = SettingsDatabase(raw_settings.get("database", {}))
         self.api = SettingsAPI(raw_settings.get("api", {}))
         self.scheduler = SettingsScheduler(self.message_timeout)
-        self.log_file = path.join(LOGS_DIRECTORY, "hive.log")
         self.evidence_directory = EVIDENCE_DIRECTORY
 
 

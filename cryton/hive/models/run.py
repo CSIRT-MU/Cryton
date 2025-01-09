@@ -18,6 +18,7 @@ class Run(SchedulableExecution):
         :param model_id: Model ID
         """
         self.__model = RunModel.objects.get(id=model_id)
+        self._logger = logger.logger.bind(run_id=model_id)
 
     @staticmethod
     def create_model(plan_id: int) -> RunModel | Type[RunModel]:
@@ -36,7 +37,7 @@ class Run(SchedulableExecution):
         Delete RunModel
         :return:
         """
-        logger.logger.debug("deleting run", run_id=self.model.id)
+        self._logger.debug("run deleting")
         self.model.delete()
 
     @property
@@ -105,7 +106,7 @@ class Run(SchedulableExecution):
         with transaction.atomic():
             RunModel.objects.select_for_update().get(id=self.model.id)
             if st.RunStateMachine.validate_transition(self.state, value):
-                logger.logger.debug("run changed state", state_from=self.state, state_to=value, run_id=self.model.id)
+                self._logger.debug("run changed state", state_from=self.state, state_to=value)
                 model = self.model
                 model.state = value
                 model.save()
@@ -151,7 +152,7 @@ class Run(SchedulableExecution):
         :raises
             :exception RuntimeError
         """
-        logger.logger.debug("scheduling run", run_id=self.model.id)
+        self._logger.debug("run scheduling")
         st.RunStateMachine.validate_state(self.state, st.RUN_SCHEDULE_STATES)
 
         self.trigger_id = scheduler_client.schedule_function(
@@ -160,7 +161,7 @@ class Run(SchedulableExecution):
         if isinstance(self.trigger_id, str):
             self.schedule_time = schedule_time.replace(tzinfo=timezone.utc)
             self.state = st.SCHEDULED
-            logger.logger.info("Run scheduled", run_id=self.model.id, status="success")
+            self._logger.info("run scheduled")
         else:
             raise RuntimeError("Could not schedule run")
 
@@ -169,14 +170,14 @@ class Run(SchedulableExecution):
         Unschedules Run on specified workers
         :return: None
         """
-        logger.logger.debug("Unscheduling Run", run_id=self.model.id)
+        self._logger.debug("run unscheduling")
         # Check state
         st.RunStateMachine.validate_state(self.state, st.RUN_UNSCHEDULE_STATES)
 
         scheduler_client.remove_job(self.trigger_id)
         self.trigger_id, self.schedule_time = "", None
         self.state = st.PENDING
-        logger.logger.info("Run unscheduled", run_id=self.model.id, status="success")
+        self._logger.info("run unscheduled")
 
     def reschedule(self, schedule_time: datetime) -> None:
         """
@@ -184,21 +185,21 @@ class Run(SchedulableExecution):
         :param schedule_time: Desired start time
         :return: None
         """
-        logger.logger.debug("Rescheduling Run", run_id=self.model.id)
+        self._logger.debug("run rescheduling")
         # Check state
         st.RunStateMachine.validate_state(self.state, st.RUN_RESCHEDULE_STATES)
 
         self.unschedule()
         self.schedule(schedule_time)
 
-        logger.logger.info("Run rescheduled", run_id=self.model.id, status="success")
+        self._logger.info("run rescheduled")
 
     def pause(self) -> None:
         """
         Pauses Run on specified WorkerModels
         :return:
         """
-        logger.logger.debug("Pausing Run", run_id=self.model.id)
+        self._logger.debug("run pausing")
         # Check state
         st.RunStateMachine.validate_state(self.state, st.RUN_PAUSE_STATES)
 
@@ -210,14 +211,14 @@ class Run(SchedulableExecution):
         if not self.model.plan_executions.exclude(state__in=st.RUN_PLAN_PAUSE_STATES).exists():
             self.state = st.PAUSED
             self.pause_time = timezone.now()
-            logger.logger.info("Run paused", run_id=self.model.id, status="success")
+            self._logger.info("run paused")
 
     def resume(self) -> None:
         """
         Resumes Run on specified WorkerModels
         :return:
         """
-        logger.logger.debug("Unpausing Run", run_id=self.model.id)
+        self._logger.debug("run resuming")
         # Check state
         st.RunStateMachine.validate_state(self.state, st.RUN_RESUME_STATES)
 
@@ -227,7 +228,7 @@ class Run(SchedulableExecution):
         for plan_execution_model in self.model.plan_executions.all():
             PlanExecution(plan_execution_model.id).resume()
 
-        logger.logger.info("Run resumed", run_id=self.model.id, status="success")
+        self._logger.info("run resumed")
 
     def healthcheck_workers(self) -> None:
         """
@@ -245,7 +246,7 @@ class Run(SchedulableExecution):
         Executes Run
         :return:
         """
-        logger.logger.debug("Executing Run", run_id=self.model.id)
+        self._logger.debug("run starting")
         st.RunStateMachine.validate_state(self.state, st.RUN_EXECUTE_STATES)
 
         self.start_time = timezone.now()
@@ -254,14 +255,14 @@ class Run(SchedulableExecution):
         for plan_ex_model in self.model.plan_executions.all():
             PlanExecution(plan_ex_model.id).start()
 
-        logger.logger.info("Run executed", run_id=self.model.id)
+        self._logger.info("run started")
 
     def stop(self) -> None:
         """
         Stop current Run and its PlanExecutions
         :return: None
         """
-        logger.logger.debug("stopping run", run_id=self.model.id)
+        self._logger.debug("run stopping")
         st.RunStateMachine.validate_state(self.state, st.RUN_STOP_STATES)
         self.state = st.STOPPING
 
@@ -285,18 +286,18 @@ class Run(SchedulableExecution):
 
         self.finish_time = timezone.now()
         self.state = st.STOPPED
-        logger.logger.info("run stopped", run_id=self.model.id)
+        self._logger.info("run stopped")
 
     def validate_modules(self):
         """
         For each Plan validate if worker is up, all modules are present and module args are correct.
         """
-        logger.logger.debug("Run modules validation started", run_id=self.model.id)
+        self._logger.debug("run validating modules")
 
         for plan_execution_id in self.model.plan_executions.values_list("id", flat=True):
             plan_execution = PlanExecution(plan_execution_id)
             plan_execution.validate_modules()
-        logger.logger.debug("Run modules validated", run_id=self.model.id)
+        self._logger.debug("run modules validated")
 
     def finish(self) -> None:
         """
@@ -304,7 +305,7 @@ class Run(SchedulableExecution):
         :return: None
         """
         st.RunStateMachine.validate_state(self.state, [st.PAUSING, st.RUNNING])
-        logger.logger.info("Run finished", run_id=self.model.id)
+        self._logger.info("run finished")
 
         self.state = st.FINISHED
         self.finish_time = timezone.now()

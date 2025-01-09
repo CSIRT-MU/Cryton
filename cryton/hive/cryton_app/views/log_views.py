@@ -33,10 +33,10 @@ class LogViewSet(util.BaseViewSet):
         },
     )
     def list(self, request: Request):
-        query_params = request.query_params
+        query_params = request.query_params.copy()
         try:
-            offset = int(request.query_params.pop("offset", 0))
-            limit = int(request.query_params.pop("limit", 0))
+            offset = int(query_params.pop("offset", 0)[0])
+            limit = int(query_params.pop("limit", 0)[0])
 
             if offset < 0:
                 raise ValueError("The `offset` parameter must be a positive number.")

@@ -15,7 +15,7 @@ class Event:
         Process trigger trying to start Stage execution.
         :return: None
         """
-        logger.logger.debug("Processing trigger", event_v=self.event_details)
+        logger.logger.debug("processing trigger", event_v=self.event_details)
 
         # Get Stage execution
         trigger_id = self.event_details.get(constants.TRIGGER_ID)
@@ -35,7 +35,7 @@ class Event:
         Check for FINISHED states.
         :return: None
         """
-        logger.logger.debug("Handling finished Step", step_execution_id=self.event_details["step_execution_id"])
+        logger.logger.debug("handling finished step", step_execution_id=self.event_details["step_execution_id"])
         step_ex_obj = step.StepExecution(self.event_details["step_execution_id"])
 
         if step_ex_obj.model.step.stage.plan.dynamic:

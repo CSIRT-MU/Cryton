@@ -7,7 +7,8 @@ import re
 import json
 
 from cryton.hive.config.settings import SETTINGS
-from cryton.hive.utility import exceptions, logger
+from cryton.hive.utility import exceptions
+from cryton.hive.utility.logger import logger, logger_wrapper
 
 from django.utils import timezone
 
@@ -108,7 +109,7 @@ def run_step_executions(rabbit_connection: amqpstorm.Connection, step_execution_
     """
     with rabbit_connection.channel() as channel:
         for step_execution in step_execution_list:
-            logger.logger.debug("Running Step Execution in thread", step_execution_id=step_execution.model.id)
+            logger.debug("Running Step Execution in thread", step_execution_id=step_execution.model.id)
             step_execution.start(channel)
 
 
@@ -328,9 +329,8 @@ def get_logs(offset: int, limit: int, filter_params: dict[str, str]) -> list[dic
     :param filter_params: Substrings used for filtering the logs
     :return: Parsed Logs
     """
-    log_file_path = SETTINGS.log_file
     logs = []
-    with open(log_file_path, "r") as log_file:
+    with open(logger_wrapper.log_file, "r") as log_file:
         raw_logs = log_file.readlines()
 
     number_of_logs = len(raw_logs)
@@ -339,12 +339,7 @@ def get_logs(offset: int, limit: int, filter_params: dict[str, str]) -> list[dic
         limit = number_of_logs
 
     for i in range(offset, number_of_logs):
-        raw_log = raw_logs[i]
-        try:
-            parsed_log = json.loads(raw_log)
-        except json.JSONDecodeError:  # TODO: make sure this won't happen and remove
-            parsed_log = {"detail": raw_log.rstrip("\n").rstrip(" ").lstrip(" ")}
-
+        parsed_log = json.loads(raw_logs[i])
         if not all(value in parsed_log.get(key, "") for key, value in filter_params.items()):
             continue
 
