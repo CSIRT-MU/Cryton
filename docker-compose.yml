@@ -94,7 +94,7 @@ services:
 
   cryton_db:
     restart: always
-    image: postgres:16
+    image: postgres:17
     container_name: cryton-db
     environment:
       <<: *settings
@@ -108,7 +108,7 @@ services:
 
   cryton_pgbouncer:
     restart: always
-    image: bitnami/pgbouncer:1.22.1
+    image: bitnami/pgbouncer:1.24.0
     container_name: cryton-pgbouncer
     depends_on:
       cryton_db:
@@ -118,7 +118,7 @@ services:
 
   cryton_rabbit:
     restart: always
-    image: rabbitmq:3.12-management
+    image: rabbitmq:4.0-management
     container_name: cryton-rabbit
     environment:
       <<: *settings
@@ -148,7 +148,7 @@ services:
 
   cryton_msf:
     restart: always
-    image: sadparad1se/metasploit-framework:rpc
+    image: sadparad1se/metasploit-framework:rpc-6
     container_name: cryton-msf
     environment:
       <<: *settings
