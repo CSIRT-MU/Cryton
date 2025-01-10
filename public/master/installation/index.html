@@ -1612,34 +1612,34 @@ It is <strong>highly recommended</strong> to use <em>pipx</em>, since it creates
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><strong>pipx</strong>
-<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>hive,modules<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>hive,modules<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 <p><strong>pip</strong>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>hive,modules<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>hive,modules<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p><strong>pipx</strong>
-<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>worker<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>worker<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 <p><strong>pip</strong>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>worker<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>worker<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p><strong>pipx</strong>
-<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>cli<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>cli<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 <p><strong>pip</strong>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>cli<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>cli<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p><strong>pipx</strong>
-<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>all<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>cryton<span class="o">[</span>all<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 <p><strong>pip</strong>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>all<span class="o">]==</span><span class="m">2</span>.*
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>cryton<span class="o">[</span>all<span class="o">]==</span><span class="m">3</span>.*
 </code></pre></div></p>
 </div>
 </div>
@@ -1664,23 +1664,23 @@ It is <strong>highly recommended</strong> to use <em>pipx</em>, since it creates
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Run the container in the background:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-d<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/hive:2
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-d<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/hive:3
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p>Run the container in the background:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-d<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:2
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-d<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/worker:3
 </code></pre></div></p>
 <p>It contains the official modules and their prerequisites.</p>
 </div>
 <div class="tabbed-block">
 <p>Run the container and enter an interactive shell:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-it<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/cli:2
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--network<span class="w"> </span>host<span class="w"> </span>-it<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton/cli:3
 </code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p>Run the container in the background:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8080:80<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend:2
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8080:80<span class="w"> </span>registry.gitlab.ics.muni.cz:443/cryton/cryton-frontend:3
 </code></pre></div></p>
 </div>
 </div>
