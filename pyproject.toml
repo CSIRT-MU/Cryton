@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cryton"
-version = "3.0.0"
+version = "3.0.1"
 description = "Advanced scenario orchestrator"
 authors = [
     "Ivo Nutár <nutar@ics.muni.cz>",

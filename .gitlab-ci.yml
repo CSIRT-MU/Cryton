@@ -82,7 +82,7 @@ build_documentation:
 .build_docker_image:
   extends: .publish
   image:
-    name: gcr.io/kaniko-project/executor:latest
+    name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
   variables:
     BUILD_TARGET: "production"
@@ -194,7 +194,7 @@ build_docker_image_ci_python:
   rules:
     - when: manual
   image:
-    name: gcr.io/kaniko-project/executor:latest
+    name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
   before_script:
     # Set variables
@@ -216,7 +216,7 @@ build_docker_image_production_base:
   rules:
     - when: manual
   image:
-    name: gcr.io/kaniko-project/executor:latest
+    name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
   before_script:
     # Set variables
