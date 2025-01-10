@@ -1,16 +1,9 @@
-release_version: 2
-git_release: stable/2
+release_version: 3
+git_release: stable/3
 
 python:
   min: 3.11
   max: 3.13
-
-ansible:
-  deploy_cli: 2.0.0
-  deploy_core: 2.0.0
-  deploy_worker: 2.0.0
-  deploy_frontend: 2.0.0
-  register_worker: 2.0.0
 
 releases:
   cryton: https://gitlab.ics.muni.cz/cryton/cryton/-/releases/
