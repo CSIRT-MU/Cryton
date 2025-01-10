@@ -1,5 +1,12 @@
 # Creating a scenario
 
+!!! tip "Use JSON schema for real-time template validation!"
+
+    Import the JSON schema located on this address `https://gitlab.ics.muni.cz/cryton/cryton/-/raw/{{{ git_release }}}/cryton.schema.json` to your favourite editor.
+    
+    * [PyCharm guide](https://www.jetbrains.com/help/pycharm/json.html#ws_json_schema_add_custom)
+    * [VS code guide](https://code.visualstudio.com/docs/languages/json#_mapping-in-the-user-settings)
+
 ## What is a scenario
 
 ??? note "TLDR"
@@ -41,13 +48,6 @@ Stage 1
 Stage 2
   Step 3
 ```
-
-??? tip "Use JSON schema for real-time template validation"
-
-    Import the JSON schema located on this address `https://gitlab.ics.muni.cz/cryton/cryton/-/raw/master/cryton.schema.json` to your favourite editor.
-    
-    * [PyCharm guide](https://www.jetbrains.com/help/pycharm/json.html#ws_json_schema_add_custom)
-    * [VS code guide](https://code.visualstudio.com/docs/languages/json#_mapping-in-the-user-settings)
 
 ## What is a plan instance
 While Template contains unfilled variables (therefore the name "template"), Plan instance fills these things in by combining the template with an **[inventory file](#inventory-files)**. This file contains all information that needs to be filled in the template. After instantiation, everything is ready to create a **Run**.
