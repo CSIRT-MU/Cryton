@@ -1462,14 +1462,14 @@ touch<span class="w"> </span>cryton/modules/hello_world/__init__.py
 │   │   │   ├── __init__.py
 │   │   │   ├── module.py
 </code></pre></div></p>
-<p>Copy the following code into the <code>cryton/modules/hello_world/module.py</code> file:
+<p>Copy the following code into the <code>cryton/modules/hello_world/module.py</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cryton.lib.utility.module</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleBase</span><span class="p">,</span> <span class="n">ModuleOutput</span><span class="p">,</span> <span class="n">Result</span>
 
 
 <span class="c1"># Module implementation</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Module</span><span class="p">(</span><span class="n">ModuleBase</span><span class="p">):</span>
     <span class="c1"># The SCHEMA variable is used for input arguments validation (it uses JSON Schema)</span>
-    <span class="n">SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
         <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Arguments for the `hello_world` module.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1493,7 +1493,7 @@ touch<span class="w"> </span>cryton/modules/hello_world/__init__.py
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">Result</span><span class="o">.</span><span class="n">OK</span>  <span class="c1"># The module finished successfully</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">to_print</span>  <span class="c1"># Output we want to send</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>You just created a module that checks if the input parameter <code>name</code> is a string and has at least one character, in case it is defined. Once the module is executed it returns the greeting.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
