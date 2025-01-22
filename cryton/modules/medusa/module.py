@@ -5,7 +5,7 @@ from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
 class Module(ModuleBase):
-    SCHEMA = {
+    _SCHEMA = {
         "definitions": {
             "username": {"type": "string", "description": "Username."},
             "username_file": {"type": "string", "description": "Absolute path to file with usernames."},

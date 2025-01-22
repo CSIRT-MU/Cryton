@@ -77,30 +77,47 @@ class Plan(Instance):
         Get Plan's YAML from database.
         :return: Plan and its Stages/Steps
         """
-        stages = []
+        stages: dict[str, dict] = {}
         for stage_obj in self.model.stages.all():
-            steps = []
+            steps: dict[str, dict] = {}
             for step_obj in stage_obj.steps.all():
-                step_data = model_to_dict(step_obj, exclude=["stage"])
+                step_data = model_to_dict(step_obj, exclude=["stage", "id", "is_final", "output_settings"])
 
                 successors = []
                 for successor_obj in step_obj.successors.all():
+
                     successor_data = {
                         "type": successor_obj.type,
                         "value": successor_obj.value,
                         "step": successor_obj.successor.name,
                     }
+                    if successor_obj.type == "any":
+                        successor_data.pop("value")
                     successors.append(successor_data)
 
-                step_data["next"] = successors
-                steps.append(step_data)
+                if successors:
+                    step_data["next"] = successors
+                output_settings = dict()
+                if step_obj.output_settings.alias:
+                    output_settings["alias"] = step_obj.output_settings.alias
+                if step_obj.output_settings.replace:
+                    output_settings["replace"] = step_obj.output_settings.replace
+                if mappings := [
+                    {"from": mapping.name_from, "to": mapping.name_to}
+                    for mapping in step_obj.output_settings.mappings.all()
+                ]:
+                    output_settings["mapping"] = mappings
+                if output_settings:
+                    step_data["output"] = output_settings
+                steps[step_obj.name] = step_data
 
-            stage_data = model_to_dict(stage_obj, exclude=["plan"])
+            stage_data = model_to_dict(stage_obj, exclude=["plan", "id"])
             stage_data["steps"] = steps
-            stages.append(stage_data)
+            stages[stage_obj.name] = stage_data
 
-        plan_data = model_to_dict(self.model)
+        plan_data = model_to_dict(self.model, exclude=["id", "settings"])
         plan_data["stages"] = stages
+        plan_data["settings"] = model_to_dict(self.model.settings, exclude=["id"])
 
         return plan_data
 

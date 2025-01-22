@@ -6,7 +6,7 @@ from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
 
 class Module(ModuleBase):
-    SCHEMA = {
+    _SCHEMA = {
         "type": "object",
         "description": "Arguments for the `metasploit` module.",
         "OneOf": [

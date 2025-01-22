@@ -276,7 +276,6 @@ def pop_key(in_dict, val):
         else:
             return in_dict.get(val[0]).pop(val[1])
     else:
-        print(val)
         return in_dict.pop(val[0])
 
 

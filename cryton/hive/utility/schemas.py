@@ -5,7 +5,7 @@ from cryton.lib.utility.schemas import inject_schema
 
 def import_module_schema(name: str):
     try:
-        return inject_schema(import_module(f"cryton.modules.{name}.module").Module.SCHEMA)
+        return inject_schema(import_module(f"cryton.modules.{name}.module").Module.get_schema())
     except ImportError:
         return {"type": "object"}
 

@@ -72,6 +72,7 @@ We should have the following structure:
 ```
 
 Copy the following code into the `cryton/modules/hello_world/module.py` file:
+
 ```python
 from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 
@@ -79,7 +80,7 @@ from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 # Module implementation
 class Module(ModuleBase):
     # The SCHEMA variable is used for input arguments validation (it uses JSON Schema)
-    SCHEMA = {
+    _SCHEMA = {
         "type": "object",
         "description": "Arguments for the `hello_world` module.",
         "properties": {

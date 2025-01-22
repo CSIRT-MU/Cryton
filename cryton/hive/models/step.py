@@ -496,8 +496,8 @@ class StepExecution(Execution):
         self._logger.debug("step execution postprocessing")
         self.finish_time = timezone.now()
 
-        serialized_output = ret_vals[constants.SERIALIZED_OUTPUT]
-        output = ret_vals[constants.OUTPUT]
+        serialized_output: dict | list = ret_vals[constants.SERIALIZED_OUTPUT]
+        output: str = ret_vals[constants.OUTPUT]
         result = Result(ret_vals[constants.RESULT])
 
         match result:
@@ -508,12 +508,24 @@ class StepExecution(Execution):
             case Result.FAIL:
                 self.state = states.FAILED
             case Result.OK:
-                self.state = states.FINISHED
-                output, serialized_output = self._alter_output(output, serialized_output)
-                self._apply_output_mappings(serialized_output)
+                try:
+                    output, serialized_output = self._alter_output(output, serialized_output)
+                except Exception as ex:
+                    self.state = states.ERROR
+                    self.output += f"An error occurred while altering the output: {ex}.\n"
+                try:
+                    self._apply_output_mappings(serialized_output)
+                except Exception as ex:
+                    self.state = states.ERROR
+                    self.output += f"An error occurred while updating the output mappings: {ex}.\n"
+
+                try:
+                    self.state = states.FINISHED
+                except exceptions.StateTransitionError:
+                    pass
 
         self.serialized_output = serialized_output
-        self.output = output
+        self.output += output
 
         # update Successors parents
         for successor in self._get_executable_successors():
@@ -525,7 +537,7 @@ class StepExecution(Execution):
         for mapping in self.model.step.output_settings.mappings.all():
             util.rename_key(serialized_output, mapping.name_from, mapping.name_to)
 
-    def _alter_output(self, output: str, serialized_output: dict) -> tuple[str, dict]:
+    def _alter_output(self, output: str, serialized_output: dict) -> tuple[str, dict | list]:
         converted_serialized_output = json.dumps(serialized_output)
         replace_rules: dict[str, str] = self.model.step.output_settings.replace
         if replace_rules:
@@ -562,7 +574,9 @@ class StepExecution(Execution):
         """
         self._logger.debug("step execution starting successors")
         for successor in self._get_executable_successors():
-            successor.start()
+            # in case the successor was executed by another step microseconds before
+            if successor.state in states.STEP_EXECUTE_STATES:
+                successor.start()
 
     def pause_successors(self) -> None:
         """

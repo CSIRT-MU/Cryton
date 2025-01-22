@@ -80,7 +80,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         try:
             run_obj = Run(run_id)
             report = run_obj.report()
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         return Response({"detail": report}, status=status.HTTP_200_OK)
@@ -103,7 +103,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             run_obj.pause()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         msg = {"detail": f"Run {run_id} is paused."}
@@ -127,7 +127,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             run_obj.resume()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         msg = {"detail": f"Run {run_id} is resumed."}
@@ -170,7 +170,7 @@ class RunViewSet(util.ExecutionFullViewSet):
             run_obj.schedule(start_time)
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         msg = {"detail": f"Run {run_id} is scheduled for {start_time}."}
@@ -190,7 +190,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         run_id = kwargs.get("pk")
         try:
             run_obj = Run(run_id)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         if run_obj.state not in states.RUN_EXECUTE_NOW_STATES:
@@ -243,7 +243,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         try:
             run_obj = Run(run_id)
             run_obj.reschedule(start_time)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
@@ -266,7 +266,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         try:
             run_obj = Run(run_id)
             run_obj.unschedule()
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
@@ -290,7 +290,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         try:
             run_obj = Run(run_id)
             run_obj.stop()
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
         except core_exceptions.InvalidStateError as ex:
             raise exceptions.ApiWrongObjectState(ex)
@@ -312,7 +312,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         run_id = kwargs.get("pk")
         try:
             run_obj = Run(run_id)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         try:
@@ -337,7 +337,7 @@ class RunViewSet(util.ExecutionFullViewSet):
         run_id = kwargs.get("pk")
         try:
             run_obj = Run(run_id)
-        except core_exceptions.RunObjectDoesNotExist:
+        except RunModel.DoesNotExist:
             raise exceptions.NotFound()
 
         try:

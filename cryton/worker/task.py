@@ -333,7 +333,7 @@ class ControlTask(Task):
                             },
                             {
                                 "properties": {
-                                    "event_v": import_module("cryton.modules.metasploit.module").Module.SCHEMA
+                                    "event_v": import_module("cryton.modules.metasploit.module").Module.get_schema()
                                 },
                             },
                         ]

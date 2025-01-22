@@ -230,7 +230,7 @@ async def try_empire_request(fn_to_run, *fn_args, **fn_kwargs):
 
 
 class Module(ModuleBase):
-    SCHEMA = {
+    _SCHEMA = {
         "type": "object",
         "description": "Arguments for the `empire` module.",
         "properties": {
@@ -336,6 +336,8 @@ class Module(ModuleBase):
 
     def execute(self) -> ModuleOutput:
         output = asyncio.run(self.execute_async())
+        if isinstance(output, dict):  # TODO: hotfix for output must be string
+            output = str(output)
         self._data.result = Result.OK
         self._data.output = output
 
