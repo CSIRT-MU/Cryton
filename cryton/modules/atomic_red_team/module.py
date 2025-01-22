@@ -21,7 +21,7 @@ class Architecture(StrEnum):
 
 
 class Module(ModuleBase):
-    SCHEMA = {
+    _SCHEMA = {
         "definitions": {
             "powershell": {
                 "type": "object",

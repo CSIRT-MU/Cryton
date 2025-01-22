@@ -10,7 +10,7 @@ from cryton.lib.utility.module import ModuleBase, ModuleOutput, Result
 #  - rework the module
 #  - add tests
 class Module(ModuleBase):
-    SCHEMA = {
+    _SCHEMA = {
         "type": "object",
         "description": "Arguments for the `script` module.",
         "properties": {

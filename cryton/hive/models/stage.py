@@ -290,7 +290,8 @@ class StageExecution(Execution):
             self.start_time = timezone.now()
         self.state = st.RUNNING
 
-        self._run_step_executions(step_executions)
+        # self._run_step_executions(step_executions)
+        util.run_executions_in_threads(step_executions)
         self._logger.info("stage execution executed")
 
     def pause(self):

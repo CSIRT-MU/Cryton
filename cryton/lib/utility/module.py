@@ -19,7 +19,7 @@ class ModuleOutput:
 
 
 class ModuleBase(ABC):
-    SCHEMA = {}
+    _SCHEMA = {}
 
     def __init__(self, arguments: dict):
         """
@@ -30,6 +30,10 @@ class ModuleBase(ABC):
         self._arguments = deepcopy(arguments)
 
     @classmethod
+    def get_schema(cls) -> dict:
+        return deepcopy(cls._SCHEMA)
+
+    @classmethod
     def validate_arguments(cls, arguments: dict, allow_unresolved_variables: bool = False) -> None:
         """
         Validate input arguments using jsonschema.
@@ -38,7 +42,8 @@ class ModuleBase(ABC):
         :return: None
         :exception Exception: In case of error
         """
-        schema = inject_schema(cls.SCHEMA) if allow_unresolved_variables else cls.SCHEMA
+        schema_copy = cls.get_schema()
+        schema = inject_schema(schema_copy) if allow_unresolved_variables else schema_copy
         validate(arguments, schema)
 
     @abstractmethod

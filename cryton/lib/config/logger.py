@@ -96,6 +96,15 @@ class LoggerWrapper:
                     f"{self._name}": {"level": "DEBUG", "handlers": [], "propagate": True},
                     "amqpstorm": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
                     "apscheduler": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "urllib3": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "charset_normalizer": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "requests": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "dotenv": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "concurrent": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "asyncio": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "httpx": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "httpcore": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
+                    "django": {"level": "DEBUG", "handlers": [], "propagate": self._is_debug},
                 },
             }
         )
