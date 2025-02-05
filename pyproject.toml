@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cryton"
-version = "3.0.2"
+version = "3.0.3"
 description = "Advanced scenario orchestrator"
 authors = [
     "Ivo Nutár <nutar@ics.muni.cz>",
@@ -10,7 +10,6 @@ authors = [
 ]
 maintainers = [
     "Jiří Rája <raja@ics.muni.cz>",
-    "Milan Boháček <bohacek@ics.muni.cz>"
 ]
 license = "MIT"
 homepage = "https://gitlab.ics.muni.cz/cryton"
