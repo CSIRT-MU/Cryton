@@ -39,7 +39,7 @@ class StageViewSet(util.InstanceFullViewSet):
         description="Create Stage under Plan. There is no limit or naming convention for inventory files.",
         request=serializers.StageCreateSerializer,
         responses={
-            200: serializers.CreateMultipleDetailSerializer,
+            200: serializers.CreateDetailSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
         },
@@ -55,24 +55,31 @@ class StageViewSet(util.InstanceFullViewSet):
 
         # Check if the Plan is dynamic
         if not plan_obj.dynamic:
-            raise exceptions.ValidationError("Creating objects under non dynamic Plan is not supported.")
+            raise exceptions.ValidationError("Creating objects under non dynamic plan is not supported.")
 
+        # Parse the stage definition
         stages = util.parse_object_from_files(request.FILES)
+        stage_name, stage_data = next(iter(stages.items()))
 
-        # Validate Stages
+        # Check the number of stages to be created
+        if len(stages) != 1:
+            raise exceptions.ValidationError("Create one stage at a time.")
+
+        # Check validity of the new plan
         new_plan = plan_obj.generate_plan()
-        for stage_name, stage_data in stages:
-            if new_plan["stages"][stage_name]:
-                exceptions.ValidationError(f"Stage {stage_name} is already present in the plan.")
-            new_plan["stages"][stage_name] = stage_data
+        if new_plan["stages"].get(stage_name):
+            exceptions.ValidationError(f"Stage {stage_name} is already present in the plan.")
+        new_plan["stages"][stage_name] = stage_data
+
         try:
             Validator(new_plan).validate()
         except core_exceptions.ValidationError as ex:
             raise exceptions.ValidationError(ex)
 
-        stage_ids = creator.create_stages(plan_obj.model, stages)
+        # Create the stage
+        stage_id = creator.create_stages(plan_obj.model, stages)
+        msg = {"id": stage_id, "detail": "Stage successfully created."}
 
-        msg = {"ids": stage_ids, "detail": "Stage successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(

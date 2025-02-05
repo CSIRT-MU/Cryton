@@ -40,7 +40,7 @@ class StepViewSet(util.InstanceFullViewSet):
         description="Create Step under Stage. There is no limit or naming convention for inventory files.",
         request=serializers.StepCreateSerializer,
         responses={
-            200: serializers.CreateMultipleDetailSerializer,
+            200: serializers.CreateDetailSerializer,
             400: serializers.DetailStringSerializer,
             404: serializers.DetailStringSerializer,
         },
@@ -55,40 +55,46 @@ class StepViewSet(util.InstanceFullViewSet):
             raise exceptions.NotFound()
 
         # Check if the Plan is dynamic
-        plan_obj = stage_obj.model.plan
-        if not plan_obj.dynamic:
-            raise exceptions.ValidationError("Creating objects under non dynamic Plan is not supported.")
-
-        step_data = util.parse_object_from_files(request.FILES)
-
         plan_obj = Plan(stage_obj.model.plan.id)
+        if not plan_obj.dynamic:
+            raise exceptions.ValidationError("Creating objects under non dynamic plan is not supported.")
 
+        # Parse the step definition
+        steps = util.parse_object_from_files(request.FILES)
+        step_name, step_data = next(iter(steps.items()))
+
+        # Check the number of steps to be created
+        if len(steps) != 1:
+            raise exceptions.ValidationError("Create one step at a time.")
+
+        # Update the execution tree
+        previous_step: StepModel | None = None
+        if not step_data.get("is_init", False) and (previous_step := stage_obj.model.steps.last()) is None:
+            step_data["is_init"] = True
+
+        # Check validity of the new plan
         new_plan = plan_obj.generate_plan()
-        for step_name, step_dict in step_data.items():
-            if new_plan["stages"][stage_obj.name].get(step_name):
-                raise exceptions.ValidationError(f"Step {step_name} is already present in the plan.")
-            new_plan["stages"][stage_obj.name][step_name] = step_dict
+        if new_plan["stages"][stage_obj.name]["steps"].get(step_name):
+            raise exceptions.ValidationError(f"Step {step_name} is already present in the plan.")
+        new_plan["stages"][stage_obj.name]["steps"][step_name] = step_data
+        if previous_step:
+            previous_step_data = new_plan["stages"][stage_obj.name]["steps"][previous_step.name]
+            if previous_step_next := previous_step_data.get("next"):
+                previous_step_next.append({"step": step_name, "type": "any"})
+            else:
+                previous_step_data["next"] = [{"step": step_name, "type": "any"}]
 
         try:
             Validator(new_plan).validate()
         except core_exceptions.ValidationError as ex:
             raise exceptions.ValidationError(f"Adding the steps(s) would make the plan invalid.\n{ex}")
 
-        # Create a Step
-        # for step_name, step_dict in step_data.items():
-        step_ids = creator.create_steps(stage_obj.model, step_data)
+        # Create the step
+        step_id = creator.create_steps(stage_obj.model, {step_name: step_data})[0]
+        if previous_step:
+            creator.create_successors(stage_obj.model, {previous_step.id: [{"step": step_name, "type": "any"}]})
+        msg = {"id": step_id, "detail": "Step successfully created."}
 
-        # parent_step_model = stage_obj.model.steps.last()
-        # step_id = creator.create_step(stage_id, step_data)
-        # step_obj = Step(step_id=step_id)
-        #
-        # # Mark the new Step as a successor
-        # # TODO: take this from the input and if it's missing, add it automatically?
-        # if not step_obj.is_init and parent_step_model is not None:
-        #     parent_step = Step(step_id=parent_step_model.id)
-        #     creator.create_successors(parent_step, stage_id, step_name, "any", "")
-
-        msg = {"ids": step_ids, "detail": "Step successfully created."}
         return Response(msg, status=status.HTTP_201_CREATED)
 
     @extend_schema(
@@ -112,9 +118,9 @@ class StepViewSet(util.InstanceFullViewSet):
 
         new_plan = plan_obj.generate_plan()
         for step_name, step_dict in step_data.items():
-            if new_plan["stages"][stage_obj.name].get(step_name):
+            if new_plan["stages"][stage_obj.name]["steps"].get(step_name):
                 raise exceptions.ValidationError(f"Step {step_name} is already present in the plan.")
-            new_plan["stages"][stage_obj.name][step_name] = step_dict
+            new_plan["stages"][stage_obj.name]["steps"][step_name] = step_dict
 
         try:
             Validator(new_plan).validate()
