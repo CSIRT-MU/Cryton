@@ -193,6 +193,7 @@ build_docker_image_ci_python:
   stage: build
   rules:
     - when: manual
+  needs: []
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -207,6 +208,7 @@ build_docker_image_ci_python:
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --context $CI_PROJECT_DIR/docker/ci-python
+      --dockerfile $CI_PROJECT_DIR/docker/ci-python/Dockerfile
       --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
       --destination $IMAGE_DESTINATION:latest
       --label python="$PYTHON_VERSIONS"
@@ -215,6 +217,7 @@ build_docker_image_production_base:
   stage: build
   rules:
     - when: manual
+  needs: []
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -228,7 +231,8 @@ build_docker_image_production_base:
   script:
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
-      --context $CI_PROJECT_DIR/docker/ci-python
+      --context $CI_PROJECT_DIR/docker/production-base
+      --dockerfile $CI_PROJECT_DIR/docker/production-base/Dockerfile
       --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
       --destination $IMAGE_DESTINATION:latest
       --label python="$PYTHON_VERSION"

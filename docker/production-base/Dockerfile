@@ -9,4 +9,4 @@ ENV POETRY_CACHE_DIR=/opt/.cache
 RUN python3 -m pip install --user pipx==1.*
 
 # Install poetry
-RUN pipx install poetry==1.*
+RUN pipx install poetry==2.*

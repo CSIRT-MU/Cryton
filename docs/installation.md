@@ -173,18 +173,6 @@ It is **highly recommended** to use *pipx*, since it creates and manages an isol
     pip install --user cryton[cli]=={{{ release_version }}}.*
     ```
 
-=== "All-in-one"
-
-    **pipx**
-    ```shell
-    pipx install cryton[all]=={{{ release_version }}}.*
-    ```
-    
-    **pip**
-    ```shell
-    pip install --user cryton[all]=={{{ release_version }}}.*
-    ```
-
 Once you finish the installation, check out the [usage](usage/index.md) page.
 
 ## With Docker

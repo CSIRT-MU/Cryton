@@ -49,7 +49,7 @@ RUN ln -s "$(find /root/.pyenv/versions/ -name "3.13.*")/bin/pip3" /usr/bin/pip3
 RUN python3 -m pip install --user pipx==1.*
 
 # Install Poetry
-RUN pipx install poetry==1.*
+RUN pipx install poetry==2.*
 
 # Install tox
 RUN pipx install tox==4.*
