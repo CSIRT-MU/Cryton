@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1678,9 +1678,6 @@
 <p>Install Cryton:
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>install<span class="w"> </span>--all-extras<span class="w"> </span>--with<span class="w"> </span>docs
 </code></pre></div></p>
-<p>To spawn a shell use:
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>shell
-</code></pre></div></p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>Run Hive:
 <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>cryton-hive<span class="w"> </span>start<span class="w"> </span>--migrate-database
@@ -1694,20 +1691,20 @@
 <p><a href="../usage/">Link to the usage</a>.</p>
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <h3 id="pytest">Pytest<a class="headerlink" href="#pytest" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>tests/unit/<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-unit<span class="w"> </span>--cov-report<span class="w"> </span>html
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>tests/unit/<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-unit<span class="w"> </span>--cov-report<span class="w"> </span>html
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>tests/integration/<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration<span class="w"> </span>--cov-report<span class="w"> </span>html
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>tests/integration/<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration<span class="w"> </span>--cov-report<span class="w"> </span>html
 </code></pre></div>
 <details open="open">
 <summary>Run specific test</summary>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>my_test_file.py::MyTestClass::my_test
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>my_test_file.py::MyTestClass::my_test
 </code></pre></div>
 </details>
 <h3 id="tox">tox<a class="headerlink" href="#tox" title="Permanent link">&para;</a></h3>
 <p>Use in combination with <a href="https://github.com/pyenv/pyenv" target="_blank">pyenv</a>.</p>
-<div class="highlight"><pre><span></span><code>tox<span class="w"> </span>--<span class="w"> </span>tests/unit/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-unit
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>tox<span class="w"> </span>--<span class="w"> </span>tests/unit/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-unit
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>tox<span class="w"> </span>--<span class="w"> </span>tests/integration/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>tox<span class="w"> </span>--<span class="w"> </span>tests/integration/<span class="w"> </span>--cov<span class="o">=</span>cryton<span class="w"> </span>--cov-config<span class="o">=</span>.coveragerc-integration
 </code></pre></div>
 <p>Use the provided <a href="#ci-python"><code>ci-python</code> image</a> to get an isolated environment.</p>
 <h3 id="e2e">E2E<a class="headerlink" href="#e2e" title="Permanent link">&para;</a></h3>
@@ -1719,7 +1716,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">CRYTON_E2E_WORKER_ADDRESS</span><span class="o">=</span><span class="s2">&quot;192.168.90.11&quot;</span>
 </code></pre></div></p>
 <p>Run the tests:
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/e2e/
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/e2e/
 </code></pre></div></p>
 <h2 id="django-related">Django related<a class="headerlink" href="#django-related" title="Permanent link">&para;</a></h2>
 <h2 id="custom-script-setup-with-django">Custom script setup with Django<a class="headerlink" href="#custom-script-setup-with-django" title="Permanent link">&para;</a></h2>
@@ -1784,7 +1781,6 @@ testing if all the functionality works across the whole Cryton toolset.</p>
 <li>Settings for Pytest can be found in a <em>pyproject.toml</em> file</li>
 <li>Tests (that test the same code part/class) are grouped using classes</li>
 <li>Each class that works with the Django DB has to be marked with <code>@pytest.mark.django_db</code></li>
-<li>Each class should be patched to use the test logger if possible (<a href="../logging/#testing">testing logger</a>)</li>
 <li>Unit tests shouldn't interact with the DB. </li>
 <li>Use the <code>model_bakery</code> library instead of mocking the DB interactions for the integration tests</li>
 <li>For easier mocking, each test class should have a <code>path</code> class variable. If we are testing a class 
@@ -1936,7 +1932,7 @@ in <code>path/to/module.py</code>, then the <em>path</em> variable will be <code
     <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link", "content.code.copy", "navigation.tracking", "navigation.top", "navigation.instant", "navigation.instant.progress", "navigation.indexes", "navigation.footer", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
       
     
   </body>
