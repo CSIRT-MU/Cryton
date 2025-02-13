@@ -45,11 +45,6 @@ Install Cryton:
 poetry install --all-extras --with docs
 ```
 
-To spawn a shell use:
-```shell
-poetry shell
-```
-
 ## Usage
 Run Hive:
 ```shell
@@ -72,28 +67,28 @@ poetry run cryton-cli
 
 ### Pytest
 ```shell
-pytest --cov=cryton tests/unit/ --cov-config=.coveragerc-unit --cov-report html
+poetry run pytest --cov=cryton tests/unit/ --cov-config=.coveragerc-unit --cov-report html
 ```
 
 ```shell
-pytest --cov=cryton tests/integration/ --cov-config=.coveragerc-integration --cov-report html
+poetry run pytest --cov=cryton tests/integration/ --cov-config=.coveragerc-integration --cov-report html
 ```
 
 ???+ "Run specific test" 
 
     ```shell
-    pytest my_test_file.py::MyTestClass::my_test
+    poetry run pytest my_test_file.py::MyTestClass::my_test
     ```
 
 ### tox
 Use in combination with [pyenv](https://github.com/pyenv/pyenv){target="_blank"}.
 
 ```shell
-tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
+poetry run tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
 ```
 
 ```shell
-tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
+poetry run tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
 ```
 
 Use the provided [`ci-python` image](#ci-python) to get an isolated environment.
@@ -113,7 +108,7 @@ export CRYTON_E2E_WORKER_ADDRESS="192.168.90.11"
 
 Run the tests:
 ```shell
-pytest tests/e2e/
+poetry run pytest tests/e2e/
 ```
 
 ## Django related
@@ -202,7 +197,6 @@ testing if all the functionality works across the whole Cryton toolset.
 - Settings for Pytest can be found in a *pyproject.toml* file
 - Tests (that test the same code part/class) are grouped using classes
 - Each class that works with the Django DB has to be marked with `@pytest.mark.django_db`
-- Each class should be patched to use the test logger if possible ([testing logger](../logging.md#testing))
 - Unit tests shouldn't interact with the DB. 
 - Use the `model_bakery` library instead of mocking the DB interactions for the integration tests
 - For easier mocking, each test class should have a `path` class variable. If we are testing a class 
