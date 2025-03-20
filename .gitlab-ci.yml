@@ -3,7 +3,9 @@ variables:
   CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
 
 default:
-  image: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
+  image:
+    name: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
+    pull_policy: always
   interruptible: true
   artifacts:
     expire_in: 30 days
