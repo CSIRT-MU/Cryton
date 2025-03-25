@@ -22,7 +22,7 @@ stages:
         - .gitlab-ci.yml
     - when: never
 
-# test
+# tests
 .tests:
   stage: test
   coverage: '/TOTAL.*\s+(\d+%)$/'
