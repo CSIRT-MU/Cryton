@@ -15,5 +15,9 @@ docker-compose.*
 # Development
 .git*
 .idea
+.venv
+.tox
+htmlcov
+site
 dist
 uploads

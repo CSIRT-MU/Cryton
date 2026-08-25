@@ -28,7 +28,7 @@ class TestModuleFFUF:
 
     @pytest.fixture
     def f_open(self, mocker: MockerFixture):
-        return mocker.patch(f"builtins.open", mock_open())
+        return mocker.patch("builtins.open", mock_open())
 
     @pytest.fixture
     def f_os_remove(self, mocker: MockerFixture):
@@ -39,17 +39,12 @@ class TestModuleFFUF:
         [
             {"target": "placeholder", "wordlist": "placeholder"},
             {"target": "placeholder", "wordlist": "placeholder", "options": "a b c", "serialize_output": True},
-        ]
+        ],
     )
     def test_schema(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
-    @pytest.mark.parametrize(
-        "p_arguments",
-        [
-            {"command": "placeholder"}
-        ]
-    )
+    @pytest.mark.parametrize("p_arguments", [{"command": "placeholder"}])
     def test_schema_custom(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
@@ -62,8 +57,8 @@ class TestModuleFFUF:
             {"target": "placeholder"},
             {"wordlist": "placeholder"},
             {"target": "placeholder", "wordlist": "placeholder", "non_existent": "placeholder"},
-            {"target": "placeholder", "wordlist": "placeholder", "command": "placeholder"}
-        ]
+            {"target": "placeholder", "wordlist": "placeholder", "command": "placeholder"},
+        ],
     )
     def test_schema_error(self, p_arguments: dict):
         with pytest.raises(Exception):

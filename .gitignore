@@ -4,6 +4,7 @@ dist
 __pycache__
 .pytest_cache
 .tox
+.uv-cache
 
 # Tests coverage
 htmlcov

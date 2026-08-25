@@ -32,11 +32,11 @@ Let's say we want to create a module that just prints and returns `Hello World!`
     
     Projects and Python packages should follow the convention of having the `cryton-modules-` prefix.
     
-    We will be using [Poetry](https://python-poetry.org/docs/#installation){target="_blank"} for this example.
+    We will be using [uv](https://docs.astral.sh/uv/getting-started/installation/){target="_blank"} for this example.
     
-    Create new poetry project for a module called `hello_world` for the `cryton.modules` namespace:
+    Create a new package project for a module collection:
     ```shell
-    poetry new --name cryton.modules.hello_world cryton-modules-my-collection
+    uv init --package cryton-modules-my-collection
     ```
     
     Go into the project directory:
@@ -46,7 +46,7 @@ Let's say we want to create a module that just prints and returns `Hello World!`
     
     Add Cryton (with *worker* extras) as a dependency.
     ```shell
-    poetry add "cryton[worker]>=2"
+    uv add "cryton[worker]>=2"
     ```
     
     You're all set. Follow the rest of the guide, but don't forget you already have the module directory (Python package).

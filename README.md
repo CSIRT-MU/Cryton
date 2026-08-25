@@ -2,7 +2,7 @@
 [![coverage report](https://gitlab.ics.muni.cz/cryton/cryton/badges/master/coverage.svg)](https://gitlab.ics.muni.cz/cryton/cryton/-/commits/master)
 [![Latest Release](https://gitlab.ics.muni.cz/cryton/cryton/-/badges/release.svg)](https://gitlab.ics.muni.cz/cryton/cryton/-/releases)
 
-[//]: # (TODO: add badges for python versions, black, pylint, flake8, unit tests, integration tests)
+[//]: # (TODO: add badges for python versions, ruff, unit tests, integration tests)
 
 # Cryton
 Cryton is a Cron-like red team framework for complex attack scenarios automation and scheduling. It provides ways to plan, execute, and evaluate multistep attacks.

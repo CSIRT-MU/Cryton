@@ -1,18 +1,48 @@
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   CRYTON_APP_DIRECTORY: "$CI_PROJECT_DIR/cryton/"
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.uv-cache"
+  UV_LINK_MODE: copy
+  UV_PYTHON_CACHE_DIR: "$UV_CACHE_DIR/python"
+  UV_PYTHON_INSTALL_DIR: "$CI_PROJECT_DIR/.uv-python"
+  CACHE_UV_CACHE_POLICY: pull
 
 default:
-  image: registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest
+  image: ghcr.io/astral-sh/uv:0.12.5-debian
   interruptible: true
   artifacts:
     expire_in: 30 days
+  cache:
+    - key:
+        files:
+          - uv.lock
+        prefix: uv
+      paths:
+        - .uv-cache/
+      policy: $CACHE_UV_CACHE_POLICY
+    - key:
+        files:
+          - .python-versions
+        prefix: python
+      paths:
+        - .uv-python/
+      policy: $CACHE_UV_CACHE_POLICY
 
 stages:
+  - setup
   - test
   - publish
   - build
   - deploy
+
+uv_install:
+  stage: setup
+  variables:
+    CACHE_UV_CACHE_POLICY: pull-push
+  script:
+    - uv python install --upgrade
+    - uv sync --frozen --all-groups --all-extras
+    - uv cache prune --ci
 
 .documentation:
   rules:
@@ -28,12 +58,12 @@ stages:
   coverage: '/TOTAL.*\s+(\d+%)$/'
   rules:
     - changes:
-        - cryton/**/*
+        - src/**/*
         - tests/**/*
         - .coveragerc-*
         - settings*
         - .gitlab-ci.yml
-        - poetry.lock
+        - uv.lock
         - pyproject.toml
         - tox.ini
     - when: never
@@ -41,37 +71,37 @@ stages:
 unit_tests:
   extends: .tests
   script:
-    - tox run-parallel -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
+    - uv run tox run-parallel -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
     - cat coverage.readable
 
 integration_tests:
   extends: .tests
   script:
-    - tox run-parallel -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
+    - uv run tox run-parallel -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
     - cat coverage.readable
 
-black:
+format:
   stage: test
   rules:
     - changes:
-        - cryton/**/*
+        - src/**/*
         - tests/**/*
         - .gitlab-ci.yml
-        - poetry.lock
+        - uv.lock
         - pyproject.toml
     - when: never
   before_script:
-    - poetry install
+    - uv sync --locked --all-extras --group dev
   script:
-    - poetry run black --check --diff cryton/
+    - uv run ruff format --check --diff src tests
 
 build_documentation:
   extends: .documentation
   stage: test
   before_script:
-    - poetry install --with docs
+    - uv sync --locked --group docs
   script:
-    - poetry run mkdocs build
+    - uv run mkdocs build
 
 # publish
 .publish:
@@ -81,6 +111,7 @@ build_documentation:
 
 .build_docker_image:
   extends: .publish
+  cache: []
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -117,8 +148,8 @@ build_documentation:
 upload_package_to_pypi:
   extends: .publish
   script:
-    - poetry config pypi-token.pypi $PYPI_TOKEN
-    - poetry publish --build
+    - uv build
+    - uv publish --token "$PYPI_TOKEN"
 
 build_docker_image_hive:
   extends: .build_docker_image
@@ -152,14 +183,13 @@ pages:
     HTTPS_REMOTE: https://${BOT_SHAKESPEARE_NAME}:${BOT_SHAKESPEARE_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
     PAGES_BRANCH: "pages"
   before_script:
-    - apt update && apt install -y git
     - git config user.name $BOT_SHAKESPEARE_NAME
     - git config user.email $BOT_SHAKESPEARE_NAME@asd.asd
     - git remote remove origin
     - git remote add origin $HTTPS_REMOTE
     - git branch -D $PAGES_BRANCH || echo "Branch not present."
     - git fetch --depth=1 origin $PAGES_BRANCH || echo "Branch doesn't exist yet."
-    - poetry install --with docs
+    - uv sync --locked --group docs
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+|x\.([0-9]|[0-z])+$/ && $CI_COMMIT_REF_PROTECTED == "true"
@@ -174,65 +204,17 @@ pages:
       fi
     - echo "DOCUMENTATION_VERSION $DOCUMENTATION_VERSION"
     - echo "ALIAS $ALIAS"
-    - poetry run mike deploy
+    - uv run mike deploy
       --update-aliases
       --alias-type=redirect
       --push
       --branch $PAGES_BRANCH
       --deploy-prefix public
       $DOCUMENTATION_VERSION $ALIAS
-    - poetry run mike set-default --push --branch $PAGES_BRANCH --deploy-prefix public latest || echo "The tag latest doesn't exist."
+    - uv run mike set-default --push --branch $PAGES_BRANCH --deploy-prefix public latest || echo "The tag latest doesn't exist."
     - git checkout $PAGES_BRANCH
     - git log -1
   artifacts:
     expire_in: 30 days
     paths:
       - public/
-
-build_docker_image_ci_python:
-  stage: build
-  rules:
-    - when: manual
-  needs: []
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [ "" ]
-  before_script:
-    # Set variables
-    - export PYTHON_VERSIONS=$(cat $CI_PROJECT_DIR/docker/ci-python/Dockerfile | grep "pyenv install" | cut -b 19-)
-    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE/ci-python
-    # Check variables
-    - echo "PYTHON_VERSIONS $PYTHON_VERSIONS"
-    - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
-  script:
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor
-      --context $CI_PROJECT_DIR/docker/ci-python
-      --dockerfile $CI_PROJECT_DIR/docker/ci-python/Dockerfile
-      --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
-      --destination $IMAGE_DESTINATION:latest
-      --label python="$PYTHON_VERSIONS"
-
-build_docker_image_production_base:
-  stage: build
-  rules:
-    - when: manual
-  needs: []
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [ "" ]
-  before_script:
-    # Set variables
-    - export PYTHON_VERSION=$(head $CI_PROJECT_DIR/docker/production-base/Dockerfile -n 1 | cut -b 13-16)
-    - export IMAGE_DESTINATION=$CI_REGISTRY_IMAGE/production-base
-    # Check variables
-    - echo "PYTHON_VERSION $PYTHON_VERSION"
-    - echo "IMAGE_DESTINATION $IMAGE_DESTINATION"
-  script:
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor
-      --context $CI_PROJECT_DIR/docker/production-base
-      --dockerfile $CI_PROJECT_DIR/docker/production-base/Dockerfile
-      --destination $IMAGE_DESTINATION:$CI_COMMIT_SHA
-      --destination $IMAGE_DESTINATION:latest
-      --label python="$PYTHON_VERSION"

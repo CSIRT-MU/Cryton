@@ -68,7 +68,7 @@ class _Test:
         :return: None
         """
         result = self._cli_call(["workers", "create", self.worker, "-d", description])
-        if not "already exists" in str(result):
+        if "already exists" not in str(result):
             self.worker_id = result["id"]
             return
 
@@ -200,7 +200,7 @@ def trigger_msf_listener(worker_address: str, worker_port: int, timeout: int = 3
             break
         time.sleep(0.3)
 
-    raise RuntimeError(f"Unable to trigger the Metasploit listener in the given time.")
+    raise RuntimeError("Unable to trigger the Metasploit listener in the given time.")
 
 
 def create_connection(target: str, port: int = 4444):

@@ -44,7 +44,7 @@ Any relevant information to your deployment/issue.
 
 * Application versions (X.Y.Z/major.minor.patch)
 * Operating System (Debian 12, Windows 10, macOS Big Sur)
-* How you've installed the application(s) (Poetry, Docker, pip, pipx)
+* How you've installed the application(s) (uv, Docker, pip, pipx)
 * Application configuration (.env file(s), environment variables, Docker Compose file(s))
 -->
 
