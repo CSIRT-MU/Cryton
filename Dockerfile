@@ -1,19 +1,23 @@
-FROM registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest AS base
+FROM ghcr.io/astral-sh/uv:0.12.5-python3.12-trixie-slim AS base
 
 # Set environment
-ENV POETRY_VIRTUALENVS_IN_PROJECT=true
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON=3.12 \
+    UV_PYTHON_DOWNLOADS=0 \
+    UV_PROJECT_ENVIRONMENT=/app/.venv
 
 WORKDIR /app
 
 # Install dependencies
-COPY poetry.lock pyproject.toml ./
-RUN poetry install --without dev --no-root --no-interaction --no-ansi --all-extras
+COPY uv.lock pyproject.toml ./
+RUN uv sync --locked --no-dev --no-install-project --all-extras
 
 # Install app
 COPY . .
-RUN poetry install --only-root --no-interaction --no-ansi --all-extras
+RUN uv sync --locked --no-dev --no-editable --all-extras
 
-FROM python:3.12-slim-bullseye AS production
+FROM python:3.12-slim-trixie AS production
 
 # Set environment
 ENV CRYTON_APP_DIRECTORY=/app

@@ -31,17 +31,17 @@ In case the changes affect other applications, include them in the example.
 
 Example below:
 
-1. Check out the MR branch and install the application using Poetry (make sure the prerequisites are running)
+1. Check out the MR branch and install the application using uv (make sure the prerequisites are running)
     ```
     git checkout my-branch
-    poetry install
+    uv sync --all-extras --all-groups
     cryton-core start
     ```
-2. Clone CLI, check out to the related MR branch and install the application using Poetry
+2. Clone CLI, check out to the related MR branch and install the application using uv
     ```
     git clone https://gitlab.ics.muni.cz/cryton/cryton-cli.git
     git checkout my-related-branch
-    poetry install
+    uv sync --all-extras --all-groups
     ```
 3. Check if the new `runs execute` command makes sure the Workers are up and modules are valid before the execution
     ```

@@ -20,17 +20,12 @@ class TestModuleWPScan:
             {
                 "target": "example",
             },
-        ]
+        ],
     )
     def test_schema(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
-    @pytest.mark.parametrize(
-        "p_arguments",
-        [
-            {"command": "placeholder"}
-        ]
-    )
+    @pytest.mark.parametrize("p_arguments", [{"command": "placeholder"}])
     def test_schema_custom(self, p_arguments: dict):
         Module.validate_arguments(p_arguments)
 
@@ -41,7 +36,7 @@ class TestModuleWPScan:
             {"non_existent": "placeholder"},
             {"target": "placeholder", "command": "placeholder"},
             {"options": "placeholder"},
-        ]
+        ],
     )
     def test_schema_error(self, p_arguments: dict):
         with pytest.raises(Exception):
@@ -55,10 +50,12 @@ class TestModuleWPScan:
     @pytest.mark.parametrize(
         "p_arguments, p_command",
         [
-            ({"target": "http://address/index.php", "options": "--request-timeout 60"},
-             ['wpscan', '--url', 'http://address/index.php', '-f', 'json', '--request-timeout', '60']),
+            (
+                {"target": "http://address/index.php", "options": "--request-timeout 60"},
+                ["wpscan", "--url", "http://address/index.php", "-f", "json", "--request-timeout", "60"],
+            ),
             ({"command": "test command"}, ["test", "command"]),
-        ]
+        ],
     )
     def test_parse_command(self, p_arguments, p_command):
         command = parse_command(p_arguments)
@@ -69,7 +66,7 @@ class TestModuleWPScan:
         [
             ("test_output", "", "test_output"),
             ("test_output\n", "test_error", "test_output\ntest_error"),
-        ]
+        ],
     )
     def test_execute_with_standard_output(self, mocker, p_stdout, p_stderr, p_final_output):
         module_arguments = {"test": "argument"}
@@ -103,8 +100,8 @@ class TestModuleWPScan:
         "p_exception, p_result",
         [
             (OSError("test_error"), "Check if your command starts with 'wpscan'. Original error: test_error"),
-            (subprocess.SubprocessError("test_error"), "WPScan couldn't start. Original error: test_error")
-        ]
+            (subprocess.SubprocessError("test_error"), "WPScan couldn't start. Original error: test_error"),
+        ],
     )
     def test_execute_with_exceptions(self, mocker, p_exception, p_result):
         module_arguments = {"test": "argument"}

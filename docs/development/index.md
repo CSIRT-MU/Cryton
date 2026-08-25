@@ -1,12 +1,12 @@
 # Development
 
 ## Environment setup
-First, we have to set up the development environment. This is done using Poetry.
+First, we have to set up the development environment. This is done using uv.
 
 !!! danger "Requirements"
 
     - [Python](https://www.python.org/about/gettingstarted/){target="_blank"} >={{{ python.min }}},<{{{ python.max }}}
-    - [Poetry](https://python-poetry.org/docs/#installation){target="_blank"}
+    - [uv](https://docs.astral.sh/uv/getting-started/installation/){target="_blank"}
     - [Docker Compose](https://docs.docker.com/compose/install/){target="_blank"}
 
 Clone the repository:
@@ -42,23 +42,23 @@ docker compose -f docker-compose.prerequisites.yml up -d
 
 Install Cryton:
 ```shell
-poetry install --all-extras --with docs
+uv sync --all-extras --all-groups
 ```
 
 ## Usage
 Run Hive:
 ```shell
-poetry run cryton-hive start --migrate-database
+uv run cryton-hive start --migrate-database
 ```
 
 Run Worker:
 ```shell
-poetry run cryton-worker start
+uv run cryton-worker start
 ```
 
 Run CLI:
 ```shell
-poetry run cryton-cli
+uv run cryton-cli
 ```
 
 [Link to the usage](../usage/index.md).
@@ -67,31 +67,37 @@ poetry run cryton-cli
 
 ### Pytest
 ```shell
-poetry run pytest --cov=cryton tests/unit/ --cov-config=.coveragerc-unit --cov-report html
+uv run pytest --cov=cryton tests/unit/ --cov-config=.coveragerc-unit --cov-report html
 ```
 
 ```shell
-poetry run pytest --cov=cryton tests/integration/ --cov-config=.coveragerc-integration --cov-report html
+uv run pytest --cov=cryton tests/integration/ --cov-config=.coveragerc-integration --cov-report html
 ```
 
 ???+ "Run specific test" 
 
     ```shell
-    poetry run pytest my_test_file.py::MyTestClass::my_test
+    uv run pytest my_test_file.py::MyTestClass::my_test
     ```
 
 ### tox
-Use in combination with [pyenv](https://github.com/pyenv/pyenv){target="_blank"}.
+Install all Python versions listed in `.python-versions` using uv:
 
 ```shell
-poetry run tox -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
+uv python install
+```
+
+The tox matrix uses uv-managed Python 3.11, 3.12, 3.13, and 3.14 environments.
+
+```shell
+uv run tox run-parallel -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit
 ```
 
 ```shell
-poetry run tox -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
+uv run tox run-parallel -- tests/integration/ --cov=cryton --cov-config=.coveragerc-integration
 ```
 
-Use the provided [`ci-python` image](#ci-python) to get an isolated environment.
+The CI pipeline uses the pinned official uv Debian image and installs these Python versions with uv before running tox.
 
 ### E2E
 E2E tests will test Hive, Worker, and CLI together.
@@ -108,7 +114,7 @@ export CRYTON_E2E_WORKER_ADDRESS="192.168.90.11"
 
 Run the tests:
 ```shell
-poetry run pytest tests/e2e/
+uv run pytest tests/e2e/
 ```
 
 ## Django related
@@ -236,28 +242,4 @@ class TestUnitName:
 
 ## Docker images
 
-### production-base
-Image used for building Python applications.
-
-Build it:
-```shell
-docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base:latest docker/production-base/
-```
-
-Push it:
-```shell
-docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/production-base
-```
-
-### ci-python
-To get the same environment as in the CI/CD pipeline, use the provided `ci-python` image.
-
-Build it:
-```shell
-docker build --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:$(git rev-parse HEAD) --tag registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python:latest docker/ci-python/
-```
-
-Push it:
-```shell
-docker push --all-tags registry.gitlab.ics.muni.cz:443/cryton/cryton/ci-python
-```
+Application images use pinned official uv builder images directly, while their final runtime images contain only Python and Cryton.
