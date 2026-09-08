@@ -1,6 +1,7 @@
 /* Tablets */
 
-input[type="submit"], button {
+input[type="submit"],
+button {
     -webkit-appearance: none;
     appearance: none;
 }
@@ -12,13 +13,14 @@ input[type="submit"], button {
         -webkit-text-size-adjust: 100%;
     }
 
-    td, th {
+    td,
+    th {
         padding: 10px;
-        font-size: 14px;
+        font-size: 0.875rem;
     }
 
     .small {
-        font-size: 12px;
+        font-size: 0.75rem;
     }
 
     /* Layout */
@@ -28,7 +30,7 @@ input[type="submit"], button {
     }
 
     #content {
-        padding: 20px 30px 30px;
+        padding: 15px 20px 20px;
     }
 
     div.breadcrumbs {
@@ -43,9 +45,8 @@ input[type="submit"], button {
         justify-content: flex-start;
     }
 
-    #branding h1 {
+    #site-name {
         margin: 0 0 8px;
-        font-size: 20px;
         line-height: 1.2;
     }
 
@@ -87,8 +88,9 @@ input[type="submit"], button {
         padding-right: 0;
     }
 
-    td .changelink, td .addlink {
-        font-size: 13px;
+    td .changelink,
+    td .addlink {
+        font-size: 0.8125rem;
     }
 
     /* Changelist */
@@ -105,17 +107,17 @@ input[type="submit"], button {
     }
 
     #changelist-search label {
-        line-height: 22px;
+        line-height: 1.375rem;
     }
 
     #toolbar form #searchbar {
         flex: 1 0 auto;
         width: 0;
-        height: 22px;
+        height: 1.375rem;
         margin: 0 10px 0 6px;
     }
 
-    #toolbar form input[type=submit] {
+    #toolbar form input[type="submit"] {
         flex: 0 1 auto;
     }
 
@@ -125,34 +127,30 @@ input[type="submit"], button {
         margin: 5px 0 0 25px;
     }
 
-    #changelist .actions {
+    .actions {
         display: flex;
         flex-wrap: wrap;
         padding: 15px 0;
     }
 
-    #changelist .actions.selected {
-        border: none;
-    }
-
-    #changelist .actions label {
+    .actions label {
         display: flex;
     }
 
-    #changelist .actions select {
+    .actions select {
         background: var(--body-bg);
     }
 
-    #changelist .actions .button {
+    .actions .button {
         min-width: 48px;
         margin: 0 10px;
     }
 
-    #changelist .actions span.all,
-    #changelist .actions span.clear,
-    #changelist .actions span.question,
-    #changelist .actions span.action-counter {
-        font-size: 11px;
+    .actions span.all,
+    .actions span.clear,
+    .actions span.question,
+    .actions span.action-counter {
+        font-size: 0.6875rem;
         margin: 0 10px 0 0;
     }
 
@@ -164,7 +162,6 @@ input[type="submit"], button {
     .change-list .filtered .paginator,
     .filtered #toolbar,
     .filtered .actions,
-
     #changelist .paginator {
         border-top-color: var(--hairline-color); /* XXX Is this used at all? */
     }
@@ -175,45 +172,39 @@ input[type="submit"], button {
 
     /* Forms */
 
+    legend,
     label {
-        font-size: 14px;
+        font-size: 1rem;
     }
 
-    .form-row input[type=text],
-    .form-row input[type=password],
-    .form-row input[type=email],
-    .form-row input[type=url],
-    .form-row input[type=tel],
-    .form-row input[type=number],
+    /*
+    Minifiers remove the default (text) "type" attribute from "input" HTML
+    tags. Add input:not([type]) to make the CSS stylesheet work the same.
+    */
+    .form-row input:not([type]),
+    .form-row input[type="text"],
+    .form-row input[type="password"],
+    .form-row input[type="email"],
+    .form-row input[type="url"],
+    .form-row input[type="tel"],
+    .form-row input[type="number"],
     .form-row textarea,
     .form-row select,
     .form-row .vTextField {
         box-sizing: border-box;
         margin: 0;
         padding: 6px 8px;
-        min-height: 36px;
-        font-size: 14px;
+        min-height: 2.25rem;
+        font-size: 1rem;
     }
 
     .form-row select {
-        height: 36px;
+        height: 2.25rem;
     }
 
     .form-row select[multiple] {
         height: auto;
         min-height: 0;
-    }
-
-    fieldset .fieldBox {
-        float: none;
-        margin: 0 -10px;
-        padding: 0 10px;
-    }
-
-    fieldset .fieldBox + .fieldBox {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid var(--hairline-color);
     }
 
     textarea {
@@ -229,27 +220,27 @@ input[type="submit"], button {
     .aligned .datetimeshortcuts,
     .aligned .related-lookup + strong {
         align-self: center;
-        margin-left: 15px;
+        margin-left: 0.5rem;
     }
 
     form .aligned div.radiolist {
         margin-left: 2px;
     }
 
-    /* Related widget */
-
-    .related-widget-wrapper {
-        float: none;
+    .submit-row {
+        padding: 8px;
     }
 
-    .related-widget-wrapper-link + .selector {
-        max-width: calc(100% - 30px);
-        margin-right: 15px;
+    .submit-row a.deletelink {
+        padding: 10px 7px;
     }
 
-    select + .related-widget-wrapper-link,
-    .related-widget-wrapper-link + .related-widget-wrapper-link {
-        margin-left: 10px;
+    .button,
+    input[type="submit"],
+    input[type="button"],
+    .submit-row input,
+    a.button {
+        padding: 7px;
     }
 
     /* Selector */
@@ -264,17 +255,14 @@ input[type="submit"], button {
         align-items: center;
     }
 
-    .selector .selector-filter label {
-        margin: 0 8px 0 0;
-    }
-
     .selector .selector-filter input {
-        width: auto;
+        width: 100%;
         min-height: 0;
         flex: 1 1;
     }
 
-    .selector-available, .selector-chosen {
+    .selector-available,
+    .selector-chosen {
         width: auto;
         flex: 1 1;
         display: flex;
@@ -287,30 +275,8 @@ input[type="submit"], button {
         margin-bottom: 5px;
     }
 
-    .selector ul.selector-chooser {
-        width: 26px;
-        height: 52px;
-        padding: 2px 0;
-        margin: auto 15px;
-        border-radius: 20px;
-        transform: translateY(-10px);
-    }
-
-    .selector-add, .selector-remove {
-        width: 20px;
-        height: 20px;
-        background-size: 20px auto;
-    }
-
-    .selector-add {
-        background-position: 0 -120px;
-    }
-
-    .selector-remove {
-        background-position: 0 -80px;
-    }
-
-    a.selector-chooseall, a.selector-clearall {
+    .selector-chooseall,
+    .selector-clearall {
         align-self: center;
     }
 
@@ -327,15 +293,13 @@ input[type="submit"], button {
         margin-bottom: 0;
     }
 
-    .stacked .selector-available, .stacked .selector-chosen {
+    .stacked .selector-available,
+    .stacked .selector-chosen {
         width: auto;
     }
 
     .stacked ul.selector-chooser {
-        width: 52px;
-        height: 26px;
         padding: 0 2px;
-        margin: 15px auto;
         transform: none;
     }
 
@@ -343,48 +307,9 @@ input[type="submit"], button {
         padding: 3px;
     }
 
-    .stacked .selector-add, .stacked .selector-remove {
-        background-size: 20px auto;
-    }
-
-    .stacked .selector-add {
-        background-position: 0 -40px;
-    }
-
-    .stacked .active.selector-add {
-        background-position: 0 -40px;
-    }
-
-    .active.selector-add:focus, .active.selector-add:hover {
-        background-position: 0 -140px;
-    }
-
-    .stacked .active.selector-add:focus, .stacked .active.selector-add:hover {
-        background-position: 0 -60px;
-    }
-
-    .stacked .selector-remove {
-        background-position: 0 0;
-    }
-
-    .stacked .active.selector-remove {
-        background-position: 0 0;
-    }
-
-    .active.selector-remove:focus, .active.selector-remove:hover {
-        background-position: 0 -100px;
-    }
-
-    .stacked .active.selector-remove:focus, .stacked .active.selector-remove:hover {
-        background-position: 0 -20px;
-    }
-
-    .help-tooltip, .selector .help-icon {
+    .help-tooltip,
+    .selector .help-icon {
         display: none;
-    }
-
-    form .form-row p.datetime {
-        width: 100%;
     }
 
     .datetime input {
@@ -393,20 +318,23 @@ input[type="submit"], button {
     }
 
     .datetime span {
-        font-size: 13px;
+        font-size: 0.8125rem;
     }
 
     .datetime .timezonewarning {
         display: block;
-        font-size: 11px;
+        font-size: 0.6875rem;
         color: var(--body-quiet-color);
     }
 
     .datetimeshortcuts {
-        color: var(--border-color); /* XXX Redundant, .datetime span also sets #ccc */
+        color: var(
+            --border-color
+        ); /* XXX Redundant, .datetime span also sets #ccc */
     }
 
-    .form-row .datetime input.vDateField, .form-row .datetime input.vTimeField {
+    .form-row .datetime input.vDateField,
+    .form-row .datetime input.vTimeField {
         width: 75%;
     }
 
@@ -417,16 +345,8 @@ input[type="submit"], button {
     /* Messages */
 
     ul.messagelist li {
-        padding-left: 55px;
-        background-position: 30px 12px;
-    }
-
-    ul.messagelist li.error {
-        background-position: 30px 12px;
-    }
-
-    ul.messagelist li.warning {
-        background-position: 30px 14px;
+        padding: 10px 10px 10px 55px;
+        background-position-x: 30px;
     }
 
     /* Login */
@@ -435,7 +355,7 @@ input[type="submit"], button {
         padding: 15px 20px;
     }
 
-    .login #branding h1 {
+    .login #site-name {
         margin: 0;
     }
 
@@ -467,12 +387,9 @@ input[type="submit"], button {
 @media (max-width: 767px) {
     /* Layout */
 
-    #header, #content, #footer {
+    #header,
+    #content {
         padding: 15px;
-    }
-
-    #footer:empty {
-        padding: 0;
     }
 
     div.breadcrumbs {
@@ -481,11 +398,13 @@ input[type="submit"], button {
 
     /* Dashboard */
 
-    .colMS, .colSM {
+    .colMS,
+    .colSM {
         margin: 0;
     }
 
-    #content-related, .colSM #content-related {
+    #content-related,
+    .colSM #content-related {
         width: 100%;
         margin: 0;
     }
@@ -496,14 +415,18 @@ input[type="submit"], button {
 
     #content-related .module h2 {
         padding: 10px 15px;
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     /* Changelist */
 
-    #changelist {
-        align-items: stretch;
+    #changelist .changelist-form-container {
         flex-direction: column;
+    }
+
+    #changelist .changelist-form-container:has(#changelist-filter) > div {
+        max-width: 100%;
+        width: 100%;
     }
 
     #toolbar {
@@ -514,42 +437,33 @@ input[type="submit"], button {
         margin-left: 0;
     }
 
-    #changelist .actions label {
+    .actions label {
         flex: 1 1;
     }
 
-    #changelist .actions select {
+    .actions select {
         flex: 1 0;
         width: 100%;
     }
 
-    #changelist .actions span {
+    .actions span {
         flex: 1 0 100%;
     }
 
     #changelist-filter {
-        position: static;
-        width: auto;
+        width: 100%;
         margin-top: 30px;
     }
 
-    .object-tools {
-        float: none;
-        margin: 0 0 15px;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .object-tools li {
-        height: auto;
-        margin-left: 0;
-    }
-
-    .object-tools li + li {
-        margin-left: 15px;
-    }
-
     /* Forms */
+
+    .titles-and-tools {
+        flex-direction: column;
+    }
+
+    .object-tools {
+        margin-bottom: 10px;
+    }
 
     .form-row {
         padding: 15px 0;
@@ -557,13 +471,15 @@ input[type="submit"], button {
 
     .aligned .form-row,
     .aligned .form-row > div {
-        display: flex;
-        flex-wrap: wrap;
         max-width: 100vw;
     }
 
     .aligned .form-row > div {
         width: calc(100vw - 30px);
+    }
+
+    .flex-container {
+        align-items: stretch;
     }
 
     textarea {
@@ -574,33 +490,11 @@ input[type="submit"], button {
         width: auto;
     }
 
-    fieldset .fieldBox + .fieldBox {
-        margin-top: 15px;
-        padding-top: 15px;
-    }
-
-    fieldset.collapsed .form-row {
-        display: none;
-    }
-
-    .aligned label {
-        width: 100%;
-        padding: 0 0 10px;
-    }
-
-    .aligned label:after {
-        max-height: 0;
-    }
-
     .aligned .form-row input,
     .aligned .form-row select,
     .aligned .form-row textarea {
         flex: 1 1 auto;
         max-width: 100%;
-    }
-
-    .aligned .checkbox-row {
-        align-items: center;
     }
 
     .aligned .checkbox-row input {
@@ -613,16 +507,8 @@ input[type="submit"], button {
         padding: 1px 0 0 5px;
     }
 
-    .aligned label + p,
-    .aligned label + div.help,
-    .aligned label + div.readonly {
-        padding: 0;
-        margin-left: 0;
-    }
-
     .aligned p.file-upload {
-        margin-left: 0;
-        font-size: 13px;
+        font-size: 0.8125rem;
     }
 
     span.clearable-file-input {
@@ -630,30 +516,8 @@ input[type="submit"], button {
     }
 
     span.clearable-file-input label {
-        font-size: 13px;
+        font-size: 0.8125rem;
         padding-bottom: 0;
-    }
-
-    .aligned .timezonewarning {
-        flex: 1 0 100%;
-        margin-top: 5px;
-    }
-
-    form .aligned .form-row div.help {
-        width: 100%;
-        margin: 5px 0 0;
-        padding: 0;
-    }
-
-    form .aligned ul {
-        margin-left: 0;
-        padding-left: 0;
-    }
-
-    form .aligned div.radiolist {
-        margin-top: 5px;
-        margin-right: 15px;
-        margin-bottom: -3px;
     }
 
     form .aligned div.radiolist:not(.inline) div + div {
@@ -670,6 +534,7 @@ input[type="submit"], button {
 
     .related-widget-wrapper .selector {
         order: 1;
+        flex: 1 0 auto;
     }
 
     .related-widget-wrapper > a {
@@ -684,23 +549,15 @@ input[type="submit"], button {
         align-self: center;
     }
 
-    select + .related-widget-wrapper-link,
-    .related-widget-wrapper-link + .related-widget-wrapper-link {
-        margin-left: 15px;
-    }
-
     /* Selector */
 
     .selector {
         flex-direction: column;
+        gap: 10px 0;
     }
 
-    .selector > * {
-        float: none;
-    }
-
-    .selector-available, .selector-chosen {
-        margin-bottom: 0;
+    .selector-available,
+    .selector-chosen {
         flex: 1 1 auto;
     }
 
@@ -709,12 +566,10 @@ input[type="submit"], button {
     }
 
     .selector ul.selector-chooser {
-        display: block;
-        float: none;
-        width: 52px;
-        height: 26px;
+        display: flex;
+        width: 60px;
+        height: 30px;
         padding: 0 2px;
-        margin: 15px auto 20px;
         transform: none;
     }
 
@@ -726,16 +581,18 @@ input[type="submit"], button {
         background-position: 0 0;
     }
 
-    .active.selector-remove:focus, .active.selector-remove:hover {
-        background-position: 0 -20px;
+    :enabled.selector-remove:focus,
+    :enabled.selector-remove:hover {
+        background-position: 0 -24px;
     }
 
-    .selector-add  {
-        background-position: 0 -40px;
+    .selector-add {
+        background-position: 0 -48px;
     }
 
-    .active.selector-add:focus, .active.selector-add:hover {
-        background-position: 0 -60px;
+    :enabled.selector-add:focus,
+    :enabled.selector-add:hover {
+        background-position: 0 -72px;
     }
 
     /* Inlines */
@@ -755,12 +612,18 @@ input[type="submit"], button {
         padding: 0 10px;
     }
 
-    .inline-group[data-inline-type="stacked"] .inline-related .module .form-row {
+    .inline-group[data-inline-type="stacked"]
+        .inline-related
+        .module
+        .form-row {
         border-top: 1px solid var(--hairline-color);
         border-bottom: none;
     }
 
-    .inline-group[data-inline-type="stacked"] .inline-related .module .form-row:first-child {
+    .inline-group[data-inline-type="stacked"]
+        .inline-related
+        .module
+        .form-row:first-child {
         border-top: none;
     }
 
@@ -783,7 +646,10 @@ input[type="submit"], button {
         margin-top: 5px;
     }
 
-    .inline-group[data-inline-type="stacked"] .aligned .form-row > div:not([class]) {
+    .inline-group[data-inline-type="stacked"]
+        .aligned
+        .form-row
+        > div:not([class]) {
         width: 100%;
     }
 
@@ -812,48 +678,39 @@ input[type="submit"], button {
     /* Submit row */
 
     .submit-row {
-        padding: 10px 10px 0;
+        padding: 10px;
         margin: 0 0 15px;
-        display: flex;
         flex-direction: column;
+        gap: 8px;
     }
 
-    .submit-row > * {
-        width: 100%;
-    }
-
-    .submit-row input, .submit-row input.default, .submit-row a, .submit-row a.closelink {
-        float: none;
-        margin: 0 0 10px;
+    .submit-row input,
+    .submit-row input.default,
+    .submit-row a {
         text-align: center;
     }
 
     .submit-row a.closelink {
         padding: 10px 0;
+        text-align: center;
     }
 
-    .submit-row p.deletelink-box {
-        order: 4;
+    .submit-row a.deletelink {
+        margin: 0;
     }
 
     /* Messages */
 
     ul.messagelist li {
-        padding-left: 40px;
-        background-position: 15px 12px;
-    }
-
-    ul.messagelist li.error {
-        background-position: 15px 12px;
-    }
-
-    ul.messagelist li.warning {
-        background-position: 15px 14px;
+        padding: 10px 10px 10px 40px;
+        background-position-x: 15px;
     }
 
     /* Paginator */
 
-    .paginator .this-page, .paginator a:link, .paginator a:visited {
+    .paginator .this-page,
+    .paginator a:link,
+    .paginator a:visited {
         padding: 4px 10px;
     }
 
@@ -907,12 +764,13 @@ input[type="submit"], button {
     .errornote {
         margin: 0 0 20px;
         padding: 8px 12px;
-        font-size: 13px;
+        font-size: 0.8125rem;
     }
 
     /* Calendar and clock */
 
-    .calendarbox, .clockbox {
+    .calendarbox,
+    .clockbox {
         position: fixed !important;
         top: 50% !important;
         left: 50% !important;
@@ -922,18 +780,8 @@ input[type="submit"], button {
         overflow: visible;
     }
 
-    .calendarbox:before, .clockbox:before {
-        content: '';
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.75);
-        transform: translate(-50%, -50%);
-    }
-
-    .calendarbox > *, .clockbox > * {
+    .calendarbox > *,
+    .clockbox > * {
         position: relative;
         z-index: 1;
     }
@@ -942,20 +790,22 @@ input[type="submit"], button {
         z-index: 2;
     }
 
-    .calendarbox .calendar, .clockbox h2 {
+    .calendarbox .calendar,
+    .clockbox h2 {
         border-radius: 4px 4px 0 0;
         overflow: hidden;
     }
 
-    .calendarbox .calendar-cancel, .clockbox .calendar-cancel {
+    .calendarbox .calendar-cancel,
+    .clockbox .calendar-cancel {
         border-radius: 0 0 4px 4px;
         overflow: hidden;
     }
 
     .calendar-shortcuts {
         padding: 10px 0;
-        font-size: 12px;
-        line-height: 12px;
+        font-size: 0.75rem;
+        line-height: 0.75rem;
     }
 
     .calendar-shortcuts a {
@@ -979,15 +829,17 @@ input[type="submit"], button {
         padding: 10px;
     }
 
-    .calendarbox .calendarnav-previous, .calendarbox .calendarnav-next {
+    .calendarbox .calendarnav-previous,
+    .calendarbox .calendarnav-next {
         z-index: 1;
         top: 10px;
     }
 
     /* History */
 
-    table#change-history tbody th, table#change-history tbody td {
-        font-size: 13px;
+    table#change-history tbody th,
+    table#change-history tbody td {
+        font-size: 0.8125rem;
         word-break: break-word;
     }
 
@@ -997,8 +849,9 @@ input[type="submit"], button {
 
     /* Docs */
 
-    table.model tbody th, table.model tbody td {
-        font-size: 13px;
+    table.model tbody th,
+    table.model tbody td {
+        font-size: 0.8125rem;
         word-break: break-word;
     }
 }

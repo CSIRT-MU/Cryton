@@ -199,14 +199,14 @@ Password for Postgres server login.
 | string | cryton  | admin   | hive.database.password | CRYTON_HIVE_DATABASE_PASSWORD |
 
 #### API secret key
-Key (64 chars) used by the REST API for cryptographic signing. More information can be found [here](https://docs.djangoproject.com/en/4.2/ref/settings/#std-setting-SECRET_KEY){target="_blank"}.
+Key (64 chars) used by the REST API for cryptographic signing. More information can be found [here](https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-SECRET_KEY){target="_blank"}.
 
 | type   | default | example     | YAML variable path  | Environment variable       |
 |--------|---------|-------------|---------------------|----------------------------|
 | string | cryton  | XF37...6HB3 | hive.api.secret_key | CRYTON_HIVE_API_SECRET_KEY |
 
 #### API allowed hosts
-Domain names that the site can serve. More information can be found [here](https://docs.djangoproject.com/en/4.2/ref/settings/#allowed-hosts){target="_blank"}.
+Domain names that the site can serve. More information can be found [here](https://docs.djangoproject.com/en/6.1/ref/settings/#allowed-hosts){target="_blank"}.
 
 | type                               | default | example     | YAML variable path     | Environment variable          |
 |------------------------------------|---------|-------------|------------------------|-------------------------------|

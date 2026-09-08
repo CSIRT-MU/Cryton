@@ -2,8 +2,8 @@ release_version: 3
 git_release: stable/3
 
 python:
-  min: 3.11
-  max: 3.13
+  min: 3.12
+  max: 3.14
 
 releases:
   cryton: https://gitlab.ics.muni.cz/cryton/cryton/-/releases/

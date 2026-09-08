@@ -87,7 +87,7 @@ Install all Python versions listed in `.python-versions` using uv:
 uv python install
 ```
 
-The tox matrix uses uv-managed Python 3.11, 3.12, 3.13, and 3.14 environments.
+The tox matrix uses uv-managed Python 3.12, 3.13, and 3.14 environments.
 
 ```shell
 uv run tox run-parallel -- tests/unit/ --cov=cryton --cov-config=.coveragerc-unit

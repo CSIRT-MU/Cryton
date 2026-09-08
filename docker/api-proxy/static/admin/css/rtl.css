@@ -4,19 +4,24 @@ th {
     text-align: right;
 }
 
-.module h2, .module caption {
+.module h2,
+.module caption {
     text-align: right;
 }
 
-.module ul, .module ol {
+.module ul,
+.module ol {
     margin-left: 0;
     margin-right: 1.5em;
 }
 
-.viewlink, .addlink, .changelink {
+.viewlink,
+.addlink,
+.changelink,
+.hidelink {
     padding-left: 0;
     padding-right: 16px;
-    background-position: 100% 1px;
+    background-position-x: 100%;
 }
 
 .deletelink {
@@ -25,8 +30,9 @@ th {
     background-position: 100% 1px;
 }
 
-.object-tools {
-    float: left;
+.object-tools li + li {
+    margin-right: 15px;
+    margin-left: 0;
 }
 
 thead th:first-child,
@@ -64,7 +70,7 @@ div.breadcrumbs {
 /* SORTABLE TABLES */
 
 table thead th.sorted .sortoptions {
-   float: left;
+    float: left;
 }
 
 thead th.sorted .text {
@@ -75,7 +81,7 @@ thead th.sorted .text {
 /* dashboard styles */
 
 .dashboard .module table td a {
-    padding-left: .6em;
+    padding-left: 0.6em;
     padding-right: 16px;
 }
 
@@ -102,45 +108,26 @@ thead th.sorted .text {
     margin-right: -15px;
 }
 
-#changelist table tbody td:first-child, #changelist table tbody th:first-child {
+#changelist table tbody td:first-child,
+#changelist table tbody th:first-child {
     border-right: none;
     border-left: none;
 }
 
+.paginator ul {
+    margin-left: 6px;
+    margin-right: 0;
+}
+
+.paginator input {
+    margin-left: 0;
+    margin-right: auto;
+}
+
 /* FORMS */
 
-.aligned label {
-    padding: 0 0 3px 1em;
-    float: right;
-}
-
-.submit-row {
-    text-align: left
-}
-
-.submit-row p.deletelink-box {
-    float: right;
-}
-
-.submit-row input.default {
-    margin-left: 0;
-}
-
-.vDateField, .vTimeField {
-    margin-left: 2px;
-}
-
-.aligned .form-row input {
-    margin-left: 5px;
-}
-
-form .aligned p.help, form .aligned div.help {
-    clear: right;
-}
-
 form .aligned ul {
-    margin-right: 163px;
-    margin-left: 0;
+    margin: 0;
 }
 
 form ul.inline li {
@@ -149,24 +136,8 @@ form ul.inline li {
     padding-left: 7px;
 }
 
-input[type=submit].default, .submit-row input.default {
-    float: left;
-}
-
-fieldset .fieldBox {
-    float: right;
-    margin-left: 20px;
-    margin-right: 0;
-}
-
-.errorlist li {
-    background-position: 100% 12px;
-    padding: 0;
-}
-
-.errornote {
-    background-position: 100% 12px;
-    padding: 10px 12px;
+.submit-row {
+    text-align: right;
 }
 
 /* WIDGETS */
@@ -175,15 +146,18 @@ fieldset .fieldBox {
     top: 0;
     left: auto;
     right: 10px;
+    background: url(../img/calendar-icons.svg) 0 -15px no-repeat;
 }
 
 .calendarnav-next {
     top: 0;
     right: auto;
     left: 10px;
+    background: url(../img/calendar-icons.svg) 0 0 no-repeat;
 }
 
-.calendar caption, .calendarbox h2 {
+.calendar caption,
+.calendarbox h2 {
     text-align: center;
 }
 
@@ -193,6 +167,36 @@ fieldset .fieldBox {
 
 .selector .selector-filter {
     text-align: right;
+}
+
+.selector-add {
+    background: url(../img/selector-icons.svg) 0 -96px no-repeat;
+    background-size: 24px auto;
+}
+
+:enabled.selector-add:focus,
+:enabled.selector-add:hover {
+    background-position: 0 -120px;
+}
+
+.selector-remove {
+    background: url(../img/selector-icons.svg) 0 -144px no-repeat;
+    background-size: 24px auto;
+}
+
+:enabled.selector-remove:focus,
+:enabled.selector-remove:hover {
+    background-position: 0 -168px;
+}
+
+:enabled.selector-chooseall:focus,
+:enabled.selector-chooseall:hover {
+    background-position: 100% -144px;
+}
+
+:enabled.selector-clearall:focus,
+:enabled.selector-clearall:hover {
+    background-position: 0 -176px;
 }
 
 .inline-deletelink {
@@ -209,8 +213,9 @@ form .form-row p.datetime {
 
 /* MISC */
 
-.inline-related h2, .inline-group h2 {
-    text-align: right
+.inline-related h2,
+.inline-group h2 {
+    text-align: right;
 }
 
 .inline-related h3 span.delete {
@@ -218,10 +223,23 @@ form .form-row p.datetime {
     padding-left: inherit;
     left: 10px;
     right: inherit;
-    float:left;
+    float: left;
 }
 
 .inline-related h3 span.delete label {
     margin-left: inherit;
     margin-right: 2px;
+}
+
+.inline-group .tabular td.original p {
+    right: 0;
+}
+
+.selector .selector-chooser {
+    margin: 0;
+}
+
+ul.messagelist li {
+    padding: 10px 65px 10px 10px;
+    background-position-x: calc(100% - 40px);
 }
